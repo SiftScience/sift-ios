@@ -1,1 +1,0 @@
-../../../../../SiftIOS/SiftIOS/SFTDeviceInfo.h

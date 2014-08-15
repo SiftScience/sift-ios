@@ -1,4 +1,4 @@
-sift-ios
-========
+sift-ios-sdk
+============
 
-Sift Science iOS SDK
+sift-ios-sdk repo for sending device information on iOS devices.

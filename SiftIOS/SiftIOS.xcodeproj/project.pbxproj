@@ -1,0 +1,495 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		284F47AF199C054400F18F46 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 284F47AE199C054400F18F46 /* Foundation.framework */; };
+		284F47BD199C054400F18F46 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 284F47BC199C054400F18F46 /* XCTest.framework */; };
+		284F47BE199C054400F18F46 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 284F47AE199C054400F18F46 /* Foundation.framework */; };
+		284F47C0199C054400F18F46 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 284F47BF199C054400F18F46 /* UIKit.framework */; };
+		284F47C3199C054400F18F46 /* libSiftIOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 284F47AB199C054400F18F46 /* libSiftIOS.a */; };
+		284F47C9199C054400F18F46 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 284F47C7199C054400F18F46 /* InfoPlist.strings */; };
+		284F47CB199C054400F18F46 /* sift_ios_sdkTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 284F47CA199C054400F18F46 /* sift_ios_sdkTests.m */; };
+		28E5A16B199CB3D400FB1E82 /* SFTDeviceInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 28E5A166199CB3D400FB1E82 /* SFTDeviceInfo.m */; };
+		28E5A16C199CB3D400FB1E82 /* SFTUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = 28E5A16A199CB3D400FB1E82 /* SFTUtil.m */; };
+		28E5A172199CBCB500FB1E82 /* SFTSiftDeviceInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 28E5A171199CBCB500FB1E82 /* SFTSiftDeviceInfo.m */; };
+		28E5A178199D331D00FB1E82 /* SFTDebugHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 28E5A177199D331D00FB1E82 /* SFTDebugHelper.m */; };
+		28E5A181199D351A00FB1E82 /* SFTConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = 28E5A17F199D351A00FB1E82 /* SFTConstants.m */; };
+		28E5A182199D351A00FB1E82 /* SFTFieldNames.m in Sources */ = {isa = PBXBuildFile; fileRef = 28E5A180199D351A00FB1E82 /* SFTFieldNames.m */; };
+		63AB15C509004CD1B77F2A18 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2FF9AFB487294ACE92987DB5 /* libPods.a */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		284F47C1199C054400F18F46 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 284F47A3199C054400F18F46 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 284F47AA199C054400F18F46;
+			remoteInfo = "sift-ios-sdk";
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		284F47A9199C054400F18F46 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 12;
+			dstPath = "include/$(PRODUCT_NAME)";
+			dstSubfolderSpec = 16;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		284F47AB199C054400F18F46 /* libSiftIOS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libSiftIOS.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		284F47AE199C054400F18F46 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		284F47BB199C054400F18F46 /* SiftIOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SiftIOSTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		284F47BC199C054400F18F46 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
+		284F47BF199C054400F18F46 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = Library/Frameworks/UIKit.framework; sourceTree = DEVELOPER_DIR; };
+		284F47C6199C054400F18F46 /* SiftIOSTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "SiftIOSTests-Info.plist"; sourceTree = "<group>"; };
+		284F47C8199C054400F18F46 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		284F47CA199C054400F18F46 /* sift_ios_sdkTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = sift_ios_sdkTests.m; sourceTree = "<group>"; };
+		28E5A164199CB3D400FB1E82 /* SFTConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SFTConstants.h; path = SiftIOS/SFTConstants.h; sourceTree = SOURCE_ROOT; };
+		28E5A165199CB3D400FB1E82 /* SFTDeviceInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SFTDeviceInfo.h; path = SiftIOS/SFTDeviceInfo.h; sourceTree = SOURCE_ROOT; };
+		28E5A166199CB3D400FB1E82 /* SFTDeviceInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SFTDeviceInfo.m; path = SiftIOS/SFTDeviceInfo.m; sourceTree = SOURCE_ROOT; };
+		28E5A167199CB3D400FB1E82 /* SFTFieldNames.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SFTFieldNames.h; path = SiftIOS/SFTFieldNames.h; sourceTree = SOURCE_ROOT; };
+		28E5A168199CB3D400FB1E82 /* SiftIOS-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "SiftIOS-Prefix.pch"; path = "SiftIOS/SiftIOS-Prefix.pch"; sourceTree = SOURCE_ROOT; };
+		28E5A169199CB3D400FB1E82 /* SFTUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SFTUtil.h; path = SiftIOS/SFTUtil.h; sourceTree = SOURCE_ROOT; };
+		28E5A16A199CB3D400FB1E82 /* SFTUtil.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SFTUtil.m; path = SiftIOS/SFTUtil.m; sourceTree = SOURCE_ROOT; };
+		28E5A170199CBCB500FB1E82 /* SFTSiftDeviceInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SFTSiftDeviceInfo.h; path = SiftIOS/SFTSiftDeviceInfo.h; sourceTree = SOURCE_ROOT; };
+		28E5A171199CBCB500FB1E82 /* SFTSiftDeviceInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SFTSiftDeviceInfo.m; path = SiftIOS/SFTSiftDeviceInfo.m; sourceTree = SOURCE_ROOT; };
+		28E5A176199D331D00FB1E82 /* SFTDebugHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SFTDebugHelper.h; path = SiftIOS/SFTDebugHelper.h; sourceTree = SOURCE_ROOT; };
+		28E5A177199D331D00FB1E82 /* SFTDebugHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SFTDebugHelper.m; path = SiftIOS/SFTDebugHelper.m; sourceTree = SOURCE_ROOT; };
+		28E5A17F199D351A00FB1E82 /* SFTConstants.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SFTConstants.m; path = SiftIOS/SFTConstants.m; sourceTree = SOURCE_ROOT; };
+		28E5A180199D351A00FB1E82 /* SFTFieldNames.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SFTFieldNames.m; path = SiftIOS/SFTFieldNames.m; sourceTree = SOURCE_ROOT; };
+		2FF9AFB487294ACE92987DB5 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		6C6259DFBC634D14B26908BC /* Pods.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.xcconfig; path = Pods/Pods.xcconfig; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		284F47A8199C054400F18F46 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				284F47AF199C054400F18F46 /* Foundation.framework in Frameworks */,
+				63AB15C509004CD1B77F2A18 /* libPods.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		284F47B8199C054400F18F46 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				284F47C3199C054400F18F46 /* libSiftIOS.a in Frameworks */,
+				284F47BD199C054400F18F46 /* XCTest.framework in Frameworks */,
+				284F47C0199C054400F18F46 /* UIKit.framework in Frameworks */,
+				284F47BE199C054400F18F46 /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		284F47A2199C054400F18F46 = {
+			isa = PBXGroup;
+			children = (
+				284F47B0199C054400F18F46 /* SiftIOS */,
+				284F47C4199C054400F18F46 /* SiftIOSTests */,
+				284F47AD199C054400F18F46 /* Frameworks */,
+				284F47AC199C054400F18F46 /* Products */,
+				6C6259DFBC634D14B26908BC /* Pods.xcconfig */,
+			);
+			sourceTree = "<group>";
+		};
+		284F47AC199C054400F18F46 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				284F47AB199C054400F18F46 /* libSiftIOS.a */,
+				284F47BB199C054400F18F46 /* SiftIOSTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		284F47AD199C054400F18F46 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				284F47AE199C054400F18F46 /* Foundation.framework */,
+				284F47BC199C054400F18F46 /* XCTest.framework */,
+				284F47BF199C054400F18F46 /* UIKit.framework */,
+				2FF9AFB487294ACE92987DB5 /* libPods.a */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		284F47B0199C054400F18F46 /* SiftIOS */ = {
+			isa = PBXGroup;
+			children = (
+				28E5A176199D331D00FB1E82 /* SFTDebugHelper.h */,
+				28E5A177199D331D00FB1E82 /* SFTDebugHelper.m */,
+				28E5A170199CBCB500FB1E82 /* SFTSiftDeviceInfo.h */,
+				28E5A171199CBCB500FB1E82 /* SFTSiftDeviceInfo.m */,
+				28E5A164199CB3D400FB1E82 /* SFTConstants.h */,
+				28E5A17F199D351A00FB1E82 /* SFTConstants.m */,
+				28E5A165199CB3D400FB1E82 /* SFTDeviceInfo.h */,
+				28E5A166199CB3D400FB1E82 /* SFTDeviceInfo.m */,
+				28E5A167199CB3D400FB1E82 /* SFTFieldNames.h */,
+				28E5A180199D351A00FB1E82 /* SFTFieldNames.m */,
+				28E5A168199CB3D400FB1E82 /* SiftIOS-Prefix.pch */,
+				28E5A169199CB3D400FB1E82 /* SFTUtil.h */,
+				28E5A16A199CB3D400FB1E82 /* SFTUtil.m */,
+				284F47B1199C054400F18F46 /* Supporting Files */,
+			);
+			name = SiftIOS;
+			path = "sift-ios-sdk";
+			sourceTree = "<group>";
+		};
+		284F47B1199C054400F18F46 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		284F47C4199C054400F18F46 /* SiftIOSTests */ = {
+			isa = PBXGroup;
+			children = (
+				284F47CA199C054400F18F46 /* sift_ios_sdkTests.m */,
+				284F47C5199C054400F18F46 /* Supporting Files */,
+			);
+			name = SiftIOSTests;
+			path = "sift-ios-sdkTests";
+			sourceTree = "<group>";
+		};
+		284F47C5199C054400F18F46 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				284F47C6199C054400F18F46 /* SiftIOSTests-Info.plist */,
+				284F47C7199C054400F18F46 /* InfoPlist.strings */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		284F47AA199C054400F18F46 /* SiftIOS */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 284F47CE199C054400F18F46 /* Build configuration list for PBXNativeTarget "SiftIOS" */;
+			buildPhases = (
+				9F0ADA3A6EBD494894AAE29B /* Check Pods Manifest.lock */,
+				284F47A7199C054400F18F46 /* Sources */,
+				284F47A8199C054400F18F46 /* Frameworks */,
+				284F47A9199C054400F18F46 /* CopyFiles */,
+				2A62DEAB6C154E5B946BBE8B /* Copy Pods Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = SiftIOS;
+			productName = "sift-ios-sdk";
+			productReference = 284F47AB199C054400F18F46 /* libSiftIOS.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+		284F47BA199C054400F18F46 /* SiftIOSTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 284F47D1199C054400F18F46 /* Build configuration list for PBXNativeTarget "SiftIOSTests" */;
+			buildPhases = (
+				284F47B7199C054400F18F46 /* Sources */,
+				284F47B8199C054400F18F46 /* Frameworks */,
+				284F47B9199C054400F18F46 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				284F47C2199C054400F18F46 /* PBXTargetDependency */,
+			);
+			name = SiftIOSTests;
+			productName = "sift-ios-sdkTests";
+			productReference = 284F47BB199C054400F18F46 /* SiftIOSTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		284F47A3199C054400F18F46 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0510;
+				ORGANIZATIONNAME = "Sift Science";
+			};
+			buildConfigurationList = 284F47A6199C054400F18F46 /* Build configuration list for PBXProject "SiftIOS" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 284F47A2199C054400F18F46;
+			productRefGroup = 284F47AC199C054400F18F46 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				284F47AA199C054400F18F46 /* SiftIOS */,
+				284F47BA199C054400F18F46 /* SiftIOSTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		284F47B9199C054400F18F46 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				284F47C9199C054400F18F46 /* InfoPlist.strings in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		2A62DEAB6C154E5B946BBE8B /* Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Pods-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		9F0ADA3A6EBD494894AAE29B /* Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		284F47A7199C054400F18F46 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				28E5A16B199CB3D400FB1E82 /* SFTDeviceInfo.m in Sources */,
+				28E5A178199D331D00FB1E82 /* SFTDebugHelper.m in Sources */,
+				28E5A181199D351A00FB1E82 /* SFTConstants.m in Sources */,
+				28E5A16C199CB3D400FB1E82 /* SFTUtil.m in Sources */,
+				28E5A172199CBCB500FB1E82 /* SFTSiftDeviceInfo.m in Sources */,
+				28E5A182199D351A00FB1E82 /* SFTFieldNames.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		284F47B7199C054400F18F46 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				284F47CB199C054400F18F46 /* sift_ios_sdkTests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		284F47C2199C054400F18F46 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 284F47AA199C054400F18F46 /* SiftIOS */;
+			targetProxy = 284F47C1199C054400F18F46 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		284F47C7199C054400F18F46 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				284F47C8199C054400F18F46 /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		284F47CC199C054400F18F46 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+			};
+			name = Debug;
+		};
+		284F47CD199C054400F18F46 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = YES;
+				ENABLE_NS_ASSERTIONS = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		284F47CF199C054400F18F46 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 6C6259DFBC634D14B26908BC /* Pods.xcconfig */;
+			buildSettings = {
+				DSTROOT = /tmp/sift_ios_sdk.dst;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "sift-ios-sdk/SiftIOS-Prefix.pch";
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = SiftIOS;
+				SKIP_INSTALL = YES;
+			};
+			name = Debug;
+		};
+		284F47D0199C054400F18F46 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 6C6259DFBC634D14B26908BC /* Pods.xcconfig */;
+			buildSettings = {
+				DSTROOT = /tmp/sift_ios_sdk.dst;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "sift-ios-sdk/SiftIOS-Prefix.pch";
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = SiftIOS;
+				SKIP_INSTALL = YES;
+			};
+			name = Release;
+		};
+		284F47D2199C054400F18F46 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(inherited)",
+					"$(DEVELOPER_FRAMEWORKS_DIR)",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "sift-ios-sdk/sift-ios-sdk-Prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = "sift-ios-sdkTests/SiftIOSTests-Info.plist";
+				PRODUCT_NAME = SiftIOSTests;
+				WRAPPER_EXTENSION = xctest;
+			};
+			name = Debug;
+		};
+		284F47D3199C054400F18F46 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(inherited)",
+					"$(DEVELOPER_FRAMEWORKS_DIR)",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "sift-ios-sdk/sift-ios-sdk-Prefix.pch";
+				INFOPLIST_FILE = "sift-ios-sdkTests/SiftIOSTests-Info.plist";
+				PRODUCT_NAME = SiftIOSTests;
+				WRAPPER_EXTENSION = xctest;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		284F47A6199C054400F18F46 /* Build configuration list for PBXProject "SiftIOS" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				284F47CC199C054400F18F46 /* Debug */,
+				284F47CD199C054400F18F46 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		284F47CE199C054400F18F46 /* Build configuration list for PBXNativeTarget "SiftIOS" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				284F47CF199C054400F18F46 /* Debug */,
+				284F47D0199C054400F18F46 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		284F47D1199C054400F18F46 /* Build configuration list for PBXNativeTarget "SiftIOSTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				284F47D2199C054400F18F46 /* Debug */,
+				284F47D3199C054400F18F46 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 284F47A3199C054400F18F46 /* Project object */;
+}

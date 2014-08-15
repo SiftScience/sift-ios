@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>840C969C-2644-496F-B5D3-515F743CC9BE</string>
+	<key>IDESourceControlProjectName</key>
+	<string>Cats 'N Hacks</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>262ED3E9-CEB0-4724-8859-A44579C20ADF</key>
+		<string>ssh://github.com/SiftScience/sift-ios-sdk.git</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>sample_app/CatsNHacks/Cats 'N Hacks.xcodeproj/project.xcworkspace</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>262ED3E9-CEB0-4724-8859-A44579C20ADF</key>
+		<string>../../../..</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>ssh://github.com/SiftScience/sift-ios-sdk.git</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>110</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>262ED3E9-CEB0-4724-8859-A44579C20ADF</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>262ED3E9-CEB0-4724-8859-A44579C20ADF</string>
+			<key>IDESourceControlWCCName</key>
+			<string>sift-ios-sdk</string>
+		</dict>
+	</array>
+</dict>
+</plist>

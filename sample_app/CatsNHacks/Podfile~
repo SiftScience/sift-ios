@@ -1,0 +1,3 @@
+target "CatsNHacks" do
+  pod 'SiftIOS', :path => '../../SiftIOS'
+end

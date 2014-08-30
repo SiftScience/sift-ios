@@ -126,6 +126,7 @@ NSString* _apiKey;
  */
 -(void) writeState: (NSMutableDictionary*) dict {
     [[NSUserDefaults standardUserDefaults] setObject:dict forKey:self.userKey];
+    [[NSUserDefaults standardUserDefaults] synchronize];
 }
 
 /**

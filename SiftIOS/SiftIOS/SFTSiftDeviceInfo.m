@@ -66,15 +66,10 @@ NSString* _apiKey;
     [SFTDebugHelper logIfDebug: @"%@", json];
 
     int result = 0;
-    int iters = 0;
-    while (true) {
+    for (int i = 0; i < MAX_RETRIES; i++) {
         result = [self sendEvent: json];
         [SFTDebugHelper logIfDebug:@"%d", result];
         if (result) {
-            break;
-        }
-        iters++;
-        if (iters > MAX_RETRIES) {
             break;
         }
         [NSThread sleepForTimeInterval: RETRY_FREQUENCY];

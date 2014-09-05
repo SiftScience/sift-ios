@@ -17,6 +17,7 @@
 -(NSString*) deviceName;
 -(NSString*) deviceSystemName;
 -(NSString*) defaultLanguage;
+-(NSDictionary*) lastLocation;
 -(BOOL) jailbreakStatus;
 
 @end

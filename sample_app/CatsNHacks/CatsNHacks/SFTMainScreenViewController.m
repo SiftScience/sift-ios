@@ -10,6 +10,7 @@
 #import "SFTUserStore.h"
 #import "SFTSiftDeviceInfo.h"
 #import "SFTApiKeyHolder.h"
+#import <CoreLocation/CoreLocation.h>
 
 @interface SFTMainScreenViewController ()
 
@@ -47,6 +48,9 @@
 {
     [super viewDidAppear:animated];
     [self updateTitle];
+    CLLocationManager* manager = [CLLocationManager new];
+    [manager startUpdatingLocation];
+    CLLocation* location = [manager location];
     [[[SFTSiftDeviceInfo alloc] initWithUser:[SFTUserStore user] apiKey:API_KEY] updateInfo];
 }
 
@@ -69,4 +73,5 @@
     }
     [self updateTitle];
 }
+
 @end

@@ -53,10 +53,14 @@ NSString* _apiKey;
 }
 
 -(void) infoUpdater {
+    [SFTDebugHelper logIfDebug: @"%@", @"Starting update check."];
     NSMutableDictionary* data = [NSMutableDictionary new];
+    [SFTDebugHelper logIfDebug: @"%@", @"Adding device info."];
     [self addDeviceInfo: data];
+    [SFTDebugHelper logIfDebug: @"%@", @"Adding static info."];
     [self addStaticInfo: data];
 
+    [SFTDebugHelper logIfDebug: @"%@", @"Checking against saved state."];
     if ([data isEqualToDictionary: self.readState]) {
         // Device info has not changed, no need to send update.
         [SFTDebugHelper logIfDebug: @"%@", @"No updates."];
@@ -94,6 +98,11 @@ NSString* _apiKey;
 
     [dict setValue:info.defaultLanguage forKey:DEFAULT_LANGUAGE];
     [dict setValue:[NSNumber numberWithBool: info.jailbreakStatus] forKey:JAILBREAK_STATUS];
+
+    NSDictionary* lastLocation = info.lastLocation;
+    if (lastLocation) {
+        [dict setValue:[SFTUtil dictionaryToJSON:lastLocation] forKey:LAST_LOCATION];
+    }
 }
 
 -(void) addStaticInfo:(NSMutableDictionary *)dict {

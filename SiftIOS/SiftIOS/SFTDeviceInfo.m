@@ -8,6 +8,9 @@
 
 #import "SFTDeviceInfo.h"
 #import <UIKit/UIKit.h>
+#import <CoreLocation/CoreLocation.h>
+#import "SFTFieldNames.h"
+#import "SFTDebugHelper.h"
 
 @implementation SFTDeviceInfo
 
@@ -42,6 +45,24 @@
     if (languages.count > 0) {
         return languages[0];
     }
+    return nil;
+}
+
+-(NSDictionary*) lastLocation {
+    [SFTDebugHelper logIfDebug: @"%@", @"Checking for last location."];
+    if([CLLocationManager locationServicesEnabled] &&
+       [CLLocationManager authorizationStatus] == kCLAuthorizationStatusAuthorized) {
+        // user has enabled location services, return location
+        [SFTDebugHelper logIfDebug: @"%@", @"Location services enabled, gathering location."];
+        CLLocation* location = [[CLLocationManager new] location];
+        NSDictionary* dict = [NSDictionary new];
+        [dict setValue:[NSNumber numberWithDouble:[location coordinate].latitude] forKey:LAST_LOCATION_LATITUDE];
+        [dict setValue:[NSNumber numberWithDouble:[location coordinate].longitude] forKey:LAST_LOCATION_LONGITUDE];
+        [dict setValue:[NSNumber numberWithDouble:[location altitude]] forKey:LAST_LOCATION_ALTITUDE];
+        [SFTDebugHelper logIfDebug: @"%@", @"Location successfully gathered."];
+        return dict;
+    }
+    [SFTDebugHelper logIfDebug: @"%@", @"Location services disabled."];
     return nil;
 }
 

@@ -22,3 +22,8 @@ NSString* const DEVICE_SYSTEM_NAME = @"$device_system_name";
 
 NSString* const DEFAULT_LANGUAGE = @"$default_language";
 NSString* const JAILBREAK_STATUS = @"$jailbreak_status";
+
+NSString* const LAST_LOCATION = @"$last_location";
+NSString* const LAST_LOCATION_ALTITUDE = @"$altitude";
+NSString* const LAST_LOCATION_LATITUDE = @"$latitude";
+NSString* const LAST_LOCATION_LONGITUDE = @"$longitude";

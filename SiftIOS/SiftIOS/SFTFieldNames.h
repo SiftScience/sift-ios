@@ -23,3 +23,8 @@ extern NSString* const DEVICE_SYSTEM_NAME;
 
 extern NSString* const DEFAULT_LANGUAGE;
 extern NSString* const JAILBREAK_STATUS;
+
+extern NSString* const LAST_LOCATION;
+extern NSString* const LAST_LOCATION_ALTITUDE;
+extern NSString* const LAST_LOCATION_LATITUDE;
+extern NSString* const LAST_LOCATION_LONGITUDE;

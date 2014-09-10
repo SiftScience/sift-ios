@@ -20,6 +20,8 @@
 
 @implementation SFTMainScreenViewController
 
+CLLocationManager* manager;
+
 - (void)updateTitle {
     NSString* text = [SFTUserStore user];
     if ([text length] > 0) {
@@ -48,7 +50,9 @@
 {
     [super viewDidAppear:animated];
     [self updateTitle];
-    CLLocationManager* manager = [CLLocationManager new];
+    if (!manager) {
+        manager = [CLLocationManager new];
+    }
     [manager startUpdatingLocation];
     CLLocation* location = [manager location];
     [[[SFTSiftDeviceInfo alloc] initWithUser:[SFTUserStore user] apiKey:API_KEY] updateInfo];

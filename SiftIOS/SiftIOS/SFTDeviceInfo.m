@@ -54,12 +54,24 @@
        [CLLocationManager authorizationStatus] == kCLAuthorizationStatusAuthorized) {
         // user has enabled location services, return location
         [SFTDebugHelper logIfDebug: @"%@", @"Location services enabled, gathering location."];
-        CLLocation* location = [[CLLocationManager new] location];
-        NSDictionary* dict = [NSDictionary new];
-        [dict setValue:[NSNumber numberWithDouble:[location coordinate].latitude] forKey:LAST_LOCATION_LATITUDE];
-        [dict setValue:[NSNumber numberWithDouble:[location coordinate].longitude] forKey:LAST_LOCATION_LONGITUDE];
-        [dict setValue:[NSNumber numberWithDouble:[location altitude]] forKey:LAST_LOCATION_ALTITUDE];
-        [SFTDebugHelper logIfDebug: @"%@", @"Location successfully gathered."];
+        CLLocationManager* manager = [CLLocationManager new];
+        CLLocation* location = [manager location];
+        [SFTDebugHelper logIfDebug: @"%@", @"Location obtained."];
+        NSMutableDictionary* dict = [NSMutableDictionary new];
+        [SFTDebugHelper logIfDebug: @"%@", @"Created dict."];
+        if (location) {
+            CLLocationCoordinate2D coordinate = [location coordinate];
+            [SFTDebugHelper logIfDebug: @"%@ %@", LAST_LOCATION_LATITUDE, [NSNumber numberWithDouble:coordinate.latitude]];
+            [dict setValue:[NSNumber numberWithDouble:coordinate.latitude] forKey:LAST_LOCATION_LATITUDE];
+            [SFTDebugHelper logIfDebug: @"%@", @"Added latitude."];
+            [dict setValue:[NSNumber numberWithDouble:coordinate.longitude] forKey:LAST_LOCATION_LONGITUDE];
+            [SFTDebugHelper logIfDebug: @"%@", @"Added longitude."];
+            [dict setValue:[NSNumber numberWithDouble:[location altitude]] forKey:LAST_LOCATION_ALTITUDE];
+            [SFTDebugHelper logIfDebug: @"%@", @"Added altitude."];
+            [SFTDebugHelper logIfDebug: @"%@", @"Location successfully gathered."];
+        } else {
+            [SFTDebugHelper logIfDebug: @"%@", @"Location is nil."];
+        }
         return dict;
     }
     [SFTDebugHelper logIfDebug: @"%@", @"Location services disabled."];

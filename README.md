@@ -28,5 +28,7 @@ To install dependencies and setup the project, run:
 	make setup
 ```
 To modify the sdk, open Xcode and select File -> Open -> SiftIOS.xcworkspace.
+
 To modify the demo app, open Xcode and select File -> Open -> CatsNHacks.xcworkspace.
+
 To run the demo app, open CatsNHacks in Xcode and press the "play" button in the top left corner of the window.

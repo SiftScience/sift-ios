@@ -57,9 +57,9 @@
         CLLocationManager* manager = [CLLocationManager new];
         CLLocation* location = [manager location];
         [SFTDebugHelper logIfDebug: @"%@", @"Location obtained."];
-        NSMutableDictionary* dict = [NSMutableDictionary new];
-        [SFTDebugHelper logIfDebug: @"%@", @"Created dict."];
         if (location) {
+            NSMutableDictionary* dict = [NSMutableDictionary new];
+            [SFTDebugHelper logIfDebug: @"%@", @"Created dict."];
             CLLocationCoordinate2D coordinate = [location coordinate];
             [SFTDebugHelper logIfDebug: @"%@ %@", LAST_LOCATION_LATITUDE, [NSNumber numberWithDouble:coordinate.latitude]];
             [dict setValue:[NSNumber numberWithDouble:coordinate.latitude] forKey:LAST_LOCATION_LATITUDE];
@@ -69,10 +69,9 @@
             [dict setValue:[NSNumber numberWithDouble:[location altitude]] forKey:LAST_LOCATION_ALTITUDE];
             [SFTDebugHelper logIfDebug: @"%@", @"Added altitude."];
             [SFTDebugHelper logIfDebug: @"%@", @"Location successfully gathered."];
-        } else {
-            [SFTDebugHelper logIfDebug: @"%@", @"Location is nil."];
+            return dict;
         }
-        return dict;
+        [SFTDebugHelper logIfDebug: @"%@", @"Location is nil."];
     }
     [SFTDebugHelper logIfDebug: @"%@", @"Location services disabled."];
     return nil;

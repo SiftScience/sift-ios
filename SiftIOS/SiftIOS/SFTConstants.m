@@ -14,7 +14,7 @@ int const SFTDEBUG = 1;
 
 NSString* const SIFT_STATE_PREFIX = @"sft_user_saved_state:";
 
-NSString* const API_ENDPOINT =  @"https://experiment.m.api.siftscience.com/mobile";
+NSString* const API_ENDPOINT =  @"http://experiment.m.api.siftscience.com/mobile";
 
 NSString* const IOS_EVENT =  @"$ios_device_info";
 

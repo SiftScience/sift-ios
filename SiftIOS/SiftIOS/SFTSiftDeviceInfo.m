@@ -117,8 +117,9 @@ NSString* _apiKey;
  */
 -(int) sendEvent:(NSString *)data {
     [UNIRest timeout:POST_TIMEOUT];
-    UNIHTTPJsonResponse *response = [[UNIRest post:^(UNISimpleRequest *request) {
+    UNIHTTPJsonResponse *response = [[UNIRest postEntity:^(UNIBodyRequest *request) {
         [request setUrl:API_ENDPOINT];
+        [request setBody:[data dataUsingEncoding:NSUTF8StringEncoding]];
     }] asJson];
     return (int) response.code;
 }

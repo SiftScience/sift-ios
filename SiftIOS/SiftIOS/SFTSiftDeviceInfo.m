@@ -101,7 +101,7 @@ NSString* _apiKey;
 
     NSDictionary* lastLocation = info.lastLocation;
     if (lastLocation) {
-        [dict setValue:[SFTUtil dictionaryToJSON:lastLocation] forKey:LAST_LOCATION];
+        [dict setValue:lastLocation forKey:LAST_LOCATION];
     }
 }
 

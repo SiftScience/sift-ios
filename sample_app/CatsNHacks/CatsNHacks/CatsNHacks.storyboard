@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="5056" systemVersion="13E28" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="SYF-hR-caZ">
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3733"/>
+        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
+    </dependencies>
+    <scenes>
+        <!--Main Screen View Controller - CatsNHacks-->
+        <scene sceneID="X9b-X9-H4i">
+            <objects>
+                <viewController title="CatsNHacks" id="FJ3-Ph-Cvq" customClass="SFTMainScreenViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="A6l-6U-YV4"/>
+                        <viewControllerLayoutGuide type="bottom" id="97v-BG-qRl"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="P0h-xT-AIc">
+                        <rect key="frame" x="0.0" y="64" width="320" height="504"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <subviews>
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="userid" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="BaR-dg-ke8">
+                                <rect key="frame" x="20" y="32" width="187" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <accessibility key="accessibilityConfiguration" hint="userid"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </textField>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="MUx-tV-I8o">
+                                <rect key="frame" x="215" y="32" width="85" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                                <state key="normal" title="Set userid">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                        <integer key="value" value="4"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                                <connections>
+                                    <action selector="updateUser:" destination="FJ3-Ph-Cvq" eventType="touchUpInside" id="DrJ-78-6DW"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" alpha="0.40000000000000002" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cOK-yw-Yh8">
+                                <rect key="frame" x="20" y="70" width="280" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                                <state key="normal" title="Sample page 1">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                        <integer key="value" value="4"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                                <connections>
+                                    <segue destination="QOX-BA-pXf" kind="push" id="FtO-tz-mnw"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" alpha="0.40000000000000002" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="B80-fc-X64">
+                                <rect key="frame" x="20" y="108" width="280" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                                <state key="normal" title="Sample page 2">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                        <integer key="value" value="4"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                                <connections>
+                                    <segue destination="M1R-K3-XrB" kind="push" id="5ye-fe-KFW"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="MUx-tV-I8o" firstAttribute="leading" secondItem="BaR-dg-ke8" secondAttribute="trailing" constant="8" id="6Fa-fF-qGC"/>
+                            <constraint firstItem="BaR-dg-ke8" firstAttribute="top" secondItem="A6l-6U-YV4" secondAttribute="bottom" constant="32" id="6aN-8D-PH1"/>
+                            <constraint firstAttribute="trailing" secondItem="cOK-yw-Yh8" secondAttribute="trailing" constant="20" id="8Rw-TS-5p3"/>
+                            <constraint firstItem="B80-fc-X64" firstAttribute="top" secondItem="cOK-yw-Yh8" secondAttribute="bottom" constant="8" id="9XT-5r-iq5"/>
+                            <constraint firstItem="cOK-yw-Yh8" firstAttribute="leading" secondItem="P0h-xT-AIc" secondAttribute="leading" constant="20" id="EBM-rP-SgL"/>
+                            <constraint firstItem="cOK-yw-Yh8" firstAttribute="top" secondItem="BaR-dg-ke8" secondAttribute="bottom" constant="8" id="hKz-Mq-6D5"/>
+                            <constraint firstItem="BaR-dg-ke8" firstAttribute="leading" secondItem="P0h-xT-AIc" secondAttribute="leading" constant="20" id="haf-Ge-ZAz"/>
+                            <constraint firstItem="B80-fc-X64" firstAttribute="leading" secondItem="P0h-xT-AIc" secondAttribute="leading" constant="20" id="k6h-RU-5aD"/>
+                            <constraint firstAttribute="trailing" secondItem="MUx-tV-I8o" secondAttribute="trailing" constant="20" id="orO-P6-Ww9"/>
+                            <constraint firstItem="MUx-tV-I8o" firstAttribute="centerY" secondItem="BaR-dg-ke8" secondAttribute="centerY" id="vAC-m9-S41"/>
+                            <constraint firstItem="MUx-tV-I8o" firstAttribute="width" secondItem="BaR-dg-ke8" secondAttribute="height" multiplier="17:6" id="wEc-Lk-Tui"/>
+                            <constraint firstAttribute="trailing" secondItem="B80-fc-X64" secondAttribute="trailing" constant="20" id="wa4-Hy-KEM"/>
+                        </constraints>
+                    </view>
+                    <extendedEdge key="edgesForExtendedLayout" bottom="YES"/>
+                    <navigationItem key="navigationItem" title="Cats 'N Hacks" id="gmy-BV-SXY"/>
+                    <connections>
+                        <outlet property="catButton1" destination="cOK-yw-Yh8" id="ijZ-Qg-KkA"/>
+                        <outlet property="catButton2" destination="B80-fc-X64" id="mBx-tk-v2h"/>
+                        <outlet property="userInputField" destination="BaR-dg-ke8" id="5Y8-VR-TmK"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="oMR-6f-ioP" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1101" y="-81"/>
+        </scene>
+        <!--Second Cat View Controller - Second Cat-->
+        <scene sceneID="5ff-q0-Qm8">
+            <objects>
+                <viewController id="M1R-K3-XrB" customClass="SFTSecondCatViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="s0F-ok-mcZ"/>
+                        <viewControllerLayoutGuide type="bottom" id="Vue-hd-4Oy"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="otc-NB-ZsG">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <subviews>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="cat2.jpg" translatesAutoresizingMaskIntoConstraints="NO" id="QUx-9W-P1d">
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                            </imageView>
+                        </subviews>
+                        <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                    <navigationItem key="navigationItem" title="Second Cat" id="ffh-vA-XTI"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="ve7-MA-gYY" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="612" y="691"/>
+        </scene>
+        <!--First Cat View Controller - First Cat-->
+        <scene sceneID="3Jj-Gf-88Y">
+            <objects>
+                <viewController title="First Cat" id="QOX-BA-pXf" customClass="SFTFirstCatViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="f1Y-hL-Nmo"/>
+                        <viewControllerLayoutGuide type="bottom" id="Kc8-yN-NwQ"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="vbe-3P-ZRU">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <subviews>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="cat1.jpg" translatesAutoresizingMaskIntoConstraints="NO" id="608-IK-4G5">
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                            </imageView>
+                        </subviews>
+                        <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                    <navigationItem key="navigationItem" title="First Cat" id="KhY-Xg-Ntf"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="b5f-Q0-DXS" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1507" y="7"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="Lew-Vx-PHN">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="SYF-hR-caZ" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="mY6-oa-dsX">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="FJ3-Ph-Cvq" kind="relationship" relationship="rootViewController" id="Le3-XO-d2C"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="fO5-Rd-LaQ" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="612" y="7"/>
+        </scene>
+    </scenes>
+    <resources>
+        <image name="cat1.jpg" width="1600" height="1200"/>
+        <image name="cat2.jpg" width="1920" height="1080"/>
+    </resources>
+    <simulatedMetricsContainer key="defaultSimulatedMetrics">
+        <simulatedStatusBarMetrics key="statusBar"/>
+        <simulatedOrientationMetrics key="orientation"/>
+        <simulatedScreenMetrics key="destination" type="retina4"/>
+    </simulatedMetricsContainer>
+</document>

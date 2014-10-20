@@ -8,4 +8,4 @@
 
 #import "SFTApiKeyHolder.h"
 
-NSString* const API_KEY = @"fdfdd2e9ad";
+NSString* const API_KEY = @"d114a957fe";

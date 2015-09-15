@@ -2,84 +2,88 @@
 
 #import <XCTest/XCTest.h>
 
+#import "SFEventFileUploader.h"
+#import "SFEventFileUploader+Internal.h"
+#import "SFUtil.h"
+
 #import "Sift.h"
-#import "SiftInternal.h"
+#import "Sift+Internal.h"
+
+#import "SFStubHttpProtocol.h"
 
 @interface SiftTests : XCTestCase
 
 @end
 
 @implementation SiftTests {
-    Sift *sift;
+    NSString *_rootDirPath;
+    Sift *_sift;
 }
 
 - (void)setUp {
     [super setUp];
-    NSString *testName = [NSString stringWithFormat:@"SiftTests-%07d", arc4random_uniform(1 << 20)];
-    sift = [[Sift alloc] initWithIdentifier:testName manager:[[SFEventsFileManager alloc] initWithEventsDirName:testName]];
+    _rootDirPath = [SFCacheDirPath() stringByAppendingPathComponent:[NSString stringWithFormat:@"testdata-%07d", arc4random_uniform(1 << 20)]];
+    _sift = [[Sift alloc] initWithRootDirPath:_rootDirPath];
+
+    // HACK: Replace _sift.uploader object.
+    _sift.uploader = SFStubHttpProtocolMakeUploader(_sift.operationQueue, _sift.manager, _rootDirPath);
 }
 
 - (void)tearDown {
-    [sift.manager removeEventsDir];
+    NSError *error;
+    XCTAssert([[NSFileManager defaultManager] removeItemAtPath:_rootDirPath error:&error], @"Could not remove \"%@\" due to %@", _rootDirPath, [error localizedDescription]);
     [super tearDown];
 }
 
-- (void)testTracker {
-    XCTAssert([@"https://b.siftscience.com/" isEqualToString:sift.tracker]);
-    
-    sift.tracker = @"http://127.0.0.1:8000/";
-    XCTAssert([@"http://127.0.0.1:8000/" isEqualToString:sift.tracker]);
-}
+- (void)testCustomEventQueue {
+    SFConfig config = {
+        .trackEventDifferenceOnly = NO,
+        .rotateCurrentEventFileInterval = 0,
+        .rotateCurrentEventFileIfOlderThan = 0,
+        .rotateCurrentEventFileIfLargerThan = 4096,
+        .uploadEventFilesInterval = 0,
+    };
 
-- (void)testWriteToCurrentEventsFile {
-    NSDictionary *testData[] = {
+    NSDictionary *events[] = {
         @{@"key1": @"value1", @"key2": @"value2"},
         @{@"key": @"value"},
         @{},
     };
-    for (int i = 0; i < sizeof(testData) / sizeof(testData[0]); i++) {
-        [sift writeToCurrentEventsFile:createEvent(testData[i])];
+    int numEvents = sizeof(events) / sizeof(events[0]);
+    
+    XCTestExpectation *expectation = [self expectationWithDescription:@"Wait for uploads"];
+    NSMutableArray *count = [NSMutableArray arrayWithObjects:@0, nil];
+    _sift.uploader.completionHandler = ^{
+        int newCount = ((NSNumber *)count[0]).intValue + 1;
+        count[0] = [NSNumber numberWithInt:newCount];
+        if (newCount >= numEvents) {
+            [expectation fulfill];
+        }
+    };
+
+    [_sift addEventQueue:@"q1" config:config];
+
+    for (int i = 0; i < numEvents; i++) {
+        [_sift event:events[i] identifier:@"q1"];
     }
 
-    [sift.manager maybeRotateCurrentEventsFile:YES];
-    [sift.manager processEventsFiles:^(NSFileManager *manager, NSArray *paths) {
-        XCTAssertEqual(1, paths.count);
-
-        NSData *data = [[NSData alloc] initWithContentsOfFile:paths[0]];
-
-        NSDictionary *expect[] = {
-            @{@"key1": @"value1", @"key2": @"value2"},
-            @{@"key": @"value"},
-            @{},
-        };
-        NSUInteger location = 0;
-        for (int i = 0; i < sizeof(expect) / sizeof(expect[0]); i++) {
-            NSDictionary *event = readEvent(data, &location);
-            XCTAssertTrue([expect[i] isEqualToDictionary:event]);
-        }
-        // We have read the whole data.
-        XCTAssertEqual(location, data.length);
-    }];
+    [self waitForExpectationsWithTimeout:5.0 handler:nil];
 }
 
-- (void)testEvent {
-    XCTestExpectation *expectPersisted = [self expectationWithDescription:@"Wait for event written to disk"];
-    sift.eventPersistedCallback = ^(NSFileHandle *currentEventsFile, NSData *event) {
-        [expectPersisted fulfill];
+- (void)testAddRemoveEventQueue {
+    SFConfig config = {
+        .trackEventDifferenceOnly = NO,
+        .rotateCurrentEventFileInterval = 0,
+        .rotateCurrentEventFileIfOlderThan = 0,
+        .rotateCurrentEventFileIfLargerThan = 0,
+        .uploadEventFilesInterval = 0,
     };
-    [sift event:@{@"key": @"value"}];
-    [self waitForExpectationsWithTimeout:10.0 handler:nil];
 
-    [sift.manager maybeRotateCurrentEventsFile:YES];
-    
-    XCTestExpectation *expectUpload = [self expectationWithDescription:@"Wait for HTTP response"];
-    sift.uploadTaskCompletionCallback = ^(NSURLSession *session, NSURLSessionTask *task, NSError *error){
-        [expectUpload fulfill];
-    };
-    [sift uploadEventsFiles];
-    [self waitForExpectationsWithTimeout:10.0 handler:nil];
-    
-    // TODO(clchiou): Check events file was (or was not) removed.
+    XCTAssert([_sift addEventQueue:@"q1" config:config]);
+    XCTAssert(![_sift addEventQueue:@"q1" config:config]);
+
+    XCTAssert([_sift removeEventQueue:@""]);  // The default event queue.
+    XCTAssert(![_sift removeEventQueue:@"no-such-queue"]);
 }
 
 @end

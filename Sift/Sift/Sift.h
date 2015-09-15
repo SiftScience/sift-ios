@@ -2,15 +2,19 @@
 
 @import Foundation;
 
-@interface Sift : NSObject <NSURLSessionDelegate, NSURLSessionTaskDelegate, NSURLSessionDataDelegate>
+#import "SFConfig.h"
 
-// Return the shared global instance of the Sift object.
+@interface Sift : NSObject
+
 + (Sift *)sharedInstance;
 
-// Track an event.
-- (void)event:(NSDictionary *)data;
+- (BOOL)addEventQueue:(NSString *)identifier config:(SFConfig)config;
 
-// Post tracked events to this API endpoint (writable for testing).
-@property NSString *tracker;
+- (BOOL)removeEventQueue:(NSString *)identifier;
+
+- (void)event:(NSDictionary *)event identifier:(NSString *)identifier;
+
+// Use the default event queue.
+- (void)event:(NSDictionary *)event;
 
 @end

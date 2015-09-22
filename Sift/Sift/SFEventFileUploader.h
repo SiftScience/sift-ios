@@ -8,6 +8,6 @@
 
 - (id)initWithQueue:(NSOperationQueue *)queue manager:(SFEventFileManager *)manager rootDirPath:(NSString *)rootDirPath;
 
-- (void)upload:(NSString *)path identifier:(NSString *)identifier;
+- (void)upload:(NSString *)identifier path:(NSString *)path;
 
 @end

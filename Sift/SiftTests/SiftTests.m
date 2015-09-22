@@ -50,7 +50,7 @@
         @{},
     };
     int numEvents = sizeof(events) / sizeof(events[0]);
-    
+
     XCTestExpectation *expectation = [self expectationWithDescription:@"Wait for uploads"];
     NSMutableArray *count = [NSMutableArray arrayWithObjects:@0, nil];
     _sift.uploader.completionHandler = ^{
@@ -64,7 +64,7 @@
     [_sift addEventQueue:@"q1" config:config];
 
     for (int i = 0; i < numEvents; i++) {
-        [_sift event:events[i] identifier:@"q1"];
+        [_sift event:events[i] usingEventQueue:@"q1"];
     }
 
     [self waitForExpectationsWithTimeout:5.0 handler:nil];
@@ -82,8 +82,8 @@
     XCTAssert([_sift addEventQueue:@"q1" config:config]);
     XCTAssert(![_sift addEventQueue:@"q1" config:config]);
 
-    XCTAssert([_sift removeEventQueue:@""]);  // The default event queue.
-    XCTAssert(![_sift removeEventQueue:@"no-such-queue"]);
+    XCTAssert([_sift removeEventQueue:@"" purge:NO]);  // The default event queue.
+    XCTAssert(![_sift removeEventQueue:@"no-such-queue" purge:NO]);
 }
 
 @end

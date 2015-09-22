@@ -48,20 +48,20 @@
         XCTAssertEqualObjects(expect, [self dirContents]);
     }
 
-    XCTAssert([_manager removeEventStore:@""]);
+    XCTAssert([_manager removeEventStore:@"" purge:NO]);
     {
         NSArray *expect = @[@"events", @"events-id-1", @"events-id-2"];
         XCTAssertEqualObjects(expect, [self dirContents]);
     }
 
-    XCTAssert(![_manager removeEventStore:@""]);
+    XCTAssert(![_manager removeEventStore:@"" purge:NO]);
 
-    [_manager accessEventStore:@"" block:^BOOL (SFEventFileStore *store) {
-        XCTAssertNil(store);
+    [_manager useEventStore:@"" withBlock:^BOOL (SFEventFileStore *store) {
+        XCTAssertNotNil(store);  // Created on-demand.
         return YES;
     }];
 
-    [_manager accessEventStore:@"id-1" block:^BOOL (SFEventFileStore *store) {
+    [_manager useEventStore:@"id-1" withBlock:^BOOL (SFEventFileStore *store) {
         XCTAssertNotNil(store);
         return YES;
     }];

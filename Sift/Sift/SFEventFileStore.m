@@ -5,8 +5,8 @@
 #import "SFEventFileStore.h"
 #import "SFEventFileStore+Internal.h"
 
-static NSString *EVENT_FILE_NAME = @"events";
-static NSString *EVENT_FILE_PATTERN = @"^events-(\\d+)$";
+static NSString * const SFEventFileName = @"events";
+static NSString * const SFEventFilePattern = @"^events-(\\d+)$";
 
 @implementation SFEventFileStore {
     NSString *_eventDirPath;
@@ -30,11 +30,11 @@ static NSString *EVENT_FILE_PATTERN = @"^events-(\\d+)$";
         NSError *error;
 
         _eventDirPath = eventDirPath;
-        _currentEventFilePath = [_eventDirPath stringByAppendingPathComponent:EVENT_FILE_NAME];
+        _currentEventFilePath = [_eventDirPath stringByAppendingPathComponent:SFEventFileName];
 
         _currentEventFile = nil;
 
-        _eventFileNameRegex = [NSRegularExpression regularExpressionWithPattern:EVENT_FILE_PATTERN options:0 error:&error];
+        _eventFileNameRegex = [NSRegularExpression regularExpressionWithPattern:SFEventFilePattern options:0 error:&error];
         if (error) {
             NSLog(@"Could not construct regex due to %@", [error localizedDescription]);
             self = nil;
@@ -98,23 +98,23 @@ static NSString *EVENT_FILE_PATTERN = @"^events-(\\d+)$";
             if (!eventFilePaths) {
                 return NO;
             }
-            
+
             int largestIndex = -1;
             if (eventFilePaths.count > 0) {
                 largestIndex = [self eventFileIndex:[[eventFilePaths lastObject] lastPathComponent]];
             }
-            NSString *newEventFileName = [NSString stringWithFormat:@"%@-%d", EVENT_FILE_NAME, (largestIndex + 1)];
+            NSString *newEventFileName = [NSString stringWithFormat:@"%@-%d", SFEventFileName, (largestIndex + 1)];
             NSString *newEventFilePath = [_eventDirPath stringByAppendingPathComponent:newEventFileName];
-            
+
             // Close the current event file handle before rotating it.
             [self closeCurrentEventFile];
-            
+
             NSError *error;
             if (![_manager moveItemAtPath:_currentEventFilePath toPath:newEventFilePath error:&error]) {
                 NSLog(@"Could not rotate the current event file \"%@\" to \"%@\" due to %@", _currentEventFilePath, newEventFilePath, [error localizedDescription]);
                 return NO;
             }
-            
+
             NSLog(@"The current event file is rotated to \"%@\"", newEventFilePath);
             return YES;
         }

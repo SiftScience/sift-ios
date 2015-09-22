@@ -12,11 +12,12 @@
 
 #import "Sift.h"
 
-static NSString *ROOT_DIR_NAME = @"sift-v0_0_1";
+static NSString * const SFRootDirName = @"sift-v0_0_1";
 
-static NSString *DEFAULT_EVENT_QUEUE_IDENTIFIER = @"";
+static NSString * const SFDefaultEventQueueIdentifier = @"";
 
-static const SFConfig DEFAULT_EVENT_QUEUE_CONFIG = {
+// TODO(clchiou): Experiment a sensible config for the default event queue.
+static const SFConfig SFDefaultEventQueueConfig = {
     .trackEventDifferenceOnly = NO,
     .rotateCurrentEventFileInterval = 5,
     .rotateCurrentEventFileIfOlderThan = 15,
@@ -38,7 +39,7 @@ static const SFConfig DEFAULT_EVENT_QUEUE_CONFIG = {
     static Sift *sharedInstance;
     static dispatch_once_t once;
     dispatch_once(&once, ^{
-        sharedInstance = [[Sift alloc] initWithRootDirPath:[SFCacheDirPath() stringByAppendingPathComponent:ROOT_DIR_NAME]];
+        sharedInstance = [[Sift alloc] initWithRootDirPath:[SFCacheDirPath() stringByAppendingPathComponent:SFRootDirName]];
     });
     return sharedInstance;
 }
@@ -65,7 +66,7 @@ static const SFConfig DEFAULT_EVENT_QUEUE_CONFIG = {
         }
 
         // Create the default event queue.
-        [self addEventQueue:DEFAULT_EVENT_QUEUE_IDENTIFIER config:DEFAULT_EVENT_QUEUE_CONFIG];
+        [self addEventQueue:SFDefaultEventQueueIdentifier config:SFDefaultEventQueueConfig];
     }
     return self;
 }
@@ -81,7 +82,7 @@ static const SFConfig DEFAULT_EVENT_QUEUE_CONFIG = {
         if ([_eventQueues objectForKey:identifier]) {
             NSLog(@"Could not overwrite event queue for identifier \"%@\"", identifier);
             return NO;
-        }        
+        }
         SFEventQueue *queue = [[SFEventQueue alloc] initWithIdentifier:identifier config:config queue:_operationQueue manager:_manager uploader:_uploader];
         if (!queue) {
             NSLog(@"Could not create SFEventQueue for identifier \"%@\"", identifier);
@@ -95,7 +96,7 @@ static const SFConfig DEFAULT_EVENT_QUEUE_CONFIG = {
     }
 }
 
-- (BOOL)removeEventQueue:(NSString *)identifier {
+- (BOOL)removeEventQueue:(NSString *)identifier purge:(BOOL)purge {
     pthread_rwlock_wrlock(&_lock);
     @try {
         if (![_eventQueues objectForKey:identifier]) {
@@ -103,7 +104,7 @@ static const SFConfig DEFAULT_EVENT_QUEUE_CONFIG = {
             return NO;
         }
         [_eventQueues removeObjectForKey:identifier];
-        return [_manager removeEventStore:identifier];
+        return [_manager removeEventStore:identifier purge:purge];
     }
     @finally {
         pthread_rwlock_unlock(&_lock);
@@ -111,10 +112,10 @@ static const SFConfig DEFAULT_EVENT_QUEUE_CONFIG = {
 }
 
 - (void)event:(NSDictionary *)event {
-    [self event:event identifier:DEFAULT_EVENT_QUEUE_IDENTIFIER];
+    [self event:event usingEventQueue:SFDefaultEventQueueIdentifier];
 }
 
-- (void)event:(NSDictionary *)event identifier:(NSString *)identifier {
+- (void)event:(NSDictionary *)event usingEventQueue:(NSString *)identifier {
     pthread_rwlock_rdlock(&_lock);
     @try {
         SFEventQueue *queue = [_eventQueues objectForKey:identifier];

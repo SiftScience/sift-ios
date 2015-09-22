@@ -6,7 +6,9 @@
 
 #import "SFEventFileManager.h"
 
-static NSString *EVENT_DIR_NAME = @"events";
+static NSString * const SFEventDirName = @"events";
+
+static NSString *SFMakeEventDirName(NSString *identifier);
 
 @interface SFEventFileManager ()
 
@@ -49,14 +51,14 @@ static NSString *EVENT_DIR_NAME = @"events";
             // Would not overwrite the event store...
             return YES;
         }
-        
+
         SFEventFileStore *store = [[SFEventFileStore alloc] initWithEventDirPath:[self eventDirPath:identifier]];
         if (!store) {
             return NO;
         }
-        
+
         [_stores setObject:store forKey:identifier];
-        
+
         return YES;
     }
     @finally {
@@ -64,7 +66,7 @@ static NSString *EVENT_DIR_NAME = @"events";
     }
 }
 
-- (BOOL)removeEventStore:(NSString *)identifier {
+- (BOOL)removeEventStore:(NSString *)identifier purge:(BOOL)purge {
     pthread_rwlock_wrlock(&_lock);
     @try {
         SFEventFileStore *store = [_stores objectForKey:identifier];
@@ -73,18 +75,34 @@ static NSString *EVENT_DIR_NAME = @"events";
             return NO;
         }
         [_stores removeObjectForKey:identifier];
-        return YES;
+        if (purge) {
+            return [store removeEventDir];
+        } else {
+            return YES;
+        }
     }
     @finally {
         pthread_rwlock_unlock(&_lock);
     }
 }
 
-- (BOOL)accessEventStore:(NSString *)identifier block:(BOOL (^)(SFEventFileStore *store))block {
+- (BOOL)useEventStore:(NSString *)identifier withBlock:(BOOL (^)(SFEventFileStore *store))block {
     pthread_rwlock_rdlock(&_lock);
     @try {
-        // TODO(clchiou): Should we create SFEventFileStore on-demand? (If on the suspend-resume path that the app is not fully initialized...)
-        return block([_stores objectForKey:identifier]);
+        // Create SFEventFileStore on-demand in case that a background NSURLSession wakes up the app, and the app did not properly initialize the SFEventFileManager...
+        SFEventFileStore *store = [_stores objectForKey:identifier];
+        if (!store) {
+            // Upgrade to write lock.
+            pthread_rwlock_unlock(&_lock);
+            pthread_rwlock_wrlock(&_lock);
+            store = [[SFEventFileStore alloc] initWithEventDirPath:[self eventDirPath:identifier]];
+            if (store) {
+                [_stores setObject:store forKey:identifier];
+            }
+            // We could downgrade back to read lock if that's a serious issue...
+        }
+
+        return block(store);
     }
     @finally {
         pthread_rwlock_unlock(&_lock);
@@ -95,7 +113,7 @@ static NSString *EVENT_DIR_NAME = @"events";
     pthread_rwlock_wrlock(&_lock);
     @try {
         [_stores removeAllObjects];
-        
+
         NSError *error;
         if (![[NSFileManager defaultManager] removeItemAtPath:_rootDirPath error:&error]) {
             NSLog(@"Could not remove root dir \"%@\" due to %@", _rootDirPath, [error localizedDescription]);
@@ -107,14 +125,14 @@ static NSString *EVENT_DIR_NAME = @"events";
 }
 
 - (NSString *)eventDirPath:(NSString *)identifier {
-    return [_rootDirPath stringByAppendingPathComponent:SFEventDirName(identifier)];
+    return [_rootDirPath stringByAppendingPathComponent:SFMakeEventDirName(identifier)];
 }
 
-static NSString *SFEventDirName(NSString *identifier) {
+static NSString *SFMakeEventDirName(NSString *identifier) {
     if (identifier.length > 0) {
-        return [NSString stringWithFormat:@"%@-%@", EVENT_DIR_NAME, identifier];
+        return [NSString stringWithFormat:@"%@-%@", SFEventDirName, identifier];
     } else {
-        return EVENT_DIR_NAME;
+        return SFEventDirName;
     }
 }
 

@@ -81,7 +81,7 @@ static NSDictionary *SFLastEvent(NSFileManager *manager, NSString *currentEventF
 
 - (BOOL)appendEventIfDifferent:(NSDictionary *)event lastEvent:(NSDictionary *)lastEvent {
     if (!lastEvent) {
-        return [_manager accessEventStore:_identifier block:^BOOL (SFEventFileStore *store) {
+        return [_manager useEventStore:_identifier withBlock:^BOOL (SFEventFileStore *store) {
             return [store accessAllEventFilesWithBlock:^BOOL (NSFileManager *manager, NSString *currentEventFilePath, NSArray *eventFilePaths) {
                 NSDictionary *lastEvent = SFLastEvent(manager, currentEventFilePath, eventFilePaths);
                 if (lastEvent) {
@@ -99,7 +99,7 @@ static NSDictionary *SFLastEvent(NSFileManager *manager, NSString *currentEventF
 }
 
 - (BOOL)appendEvent:(NSDictionary *)event {
-    return [_manager accessEventStore:_identifier block:^BOOL (SFEventFileStore *store) {
+    return [_manager useEventStore:_identifier withBlock:^BOOL (SFEventFileStore *store) {
         return [store writeCurrentEventFileWithBlock:^BOOL (NSFileHandle *handle) {
             if (!SFEventFileAppendEvent(handle, event)) {
                 // Remove it because the file might be corrupted or we are running out of space...
@@ -128,7 +128,7 @@ static NSDictionary *SFLastEvent(NSFileManager *manager, NSString *currentEventF
 }
 
 - (void)checkOrRotateCurrentEventFile {
-    [_manager accessEventStore:_identifier block:^BOOL (SFEventFileStore *store) {
+    [_manager useEventStore:_identifier withBlock:^BOOL (SFEventFileStore *store) {
         return [store accessAllEventFilesWithBlock:^BOOL (NSFileManager *manager, NSString *currentEventFilePath, NSArray *eventFilePaths) {
             if (![self shouldRotateCurrentEventFile:currentEventFilePath manager:manager]) {
                 return YES;
@@ -165,7 +165,7 @@ static NSDictionary *SFLastEvent(NSFileManager *manager, NSString *currentEventF
 }
 
 - (void)uploadEventFiles {
-    [_manager accessEventStore:_identifier block:^BOOL (SFEventFileStore *store) {
+    [_manager useEventStore:_identifier withBlock:^BOOL (SFEventFileStore *store) {
         return [store accessEventFilesWithBlock:^BOOL (NSFileManager *manager, NSArray *paths) {
             if (!paths) {
                 NSLog(@"The event file path array is nil (probably something went wrong)");
@@ -176,10 +176,10 @@ static NSDictionary *SFLastEvent(NSFileManager *manager, NSString *currentEventF
             }
             if (_config.trackEventDifferenceOnly) {
                 // Upload one event file at a time if we track difference only.
-                [_uploader upload:[paths objectAtIndex:0] identifier:_identifier];
+                [_uploader upload:_identifier path:[paths objectAtIndex:0]];
             } else {
                 for (NSString *path in paths) {
-                    [_uploader upload:path identifier:_identifier];
+                    [_uploader upload:_identifier path:path];
                 }
             }
             return YES;

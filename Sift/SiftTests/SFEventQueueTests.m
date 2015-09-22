@@ -50,7 +50,7 @@
         .uploadEventFilesInterval = 3600,
     };
     SFEventQueue *queue = [[SFEventQueue alloc] initWithIdentifier:@"id" config:config queue:_queue manager:_manager uploader:_uploader];
-    
+
     NSDictionary *events[] = {
         @{@"key1": @"value1"},
         @{@"key2": @"value2"},
@@ -61,7 +61,7 @@
     }
     [_queue waitUntilAllOperationsAreFinished];
     XCTAssertEqualObjects(@[@"events"], [self dirContents:@"id"]);
-    
+
     // According to the config above, this should not rotate.
     [queue checkOrRotateCurrentEventFile];
     XCTAssertEqualObjects(@[@"events"], [self dirContents:@"id"]);
@@ -76,7 +76,7 @@
         .uploadEventFilesInterval = 3600,
     };
     SFEventQueue *queue = [[SFEventQueue alloc] initWithIdentifier:@"id" config:config queue:_queue manager:_manager uploader:_uploader];
-    
+
     [queue append:@{@"key-1": @"value-1"}];
     [_queue waitUntilAllOperationsAreFinished];
     {
@@ -108,7 +108,7 @@
         .uploadEventFilesInterval = 3600,
     };
     SFEventQueue *queue = [[SFEventQueue alloc] initWithIdentifier:@"id" config:config queue:_queue manager:_manager uploader:_uploader];
-    
+
     for (int i = 0; i < 10; i++) {
         [queue append:@{@"key1": @"value1"}];
         [_queue waitUntilAllOperationsAreFinished];

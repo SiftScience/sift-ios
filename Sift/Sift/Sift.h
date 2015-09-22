@@ -10,9 +10,9 @@
 
 - (BOOL)addEventQueue:(NSString *)identifier config:(SFConfig)config;
 
-- (BOOL)removeEventQueue:(NSString *)identifier;
+- (BOOL)removeEventQueue:(NSString *)identifier purge:(BOOL)purge;
 
-- (void)event:(NSDictionary *)event identifier:(NSString *)identifier;
+- (void)event:(NSDictionary *)event usingEventQueue:(NSString *)identifier;
 
 // Use the default event queue.
 - (void)event:(NSDictionary *)event;

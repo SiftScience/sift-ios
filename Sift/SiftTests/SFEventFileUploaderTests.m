@@ -73,7 +73,7 @@
     XCTAssertEqualObjects(@[], [[[_uploader loadTasks] allValues] sortedArrayUsingSelector:@selector(compare:)]);
 
     NSMutableArray *expect = [NSMutableArray new];
-    [_manager accessEventStore:@"id-1" block:^BOOL (SFEventFileStore *store) {
+    [_manager useEventStore:@"id-1" withBlock:^BOOL (SFEventFileStore *store) {
         // Create event files...
         for (int i = 0; i < NUM_UPLOAD_TASKS; i++) {
             XCTAssertNotNil([store currentEventFile]);
@@ -88,14 +88,14 @@
             XCTAssertEqual(NUM_UPLOAD_TASKS, eventFilePaths.count);
             XCTAssertEqualObjects(expect, eventFilePaths);
             for (NSString *path in eventFilePaths) {
-                [_uploader upload:path identifier:@"id-1"];
+                [_uploader upload:@"id-1" path:path];
             }
             return YES;
         }];
         return YES;
     }];
-    
-    [_manager accessEventStore:@"id-2" block:^BOOL (SFEventFileStore *store) {
+
+    [_manager useEventStore:@"id-2" withBlock:^BOOL (SFEventFileStore *store) {
         [store accessEventFilesWithBlock:^BOOL (NSFileManager *manager, NSArray *eventFilePaths) {
             XCTAssertEqualObjects(@[], eventFilePaths);
             return YES;
@@ -115,7 +115,7 @@
     [self waitForExpectationsWithTimeout:5.0 handler:nil];
 
     // All events-id1/events-* files should be removed.
-    [_manager accessEventStore:@"id-1" block:^BOOL (SFEventFileStore *store) {
+    [_manager useEventStore:@"id-1" withBlock:^BOOL (SFEventFileStore *store) {
         [store accessEventFilesWithBlock:^BOOL (NSFileManager *manager, NSArray *eventFilePaths) {
             XCTAssertEqualObjects(@[], eventFilePaths);
             return YES;

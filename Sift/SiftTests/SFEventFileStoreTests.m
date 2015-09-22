@@ -47,7 +47,7 @@
     [self touch:@"events"];
     [self touch:@"events0"];
     [self touch:@"not-events-1"];
-    
+
     NSMutableArray *paths = [NSMutableArray new];
     [_store accessEventFilesWithBlock:^BOOL (NSFileManager *manager, NSArray *eventFilePaths){
         XCTAssertEqualObjects(paths, eventFilePaths);

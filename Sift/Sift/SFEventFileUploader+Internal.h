@@ -17,6 +17,15 @@
 @end
 
 
+@interface SFEventFileUploader (ApplicationState)
+
+- (void)applicationDidEnterBackground:(NSNotification *)notification;
+
+- (void)applicationWillTerminate:(NSNotification *)notification;
+
+@end
+
+
 @interface SFEventFileUploader (Testing)
 
 typedef void (^CompletionHandlerType)(void);

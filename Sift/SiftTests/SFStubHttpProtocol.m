@@ -40,9 +40,9 @@
 SFEventFileUploader *SFStubHttpProtocolMakeUploader(NSOperationQueue *queue, SFEventFileManager *manager, NSString *rootDirPath) {
     NSURLSessionConfiguration *config = [NSURLSessionConfiguration defaultSessionConfiguration];
     config.protocolClasses = [config.protocolClasses arrayByAddingObject:[SFStubHttpProtocol class]];
-    
+
     NSString *trackerUrl = @"mock+https://127.0.0.1/";
-    
+
     NSString *taskFilePath = [rootDirPath stringByAppendingPathComponent:@"tasks"];
 
     return [[SFEventFileUploader alloc] initWithQueue:queue manager:manager config:config trackerUrl:trackerUrl taskFilePath:taskFilePath];

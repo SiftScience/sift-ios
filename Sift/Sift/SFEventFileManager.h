@@ -10,9 +10,9 @@
 
 - (BOOL)addEventStore:(NSString *)identifier;
 
-- (BOOL)removeEventStore:(NSString *)identifier;
+- (BOOL)removeEventStore:(NSString *)identifier purge:(BOOL)purge;
 
-- (BOOL)accessEventStore:(NSString *)identifier block:(BOOL (^)(SFEventFileStore *store))block;
+- (BOOL)useEventStore:(NSString *)identifier withBlock:(BOOL (^)(SFEventFileStore *store))block;
 
 - (void)removeRootDir;
 

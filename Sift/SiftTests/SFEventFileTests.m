@@ -32,7 +32,7 @@
 - (void)testAppendAndRead {
     NSFileHandle *writeHandle = [NSFileHandle fileHandleForWritingAtPath:_testFilePath];
     XCTAssertNotNil(writeHandle);
-    
+
     NSFileHandle *readHandle = [NSFileHandle fileHandleForReadingAtPath:_testFilePath];
     XCTAssertNotNil(readHandle);
 

@@ -1,4 +1,4 @@
-// Copyright © 2015 Sift Science. All rights reserved.
+// Copyright (c) 2015 Sift Science. All rights reserved.
 
 @import Foundation;
 
@@ -7,7 +7,7 @@
 
 @interface Sift ()
 
-- (id)initWithRootDirPath:(NSString *)rootDirPath;
+- (instancetype)initWithBeaconKey:(NSString *)beaconKey serverUrl:(NSString *)serverUrl rootDirPath:(NSString *)rootDirPath;
 
 @end
 

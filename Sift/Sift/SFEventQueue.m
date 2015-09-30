@@ -1,8 +1,10 @@
-// Copyright © 2015 Sift Science. All rights reserved.
+// Copyright (c) 2015 Sift Science. All rights reserved.
 
 @import Foundation;
 
 #import "SFEventFile.h"
+#import "SFMetrics.h"
+#import "SFUtil.h"
 
 #import "SFEventQueue.h"
 #import "SFEventQueue+Internal.h"
@@ -18,7 +20,7 @@ static NSDictionary *SFLastEvent(NSFileManager *manager, NSString *currentEventF
     NSDictionary *_lastEvent;
 }
 
-- (id)initWithIdentifier:(NSString *)identifier config:(SFConfig)config queue:(NSOperationQueue *)queue manager:(SFEventFileManager *)manager uploader:(SFEventFileUploader *)uploader {
+- (instancetype)initWithIdentifier:(NSString *)identifier config:(SFConfig)config queue:(NSOperationQueue *)queue manager:(SFEventFileManager *)manager uploader:(SFEventFileUploader *)uploader {
     self = [super init];
     if (self) {
         _identifier = identifier;
@@ -43,8 +45,17 @@ static NSDictionary *SFLastEvent(NSFileManager *manager, NSString *currentEventF
     return self;
 }
 
-- (void)append:(NSDictionary *)event {
-    [_queue addOperation:[[NSInvocationOperation alloc] initWithTarget:self selector:@selector(appendEventInBackground:) object:event]];
+- (void)append:(NSDictionary *)event withBeaconKey:(NSString *)beaconKey {
+    [[SFMetrics sharedInstance] count:SFMetricsKeyEventQueueAppend];
+    NSMutableDictionary *eventWithHeader = [NSMutableDictionary dictionaryWithObjectsAndKeys:beaconKey, @"beacon_key", event, @"event", nil];
+    if (_config.trackEventDifferenceOnly) {
+        [eventWithHeader setObject:[NSNumber numberWithBool:YES] forKey:@"track_event_difference_only"];
+    }
+    [self enqueuePersistEvent:eventWithHeader];
+}
+
+- (void)enqueuePersistEvent:(NSDictionary *)event {
+    [_queue addOperation:[[NSInvocationOperation alloc] initWithTarget:self selector:@selector(persistEvent:) object:event]];
 }
 
 - (void)enqueueCheckOrRotateCurrentEventFile:(NSTimer *)timer {
@@ -57,16 +68,17 @@ static NSDictionary *SFLastEvent(NSFileManager *manager, NSString *currentEventF
 
 // NOTE: The following methods are only called in the background queue.
 
-- (void)appendEventInBackground:(NSDictionary *)event {
+- (void)persistEvent:(NSDictionary *)event {
     BOOL result;
     if (_config.trackEventDifferenceOnly) {
-        result = [self appendEventIfDifferent:event lastEvent:_lastEvent];
+        result = [self writeToCurrentEventFileIfDifferentWithEvent:event lastEvent:_lastEvent];
         _lastEvent = event;
     } else {
-        result = [self appendEvent:event];
+        result = [self writeToCurrentEventFileWithEvent:event];
     }
     if (!result) {
-        NSLog(@"Could not append event to file and will drop it: %@", event);
+        SFDebug(@"Could not append event to file and will drop it: %@", event);
+        [[SFMetrics sharedInstance] count:SFMetricsKeyEventQueueNumEventsDropped];
         return;
     }
 
@@ -79,26 +91,26 @@ static NSDictionary *SFLastEvent(NSFileManager *manager, NSString *currentEventF
     }
 }
 
-- (BOOL)appendEventIfDifferent:(NSDictionary *)event lastEvent:(NSDictionary *)lastEvent {
+- (BOOL)writeToCurrentEventFileIfDifferentWithEvent:(NSDictionary *)event lastEvent:(NSDictionary *)lastEvent {
     if (!lastEvent) {
         return [_manager useEventStore:_identifier withBlock:^BOOL (SFEventFileStore *store) {
             return [store accessAllEventFilesWithBlock:^BOOL (NSFileManager *manager, NSString *currentEventFilePath, NSArray *eventFilePaths) {
                 NSDictionary *lastEvent = SFLastEvent(manager, currentEventFilePath, eventFilePaths);
                 if (lastEvent) {
-                    return [self appendEventIfDifferent:event lastEvent:lastEvent];
+                    return [self writeToCurrentEventFileIfDifferentWithEvent:event lastEvent:lastEvent];
                 } else {
-                    return [self appendEvent:event];
+                    return [self writeToCurrentEventFileWithEvent:event];
                 }
             }];
         }];
     } else if ([lastEvent isEqualToDictionary:event]) {
         return YES;
     } else {
-        return [self appendEvent:event];
+        return [self writeToCurrentEventFileWithEvent:event];
     }
 }
 
-- (BOOL)appendEvent:(NSDictionary *)event {
+- (BOOL)writeToCurrentEventFileWithEvent:(NSDictionary *)event {
     return [_manager useEventStore:_identifier withBlock:^BOOL (SFEventFileStore *store) {
         return [store writeCurrentEventFileWithBlock:^BOOL (NSFileHandle *handle) {
             if (!SFEventFileAppendEvent(handle, event)) {
@@ -146,7 +158,8 @@ static NSDictionary *SFLastEvent(NSFileManager *manager, NSString *currentEventF
     NSError *error;
     NSDictionary *attributes = [manager attributesOfItemAtPath:currentEventFilePath error:&error];
     if (!attributes) {
-        NSLog(@"Could not get attributes of the current event file \"%@\" due to %@", currentEventFilePath, [error localizedDescription]);
+        SFDebug(@"Could not get attributes of the current event file \"%@\" due to %@", currentEventFilePath, [error localizedDescription]);
+        [[SFMetrics sharedInstance] count:SFMetricsKeyEventQueueFileAttributesRetrievalError];
         return NO;
     }
 
@@ -156,7 +169,8 @@ static NSDictionary *SFLastEvent(NSFileManager *manager, NSString *currentEventF
 
     NSTimeInterval sinceNow = -[[attributes fileModificationDate] timeIntervalSinceNow];
     if (sinceNow < 0) {
-        NSLog(@"File modification date of \"%@\" is in the future: %@", currentEventFilePath, [attributes fileModificationDate]);
+        SFDebug(@"File modification date of \"%@\" is in the future: %@", currentEventFilePath, [attributes fileModificationDate]);
+        [[SFMetrics sharedInstance] count:SFMetricsKeyEventQueueFutureFileModificationDate];
     } else if (sinceNow > _config.rotateCurrentEventFileIfOlderThan) {
         return YES;
     }
@@ -168,7 +182,7 @@ static NSDictionary *SFLastEvent(NSFileManager *manager, NSString *currentEventF
     [_manager useEventStore:_identifier withBlock:^BOOL (SFEventFileStore *store) {
         return [store accessEventFilesWithBlock:^BOOL (NSFileManager *manager, NSArray *paths) {
             if (!paths) {
-                NSLog(@"The event file path array is nil (probably something went wrong)");
+                SFDebug(@"The event file path array is nil (probably something went wrong)");
                 return NO;
             }
             if (paths.count == 0) {

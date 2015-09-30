@@ -1,4 +1,4 @@
-// Copyright © 2015 Sift Science. All rights reserved.
+// Copyright (c) 2015 Sift Science. All rights reserved.
 
 #import <XCTest/XCTest.h>
 
@@ -23,7 +23,7 @@
 - (void)setUp {
     [super setUp];
     _rootDirPath = [SFCacheDirPath() stringByAppendingPathComponent:[NSString stringWithFormat:@"testdata-%07d", arc4random_uniform(1 << 20)]];
-    _sift = [[Sift alloc] initWithRootDirPath:_rootDirPath];
+    _sift = [[Sift alloc] initWithBeaconKey:@"" serverUrl:nil rootDirPath:_rootDirPath];
 
     // HACK: Replace _sift.uploader object.
     _sift.uploader = SFStubHttpProtocolMakeUploader(_sift.operationQueue, _sift.manager, _rootDirPath);

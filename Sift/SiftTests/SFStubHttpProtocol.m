@@ -1,4 +1,4 @@
-// Copyright © 2015 Sift Science. All rights reserved.
+// Copyright (c) 2015 Sift Science. All rights reserved.
 
 @import Foundation;
 
@@ -41,9 +41,9 @@ SFEventFileUploader *SFStubHttpProtocolMakeUploader(NSOperationQueue *queue, SFE
     NSURLSessionConfiguration *config = [NSURLSessionConfiguration defaultSessionConfiguration];
     config.protocolClasses = [config.protocolClasses arrayByAddingObject:[SFStubHttpProtocol class]];
 
-    NSString *trackerUrl = @"mock+https://127.0.0.1/";
+    NSString *serverUrl = @"mock+https://127.0.0.1/";
 
     NSString *taskFilePath = [rootDirPath stringByAppendingPathComponent:@"tasks"];
 
-    return [[SFEventFileUploader alloc] initWithQueue:queue manager:manager config:config trackerUrl:trackerUrl taskFilePath:taskFilePath];
+    return [[SFEventFileUploader alloc] initWithQueue:queue manager:manager config:config serverUrl:serverUrl taskFilePath:taskFilePath];
 }

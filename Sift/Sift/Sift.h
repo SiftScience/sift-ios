@@ -1,10 +1,15 @@
-// Copyright © 2015 Sift Science. All rights reserved.
+// Copyright (c) 2015 Sift Science. All rights reserved.
 
 @import Foundation;
 
 #import "SFConfig.h"
 
 @interface Sift : NSObject
+
++ (void)configureSharedInstance:(NSString *)beaconKey;
+
+// Useful for testing/integration.
++ (void)configureSharedInstance:(NSString *)beaconKey serverUrl:(NSString *)serverUrl;
 
 + (Sift *)sharedInstance;
 

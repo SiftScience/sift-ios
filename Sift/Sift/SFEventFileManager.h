@@ -1,4 +1,4 @@
-// Copyright © 2015 Sift Science. All rights reserved.
+// Copyright (c) 2015 Sift Science. All rights reserved.
 
 @import Foundation;
 
@@ -6,7 +6,7 @@
 
 @interface SFEventFileManager : NSObject
 
-- (id)initWithRootDir:(NSString *)rootDirPath;
+- (instancetype)initWithRootDir:(NSString *)rootDirPath;
 
 - (BOOL)addEventStore:(NSString *)identifier;
 
@@ -15,5 +15,7 @@
 - (BOOL)useEventStore:(NSString *)identifier withBlock:(BOOL (^)(SFEventFileStore *store))block;
 
 - (void)removeRootDir;
+
+@property (readonly) NSInteger numEventStores;
 
 @end

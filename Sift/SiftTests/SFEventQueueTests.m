@@ -1,4 +1,4 @@
-// Copyright © 2015 Sift Science. All rights reserved.
+// Copyright (c) 2015 Sift Science. All rights reserved.
 
 #import <XCTest/XCTest.h>
 
@@ -57,7 +57,7 @@
         @{@"key3": @"value3"},
     };
     for (int i = 0; i < sizeof(events) / sizeof(events[0]); i++) {
-        [queue append:events[i]];
+        [queue enqueuePersistEvent:events[i]];
     }
     [_queue waitUntilAllOperationsAreFinished];
     XCTAssertEqualObjects(@[@"events"], [self dirContents:@"id"]);
@@ -77,21 +77,21 @@
     };
     SFEventQueue *queue = [[SFEventQueue alloc] initWithIdentifier:@"id" config:config queue:_queue manager:_manager uploader:_uploader];
 
-    [queue append:@{@"key-1": @"value-1"}];
+    [queue enqueuePersistEvent:@{@"key-1": @"value-1"}];
     [_queue waitUntilAllOperationsAreFinished];
     {
         NSArray *expect = @[@"events-0"];
         XCTAssertEqualObjects(expect, [self dirContents:@"id"]);
     }
 
-    [queue append:@{@"key-2": @"value-2"}];
+    [queue enqueuePersistEvent:@{@"key-2": @"value-2"}];
     [_queue waitUntilAllOperationsAreFinished];
     {
         NSArray *expect = @[@"events-0", @"events-1"];
         XCTAssertEqualObjects(expect, [self dirContents:@"id"]);
     }
 
-    [queue append:@{@"key-3": @"value-3"}];
+    [queue enqueuePersistEvent:@{@"key-3": @"value-3"}];
     [_queue waitUntilAllOperationsAreFinished];
     {
         NSArray *expect = @[@"events-0", @"events-1", @"events-2"];
@@ -110,14 +110,14 @@
     SFEventQueue *queue = [[SFEventQueue alloc] initWithIdentifier:@"id" config:config queue:_queue manager:_manager uploader:_uploader];
 
     for (int i = 0; i < 10; i++) {
-        [queue append:@{@"key1": @"value1"}];
+        [queue enqueuePersistEvent:@{@"key1": @"value1"}];
         [_queue waitUntilAllOperationsAreFinished];
         NSArray *expect = @[@"events-0"];
         XCTAssertEqualObjects(expect, [self dirContents:@"id"]);
     }
 
     for (int i = 0; i < 10; i++) {
-        [queue append:@{@"key2": @"value2"}];
+        [queue enqueuePersistEvent:@{@"key2": @"value2"}];
         [_queue waitUntilAllOperationsAreFinished];
         NSArray *expect = @[@"events-0", @"events-1"];
         XCTAssertEqualObjects(expect, [self dirContents:@"id"]);

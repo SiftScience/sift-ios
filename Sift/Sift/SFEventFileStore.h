@@ -1,10 +1,10 @@
-// Copyright © 2015 Sift Science. All rights reserved.
+// Copyright (c) 2015 Sift Science. All rights reserved.
 
 @import Foundation;
 
 @interface SFEventFileStore : NSObject
 
-- (id)initWithEventDirPath:(NSString *)eventDirPath;
+- (instancetype)initWithEventDirPath:(NSString *)eventDirPath;
 
 - (BOOL)writeCurrentEventFileWithBlock:(BOOL (^)(NSFileHandle *handle))block;
 

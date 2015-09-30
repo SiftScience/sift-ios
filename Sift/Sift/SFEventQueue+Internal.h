@@ -1,4 +1,4 @@
-// Copyright © 2015 Sift Science. All rights reserved.
+// Copyright (c) 2015 Sift Science. All rights reserved.
 
 @import Foundation;
 
@@ -9,17 +9,19 @@
 
 @interface SFEventQueue ()
 
+- (void)enqueuePersistEvent:(NSDictionary *)event;
+
 - (void)enqueueCheckOrRotateCurrentEventFile:(NSTimer *)timer;
 
 - (void)enqueueUploadEventFiles:(NSTimer *)timer;
 
 // NOTE: The following methods are only called in the background queue.
 
-- (void)appendEventInBackground:(NSDictionary *)event;
+- (void)persistEvent:(NSDictionary *)event;
 
-- (BOOL)appendEventIfDifferent:(NSDictionary *)event lastEvent:(NSDictionary *)lastEvent;
+- (BOOL)writeToCurrentEventFileIfDifferentWithEvent:(NSDictionary *)event lastEvent:(NSDictionary *)lastEvent;
 
-- (BOOL)appendEvent:(NSDictionary *)event;
+- (BOOL)writeToCurrentEventFileWithEvent:(NSDictionary *)event;
 
 - (void)checkOrRotateCurrentEventFile;
 

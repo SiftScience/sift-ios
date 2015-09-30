@@ -1,4 +1,4 @@
-// Copyright © 2015 Sift Science. All rights reserved.
+// Copyright (c) 2015 Sift Science. All rights reserved.
 
 @import Foundation;
 
@@ -6,7 +6,10 @@
 
 @interface SFEventFileUploader : NSObject <NSURLSessionDelegate, NSURLSessionTaskDelegate, NSURLSessionDataDelegate>
 
-- (id)initWithQueue:(NSOperationQueue *)queue manager:(SFEventFileManager *)manager rootDirPath:(NSString *)rootDirPath;
+- (instancetype)initWithQueue:(NSOperationQueue *)queue
+            manager:(SFEventFileManager *)manager
+        rootDirPath:(NSString *)rootDirPath
+          serverUrl:(NSString *)serverUrl;
 
 - (void)upload:(NSString *)identifier path:(NSString *)path;
 

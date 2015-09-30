@@ -1,7 +1,10 @@
-// Copyright © 2015 Sift Science. All rights reserved.
+// Copyright (c) 2015 Sift Science. All rights reserved.
 
 @import Foundation;
 @import UIKit;
+
+#import "SFMetrics.h"
+#import "SFUtil.h"
 
 #import "SFEventFileUploader.h"
 #import "SFEventFileUploader+Internal.h"
@@ -22,22 +25,25 @@ static NSString * const SFTaskFileName = @"tasks";
     NSString *_taskFilePath;
     NSMutableDictionary *_tasks;
 
-    NSURLRequest *_tracker;
+    NSURLRequest *_request;
 
     // For testing.
     CompletionHandlerType _completionHandler;
 }
 
-- (id)initWithQueue:(NSOperationQueue *)queue manager:(SFEventFileManager *)manager rootDirPath:(NSString *)rootDirPath {
+- (instancetype)initWithQueue:(NSOperationQueue *)queue
+            manager:(SFEventFileManager *)manager
+        rootDirPath:(NSString *)rootDirPath
+          serverUrl:(NSString *)serverUrl {
     NSURLSessionConfiguration *config = [NSURLSessionConfiguration backgroundSessionConfigurationWithIdentifier:SFSessionIdentifier];
     NSString *taskFilePath = [rootDirPath stringByAppendingPathComponent:SFTaskFileName];
-    return [self initWithQueue:queue manager:manager config:config trackerUrl:SFTrackerUrl taskFilePath:taskFilePath];
+    return [self initWithQueue:queue manager:manager config:config serverUrl:(serverUrl ?: SFTrackerUrl) taskFilePath:taskFilePath];
 }
 
-- (id)initWithQueue:(NSOperationQueue *)queue
+- (instancetype)initWithQueue:(NSOperationQueue *)queue
             manager:(SFEventFileManager *)manager
              config:(NSURLSessionConfiguration *)config
-         trackerUrl:(NSString *)trackerUrl
+          serverUrl:(NSString *)serverUrl
        taskFilePath:(NSString *)taskFilePath {
     self = [super init];
     if (self) {
@@ -48,11 +54,11 @@ static NSString * const SFTaskFileName = @"tasks";
         _manager = manager;
 
         _taskFilePath = taskFilePath;
-        _tasks = [self loadTasks];
+        _tasks = [self loadTasks];  // TODO(clchiou): What if a task entry "sticks" due to errors?
 
-        NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:[NSURL URLWithString:trackerUrl]];
+        NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:[NSURL URLWithString:serverUrl]];
         request.HTTPMethod = @"POST";
-        _tracker = request;
+        _request = request;
 
         NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
         [notificationCenter addObserver:self selector:@selector(applicationDidEnterBackground:) name:UIApplicationDidEnterBackgroundNotification object:nil];
@@ -76,7 +82,8 @@ static NSString * const SFTaskFileName = @"tasks";
 }
 
 - (void)upload:(NSString *)identifier path:(NSString *)path {
-    NSURLSessionUploadTask *task = [_session uploadTaskWithRequest:_tracker fromFile:[NSURL fileURLWithPath:path isDirectory:NO]];
+    [[SFMetrics sharedInstance] count:SFMetricsKeyEventFileUploaderUpload];
+    NSURLSessionUploadTask *task = [_session uploadTaskWithRequest:_request fromFile:[NSURL fileURLWithPath:path isDirectory:NO]];
     NSArray *blob = @[identifier, path];
     [_tasks setObject:blob forKey:[NSNumber numberWithInteger:task.taskIdentifier]];
     [task resume];
@@ -84,7 +91,8 @@ static NSString * const SFTaskFileName = @"tasks";
 
 - (void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task didCompleteWithError:(NSError *)error {
     if (error) {
-        NSLog(@"Could not complete upload due to %@", [error localizedDescription]);
+        SFDebug(@"Could not complete upload due to %@", [error localizedDescription]);
+        [[SFMetrics sharedInstance] count:SFMetricsKeyEventFileUploaderNetworkError];
         return;
     }
 
@@ -95,18 +103,20 @@ static NSString * const SFTaskFileName = @"tasks";
     // TODO(clchiou): How do we call methods of a subclass in Objective C?
     NSInteger statusCode = [(NSHTTPURLResponse *)task.response statusCode];
 
-    NSLog(@"POST %@ status %ld", task.response.URL, statusCode);
+    SFDebug(@"POST %@ status %ld", task.response.URL, statusCode);
     if (blob && statusCode == 200) {
         NSString *identifier = blob[0];
         NSString *path = blob[1];
-        NSLog(@"Remove uploaded event file \"%@\"", path);
+        SFDebug(@"Remove uploaded event file \"%@\"", path);
         [_manager useEventStore:identifier withBlock:^BOOL (SFEventFileStore *store) {
             return [store accessEventFilesWithBlock:^BOOL (NSFileManager *manager, NSArray *eventFilePaths) {
                 NSError *error;
                 if (![manager removeItemAtPath:path error:&error]) {
-                    NSLog(@"Could not remove uploaded event file \"%@\" due to %@", path, [error localizedDescription]);
+                    SFDebug(@"Could not remove uploaded event file \"%@\" due to %@", path, [error localizedDescription]);
+                    [[SFMetrics sharedInstance] count:SFMetricsKeyEventFileUploaderFileRemovalError];
                     return NO;
                 }
+                [[SFMetrics sharedInstance] count:SFMetricsKeyEventFileUploaderUploadSuccess];
                 return YES;
             }];
         }];

@@ -1,4 +1,4 @@
-// Copyright © 2015 Sift Science. All rights reserved.
+// Copyright (c) 2015 Sift Science. All rights reserved.
 
 #import <XCTest/XCTest.h>
 
@@ -24,7 +24,7 @@
 - (void)tearDown {
     NSError *error;
     if (![[NSFileManager defaultManager] removeItemAtPath:_testFilePath error:&error]) {
-        NSLog(@"Could not remove \"%@\" due to %@", _testFilePath, [error localizedDescription]);
+        SFDebug(@"Could not remove \"%@\" due to %@", _testFilePath, [error localizedDescription]);
     }
     [super tearDown];
 }

@@ -1,6 +1,9 @@
-// Copyright © 2015 Sift Science. All rights reserved.
+// Copyright (c) 2015 Sift Science. All rights reserved.
 
 @import Foundation;
+
+#import "SFMetrics.h"
+#import "SFUtil.h"
 
 #import "SFEventFile.h"
 #import "SFEventFile+Internal.h"
@@ -10,24 +13,27 @@ static const int SFEventDataSizeLimit = UINT16_MAX;
 BOOL SFEventFileAppendEvent(NSFileHandle *handle, NSDictionary *event) {
     NSData *data = SFEventFileCreateEventData(event);
     if (!data) {
-        NSLog(@"Could not serialize event");
+        SFDebug(@"Could not serialize event");
         return NO;
     } else if (data.length <= 0) {
-        NSLog(@"Do not accept empty events: size=%ld", data.length);
+        SFDebug(@"Do not accept empty events: size=%ld", data.length);
         return NO;
     } else if (data.length > SFEventDataSizeLimit) {
         // Seriously? Are you really trying to send an event bigger than 64KB?
-        NSLog(@"Do not accept events bigger than %d bytes: size=%ld", SFEventDataSizeLimit, data.length);
+        SFDebug(@"Do not accept events bigger than %d bytes: size=%ld", SFEventDataSizeLimit, data.length);
+        [[SFMetrics sharedInstance] count:SFMetricsKeyEventFileDataSizeLimitExceededError];
         return NO;
     }
 
     uint16_t length = CFSwapInt16HostToLittle(data.length);
+    [[SFMetrics sharedInstance] measure:SFMetricsKeyEventFileEventDataSize value:length];
     @try {
         [handle writeData:[NSData dataWithBytes:&length length:sizeof(length)]];
         [handle writeData:data];
     }
     @catch (NSException *exception) {
-        NSLog(@"Could not write to the current event file due to %@:%@\n%@", exception.name, exception.reason, exception.callStackSymbols);
+        SFDebug(@"Could not write to the current event file due to %@:%@\n%@", exception.name, exception.reason, exception.callStackSymbols);
+        [[SFMetrics sharedInstance] count:SFMetricsKeyEventFileWriteError];
         return NO;
     }
 
@@ -48,7 +54,8 @@ NSDictionary *SFEventFileReadLastEvent(NSFileHandle *handle) {
     while ((lengthData = [handle readDataOfLength:sizeof(lengthBuffer)]).length == sizeof(lengthBuffer)) {
         [lengthData getBytes:&lengthBuffer length:sizeof(lengthBuffer)];
         if ((length = CFSwapInt16LittleToHost(lengthBuffer)) <= 0) {
-            NSLog(@"Length should be positive (file corrupted?): %d", length);
+            SFDebug(@"Length should be positive (file corrupted?): %d", length);
+            [[SFMetrics sharedInstance] count:SFMetricsKeyEventFileCorruptionError];
             return nil;
         }
         offset += sizeof(lengthBuffer) + length;
@@ -68,7 +75,8 @@ NSData *SFEventFileCreateEventData(NSDictionary *event) {
     NSError *error;
     NSData *data = [NSJSONSerialization dataWithJSONObject:event options:0 error:&error];
     if (!data) {
-        NSLog(@"Could not serialize dictionary due to %@", [error localizedDescription]);
+        SFDebug(@"Could not serialize NSDictionary due to %@", [error localizedDescription]);
+        [[SFMetrics sharedInstance] count:SFMetricsKeyEventFileSerializationError];
         return nil;
     }
     return data;
@@ -85,7 +93,8 @@ NSDictionary *SFEventFileReadEventData(NSData *data, NSUInteger *location) {
     NSError *error;
     NSDictionary *event = [NSJSONSerialization JSONObjectWithData:[data subdataWithRange:range] options:0 error:&error];
     if (!event) {
-        NSLog(@"Could not parse dictionary due to %@", [error localizedDescription]);
+        SFDebug(@"Could not parse JSON string due to %@", [error localizedDescription]);
+        [[SFMetrics sharedInstance] count:SFMetricsKeyEventFileDeserializationError];
         return nil;
     }
 

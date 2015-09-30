@@ -1,4 +1,4 @@
-// Copyright © 2015 Sift Science. All rights reserved.
+// Copyright (c) 2015 Sift Science. All rights reserved.
 
 @import Foundation;
 
@@ -8,13 +8,18 @@
 #import "SFEventFileManager.h"
 #import "SFEventFileUploader.h"
 #import "SFEventQueue.h"
+#import "SFMetrics.h"
+#import "SFMetricsReporter.h"
 #import "SFUtil.h"
 
 #import "Sift.h"
+#import "Sift+Internal.h"
 
 static NSString * const SFRootDirName = @"sift-v0_0_1";
 
 static NSString * const SFDefaultEventQueueIdentifier = @"";
+
+// TODO(clchiou): Add queues (and timers) for collecting stuff at background (e.g., iOS version).
 
 // TODO(clchiou): Experiment a sensible config for the default event queue.
 static const SFConfig SFDefaultEventQueueConfig = {
@@ -25,7 +30,11 @@ static const SFConfig SFDefaultEventQueueConfig = {
     .uploadEventFilesInterval = 60,
 };
 
+static Sift *SFSharedInstance;
+
 @implementation Sift {
+    NSString *_beaconKey;
+
     NSOperationQueue *_operationQueue;
 
     NSMutableDictionary *_eventQueues;
@@ -33,37 +42,59 @@ static const SFConfig SFDefaultEventQueueConfig = {
 
     SFEventFileManager *_manager;
     SFEventFileUploader *_uploader;
+
+    SFMetricsReporter *_reporter;
+}
+
++ (void)configureSharedInstance:(NSString *)beaconKey {
+    [self configureSharedInstance:beaconKey serverUrl:nil];
+}
+
+
++ (void)configureSharedInstance:(NSString *)beaconKey serverUrl:(NSString *)serverUrl {
+    static dispatch_once_t once;
+    dispatch_once(&once, ^{
+        SFSharedInstance = [[Sift alloc] initWithBeaconKey:beaconKey serverUrl:serverUrl rootDirPath:[SFCacheDirPath() stringByAppendingPathComponent:SFRootDirName]];
+    });
 }
 
 + (Sift *)sharedInstance {
-    static Sift *sharedInstance;
-    static dispatch_once_t once;
-    dispatch_once(&once, ^{
-        sharedInstance = [[Sift alloc] initWithRootDirPath:[SFCacheDirPath() stringByAppendingPathComponent:SFRootDirName]];
-    });
-    return sharedInstance;
+    if (!SFSharedInstance) {
+        SFDebug(@"sharedInstance was not initialized");
+    }
+    return SFSharedInstance;
 }
 
-- (id)initWithRootDirPath:(NSString *)rootDirPath {
+- (instancetype)initWithBeaconKey:(NSString *)beaconKey serverUrl:(NSString *)serverUrl rootDirPath:(NSString *)rootDirPath {
     self = [super init];
     if (self) {
+        _beaconKey = beaconKey;
+
         _operationQueue = [NSOperationQueue new];
         _eventQueues = [NSMutableDictionary new];
         pthread_rwlock_init(&_lock, NULL);
 
         _manager = [[SFEventFileManager alloc] initWithRootDir:rootDirPath];
         if (!_manager) {
-            NSLog(@"Could not initialize SFEventFileManager");
+            SFDebug(@"Could not initialize SFEventFileManager");
             self = nil;
             return nil;
         }
 
-        _uploader = [[SFEventFileUploader alloc] initWithQueue:_operationQueue manager:_manager rootDirPath:rootDirPath];
+        _uploader = [[SFEventFileUploader alloc] initWithQueue:_operationQueue manager:_manager rootDirPath:rootDirPath serverUrl:serverUrl];
         if (!_uploader) {
-            NSLog(@"Could not initialize SFEventFileUploader");
+            SFDebug(@"Could not initialize SFEventFileUploader");
             self = nil;
             return nil;
         }
+
+        _reporter = [[SFMetricsReporter alloc] initWithMetrics:[SFMetrics sharedInstance] queue:_operationQueue];
+        if (!_reporter) {
+            SFDebug(@"Could not initialize SFMetricsReporter");
+            self = nil;
+            return nil;
+        }
+        _reporter.manager = _manager;
 
         // Create the default event queue.
         [self addEventQueue:SFDefaultEventQueueIdentifier config:SFDefaultEventQueueConfig];
@@ -80,12 +111,12 @@ static const SFConfig SFDefaultEventQueueConfig = {
     pthread_rwlock_wrlock(&_lock);
     @try {
         if ([_eventQueues objectForKey:identifier]) {
-            NSLog(@"Could not overwrite event queue for identifier \"%@\"", identifier);
+            SFDebug(@"Could not overwrite event queue for identifier \"%@\"", identifier);
             return NO;
         }
         SFEventQueue *queue = [[SFEventQueue alloc] initWithIdentifier:identifier config:config queue:_operationQueue manager:_manager uploader:_uploader];
         if (!queue) {
-            NSLog(@"Could not create SFEventQueue for identifier \"%@\"", identifier);
+            SFDebug(@"Could not create SFEventQueue for identifier \"%@\"", identifier);
             return NO;
         }
         [_eventQueues setObject:queue forKey:identifier];
@@ -100,7 +131,7 @@ static const SFConfig SFDefaultEventQueueConfig = {
     pthread_rwlock_wrlock(&_lock);
     @try {
         if (![_eventQueues objectForKey:identifier]) {
-            NSLog(@"Could not find event queue to be removed for identifier \"%@\"", identifier);
+            SFDebug(@"Could not find event queue to be removed for identifier \"%@\"", identifier);
             return NO;
         }
         [_eventQueues removeObjectForKey:identifier];
@@ -120,10 +151,10 @@ static const SFConfig SFDefaultEventQueueConfig = {
     @try {
         SFEventQueue *queue = [_eventQueues objectForKey:identifier];
         if (!queue) {
-            NSLog(@"Could not find event queue for identifier \"%@\" and will drop event", identifier);
+            SFDebug(@"Could not find event queue for identifier \"%@\" and will drop event", identifier);
             return;
         }
-        [queue append:event];
+        [queue append:event withBeaconKey:_beaconKey];
     }
     @finally {
         pthread_rwlock_unlock(&_lock);

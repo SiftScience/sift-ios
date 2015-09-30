@@ -1,6 +1,9 @@
-// Copyright © 2015 Sift Science. All rights reserved.
+// Copyright (c) 2015 Sift Science. All rights reserved.
 
 @import Foundation;
+
+#import "SFMetrics.h"
+#import "SFUtil.h"
 
 #import "SFEventFileStore.h"
 #import "SFEventFileStore+Internal.h"
@@ -24,7 +27,7 @@ static NSString * const SFEventFilePattern = @"^events-(\\d+)$";
     NSObject *_eventFilesLock;
 }
 
-- (id)initWithEventDirPath:(NSString *)eventDirPath {
+- (instancetype)initWithEventDirPath:(NSString *)eventDirPath {
     self = [super init];
     if (self) {
         NSError *error;
@@ -36,16 +39,17 @@ static NSString * const SFEventFilePattern = @"^events-(\\d+)$";
 
         _eventFileNameRegex = [NSRegularExpression regularExpressionWithPattern:SFEventFilePattern options:0 error:&error];
         if (error) {
-            NSLog(@"Could not construct regex due to %@", [error localizedDescription]);
+            SFDebug(@"Could not construct regex due to %@", [error localizedDescription]);
             self = nil;
             return nil;
         }
 
         _manager = [NSFileManager defaultManager];
 
-        NSLog(@"Create event dir \"%@\"", _eventDirPath);
+        SFDebug(@"Create event dir \"%@\"", _eventDirPath);
         if (![_manager createDirectoryAtPath:_eventDirPath withIntermediateDirectories:YES attributes:nil error:&error]) {
-            NSLog(@"Could not create event dir \"%@\" due to %@", _eventDirPath, [error localizedDescription]);
+            SFDebug(@"Could not create event dir \"%@\" due to %@", _eventDirPath, [error localizedDescription]);
+            [[SFMetrics sharedInstance] count:SFMetricsKeyEventFileStoreDirCreationError];
             self = nil;
             return nil;
         }
@@ -68,7 +72,8 @@ static NSString * const SFEventFilePattern = @"^events-(\\d+)$";
 
         NSError *error;
         if (![_manager removeItemAtPath:_currentEventFilePath error:&error]) {
-            NSLog(@"Could not remove the current event file \"%@\" due to %@", _currentEventFilePath, [error localizedDescription]);
+            SFDebug(@"Could not remove the current event file \"%@\" due to %@", _currentEventFilePath, [error localizedDescription]);
+            [[SFMetrics sharedInstance] count:SFMetricsKeyEventFileStoreFileRemovalError];
         }
     }
 }
@@ -111,11 +116,13 @@ static NSString * const SFEventFilePattern = @"^events-(\\d+)$";
 
             NSError *error;
             if (![_manager moveItemAtPath:_currentEventFilePath toPath:newEventFilePath error:&error]) {
-                NSLog(@"Could not rotate the current event file \"%@\" to \"%@\" due to %@", _currentEventFilePath, newEventFilePath, [error localizedDescription]);
+                SFDebug(@"Could not rotate the current event file \"%@\" to \"%@\" due to %@", _currentEventFilePath, newEventFilePath, [error localizedDescription]);
+                [[SFMetrics sharedInstance] count:SFMetricsKeyEventFileStoreFileRotationError];
                 return NO;
             }
 
-            NSLog(@"The current event file is rotated to \"%@\"", newEventFilePath);
+            SFDebug(@"The current event file is rotated to \"%@\"", newEventFilePath);
+            [[SFMetrics sharedInstance] count:SFMetricsKeyEventFileStoreFileRotationSuccess];
             return YES;
         }
     }
@@ -128,7 +135,8 @@ static NSString * const SFEventFilePattern = @"^events-(\\d+)$";
 
             NSError *error;
             if (![_manager removeItemAtPath:_eventDirPath error:&error]) {
-                NSLog(@"Could not remove event dir \"%@\" due to %@", _eventDirPath, [error localizedDescription]);
+                SFDebug(@"Could not remove event dir \"%@\" due to %@", _eventDirPath, [error localizedDescription]);
+                [[SFMetrics sharedInstance] count:SFMetricsKeyEventFileStoreDirRemovalError];
                 return NO;
             }
             return YES;
@@ -140,18 +148,20 @@ static NSString * const SFEventFilePattern = @"^events-(\\d+)$";
 
 - (NSFileHandle *)currentEventFile {
     if (!_currentEventFile) {
-        NSLog(@"Open the current event file \"%@\"", _currentEventFilePath);
+        SFDebug(@"Open the current event file \"%@\"", _currentEventFilePath);
 
         if (![_manager isWritableFileAtPath:_currentEventFilePath]) {
             if (![_manager createFileAtPath:_currentEventFilePath contents:nil attributes:nil]) {
-                NSLog(@"Could not create \"%@\"", _currentEventFilePath);
+                SFDebug(@"Could not create \"%@\"", _currentEventFilePath);
+                [[SFMetrics sharedInstance] count:SFMetricsKeyEventFileStoreFileCreationError];
                 return nil;
             }
         }
 
         _currentEventFile = [NSFileHandle fileHandleForWritingAtPath:_currentEventFilePath];
         if (!_currentEventFile) {
-            NSLog(@"Could not open \"%@\" for writing", _currentEventFilePath);
+            SFDebug(@"Could not open \"%@\" for writing", _currentEventFilePath);
+            [[SFMetrics sharedInstance] count:SFMetricsKeyEventFileStoreFileOpenError];
             return nil;
         }
 
@@ -171,7 +181,8 @@ static NSString * const SFEventFilePattern = @"^events-(\\d+)$";
     NSError *error;
     NSArray *fileNames = [_manager contentsOfDirectoryAtPath:_eventDirPath error:&error];
     if (!fileNames) {
-        NSLog(@"Could not list contents of directory \"%@\" due to %@", _eventDirPath, [error localizedDescription]);
+        SFDebug(@"Could not list contents of directory \"%@\" due to %@", _eventDirPath, [error localizedDescription]);
+        [[SFMetrics sharedInstance] count:SFMetricsKeyEventFileStoreDirListingError];
         return nil;
     }
 

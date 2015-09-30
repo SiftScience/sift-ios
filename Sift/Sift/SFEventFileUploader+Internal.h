@@ -1,13 +1,13 @@
-// Copyright © 2015 Sift Science. All rights reserved.
+// Copyright (c) 2015 Sift Science. All rights reserved.
 
 @import Foundation;
 
 @interface SFEventFileUploader ()
 
-- (id)initWithQueue:(NSOperationQueue *)queue
+- (instancetype)initWithQueue:(NSOperationQueue *)queue
             manager:(SFEventFileManager *)manager
              config:(NSURLSessionConfiguration *)config
-         trackerUrl:(NSString *)trackerUrl
+          serverUrl:(NSString *)serverUrl
        taskFilePath:(NSString *)taskFilePath;
 
 - (NSMutableDictionary *)loadTasks;

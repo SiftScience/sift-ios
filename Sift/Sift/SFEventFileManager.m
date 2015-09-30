@@ -1,8 +1,11 @@
-// Copyright © 2015 Sift Science. All rights reserved.
+// Copyright (c) 2015 Sift Science. All rights reserved.
 
 @import Foundation;
 
 #import "pthread.h"
+
+#import "SFMetrics.h"
+#import "SFUtil.h"
 
 #import "SFEventFileManager.h"
 
@@ -22,7 +25,9 @@ static NSString *SFMakeEventDirName(NSString *identifier);
     pthread_rwlock_t _lock;  // Using a RW lock is easier than dispatch_barrier_async at the moment...
 }
 
-- (id)initWithRootDir:(NSString *)rootDirPath {
+// TODO(clchiou): Purge unknown event dir older than a specific modification date?
+
+- (instancetype)initWithRootDir:(NSString *)rootDirPath {
     self = [super init];
     if (self) {
         _rootDirPath = rootDirPath;
@@ -31,7 +36,8 @@ static NSString *SFMakeEventDirName(NSString *identifier);
 
         NSError *error;
         if (![[NSFileManager defaultManager] createDirectoryAtPath:_rootDirPath withIntermediateDirectories:YES attributes:nil error:&error]) {
-            NSLog(@"Could not create root dir \"%@\" due to %@", _rootDirPath, [error localizedDescription]);
+            SFDebug(@"Could not create root dir \"%@\" due to %@", _rootDirPath, [error localizedDescription]);
+            [[SFMetrics sharedInstance] count:SFMetricsKeyEventFileManagerDirCreationError];
             self = nil;
             return nil;
         }
@@ -44,11 +50,21 @@ static NSString *SFMakeEventDirName(NSString *identifier);
     //[super dealloc];  // Provided by compiler!
 }
 
+- (NSInteger) numEventStores {
+    pthread_rwlock_rdlock(&_lock);
+    @try {
+        return _stores.count;
+    }
+    @finally {
+        pthread_rwlock_unlock(&_lock);
+    }    
+}
+
 - (BOOL)addEventStore:(NSString *)identifier {
     pthread_rwlock_wrlock(&_lock);
     @try {
         if ([_stores objectForKey:identifier]) {
-            // Would not overwrite the event store...
+            // I would rather not overwrite an event store...
             return YES;
         }
 
@@ -58,7 +74,6 @@ static NSString *SFMakeEventDirName(NSString *identifier);
         }
 
         [_stores setObject:store forKey:identifier];
-
         return YES;
     }
     @finally {
@@ -71,7 +86,7 @@ static NSString *SFMakeEventDirName(NSString *identifier);
     @try {
         SFEventFileStore *store = [_stores objectForKey:identifier];
         if (!store) {
-            NSLog(@"Could not find event store for identifier to remove \"%@\"", identifier);
+            SFDebug(@"Could not find event store for identifier to remove \"%@\"", identifier);
             return NO;
         }
         [_stores removeObjectForKey:identifier];
@@ -116,7 +131,8 @@ static NSString *SFMakeEventDirName(NSString *identifier);
 
         NSError *error;
         if (![[NSFileManager defaultManager] removeItemAtPath:_rootDirPath error:&error]) {
-            NSLog(@"Could not remove root dir \"%@\" due to %@", _rootDirPath, [error localizedDescription]);
+            SFDebug(@"Could not remove root dir \"%@\" due to %@", _rootDirPath, [error localizedDescription]);
+            [[SFMetrics sharedInstance] count:SFMetricsKeyEventFileManagerDirRemovalError];
         }
     }
     @finally {

@@ -4,7 +4,7 @@
 
 #include <string.h>
 
-#import "SFUtil.h"
+#import "SFDebug.h"
 
 #import "SFMetrics.h"
 
@@ -36,7 +36,7 @@ NSString *SFMetricsMetricName(SFMetricsKey key) {
     SFMetricsMeter _meters[SFMetricsNumMeters];
 }
 
-+ (instancetype)sharedInstance {
++ (instancetype)sharedMetrics {
     static SFMetrics *instance;
     static dispatch_once_t once;
     dispatch_once(&once, ^{

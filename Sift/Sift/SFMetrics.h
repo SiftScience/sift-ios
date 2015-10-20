@@ -3,12 +3,6 @@
 @import Foundation;
 
 #define SF_METRICS_COUNTERS(BIN_OP) \
-    /* SFEventFile counters */ \
-    SF_METRICS_MAKE(EventFileDeserializationError) BIN_OP \
-    SF_METRICS_MAKE(EventFileSerializationError) BIN_OP \
-    SF_METRICS_MAKE(EventFileDataSizeLimitExceededError) BIN_OP \
-    SF_METRICS_MAKE(EventFileCorruptionError) BIN_OP \
-    SF_METRICS_MAKE(EventFileWriteError) BIN_OP \
     /* SFEventFileManager counters */ \
     SF_METRICS_MAKE(EventFileManagerDirCreationError) BIN_OP \
     SF_METRICS_MAKE(EventFileManagerDirRemovalError) BIN_OP \
@@ -30,13 +24,19 @@
     SF_METRICS_MAKE(EventQueueAppend) BIN_OP \
     SF_METRICS_MAKE(EventQueueNumEventsDropped) BIN_OP \
     SF_METRICS_MAKE(EventQueueFileAttributesRetrievalError) BIN_OP \
-    SF_METRICS_MAKE(EventQueueFutureFileModificationDate)
+    SF_METRICS_MAKE(EventQueueFutureFileModificationDate) BIN_OP \
+    /* SFRecordIo counters */ \
+    SF_METRICS_MAKE(RecordIoDeserializationError) BIN_OP \
+    SF_METRICS_MAKE(RecordIoSerializationError) BIN_OP \
+    SF_METRICS_MAKE(RecordIoDataSizeLimitExceededError) BIN_OP \
+    SF_METRICS_MAKE(RecordIoCorruptionError) BIN_OP \
+    SF_METRICS_MAKE(RecordIoWriteError)
 
 #define SF_METRICS_METERS(BIN_OP) \
-    /* SFEventFile meters */ \
-    SF_METRICS_MAKE(EventFileEventDataSize) BIN_OP \
     /* SFEventFileManager meters */ \
-    SF_METRICS_MAKE(EventFileManagerNumEventStores)
+    SF_METRICS_MAKE(EventFileManagerNumEventStores) BIN_OP \
+    /* SFRecordIo meters */ \
+    SF_METRICS_MAKE(RecordIoDataSize)
 
 #define SF_COMMA ,
 
@@ -48,19 +48,17 @@ typedef NS_ENUM(NSInteger, SFMetricsKey) {
     SFMetricsNumMetrics,
 };
 
-struct _SFMetricsMeter {
+typedef struct {
     double sum;
     double sumsq;
     NSInteger count;
-};
-
-typedef struct _SFMetricsMeter SFMetricsMeter;
+} SFMetricsMeter;
 
 NSString *SFMetricsMetricName(SFMetricsKey key);
 
 @interface SFMetrics : NSObject
 
-+ (instancetype)sharedInstance;
++ (instancetype)sharedMetrics;
 
 - (void)count:(SFMetricsKey)counterKey;
 

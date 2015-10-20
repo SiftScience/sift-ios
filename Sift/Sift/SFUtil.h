@@ -2,10 +2,4 @@
 
 @import Foundation;
 
-#ifdef NDEBUG
-#define SFDebug(...)
-#else
-#define SFDebug(...) NSLog(__VA_ARGS__)
-#endif
-
 NSString *SFCacheDirPath(void);

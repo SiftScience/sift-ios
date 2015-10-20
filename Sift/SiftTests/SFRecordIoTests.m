@@ -2,16 +2,17 @@
 
 #import <XCTest/XCTest.h>
 
+#import "SFDebug.h"
 #import "SFUtil.h"
 
-#import "SFEventFile.h"
-#import "SFEventFile+Internal.h"
+#import "SFRecordIo.h"
+#import "SFRecordIo+Private.h"
 
-@interface SFEventFileTests : XCTestCase
+@interface SFRecordIoTests : XCTestCase
 
 @end
 
-@implementation SFEventFileTests {
+@implementation SFRecordIoTests {
     NSString *_testFilePath;
 }
 
@@ -36,25 +37,25 @@
     NSFileHandle *readHandle = [NSFileHandle fileHandleForReadingAtPath:_testFilePath];
     XCTAssertNotNil(readHandle);
 
-    XCTAssertNil(SFEventFileReadLastEvent(readHandle));
+    XCTAssertNil(SFRecordIoReadLastRecord(readHandle));
 
-    NSDictionary *events[] = {
+    NSDictionary *records[] = {
         @{@"key1": @"value1"},
         @{@"key2": @"value2"},
         @{@"key3": @"value3"},
     };
 
-    for (int i = 0; i < sizeof(events) / sizeof(events[0]); i++) {
-        XCTAssert(SFEventFileAppendEvent(writeHandle, events[i]));
-        XCTAssert([events[i] isEqualToDictionary:SFEventFileReadLastEvent(readHandle)]);
+    for (int i = 0; i < sizeof(records) / sizeof(records[0]); i++) {
+        XCTAssert(SFRecordIoAppendRecord(writeHandle, records[i]));
+        XCTAssert([records[i] isEqualToDictionary:SFRecordIoReadLastRecord(readHandle)]);
     }
 
     [readHandle seekToFileOffset:0];
     NSData *data = [readHandle readDataToEndOfFile];
     NSUInteger location = 0;
-    for (int i = 0; i < sizeof(events) / sizeof(events[0]); i++) {
-        NSDictionary *event = SFEventFileReadEventData(data, &location);
-        XCTAssert([events[i] isEqualToDictionary:event]);
+    for (int i = 0; i < sizeof(records) / sizeof(records[0]); i++) {
+        NSDictionary *record = SFRecordIoReadRecordData(data, &location);
+        XCTAssert([records[i] isEqualToDictionary:record]);
     }
     XCTAssertEqual(data.length, location);  // We have read all data.
 }

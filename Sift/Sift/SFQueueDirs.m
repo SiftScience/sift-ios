@@ -83,11 +83,13 @@ static NSString *SFMakeQueueDirName(NSString *identifier);
     pthread_rwlock_wrlock(&_lock);
     @try {
         if ([_rotatedFilesDict objectForKey:identifier]) {
+            SFDebug(@"Do not overwrite queue dir entry for \"%@\"", identifier);
             return YES;  // Don't overwrite...
         }
 
         SFRotatedFiles *rotatedFiles = [[SFRotatedFiles alloc] initWithDirPath:[self dirPath:identifier]];
         if (!rotatedFiles) {
+            SFDebug(@"Could not create rotated files for \"%@\"", identifier);
             return NO;
         }
 

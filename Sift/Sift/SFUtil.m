@@ -13,6 +13,27 @@ NSString *SFCacheDirPath(void) {
     return [NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) objectAtIndex:0];
 }
 
+BOOL SFTouchFilePath(NSString *path) {
+    NSFileManager *manager = [NSFileManager defaultManager];
+    BOOL isDirectory;
+    if ([manager fileExistsAtPath:path isDirectory:&isDirectory]) {
+        if (isDirectory) {
+            SFDebug(@"\"%@\" is a directory", path);
+            return NO;
+        } else {
+            return YES;
+        }
+    } else {
+        BOOL okay = [manager createFileAtPath:path contents:nil attributes:0];
+        if (okay) {
+            SFDebug(@"Create file \"%@\"", path);
+        } else {
+            SFDebug(@"Could not reate file \"%@\"", path);
+        }
+        return okay;
+    }
+}
+
 id SFReadJsonFromFile(NSString *filePath) {
     NSData *data;
     @try {
@@ -21,6 +42,10 @@ id SFReadJsonFromFile(NSString *filePath) {
     }
     @catch (NSException *exception) {
         SFDebug(@"Could not read from file \"%@\" due to %@:%@\n%@", filePath, exception.name, exception.reason, exception.callStackSymbols);
+        return nil;
+    }
+    if (!data) {
+        SFDebug(@"Could not read contents of \"%@\"", filePath);
         return nil;
     }
     NSError *error;

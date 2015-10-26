@@ -4,6 +4,6 @@
 
 typedef struct {
     BOOL appendEventOnlyWhenDifferent;
-    unsigned long long uploadEventsWhenLargerThan;
+    NSInteger uploadEventsWhenLargerThan;
     NSTimeInterval uploadEventsWhenOlderThan;
 } SFQueueConfig;

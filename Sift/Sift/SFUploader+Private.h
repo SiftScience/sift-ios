@@ -2,7 +2,9 @@
 
 @import Foundation;
 
-//typedef void (^CompletionHandlerType)(void);
+#import "SFUploader.h"
+
+typedef void (^CompletionHandlerType)(void);
 
 @interface SFUploader ()
 
@@ -10,7 +12,7 @@
 
 - (void)removeSourceFiles:(NSSet *)sourceFilePaths;
 
-// For testing.
-//@property CompletionHandlerType completionHandler;
+// For testing (must be 'copy', don't retain).
+@property (nonatomic, copy) CompletionHandlerType completionHandler;
 
 @end

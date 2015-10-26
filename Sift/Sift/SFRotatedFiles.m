@@ -68,13 +68,13 @@ static NSString * const SFFileNamePrefix = @"data-";
     }
 }
 
-- (BOOL)accessNonCurrentFilesWithBlock:(BOOL (^)(NSFileManager *manager, NSArray *eventFilePaths))block {
+- (BOOL)accessNonCurrentFilesWithBlock:(BOOL (^)(NSFileManager *manager, NSArray *filePaths))block {
     @synchronized(_nonCurrentFilesLock) {
         return block(_manager, [self filePaths]);
     }
 }
 
-- (BOOL)accessFilesWithBlock:(BOOL (^)(NSFileManager *manager, NSString *currentFilePath, NSArray *eventFilePaths))block {
+- (BOOL)accessFilesWithBlock:(BOOL (^)(NSFileManager *manager, NSString *currentFilePath, NSArray *filePaths))block {
     @synchronized(_currentFileLock) {
         @synchronized(_nonCurrentFilesLock) {
             return block(_manager, _currentFilePath, [self filePaths]);

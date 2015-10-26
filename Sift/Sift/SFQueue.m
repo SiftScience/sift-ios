@@ -95,7 +95,6 @@ static NSDictionary *SFReadLastEvent(NSFileManager *manager, NSString *currentFi
     BOOL rotated = [_queueDirs useDir:_identifier withBlock:^BOOL (SFRotatedFiles *rotatedFiles) {
         return [rotatedFiles accessFilesWithBlock:^BOOL (NSFileManager *manager, NSString *currentFilePath, NSArray *filePaths) {
             if (_config.appendEventOnlyWhenDifferent && filePaths && filePaths.count > 0) {
-                // TODO(clchiou): Revisit this part (this might be buggy).
                 return NO;  // Maintain strict upload order...
             }
             if (!SFQueueShouldRotateFile(manager, currentFilePath, &_config)) {
@@ -120,7 +119,9 @@ BOOL SFQueueShouldRotateFile(NSFileManager *manager, NSString *currentFilePath, 
         return NO;
     }
 
-    if ([attributes fileSize] > config->uploadEventsWhenLargerThan) {
+    unsigned long long fileSize = [attributes fileSize];
+    if (fileSize > config->uploadEventsWhenLargerThan) {
+        SFDebug(@"Should rotate file due to file size: %lld > %ld", fileSize, config->uploadEventsWhenLargerThan);
         return YES;
     }
 
@@ -129,6 +130,7 @@ BOOL SFQueueShouldRotateFile(NSFileManager *manager, NSString *currentFilePath, 
         SFDebug(@"File modification date of \"%@\" is in the future: %@", currentFilePath, [attributes fileModificationDate]);
         [[SFMetrics sharedMetrics] count:SFMetricsKeyQueueFutureFileModificationDate];
     } else if (sinceNow > config->uploadEventsWhenOlderThan) {
+        SFDebug(@"Should rotate file due to modification date: %.2f > %.2f", sinceNow, config->uploadEventsWhenOlderThan);
         return YES;
     }
 

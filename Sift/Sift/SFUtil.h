@@ -2,4 +2,10 @@
 
 @import Foundation;
 
+NSInteger SFTimestampMillis(void);
+
 NSString *SFCacheDirPath(void);
+
+id SFReadJsonFromFile(NSString *filePath);
+
+BOOL SFWriteJsonToFile(id object, NSString *filePath);

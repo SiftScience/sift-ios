@@ -6,7 +6,6 @@
 #import "SFUtil.h"
 
 #import "SFRecordIo.h"
-#import "SFRecordIo+Private.h"
 
 @interface SFRecordIoTests : XCTestCase
 
@@ -51,13 +50,11 @@
     }
 
     [readHandle seekToFileOffset:0];
-    NSData *data = [readHandle readDataToEndOfFile];
-    NSUInteger location = 0;
     for (int i = 0; i < sizeof(records) / sizeof(records[0]); i++) {
-        NSDictionary *record = SFRecordIoReadRecordData(data, &location);
+        NSDictionary *record = SFRecordIoReadRecord(readHandle);
         XCTAssert([records[i] isEqualToDictionary:record]);
     }
-    XCTAssertEqual(data.length, location);  // We have read all data.
+    XCTAssertNil(SFRecordIoReadRecord(readHandle));  // We've read them all.
 }
 
 @end

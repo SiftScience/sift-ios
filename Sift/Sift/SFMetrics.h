@@ -3,38 +3,41 @@
 @import Foundation;
 
 #define SF_METRICS_COUNTERS(BIN_OP) \
-    /* SFEventFileManager counters */ \
-    SF_METRICS_MAKE(EventFileManagerDirCreationError) BIN_OP \
-    SF_METRICS_MAKE(EventFileManagerDirRemovalError) BIN_OP \
-    /* SFEventFileStore counters */ \
-    SF_METRICS_MAKE(EventFileStoreDirCreationError) BIN_OP \
-    SF_METRICS_MAKE(EventFileStoreDirListingError) BIN_OP \
-    SF_METRICS_MAKE(EventFileStoreDirRemovalError) BIN_OP \
-    SF_METRICS_MAKE(EventFileStoreFileCreationError) BIN_OP \
-    SF_METRICS_MAKE(EventFileStoreFileOpenError) BIN_OP \
-    SF_METRICS_MAKE(EventFileStoreFileRemovalError) BIN_OP \
-    SF_METRICS_MAKE(EventFileStoreFileRotationSuccess) BIN_OP \
-    SF_METRICS_MAKE(EventFileStoreFileRotationError) BIN_OP \
-    /* SFEventFileUploader counters */ \
-    SF_METRICS_MAKE(EventFileUploaderUpload) BIN_OP \
-    SF_METRICS_MAKE(EventFileUploaderUploadSuccess) BIN_OP \
-    SF_METRICS_MAKE(EventFileUploaderNetworkError) BIN_OP \
-    SF_METRICS_MAKE(EventFileUploaderFileRemovalError) BIN_OP \
-    /* SFEventQueue counters */ \
-    SF_METRICS_MAKE(EventQueueAppend) BIN_OP \
-    SF_METRICS_MAKE(EventQueueNumEventsDropped) BIN_OP \
-    SF_METRICS_MAKE(EventQueueFileAttributesRetrievalError) BIN_OP \
-    SF_METRICS_MAKE(EventQueueFutureFileModificationDate) BIN_OP \
+    /* SFEvent counters */ \
+    SF_METRICS_MAKE(EventWriteError) BIN_OP \
+    /* SFQueue counters */ \
+    SF_METRICS_MAKE(QueueAppend) BIN_OP \
+    SF_METRICS_MAKE(QueueNumEventsDropped) BIN_OP \
+    SF_METRICS_MAKE(QueueFileAttributesRetrievalError) BIN_OP \
+    SF_METRICS_MAKE(QueueFutureFileModificationDate) BIN_OP \
+    /* SFQueueDirs counters */ \
+    SF_METRICS_MAKE(QueueDirsDirCreationError) BIN_OP \
+    SF_METRICS_MAKE(QueueDirsDirListingError) BIN_OP \
+    SF_METRICS_MAKE(QueueDirsDirRemovalError) BIN_OP \
     /* SFRecordIo counters */ \
     SF_METRICS_MAKE(RecordIoDeserializationError) BIN_OP \
     SF_METRICS_MAKE(RecordIoSerializationError) BIN_OP \
     SF_METRICS_MAKE(RecordIoDataSizeLimitExceededError) BIN_OP \
     SF_METRICS_MAKE(RecordIoCorruptionError) BIN_OP \
-    SF_METRICS_MAKE(RecordIoWriteError)
+    SF_METRICS_MAKE(RecordIoWriteError) BIN_OP \
+    /* SFRotatedFiles counters */ \
+    SF_METRICS_MAKE(RotatedFilesDirCreationError) BIN_OP \
+    SF_METRICS_MAKE(RotatedFilesDirListingError) BIN_OP \
+    SF_METRICS_MAKE(RotatedFilesDirRemovalError) BIN_OP \
+    SF_METRICS_MAKE(RotatedFilesFileCreationError) BIN_OP \
+    SF_METRICS_MAKE(RotatedFilesFileOpenError) BIN_OP \
+    SF_METRICS_MAKE(RotatedFilesFileRemovalError) BIN_OP \
+    SF_METRICS_MAKE(RotatedFilesFileRotationSuccess) BIN_OP \
+    SF_METRICS_MAKE(RotatedFilesFileRotationError) BIN_OP \
+    /* SFUploader counters */ \
+    SF_METRICS_MAKE(UploaderUpload) BIN_OP \
+    SF_METRICS_MAKE(UploaderUploadSuccess) BIN_OP \
+    SF_METRICS_MAKE(UploaderNetworkError) BIN_OP \
+    SF_METRICS_MAKE(UploaderFileRemovalError)
 
 #define SF_METRICS_METERS(BIN_OP) \
-    /* SFEventFileManager meters */ \
-    SF_METRICS_MAKE(EventFileManagerNumEventStores) BIN_OP \
+    /* SFQueueDirs meters */ \
+    SF_METRICS_MAKE(QueueDirsNumDirs) BIN_OP \
     /* SFRecordIo meters */ \
     SF_METRICS_MAKE(RecordIoDataSize)
 

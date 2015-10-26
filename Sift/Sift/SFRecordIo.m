@@ -6,12 +6,19 @@
 #import "SFMetrics.h"
 
 #import "SFRecordIo.h"
-#import "SFRecordIo+Private.h"
+
+static NSData *SFSerializeRecord(NSDictionary *record);
+
+static NSDictionary *SFDeserializeRecordData(NSData *data);
+
+static BOOL SFReadUint16(NSFileHandle *handle, int *output);
+
+static BOOL SFReadLength(NSFileHandle *handle, int *output);
 
 static const int SFRecordDataSizeLimit = UINT16_MAX;
 
 BOOL SFRecordIoAppendRecord(NSFileHandle *handle, NSDictionary *record) {
-    NSData *data = SFRecordIoCreateRecordData(record);
+    NSData *data = SFSerializeRecord(record);
     if (!data) {
         SFDebug(@"Could not serialize record");
         return NO;
@@ -25,14 +32,15 @@ BOOL SFRecordIoAppendRecord(NSFileHandle *handle, NSDictionary *record) {
         return NO;
     }
 
+    [[SFMetrics sharedMetrics] measure:SFMetricsKeyRecordIoDataSize value:data.length];
     uint16_t length = CFSwapInt16HostToLittle(data.length);
-    [[SFMetrics sharedMetrics] measure:SFMetricsKeyRecordIoDataSize value:length];
     @try {
         [handle writeData:[NSData dataWithBytes:&length length:sizeof(length)]];
         [handle writeData:data];
+        [handle writeData:[NSData dataWithBytes:&length length:sizeof(length)]];  // This makes read-last easier.
     }
     @catch (NSException *exception) {
-        SFDebug(@"Could not write to the current event file due to %@:%@\n%@", exception.name, exception.reason, exception.callStackSymbols);
+        SFDebug(@"Could not write to the current record file due to %@:%@\n%@", exception.name, exception.reason, exception.callStackSymbols);
         [[SFMetrics sharedMetrics] count:SFMetricsKeyRecordIoWriteError];
         return NO;
     }
@@ -40,36 +48,83 @@ BOOL SFRecordIoAppendRecord(NSFileHandle *handle, NSDictionary *record) {
     return YES;
 }
 
-NSDictionary *SFRecordIoReadLastRecord(NSFileHandle *handle) {
-    assert(handle);
+NSDictionary *SFRecordIoReadRecord(NSFileHandle *handle) {
+    return SFDeserializeRecordData(SFRecordIoReadRecordData(handle));
+}
 
-    int offset = 0;
-    int length = 0;
-
-    [handle seekToFileOffset:offset];
-    uint16_t lengthBuffer;
-    NSData *lengthData;
-    while ((lengthData = [handle readDataOfLength:sizeof(lengthBuffer)]).length == sizeof(lengthBuffer)) {
-        [lengthData getBytes:&lengthBuffer length:sizeof(lengthBuffer)];
-        if ((length = CFSwapInt16LittleToHost(lengthBuffer)) <= 0) {
-            SFDebug(@"Length should be positive (file corrupted?): %d", length);
-            [[SFMetrics sharedMetrics] count:SFMetricsKeyRecordIoCorruptionError];
-            return nil;
-        }
-        offset += sizeof(lengthBuffer) + length;
-        [handle seekToFileOffset:offset];
-    }
-    if (!length) {
+NSData *SFRecordIoReadRecordData(NSFileHandle *handle) {
+    if (!handle) {
         return nil;
     }
 
-    [handle seekToFileOffset:(offset - sizeof(lengthBuffer) - length)];
-    NSData *data = [handle readDataOfLength:(sizeof(lengthBuffer) + length)];
-    NSUInteger location = 0;
-    return SFRecordIoReadRecordData(data, &location);
+    int length;
+    if (!SFReadLength(handle, &length)) {
+        return nil;
+    }
+
+    NSData *data = [handle readDataOfLength:length];
+    if (!data) {
+        return nil;
+    }
+
+    int length2;
+    if (!SFReadLength(handle, &length2)) {
+        return nil;
+    }
+    if (length != length2) {
+        SFDebug(@"Lengths do not match (file corrupted?): %d != %d", length, length2);
+        [[SFMetrics sharedMetrics] count:SFMetricsKeyRecordIoCorruptionError];
+        return nil;
+    }
+
+    return data;
 }
 
-NSData *SFRecordIoCreateRecordData(NSDictionary *record) {
+NSDictionary *SFRecordIoReadLastRecord(NSFileHandle *handle) {
+    return SFDeserializeRecordData(SFRecordIoReadLastRecordData(handle));
+}
+
+NSData *SFRecordIoReadLastRecordData(NSFileHandle *handle) {
+    if (!handle) {
+        return nil;
+    }
+
+    const int lengthSize = sizeof(uint16_t);
+
+    unsigned long long size = [handle seekToEndOfFile];
+
+    if (size < lengthSize) {
+        return nil;
+    }
+    [handle seekToFileOffset:(size - lengthSize)];
+
+    int length2;
+    if (!SFReadLength(handle, &length2)) {
+        return nil;
+    }
+
+    if (size < lengthSize * 2 + length2) {
+        return nil;
+    }
+    [handle seekToFileOffset:(size - (lengthSize * 2 + length2))];
+
+    int length;
+    if (!SFReadLength(handle, &length)) {
+        return nil;
+    }
+    if (length != length2) {
+        SFDebug(@"Lengths do not match (file corrupted?): %d != %d", length, length2);
+        [[SFMetrics sharedMetrics] count:SFMetricsKeyRecordIoCorruptionError];
+        return nil;
+    }
+
+    return [handle readDataOfLength:length];
+}
+
+static NSData *SFSerializeRecord(NSDictionary *record) {
+    if (!record) {
+        return nil;
+    }
     NSError *error;
     NSData *data = [NSJSONSerialization dataWithJSONObject:record options:0 error:&error];
     if (!data) {
@@ -80,22 +135,41 @@ NSData *SFRecordIoCreateRecordData(NSDictionary *record) {
     return data;
 }
 
-NSDictionary *SFRecordIoReadRecordData(NSData *data, NSUInteger *location) {
-    uint16_t lengthBuffer;
-    NSRange range = {*location, sizeof(lengthBuffer)};
-    [data getBytes:&lengthBuffer range:range];
-    int length = CFSwapInt16LittleToHost(lengthBuffer);
-
-    range.location += range.length;
-    range.length = length;
+static NSDictionary *SFDeserializeRecordData(NSData *data) {
+    if (!data) {
+        return nil;
+    }
     NSError *error;
-    NSDictionary *record = [NSJSONSerialization JSONObjectWithData:[data subdataWithRange:range] options:0 error:&error];
+    NSDictionary *record = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
     if (!record) {
         SFDebug(@"Could not parse JSON string due to %@", [error localizedDescription]);
         [[SFMetrics sharedMetrics] count:SFMetricsKeyRecordIoDeserializationError];
         return nil;
     }
-
-    *location = range.location + range.length;
     return record;
+}
+
+static BOOL SFReadUint16(NSFileHandle *handle, int *output) {
+    uint16_t data;
+    NSData *buffer = [handle readDataOfLength:sizeof(data)];
+    if (buffer.length != sizeof(data)) {
+        return NO;
+    }
+    [buffer getBytes:&data length:sizeof(data)];
+    *output = CFSwapInt16LittleToHost(data);
+    return YES;
+}
+
+static BOOL SFReadLength(NSFileHandle *handle, int *output) {
+    int length;
+    if (!SFReadUint16(handle, &length)) {
+        return NO;
+    }
+    if (length <= 0) {
+        SFDebug(@"Length should be positive (file corrupted?): %d", length);
+        [[SFMetrics sharedMetrics] count:SFMetricsKeyRecordIoCorruptionError];
+        return NO;
+    }
+    *output = length;
+    return YES;
 }

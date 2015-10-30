@@ -9,7 +9,21 @@
 #import "SFEvent.h"
 
 NSDictionary *SFEventMakeEvent(NSInteger time, NSString *path, NSString *mobileEventType, NSString *userId, NSDictionary *fields) {
-    return @{@"time": [NSNumber numberWithInteger:time], @"path": path, @"mobileEventType": mobileEventType, @"userId": userId, @"fields": fields};
+    NSMutableDictionary *event = [NSMutableDictionary new];
+    [event setObject:[NSNumber numberWithInteger:time] forKey:@"time"];
+    if (path) {
+        [event setObject:path forKey:@"path"];
+    }
+    if (mobileEventType) {
+        [event setObject:mobileEventType forKey:@"mobile_event_type"];
+    }
+    if (userId) {
+        [event setObject:userId forKey:@"user_id"];
+    }
+    if (fields) {
+        [event setObject:fields forKey:@"fields"];
+    }
+    return event;
 }
 
 static NSData *SFHeader;

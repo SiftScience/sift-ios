@@ -103,7 +103,7 @@ static NSDictionary *SFReadLastEvent(NSFileManager *manager, NSString *currentFi
             return [rotatedFiles rotateFile];
         }];
     }];
-    SFDebug(@"%s: files %s rotated", __func__, rotated ? "were" : "weren't");
+    SFDebug(@"Files %s rotated", rotated ? "were" : "weren't");
 }
 
 BOOL SFQueueShouldRotateFile(NSFileManager *manager, NSString *currentFilePath, SFQueueConfig *config) {

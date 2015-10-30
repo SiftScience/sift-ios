@@ -38,7 +38,6 @@ NSURLSessionConfiguration *SFMakeStubConfig(void) {
 
 - (void)startLoading {
     [SFCapturedRequests() addObject:self.request];
-    NSLog(@"XXX YYY %@ %@", self.request, self.request.HTTPBody);
 
     // Always return 200 for now...
     NSURLResponse *response = [[NSHTTPURLResponse alloc] initWithURL:self.request.URL statusCode:200 HTTPVersion:@"HTTP/1.1" headerFields:nil];

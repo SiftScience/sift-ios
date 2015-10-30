@@ -15,7 +15,7 @@ static NSString * const SFSessionIdentifier = @"com.sift.UploadSession";
 static NSString * const SFUploadFileName = @"upload.json";
 static NSString * const SFUploadSourcesFileName = @"upload-sources.json";
 
-static const NSTimeInterval SFUploadTimeout = 600.0;  // 10 minutes.
+static const NSTimeInterval SFUploadTimeout = 60;  // 1 minute.
 
 @implementation SFUploader {
     SFQueueDirs *_queueDirs;
@@ -78,6 +78,17 @@ static const NSTimeInterval SFUploadTimeout = 600.0;  // 10 minutes.
         // TODO(clchiou): Add metrics.
         return NO;
     }
+#ifndef NDEBUG
+    {
+        NSError *error;
+        NSString *listRequestText = [NSString stringWithContentsOfFile:_uploadFilePath encoding:NSASCIIStringEncoding error:&error];
+        if (listRequestText) {
+            SFDebug(@"Upload list request:\n>>>\n%@\n<<<", listRequestText);
+        } else {
+            SFDebug(@"Could not read \"%@\" due to %@", _uploadFilePath, [error localizedDescription]);
+        }
+    }
+#endif
 
     if (!SFTouchFilePath(_uploadSourcesFilePath)) {
         SFDebug(@"Could not touch \"%@\"", _uploadSourcesFilePath);
@@ -94,10 +105,10 @@ static const NSTimeInterval SFUploadTimeout = 600.0;  // 10 minutes.
     }
 
     NSString *url = [NSString stringWithFormat:serverUrlFormat, accountId];
-    NSString *encodedBeaconKey = [[[@"key:" stringByAppendingString:beaconKey] dataUsingEncoding:NSASCIIStringEncoding] base64EncodedStringWithOptions:0];
+    NSString *encodedBeaconKey = [[beaconKey dataUsingEncoding:NSASCIIStringEncoding] base64EncodedStringWithOptions:0];
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:[NSURL URLWithString:url]];
     [request setHTTPMethod:@"PUT"];
-    [request setValue:encodedBeaconKey forHTTPHeaderField:@"Authorization"];
+    [request setValue:[@"Basic " stringByAppendingString:encodedBeaconKey] forHTTPHeaderField:@"Authorization"];
     [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
 
     [[SFMetrics sharedMetrics] count:SFMetricsKeyUploaderUpload];
@@ -117,6 +128,7 @@ static const NSTimeInterval SFUploadTimeout = 600.0;  // 10 minutes.
         BOOL okay = [_queueDirs useDirsWithBlock:^BOOL (SFRotatedFiles *rotatedFiles) {
             return [rotatedFiles accessNonCurrentFilesWithBlock:^BOOL (NSFileManager *manager, NSArray *filePaths) {
                 for (NSString *filePath in filePaths) {
+                    SFDebug(@"Collect events from \"%@\"", filePath);
                     if (![converter convert:[NSFileHandle fileHandleForReadingAtPath:filePath]]) {
                         return NO;
                     }
@@ -138,6 +150,7 @@ static const NSTimeInterval SFUploadTimeout = 600.0;  // 10 minutes.
         return [rotatedFiles accessNonCurrentFilesWithBlock:^BOOL (NSFileManager *manager, NSArray *filePaths) {
             for (NSString *filePath in filePaths) {
                 if ([sourceFilePaths containsObject:filePath]) {
+                    SFDebug(@"Remove \"%@\"...", filePath);
                     NSError *error;
                     if (![manager removeItemAtPath:filePath error:&error]) {
                         // We will upload this file again, resulting in duplicated data in the server...
@@ -164,29 +177,23 @@ static const NSTimeInterval SFUploadTimeout = 600.0;  // 10 minutes.
 
         SFDebug(@"PUT %@ status %ld", task.response.URL, statusCode);
         if (statusCode == 200) {
-            SFDebug(@"Remove uploaded source files");
-
             NSArray *sourceFilePaths = SFReadJsonFromFile(_uploadSourcesFilePath);
             if (!sourceFilePaths) {
                 SFDebug(@"Could not read sources file paths from disk");
                 // TODO(clchiou): Add metrics.
                 return;
             }
-
             [self removeSourceFiles:[NSSet setWithArray:sourceFilePaths]];
-
-            NSError *error;
-            if (![_manager removeItemAtPath:_uploadSourcesFilePath error:&error]) {
-                SFDebug(@"Could not remove source files list");
-                // TODO(clchiou): Add metrics.
-            }
         }
     }
     @finally {
-        NSError *error;
-        if (![_manager removeItemAtPath:_uploadSourcesFilePath error:&error]) {
-            SFDebug(@"Could not remove source files list");
-            // TODO(clchiou): Add metrics.
+        for (NSString *path in @[_uploadFilePath, _uploadSourcesFilePath]) {
+            SFDebug(@"Remove \"%@\"...", path);
+            NSError *error;
+            if (![_manager removeItemAtPath:path error:&error]) {
+                SFDebug(@"Could not remove \"%@\" due to %@", path, [error localizedDescription]);
+                // TODO(clchiou): Add metrics.
+            }
         }
     }
     // For testing.

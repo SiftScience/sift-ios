@@ -12,18 +12,20 @@
 
 - (BOOL)removeEventQueue:(NSString *)identifier purge:(BOOL)purge;
 
-- (void)appendEvent:(NSDictionary *)event;
+- (BOOL)appendEvent:(NSString *)path mobileEventType:(NSString *)mobileEventType userId:(NSString *)userId fields:(NSDictionary *)fields;
 
-- (void)appendEvent:(NSDictionary *)event toQueue:(NSString *)identifier;
+- (BOOL)appendEvent:(NSString *)path mobileEventType:(NSString *)mobileEventType userId:(NSString *)userId fields:(NSDictionary *)fields toQueue:(NSString *)identifier;
 
 - (BOOL)upload;
 
 @property (nonatomic) NSTimeInterval uploadPeriod;
 
-@property (nonatomic) NSString *serverUrlFormat;
+@property NSString *serverUrlFormat;
 
-@property (nonatomic) NSString *accountId;
+@property NSString *accountId;
 
-@property (nonatomic) NSString *beaconKey;
+@property NSString *beaconKey;
+
+@property NSString *userId;
 
 @end

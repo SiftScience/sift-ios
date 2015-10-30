@@ -5,6 +5,7 @@
 #import "pthread.h"
 
 #import "SFDebug.h"
+#import "SFEvent.h"
 #import "SFQueue.h"
 #import "SFQueueConfig.h"
 #import "SFQueueDirs.h"
@@ -27,8 +28,8 @@ static NSString * const SFDefaultEventQueueIdentifier = @"";
 // TODO(clchiou): Experiment a sensible config for the default event queue.
 static const SFQueueConfig SFDefaultEventQueueConfig = {
     .appendEventOnlyWhenDifferent = NO,
-    .uploadEventsWhenLargerThan = 512,
-    .uploadEventsWhenOlderThan = 60,
+    .uploadEventsWhenLargerThan = 4096,  // 4 KB
+    .uploadEventsWhenOlderThan = 60,  // 1 minute
 };
 
 @implementation Sift {
@@ -64,6 +65,7 @@ static const SFQueueConfig SFDefaultEventQueueConfig = {
         _serverUrlFormat = SFServerUrlFormat;
         _accountId = nil;
         _beaconKey = nil;
+        _userId = nil;
 
         _operationQueue = operationQueue ?: [NSOperationQueue new];
 
@@ -126,8 +128,10 @@ static const SFQueueConfig SFDefaultEventQueueConfig = {
         SFDebug(@"Cannot upload events due to lack of server URL format, account ID, and/or beacon key");
         return NO;
     }
-    SFDebug(@"Upload events...");
-    return [_uploader upload:_serverUrlFormat accountId:_accountId beaconKey:_beaconKey];
+    @synchronized(self) {
+        SFDebug(@"Upload events...");
+        return [_uploader upload:_serverUrlFormat accountId:_accountId beaconKey:_beaconKey];
+    }
 }
 
 - (BOOL)addEventQueue:(NSString *)identifier config:(SFQueueConfig)config {
@@ -166,19 +170,25 @@ static const SFQueueConfig SFDefaultEventQueueConfig = {
     }
 }
 
-- (void)appendEvent:(NSDictionary *)event {
-    [self appendEvent:event toQueue:SFDefaultEventQueueIdentifier];
+- (BOOL)appendEvent:(NSString *)path mobileEventType:(NSString *)mobileEventType userId:(NSString *)userId fields:(NSDictionary *)fields {
+    return [self appendEvent:path mobileEventType:mobileEventType userId:userId fields:fields toQueue:SFDefaultEventQueueIdentifier];
 }
 
-- (void)appendEvent:(NSDictionary *)event toQueue:(NSString *)identifier {
+- (BOOL)appendEvent:(NSString *)path mobileEventType:(NSString *)mobileEventType userId:(NSString *)userId fields:(NSDictionary *)fields toQueue:(NSString *)identifier {
+    NSDictionary *event = SFEventMakeEvent(SFTimestampMillis(), path, mobileEventType, userId ?: _userId, fields);
+    return [self appendEvent:event toQueue:identifier];
+}
+
+- (BOOL)appendEvent:(NSDictionary *)event toQueue:(NSString *)identifier {
     pthread_rwlock_rdlock(&_lock);
     @try {
         SFQueue *queue = [_eventQueues objectForKey:identifier];
         if (!queue) {
             SFDebug(@"Could not find event queue for identifier \"%@\" and will drop event", identifier);
-            return;
+            return NO;
         }
         [queue append:event];
+        return YES;
     }
     @finally {
         pthread_rwlock_unlock(&_lock);

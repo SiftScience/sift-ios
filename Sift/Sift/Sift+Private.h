@@ -6,6 +6,8 @@
 
 - (instancetype)initWithRootDirPath:(NSString *)rootDirPath operationQueue:(NSOperationQueue *)operationQueue queueDir:(SFQueueDirs *)queueDirs uploader:(SFUploader *)uploader;
 
+- (BOOL)appendEvent:(NSDictionary *)event toQueue:(NSString *)identifier;
+
 - (void)enqueueUpload:(NSTimer *)timer;
 
 @end

@@ -6,6 +6,8 @@
 
 #import "SFDebug.h"
 #import "SFEvent.h"
+#import "SFMetrics.h"
+#import "SFMetricsReporter.h"
 #import "SFQueue.h"
 #import "SFQueueConfig.h"
 #import "SFQueueDirs.h"
@@ -47,7 +49,7 @@ static const SFQueueConfig SFDefaultEventQueueConfig = {
     SFUploader *_uploader;
     NSTimer *_timer;
 
-    //SFMetricsReporter *_reporter;  // TODO...
+    SFMetricsReporter *_reporter;
 }
 
 + (instancetype)sharedSift {
@@ -65,7 +67,6 @@ static const SFQueueConfig SFDefaultEventQueueConfig = {
         _serverUrlFormat = SFServerUrlFormat;
         _accountId = nil;
         _beaconKey = nil;
-        _userId = nil;
 
         _operationQueue = operationQueue ?: [NSOperationQueue new];
 
@@ -86,6 +87,12 @@ static const SFQueueConfig SFDefaultEventQueueConfig = {
 
         // Create the default event queue.
         if (![self addEventQueue:SFDefaultEventQueueIdentifier config:SFDefaultEventQueueConfig]) {
+            self = nil;
+            return nil;
+        }
+
+        _reporter = [[SFMetricsReporter alloc] initWithOperationQueue:_operationQueue];
+        if (!_reporter) {
             self = nil;
             return nil;
         }
@@ -175,7 +182,7 @@ static const SFQueueConfig SFDefaultEventQueueConfig = {
 }
 
 - (BOOL)appendEvent:(NSString *)path mobileEventType:(NSString *)mobileEventType userId:(NSString *)userId fields:(NSDictionary *)fields toQueue:(NSString *)identifier {
-    NSDictionary *event = SFEventMakeEvent(SFTimestampMillis(), path, mobileEventType, userId ?: _userId, fields);
+    NSDictionary *event = SFEventMakeEvent(SFTimestampMillis(), path, mobileEventType, userId, fields);
     return [self appendEvent:event toQueue:identifier];
 }
 

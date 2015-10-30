@@ -28,11 +28,11 @@ BOOL SFRecordIoAppendRecord(NSFileHandle *handle, NSDictionary *record) {
     } else if (data.length > SFRecordDataSizeLimit) {
         // Seriously? Are you really trying to send a record bigger than 64KB?
         SFDebug(@"Do not accept records bigger than %d bytes: size=%ld", SFRecordDataSizeLimit, data.length);
-        [[SFMetrics sharedMetrics] count:SFMetricsKeyRecordIoDataSizeLimitExceededError];
+        [[SFMetrics sharedMetrics] count:SFMetricsKeyNumMiscErrors];
         return NO;
     }
 
-    [[SFMetrics sharedMetrics] measure:SFMetricsKeyRecordIoDataSize value:data.length];
+    [[SFMetrics sharedMetrics] measure:SFMetricsKeyRecordSize value:data.length];
     uint16_t length = CFSwapInt16HostToLittle(data.length);
     @try {
         [handle writeData:[NSData dataWithBytes:&length length:sizeof(length)]];
@@ -41,7 +41,7 @@ BOOL SFRecordIoAppendRecord(NSFileHandle *handle, NSDictionary *record) {
     }
     @catch (NSException *exception) {
         SFDebug(@"Could not write to the current record file due to %@:%@\n%@", exception.name, exception.reason, exception.callStackSymbols);
-        [[SFMetrics sharedMetrics] count:SFMetricsKeyRecordIoWriteError];
+        [[SFMetrics sharedMetrics] count:SFMetricsKeyNumFileIoErrors];
         return NO;
     }
 
@@ -73,7 +73,7 @@ NSData *SFRecordIoReadRecordData(NSFileHandle *handle) {
     }
     if (length != length2) {
         SFDebug(@"Lengths do not match (file corrupted?): %d != %d", length, length2);
-        [[SFMetrics sharedMetrics] count:SFMetricsKeyRecordIoCorruptionError];
+        [[SFMetrics sharedMetrics] count:SFMetricsKeyNumDataCorruptionErrors];
         return nil;
     }
 
@@ -114,7 +114,7 @@ NSData *SFRecordIoReadLastRecordData(NSFileHandle *handle) {
     }
     if (length != length2) {
         SFDebug(@"Lengths do not match (file corrupted?): %d != %d", length, length2);
-        [[SFMetrics sharedMetrics] count:SFMetricsKeyRecordIoCorruptionError];
+        [[SFMetrics sharedMetrics] count:SFMetricsKeyNumDataCorruptionErrors];
         return nil;
     }
 
@@ -129,7 +129,7 @@ static NSData *SFSerializeRecord(NSDictionary *record) {
     NSData *data = [NSJSONSerialization dataWithJSONObject:record options:0 error:&error];
     if (!data) {
         SFDebug(@"Could not serialize NSDictionary due to %@", [error localizedDescription]);
-        [[SFMetrics sharedMetrics] count:SFMetricsKeyRecordIoSerializationError];
+        [[SFMetrics sharedMetrics] count:SFMetricsKeyNumMiscErrors];
         return nil;
     }
     return data;
@@ -143,7 +143,7 @@ static NSDictionary *SFDeserializeRecordData(NSData *data) {
     NSDictionary *record = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
     if (!record) {
         SFDebug(@"Could not parse JSON string due to %@", [error localizedDescription]);
-        [[SFMetrics sharedMetrics] count:SFMetricsKeyRecordIoDeserializationError];
+        [[SFMetrics sharedMetrics] count:SFMetricsKeyNumMiscErrors];
         return nil;
     }
     return record;
@@ -167,7 +167,7 @@ static BOOL SFReadLength(NSFileHandle *handle, int *output) {
     }
     if (length <= 0) {
         SFDebug(@"Length should be positive (file corrupted?): %d", length);
-        [[SFMetrics sharedMetrics] count:SFMetricsKeyRecordIoCorruptionError];
+        [[SFMetrics sharedMetrics] count:SFMetricsKeyNumDataCorruptionErrors];
         return NO;
     }
     *output = length;

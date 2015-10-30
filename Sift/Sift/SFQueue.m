@@ -37,7 +37,7 @@ static NSDictionary *SFReadLastEvent(NSFileManager *manager, NSString *currentFi
 }
 
 - (void)append:(NSDictionary *)event {
-    [[SFMetrics sharedMetrics] count:SFMetricsKeyQueueAppend];
+    [[SFMetrics sharedMetrics] count:SFMetricsKeyNumEvents];
     [_operationQueue addOperation:[[NSInvocationOperation alloc] initWithTarget:self selector:@selector(maybeWriteEventToFile:) object:event]];
 }
 
@@ -53,7 +53,7 @@ static NSDictionary *SFReadLastEvent(NSFileManager *manager, NSString *currentFi
     }
     if (!result) {
         SFDebug(@"Could not append event to file and will drop it: %@", event);
-        [[SFMetrics sharedMetrics] count:SFMetricsKeyQueueNumEventsDropped];
+        [[SFMetrics sharedMetrics] count:SFMetricsKeyNumEventsDropped];
         return;
     }
     [self maybeRotateFile];
@@ -115,7 +115,7 @@ BOOL SFQueueShouldRotateFile(NSFileManager *manager, NSString *currentFilePath, 
     NSDictionary *attributes = [manager attributesOfItemAtPath:currentFilePath error:&error];
     if (!attributes) {
         SFDebug(@"Could not get attributes of the current file \"%@\" due to %@", currentFilePath, [error localizedDescription]);
-        [[SFMetrics sharedMetrics] count:SFMetricsKeyQueueFileAttributesRetrievalError];
+        [[SFMetrics sharedMetrics] count:SFMetricsKeyNumFileOperationErrors];
         return NO;
     }
 
@@ -128,7 +128,7 @@ BOOL SFQueueShouldRotateFile(NSFileManager *manager, NSString *currentFilePath, 
     NSTimeInterval sinceNow = -[[attributes fileModificationDate] timeIntervalSinceNow];
     if (sinceNow < 0) {
         SFDebug(@"File modification date of \"%@\" is in the future: %@", currentFilePath, [attributes fileModificationDate]);
-        [[SFMetrics sharedMetrics] count:SFMetricsKeyQueueFutureFileModificationDate];
+        [[SFMetrics sharedMetrics] count:SFMetricsKeyNumMiscErrors];
     } else if (sinceNow > config->uploadEventsWhenOlderThan) {
         SFDebug(@"Should rotate file due to modification date: %.2f > %.2f", sinceNow, config->uploadEventsWhenOlderThan);
         return YES;

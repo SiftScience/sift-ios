@@ -39,7 +39,7 @@ static NSString * const SFFileNamePrefix = @"data-";
         NSError *error;
         if (![_manager createDirectoryAtPath:_dirPath withIntermediateDirectories:YES attributes:nil error:&error]) {
             SFDebug(@"Could not create rotated files dir \"%@\" due to %@", _dirPath, [error localizedDescription]);
-            [[SFMetrics sharedMetrics] count:SFMetricsKeyRotatedFilesDirCreationError];
+            [[SFMetrics sharedMetrics] count:SFMetricsKeyNumFileOperationErrors];
             self = nil;
             return nil;
         }
@@ -63,7 +63,7 @@ static NSString * const SFFileNamePrefix = @"data-";
         NSError *error;
         if (![_manager removeItemAtPath:_currentFilePath error:&error]) {
             SFDebug(@"Could not remove the current file \"%@\" due to %@", _currentFilePath, [error localizedDescription]);
-            [[SFMetrics sharedMetrics] count:SFMetricsKeyRotatedFilesFileRemovalError];
+            [[SFMetrics sharedMetrics] count:SFMetricsKeyNumFileOperationErrors];
         }
     }
 }
@@ -107,12 +107,11 @@ static NSString * const SFFileNamePrefix = @"data-";
             NSError *error;
             if (![_manager moveItemAtPath:_currentFilePath toPath:newFilePath error:&error]) {
                 SFDebug(@"Could not rotate the current file \"%@\" to \"%@\" due to %@", _currentFilePath, newFilePath, [error localizedDescription]);
-                [[SFMetrics sharedMetrics] count:SFMetricsKeyRotatedFilesFileRotationError];
+                [[SFMetrics sharedMetrics] count:SFMetricsKeyNumFileOperationErrors];
                 return NO;
             }
 
             SFDebug(@"The current file is rotated to \"%@\"", newFilePath);
-            [[SFMetrics sharedMetrics] count:SFMetricsKeyRotatedFilesFileRotationSuccess];
             return YES;
         }
     }
@@ -126,7 +125,7 @@ static NSString * const SFFileNamePrefix = @"data-";
             NSError *error;
             if (![_manager removeItemAtPath:_dirPath error:&error]) {
                 SFDebug(@"Could not remove dir \"%@\" due to %@", _dirPath, [error localizedDescription]);
-                [[SFMetrics sharedMetrics] count:SFMetricsKeyRotatedFilesDirRemovalError];
+                [[SFMetrics sharedMetrics] count:SFMetricsKeyNumFileOperationErrors];
                 return NO;
             }
             return YES;
@@ -143,7 +142,7 @@ static NSString * const SFFileNamePrefix = @"data-";
         if (![_manager isWritableFileAtPath:_currentFilePath]) {
             if (![_manager createFileAtPath:_currentFilePath contents:nil attributes:nil]) {
                 SFDebug(@"Could not create \"%@\"", _currentFilePath);
-                [[SFMetrics sharedMetrics] count:SFMetricsKeyRotatedFilesFileCreationError];
+                [[SFMetrics sharedMetrics] count:SFMetricsKeyNumFileOperationErrors];
                 return nil;
             }
         }
@@ -151,7 +150,7 @@ static NSString * const SFFileNamePrefix = @"data-";
         _currentFile = [NSFileHandle fileHandleForWritingAtPath:_currentFilePath];
         if (!_currentFile) {
             SFDebug(@"Could not open \"%@\" for writing", _currentFilePath);
-            [[SFMetrics sharedMetrics] count:SFMetricsKeyRotatedFilesFileOpenError];
+            [[SFMetrics sharedMetrics] count:SFMetricsKeyNumFileOperationErrors];
             return nil;
         }
 
@@ -172,7 +171,7 @@ static NSString * const SFFileNamePrefix = @"data-";
     NSArray *fileNames = [_manager contentsOfDirectoryAtPath:_dirPath error:&error];
     if (!fileNames) {
         SFDebug(@"Could not list contents of directory \"%@\" due to %@", _dirPath, [error localizedDescription]);
-        [[SFMetrics sharedMetrics] count:SFMetricsKeyRotatedFilesDirListingError];
+        [[SFMetrics sharedMetrics] count:SFMetricsKeyNumFileOperationErrors];
         return nil;
     }
 

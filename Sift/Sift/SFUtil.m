@@ -3,6 +3,7 @@
 @import Foundation;
 
 #import "SFDebug.h"
+#import "SFMetrics.h"
 #import "SFUtil.h"
 
 NSInteger SFTimestampMillis(void) {
@@ -19,6 +20,7 @@ BOOL SFTouchFilePath(NSString *path) {
     if ([manager fileExistsAtPath:path isDirectory:&isDirectory]) {
         if (isDirectory) {
             SFDebug(@"\"%@\" is a directory", path);
+            [[SFMetrics sharedMetrics] count:SFMetricsKeyNumMiscErrors];
             return NO;
         } else {
             return YES;
@@ -28,7 +30,8 @@ BOOL SFTouchFilePath(NSString *path) {
         if (okay) {
             SFDebug(@"Create file \"%@\"", path);
         } else {
-            SFDebug(@"Could not reate file \"%@\"", path);
+            SFDebug(@"Could not create file \"%@\"", path);
+            [[SFMetrics sharedMetrics] count:SFMetricsKeyNumFileOperationErrors];
         }
         return okay;
     }
@@ -42,16 +45,19 @@ id SFReadJsonFromFile(NSString *filePath) {
     }
     @catch (NSException *exception) {
         SFDebug(@"Could not read from file \"%@\" due to %@:%@\n%@", filePath, exception.name, exception.reason, exception.callStackSymbols);
+        [[SFMetrics sharedMetrics] count:SFMetricsKeyNumFileIoErrors];
         return nil;
     }
     if (!data) {
         SFDebug(@"Could not read contents of \"%@\"", filePath);
+        [[SFMetrics sharedMetrics] count:SFMetricsKeyNumFileIoErrors];
         return nil;
     }
     NSError *error;
     id object = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
     if (!object) {
         SFDebug(@"Could not deserialize JSON object from \"%@\" due to %@", filePath, [error localizedDescription]);
+        [[SFMetrics sharedMetrics] count:SFMetricsKeyNumMiscErrors];
     }
     return object;
 }
@@ -61,6 +67,7 @@ BOOL SFWriteJsonToFile(id object, NSString *filePath) {
     NSData *data = [NSJSONSerialization dataWithJSONObject:object options:0 error:&error];
     if (!data) {
         SFDebug(@"Could not serialize object");
+        [[SFMetrics sharedMetrics] count:SFMetricsKeyNumMiscErrors];
         return NO;
     }
     @try {
@@ -70,6 +77,7 @@ BOOL SFWriteJsonToFile(id object, NSString *filePath) {
     }
     @catch (NSException *exception) {
         SFDebug(@"Could not write to file \"%@\" due to %@:%@\n%@", filePath, exception.name, exception.reason, exception.callStackSymbols);
+        [[SFMetrics sharedMetrics] count:SFMetricsKeyNumFileIoErrors];
         return NO;
     }
     return YES;

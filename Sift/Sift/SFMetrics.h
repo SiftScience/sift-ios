@@ -3,43 +3,19 @@
 @import Foundation;
 
 #define SF_METRICS_COUNTERS(BIN_OP) \
-    /* SFEvent counters */ \
-    SF_METRICS_MAKE(EventWriteError) BIN_OP \
-    /* SFQueue counters */ \
-    SF_METRICS_MAKE(QueueAppend) BIN_OP \
-    SF_METRICS_MAKE(QueueNumEventsDropped) BIN_OP \
-    SF_METRICS_MAKE(QueueFileAttributesRetrievalError) BIN_OP \
-    SF_METRICS_MAKE(QueueFutureFileModificationDate) BIN_OP \
-    /* SFQueueDirs counters */ \
-    SF_METRICS_MAKE(QueueDirsDirCreationError) BIN_OP \
-    SF_METRICS_MAKE(QueueDirsDirListingError) BIN_OP \
-    SF_METRICS_MAKE(QueueDirsDirRemovalError) BIN_OP \
-    /* SFRecordIo counters */ \
-    SF_METRICS_MAKE(RecordIoDeserializationError) BIN_OP \
-    SF_METRICS_MAKE(RecordIoSerializationError) BIN_OP \
-    SF_METRICS_MAKE(RecordIoDataSizeLimitExceededError) BIN_OP \
-    SF_METRICS_MAKE(RecordIoCorruptionError) BIN_OP \
-    SF_METRICS_MAKE(RecordIoWriteError) BIN_OP \
-    /* SFRotatedFiles counters */ \
-    SF_METRICS_MAKE(RotatedFilesDirCreationError) BIN_OP \
-    SF_METRICS_MAKE(RotatedFilesDirListingError) BIN_OP \
-    SF_METRICS_MAKE(RotatedFilesDirRemovalError) BIN_OP \
-    SF_METRICS_MAKE(RotatedFilesFileCreationError) BIN_OP \
-    SF_METRICS_MAKE(RotatedFilesFileOpenError) BIN_OP \
-    SF_METRICS_MAKE(RotatedFilesFileRemovalError) BIN_OP \
-    SF_METRICS_MAKE(RotatedFilesFileRotationSuccess) BIN_OP \
-    SF_METRICS_MAKE(RotatedFilesFileRotationError) BIN_OP \
-    /* SFUploader counters */ \
-    SF_METRICS_MAKE(UploaderUpload) BIN_OP \
-    SF_METRICS_MAKE(UploaderUploadSuccess) BIN_OP \
-    SF_METRICS_MAKE(UploaderNetworkError) BIN_OP \
-    SF_METRICS_MAKE(UploaderFileRemovalError)
+    SF_METRICS_MAKE(NumDataCorruptionErrors) BIN_OP \
+    SF_METRICS_MAKE(NumFileIoErrors) BIN_OP \
+    SF_METRICS_MAKE(NumFileOperationErrors) BIN_OP \
+    SF_METRICS_MAKE(NumHttpErrors) BIN_OP \
+    SF_METRICS_MAKE(NumMiscErrors) BIN_OP \
+    SF_METRICS_MAKE(NumNetworkErrors) BIN_OP \
+    SF_METRICS_MAKE(NumEvents) BIN_OP \
+    SF_METRICS_MAKE(NumEventsDropped) BIN_OP \
+    SF_METRICS_MAKE(NumUploads) BIN_OP \
+    SF_METRICS_MAKE(NumUploadsSucceeded)
 
 #define SF_METRICS_METERS(BIN_OP) \
-    /* SFQueueDirs meters */ \
-    SF_METRICS_MAKE(QueueDirsNumDirs) BIN_OP \
-    /* SFRecordIo meters */ \
-    SF_METRICS_MAKE(RecordIoDataSize)
+    SF_METRICS_MAKE(RecordSize)
 
 #define SF_COMMA ,
 

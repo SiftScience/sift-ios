@@ -41,7 +41,7 @@ static NSString *SFMakeQueueDirName(NSString *identifier);
 
         if (![manager createDirectoryAtPath:_rootDirPath withIntermediateDirectories:YES attributes:nil error:&error]) {
             SFDebug(@"Could not create root dir \"%@\" due to %@", _rootDirPath, [error localizedDescription]);
-            [[SFMetrics sharedMetrics] count:SFMetricsKeyQueueDirsDirCreationError];
+            [[SFMetrics sharedMetrics] count:SFMetricsKeyNumFileOperationErrors];
             self = nil;
             return nil;
         }
@@ -49,7 +49,7 @@ static NSString *SFMakeQueueDirName(NSString *identifier);
         NSArray *dirNames = [manager contentsOfDirectoryAtPath:_rootDirPath error:&error];
         if (!dirNames) {
             SFDebug(@"Could not list contents of directory \"%@\" due to %@", _rootDirPath, [error localizedDescription]);
-            [[SFMetrics sharedMetrics] count:SFMetricsKeyQueueDirsDirListingError];
+            [[SFMetrics sharedMetrics] count:SFMetricsKeyNumFileOperationErrors];
             self = nil;
             return nil;
         }
@@ -167,7 +167,7 @@ static NSString *SFMakeQueueDirName(NSString *identifier);
         NSError *error;
         if (![[NSFileManager defaultManager] removeItemAtPath:_rootDirPath error:&error]) {
             SFDebug(@"Could not remove root dir \"%@\" due to %@", _rootDirPath, [error localizedDescription]);
-            [[SFMetrics sharedMetrics] count:SFMetricsKeyQueueDirsDirRemovalError];
+            [[SFMetrics sharedMetrics] count:SFMetricsKeyNumFileOperationErrors];
         }
     }
     @finally {

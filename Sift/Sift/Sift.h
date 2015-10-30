@@ -26,6 +26,4 @@
 
 @property NSString *beaconKey;
 
-@property NSString *userId;
-
 @end

@@ -56,6 +56,7 @@ static const NSTimeInterval SFUploadTimeout = 60;  // 1 minute.
         NSDictionary *attributes = [_manager attributesOfItemAtPath:_uploadSourcesFilePath error:&error];
         if (!attributes) {
             SFDebug(@"Could not get attributes of \"%@\" due to %@", _uploadSourcesFilePath, [error localizedDescription]);
+            [[SFMetrics sharedMetrics] count:SFMetricsKeyNumFileOperationErrors];
         } else {
             NSTimeInterval sinceNow = -[[attributes fileModificationDate] timeIntervalSinceNow];
             if (sinceNow > SFUploadTimeout) {
@@ -75,7 +76,6 @@ static const NSTimeInterval SFUploadTimeout = 60;  // 1 minute.
     }
     NSMutableArray *sourceFilePaths = [NSMutableArray new];
     if (![self collectEventsInto:[NSFileHandle fileHandleForWritingAtPath:_uploadFilePath] fromFilePaths:sourceFilePaths]) {
-        // TODO(clchiou): Add metrics.
         return NO;
     }
 #ifndef NDEBUG
@@ -95,11 +95,11 @@ static const NSTimeInterval SFUploadTimeout = 60;  // 1 minute.
         return NO;
     }
     if (!SFWriteJsonToFile(sourceFilePaths, _uploadSourcesFilePath)) {
-        // TODO(clchiou): Add metrics.
+        [[SFMetrics sharedMetrics] count:SFMetricsKeyNumFileIoErrors];
         NSError *error;
         if (![_manager removeItemAtPath:_uploadSourcesFilePath error:&error]) {
             SFDebug(@"Could not remove \"%@\" file due to %@", _uploadSourcesFilePath, [error localizedDescription]);
-            // TODO(clchiou): Add metrics.
+            [[SFMetrics sharedMetrics] count:SFMetricsKeyNumFileOperationErrors];
         }
         return NO;
     }
@@ -111,7 +111,7 @@ static const NSTimeInterval SFUploadTimeout = 60;  // 1 minute.
     [request setValue:[@"Basic " stringByAppendingString:encodedBeaconKey] forHTTPHeaderField:@"Authorization"];
     [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
 
-    [[SFMetrics sharedMetrics] count:SFMetricsKeyUploaderUpload];
+    [[SFMetrics sharedMetrics] count:SFMetricsKeyNumUploads];
     [[_session uploadTaskWithRequest:request fromFile:_uploadUrl] resume];
     return YES;
 }
@@ -155,7 +155,7 @@ static const NSTimeInterval SFUploadTimeout = 60;  // 1 minute.
                     if (![manager removeItemAtPath:filePath error:&error]) {
                         // We will upload this file again, resulting in duplicated data in the server...
                         SFDebug(@"Could not remove \"%@\" due to %@", filePath, [error localizedDescription]);
-                        // TODO(clchiou): Add metrics.
+                        [[SFMetrics sharedMetrics] count:SFMetricsKeyNumFileOperationErrors];
                     }
                 }
             }
@@ -168,7 +168,7 @@ static const NSTimeInterval SFUploadTimeout = 60;  // 1 minute.
     @try {
         if (error) {
             SFDebug(@"Could not complete upload due to %@", [error localizedDescription]);
-            [[SFMetrics sharedMetrics] count:SFMetricsKeyUploaderNetworkError];
+            [[SFMetrics sharedMetrics] count:SFMetricsKeyNumNetworkErrors];
             return;
         }
 
@@ -177,13 +177,16 @@ static const NSTimeInterval SFUploadTimeout = 60;  // 1 minute.
 
         SFDebug(@"PUT %@ status %ld", task.response.URL, statusCode);
         if (statusCode == 200) {
+            [[SFMetrics sharedMetrics] count:SFMetricsKeyNumUploadsSucceeded];
             NSArray *sourceFilePaths = SFReadJsonFromFile(_uploadSourcesFilePath);
             if (!sourceFilePaths) {
                 SFDebug(@"Could not read sources file paths from disk");
-                // TODO(clchiou): Add metrics.
+                [[SFMetrics sharedMetrics] count:SFMetricsKeyNumFileIoErrors];
                 return;
             }
             [self removeSourceFiles:[NSSet setWithArray:sourceFilePaths]];
+        } else {
+            [[SFMetrics sharedMetrics] count:SFMetricsKeyNumHttpErrors];
         }
     }
     @finally {
@@ -192,7 +195,7 @@ static const NSTimeInterval SFUploadTimeout = 60;  // 1 minute.
             NSError *error;
             if (![_manager removeItemAtPath:path error:&error]) {
                 SFDebug(@"Could not remove \"%@\" due to %@", path, [error localizedDescription]);
-                // TODO(clchiou): Add metrics.
+                [[SFMetrics sharedMetrics] count:SFMetricsKeyNumFileOperationErrors];
             }
         }
     }

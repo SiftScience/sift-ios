@@ -66,7 +66,7 @@ static NSData *SFComma;
     }
     @catch (NSException *exception) {
         SFDebug(@"Could not write to list request file due to %@:%@\n%@", exception.name, exception.reason, exception.callStackSymbols);
-        [[SFMetrics sharedMetrics] count:SFMetricsKeyEventWriteError];
+        [[SFMetrics sharedMetrics] count:SFMetricsKeyNumFileIoErrors];
         return NO;
     }
 }

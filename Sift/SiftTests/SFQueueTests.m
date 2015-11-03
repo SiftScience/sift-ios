@@ -35,8 +35,8 @@
 - (void)testQueueConfigNoRotation {
     SFQueueConfig config = {
         .appendEventOnlyWhenDifferent = NO,
-        .uploadEventsWhenLargerThan = 65536,
-        .uploadEventsWhenOlderThan = 3600,
+        .rotateWhenLargerThan = 65536,
+        .rotateWhenOlderThan = 3600,
     };
     SFQueue *queue = [self makeQueue:config];
 
@@ -57,8 +57,8 @@
 - (void)testQueueConfigRotation {
     SFQueueConfig config = {
         .appendEventOnlyWhenDifferent = NO,
-        .uploadEventsWhenLargerThan = 0,
-        .uploadEventsWhenOlderThan = 3600,
+        .rotateWhenLargerThan = 0,
+        .rotateWhenOlderThan = 3600,
     };
     SFQueue *queue = [self makeQueue:config];
 
@@ -78,8 +78,8 @@
 - (void)testQueueConfigOnlyDifferent {
     SFQueueConfig config = {
         .appendEventOnlyWhenDifferent = YES,
-        .uploadEventsWhenLargerThan = 65536,
-        .uploadEventsWhenOlderThan = 3600,
+        .rotateWhenLargerThan = 65536,
+        .rotateWhenOlderThan = 3600,
     };
     SFQueue *queue = [self makeQueue:config];
 

@@ -106,6 +106,10 @@ static NSData *SFComma;
 }
 
 - (BOOL)end {
+    if (!_listRequest) {
+        SFDebug(@"This converter is not started yet");
+        return NO;
+    }
     BOOL okay = [self writeListRequestWithBlock:^BOOL (){
         [_listRequest writeData:SFFooter];
         return YES;

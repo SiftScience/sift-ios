@@ -120,8 +120,8 @@ BOOL SFQueueShouldRotateFile(NSFileManager *manager, NSString *currentFilePath, 
     }
 
     unsigned long long fileSize = [attributes fileSize];
-    if (fileSize > config->uploadEventsWhenLargerThan) {
-        SFDebug(@"Should rotate file due to file size: %lld > %ld", fileSize, config->uploadEventsWhenLargerThan);
+    if (fileSize > config->rotateWhenLargerThan) {
+        SFDebug(@"Should rotate file due to file size: %lld > %ld", fileSize, config->rotateWhenLargerThan);
         return YES;
     }
 
@@ -129,8 +129,8 @@ BOOL SFQueueShouldRotateFile(NSFileManager *manager, NSString *currentFilePath, 
     if (sinceNow < 0) {
         SFDebug(@"File modification date of \"%@\" is in the future: %@", currentFilePath, [attributes fileModificationDate]);
         [[SFMetrics sharedMetrics] count:SFMetricsKeyNumMiscErrors];
-    } else if (sinceNow > config->uploadEventsWhenOlderThan) {
-        SFDebug(@"Should rotate file due to modification date: %.2f > %.2f", sinceNow, config->uploadEventsWhenOlderThan);
+    } else if (sinceNow > config->rotateWhenOlderThan) {
+        SFDebug(@"Should rotate file due to modification date: %.2f > %.2f", sinceNow, config->rotateWhenOlderThan);
         return YES;
     }
 

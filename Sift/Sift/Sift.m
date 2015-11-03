@@ -30,8 +30,8 @@ static NSString * const SFDefaultEventQueueIdentifier = @"";
 // TODO(clchiou): Experiment a sensible config for the default event queue.
 static const SFQueueConfig SFDefaultEventQueueConfig = {
     .appendEventOnlyWhenDifferent = NO,
-    .uploadEventsWhenLargerThan = 4096,  // 4 KB
-    .uploadEventsWhenOlderThan = 60,  // 1 minute
+    .rotateWhenLargerThan = 4096,  // 4 KB
+    .rotateWhenOlderThan = 60,  // 1 minute
 };
 
 @implementation Sift {

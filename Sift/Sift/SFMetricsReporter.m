@@ -43,6 +43,7 @@ static NSString * const SFMetricsReporterType = @"sift_metrics_report";
         _lastReportingDate = [NSDate date];
         _lastReportingTime = CACurrentMediaTime();
 
+        // TODO(clchiou): Should we invalidate timer on dealloc?
         NSTimer *timer = [NSTimer timerWithTimeInterval:SFMetricsReporterInterval target:self selector:@selector(enqueueReport:) userInfo:nil repeats:YES];
         [[NSRunLoop mainRunLoop] addTimer:timer forMode:NSDefaultRunLoopMode];
     }

@@ -2,6 +2,7 @@
 
 @import Foundation;
 
+/** Debug output that can be turned off by undefining NDEBUG. */
 #ifdef NDEBUG
 #define SFDebug(...)
 #else

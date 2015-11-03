@@ -51,8 +51,8 @@
 - (void)testCustomEventQueue {
     SFQueueConfig config = {
         .appendEventOnlyWhenDifferent = NO,
-        .uploadEventsWhenLargerThan = 0,
-        .uploadEventsWhenOlderThan = 0,
+        .rotateWhenLargerThan = 0,
+        .rotateWhenOlderThan = 0,
     };
     [_sift addEventQueue:@"q1" config:config];
 

@@ -3,9 +3,9 @@
 @import Foundation;
 
 #import "SFDebug.h"
-#import "SFEvent.h"
+#import "SFEvent+Utils.h"
 #import "SFMetrics.h"
-#import "SFUtil.h"
+#import "SFUtils.h"
 
 #import "SFUploader.h"
 #import "SFUploader+Private.h"

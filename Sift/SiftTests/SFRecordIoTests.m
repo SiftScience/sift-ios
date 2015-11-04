@@ -3,7 +3,7 @@
 #import <XCTest/XCTest.h>
 
 #import "SFDebug.h"
-#import "SFUtil.h"
+#import "SFUtils.h"
 
 #import "SFRecordIo.h"
 

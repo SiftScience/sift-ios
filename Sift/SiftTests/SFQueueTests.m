@@ -3,7 +3,7 @@
 #import <XCTest/XCTest.h>
 
 #import "SFQueueDirs.h"
-#import "SFUtil.h"
+#import "SFUtils.h"
 
 #import "SFQueue.h"
 #import "SFQueue+Private.h"

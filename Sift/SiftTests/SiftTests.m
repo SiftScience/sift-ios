@@ -10,7 +10,7 @@
 #import "SFRotatedFiles.h"
 #import "SFUploader.h"
 #import "SFUploader+Private.h"
-#import "SFUtil.h"
+#import "SFUtils.h"
 
 #import "Sift.h"
 #import "Sift+Private.h"
@@ -67,7 +67,8 @@
         };
         int numEvents = sizeof(events) / sizeof(events[0]);
         for (int i = 0; i < numEvents; i++) {
-            [_sift appendEvent:SFEventMakeEvent(SFTimestampMillis(), @"path", @"mobile_event", @"user_id", events[i]) toQueue:@"q1"];
+            SFEvent *event = [SFEvent eventWithPath:@"path" mobileEventType:@"mobile_event" userId:@"user_id" fields:events[i]];
+            [_sift appendEvent:event toQueue:@"q1"];
         }
 
         // Force rotating files.

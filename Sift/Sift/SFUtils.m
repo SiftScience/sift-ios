@@ -4,7 +4,7 @@
 
 #import "SFDebug.h"
 #import "SFMetrics.h"
-#import "SFUtil.h"
+#import "SFUtils.h"
 
 NSInteger SFTimestampMillis(void) {
     return [[NSDate date] timeIntervalSince1970] * 1000.0;

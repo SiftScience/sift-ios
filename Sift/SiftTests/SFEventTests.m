@@ -4,9 +4,10 @@
 
 #import "SFDebug.h"
 #import "SFRecordIo.h"
-#import "SFUtil.h"
+#import "SFUtils.h"
 
 #import "SFEvent.h"
+#import "SFEvent+Utils.h"
 
 @interface SFEventTests : XCTestCase
 

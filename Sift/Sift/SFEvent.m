@@ -5,8 +5,47 @@
 #import "SFDebug.h"
 #import "SFRecordIo.h"
 #import "SFMetrics.h"
+#import "SFUtils.h"
 
 #import "SFEvent.h"
+#import "SFEvent+Utils.h"
+
+@implementation SFEvent
+
++ (SFEvent *)eventWithPath:(NSString *)path mobileEventType:(NSString *)mobileEventType userId:(NSString *)userId fields:(NSDictionary *)fields {
+    SFEvent *event = [SFEvent new];
+    if (path) {
+        event.path = path;
+    }
+    if (mobileEventType) {
+        event.mobileEventType = mobileEventType;
+    }
+    if (userId) {
+        event.userId = userId;
+    }
+    if (fields) {
+        event.fields = fields;
+    }
+    return event;
+}
+
+- (instancetype)init {
+    self = [super init];
+    if (self) {
+        _time = SFTimestampMillis();
+        _path = nil;
+        _mobileEventType = nil;
+        _userId = nil;
+        _fields = nil;
+    }
+    return self;
+}
+
+- (NSDictionary *)makeEvent {
+    return SFEventMakeEvent(_time, _path, _mobileEventType, _userId, _fields);
+}
+
+@end
 
 NSDictionary *SFEventMakeEvent(NSInteger time, NSString *path, NSString *mobileEventType, NSString *userId, NSDictionary *fields) {
     NSMutableDictionary *event = [NSMutableDictionary new];

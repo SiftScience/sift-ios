@@ -7,76 +7,57 @@
 
 #import "SFDebug.h"
 #import "SFMetrics.h"
-#import "SFUtil.h"
+#import "SFUtils.h"
 #import "Sift.h"
 
 #import "SFMetricsReporter.h"
 
 // TODO(clchiou): Handle app lifecycle (and persist metrics data).
 
-// TODO(clchiou): Make this interval configurable.
-static const NSTimeInterval SFMetricsReporterInterval = 60.0;  // 1 minute.
-
-static NSString * const SFMetricsReporterPath = @"/sift/metrics_reporter";
-static NSString * const SFMetricsReporterType = @"sift_metrics_report";
+static NSString * const SFMetricsReporterPath = @"/sift/metrics";
+static NSString * const SFMetricsReporterType = @"sift";
 
 @interface SFMetricsReporter ()
 
 - (NSDictionary *)createReport:(NSDate *)startDate duration:(CFTimeInterval)duration;
-
-- (void)enqueueReport:(NSTimer *)timer;
-
-- (void)report;
 
 @end
 
 @implementation SFMetricsReporter {
     NSDate *_lastReportingDate;
     CFTimeInterval _lastReportingTime;
-    NSOperationQueue *_operationQueue;
 }
 
-- (instancetype)initWithOperationQueue:(NSOperationQueue *)operationQueue {
+- (instancetype)init {
     self = [super init];
     if (self) {
-        _operationQueue = operationQueue;
         _lastReportingDate = [NSDate date];
         _lastReportingTime = CACurrentMediaTime();
-
-        // TODO(clchiou): Should we invalidate timer on dealloc?
-        NSTimer *timer = [NSTimer timerWithTimeInterval:SFMetricsReporterInterval target:self selector:@selector(enqueueReport:) userInfo:nil repeats:YES];
-        [[NSRunLoop mainRunLoop] addTimer:timer forMode:NSDefaultRunLoopMode];
     }
     return self;
 }
 
-- (void)enqueueReport:(NSTimer *)timer {
-    [_operationQueue addOperation:[[NSInvocationOperation alloc] initWithTarget:self selector:@selector(report) object:nil]];
-}
-
 - (void)report {
-    @synchronized(self) {
-        // NOTE: SFMetrics object use itself for locking.
-        SFMetrics *metrics = [SFMetrics sharedMetrics];
-        @synchronized(metrics) {
-            NSDate *nowDate = [NSDate date];
-            CFTimeInterval now = CACurrentMediaTime();
-            CFTimeInterval duration = now - _lastReportingTime;
-            if (duration <= 0.0) {
-                SFDebug(@"CACurrentMediaTime goes backward");
-                [[SFMetrics sharedMetrics] count:SFMetricsKeyNumMiscErrors];
-                return;
-            }
+    NSDictionary *report = nil;
+    // NOTE: SFMetrics object use itself for locking.
+    SFMetrics *metrics = [SFMetrics sharedMetrics];
+    @synchronized(metrics) {
+        NSDate *nowDate = [NSDate date];
+        CFTimeInterval now = CACurrentMediaTime();
+        CFTimeInterval duration = now - _lastReportingTime;
+        if (duration <= 0.0) {
+            SFDebug(@"CACurrentMediaTime goes backward");
+            [[SFMetrics sharedMetrics] count:SFMetricsKeyNumMiscErrors];
+        } else {
             SFDebug(@"Create report of metrics from %@ with duration %g", _lastReportingDate, duration);
-            NSDictionary *report = [self createReport:_lastReportingDate duration:duration];
-            if (!report) {
-                return;
-            }
-            [[Sift sharedSift] appendEvent:SFMetricsReporterPath mobileEventType:SFMetricsReporterType userId:nil fields:report];
-            [metrics reset];
-            _lastReportingDate = nowDate;
-            _lastReportingTime = now;
+            report = [self createReport:_lastReportingDate duration:duration];
         }
+        [metrics reset];
+        _lastReportingDate = nowDate;
+        _lastReportingTime = now;
+    }
+    if (report) {
+        [[Sift sharedSift] appendEvent:[SFEvent eventWithPath:SFMetricsReporterPath mobileEventType:SFMetricsReporterType userId:nil fields:report]];
     }
 }
 

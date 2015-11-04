@@ -2,7 +2,7 @@
 
 #import <XCTest/XCTest.h>
 
-#import "SFUtil.h"
+#import "SFUtils.h"
 
 #import "SFRotatedFiles.h"
 #import "SFRotatedFiles+Private.h"

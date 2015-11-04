@@ -3,11 +3,11 @@
 #import <XCTest/XCTest.h>
 
 #import "SFDebug.h"
-#import "SFEvent.h"
+#import "SFEvent+Utils.h"
 #import "SFQueueDirs.h"
 #import "SFRecordIo.h"
 #import "SFRotatedFiles.h"
-#import "SFUtil.h"
+#import "SFUtils.h"
 
 #import "SFStubHttpProtocol.h"
 

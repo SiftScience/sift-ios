@@ -2,9 +2,16 @@
 
 @import Foundation;
 
-// TODO(clchiou): Rewrite this (remove timer and make Sift take care of that).
+/**
+ * Use the default `SFMetrics` object and the default `Sift` object for
+ * collecting and reporting metrics.
+ */
 @interface SFMetricsReporter : NSObject
 
-- (instancetype)initWithOperationQueue:(NSOperationQueue *)operationQueue;
+/**
+ * Collect and report metrics through the default event queue, and then
+ * reset the metrics data.
+ */
+- (void)report;
 
 @end

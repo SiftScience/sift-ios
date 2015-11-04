@@ -2,12 +2,18 @@
 
 @import Foundation;
 
+/** Private methods of `Sift`. */
 @interface Sift ()
 
 - (instancetype)initWithRootDirPath:(NSString *)rootDirPath operationQueue:(NSOperationQueue *)operationQueue queueDir:(SFQueueDirs *)queueDirs uploader:(SFUploader *)uploader;
 
-- (BOOL)appendEvent:(NSDictionary *)event toQueue:(NSString *)identifier;
-
+/** Issue a call to `upload` in the background queue. */
 - (void)enqueueUpload:(NSTimer *)timer;
+
+/** Issue a call to `report` in the background queue. */
+- (void)enqueueReport:(NSTimer *)timer;
+
+/** Call `SFMetricsReporter` to collect and report metrics. */
+- (void)report;
 
 @end

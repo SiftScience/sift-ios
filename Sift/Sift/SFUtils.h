@@ -4,6 +4,9 @@
 
 /** Generic helper functions. */
 
+/** Short hand of NSAssert(false, ...) */
+#define SFFail() NSAssert(false, @"SFFail() at %s:%d", __FUNCTION__, __LINE__)
+
 /** @return the current time stamp in milliseconds. */
 NSInteger SFTimestampMillis(void);
 

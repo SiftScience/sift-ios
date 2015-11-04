@@ -115,47 +115,81 @@ static const SFQueueConfig SFDefaultEventQueueConfig = {
 }
 
 - (void)setUploadPeriod:(NSTimeInterval)uploadPeriod {
-    if (_uploadPeriod == uploadPeriod) {
-        return;
-    }
-    if (!_uploaderTimer) {
-        [_uploaderTimer invalidate];
-        _uploaderTimer = nil;
-    }
-    _uploadPeriod = uploadPeriod;
-    if (_uploadPeriod <= 0) {
-        SFDebug(@"Cancel background upload");
-        return;
-    }
-    SFDebug(@"Start background upload with period %.2f", _uploadPeriod);
-    _uploaderTimer = [NSTimer timerWithTimeInterval:_uploadPeriod target:self selector:@selector(enqueueUpload:) userInfo:nil repeats:YES];
-    [[NSRunLoop mainRunLoop] addTimer:_uploaderTimer forMode:NSDefaultRunLoopMode];
+    [self configureTimer:_uploaderTimer period:&_uploadPeriod newPeriod:uploadPeriod];
 }
 
 - (void)setReportMetricsPeriod:(NSTimeInterval)reportMetricsPeriod {
-    if (_reportMetricsPeriod == reportMetricsPeriod) {
-        return;
-    }
-    if (!_reporterTimer) {
-        [_reporterTimer invalidate];
-        _reporterTimer = nil;
-    }
-    _reportMetricsPeriod = reportMetricsPeriod;
-    if (_reportMetricsPeriod <= 0) {
-        SFDebug(@"Cancel background report");
-        return;
-    }
-    SFDebug(@"Start background rejport with period %.2f", _reportMetricsPeriod);
-    _reporterTimer = [NSTimer timerWithTimeInterval:_reportMetricsPeriod target:self selector:@selector(enqueueReport:) userInfo:nil repeats:YES];
-    [[NSRunLoop mainRunLoop] addTimer:_reporterTimer forMode:NSDefaultRunLoopMode];
+    [self configureTimer:_reporterTimer period:&_reportMetricsPeriod newPeriod:reportMetricsPeriod];
 }
 
-- (void)enqueueUpload:(NSTimer *)timer {
-    [_operationQueue addOperation:[[NSInvocationOperation alloc] initWithTarget:self selector:@selector(upload) object:nil]];
+- (void)configureTimer:(NSTimer *)timer period:(NSTimeInterval *)period newPeriod:(NSTimeInterval)newPeriod {
+    enum {
+        UPLOADER,
+        REPORTER,
+    } timerSelection;
+
+#define SET(value) \
+    do { \
+        if (timerSelection == UPLOADER) { \
+            _uploaderTimer = (value); \
+        } else if (timerSelection == REPORTER) { \
+            _reporterTimer = (value); \
+        } else { \
+            SFFail(); \
+        } \
+    } while (0);
+
+    if (timer == _uploaderTimer) {
+        timerSelection = UPLOADER;
+    } else if (timer == _reporterTimer) {
+        timerSelection = REPORTER;
+    } else {
+        SFDebug(@"Cannot recognize timer %@", timer);
+        return;
+    }
+
+    if (*period == newPeriod) {
+        return;
+    }
+
+    if (!timer) {
+        [timer invalidate];
+        SET(nil);
+        if (timerSelection == UPLOADER) {
+            _uploaderTimer = nil;
+        } else if (timerSelection == REPORTER) {
+            _reporterTimer = nil;
+        } else {
+            SFFail();
+        }
+    }
+
+    *period = newPeriod;
+    if (*period <= 0) {
+        SFDebug(@"Cancel background %@", @[@"uploader", @"reporter"][timerSelection]);
+        return;
+    }
+
+    SFDebug(@"Start background %@ with period %.2f", @[@"uploader", @"reporter"][timerSelection], *period);
+    timer = [NSTimer timerWithTimeInterval:*period target:self selector:@selector(enqueueMethod:) userInfo:nil repeats:YES];
+    [[NSRunLoop mainRunLoop] addTimer:timer forMode:NSDefaultRunLoopMode];
+    SET(timer);
+
+#undef SET
 }
 
-- (void)enqueueReport:(NSTimer *)timer {
-    [_operationQueue addOperation:[[NSInvocationOperation alloc] initWithTarget:self selector:@selector(report) object:nil]];
+- (void)enqueueMethod:(NSTimer *)timer {
+    SEL selector = nil;
+    if (timer == _uploaderTimer) {
+        selector = @selector(upload);
+    } else if (timer == _reporterTimer) {
+        selector = @selector(report);
+    } else {
+        SFDebug(@"Cannot recognize this timer %@", timer);
+    }
+    if (selector) {
+        [_operationQueue addOperation:[[NSInvocationOperation alloc] initWithTarget:self selector:selector object:nil]];
+    }
 }
 
 - (BOOL)upload {

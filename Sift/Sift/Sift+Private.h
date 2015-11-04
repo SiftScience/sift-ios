@@ -7,11 +7,14 @@
 
 - (instancetype)initWithRootDirPath:(NSString *)rootDirPath operationQueue:(NSOperationQueue *)operationQueue queueDir:(SFQueueDirs *)queueDirs uploader:(SFUploader *)uploader;
 
-/** Issue a call to `upload` in the background queue. */
-- (void)enqueueUpload:(NSTimer *)timer;
+/** Set timer period or cancel timer. */
+- (void)configureTimer:(NSTimer *)timer period:(NSTimeInterval *)period newPeriod:(NSTimeInterval)newPeriod;
 
-/** Issue a call to `report` in the background queue. */
-- (void)enqueueReport:(NSTimer *)timer;
+/**
+ * Issue a method call, based on which timer is fired, in the background
+ * queue.
+ */
+- (void)enqueueMethod:(NSTimer *)timer;
 
 /** Call `SFMetricsReporter` to collect and report metrics. */
 - (void)report;

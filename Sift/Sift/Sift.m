@@ -5,6 +5,7 @@
 #import "pthread.h"
 
 #import "SFDebug.h"
+#import "SFDevicePropertiesReporter.h"
 #import "SFEvent.h"
 #import "SFEvent+Utils.h"
 #import "SFMetrics.h"
@@ -51,7 +52,8 @@ static const SFQueueConfig SFDefaultEventQueueConfig = {
     SFUploader *_uploader;
     NSTimer *_uploaderTimer;
 
-    SFMetricsReporter *_reporter;
+    SFMetricsReporter *_metricsReporter;
+    SFDevicePropertiesReporter *_devicePropertiesReporter;
     NSTimer *_reporterTimer;
 }
 
@@ -88,14 +90,23 @@ static const SFQueueConfig SFDefaultEventQueueConfig = {
             return nil;
         }
 
-        // Create the default event queue.
+        // Create the default event queue and the queue for device properties.
         if (![self addEventQueue:SFDefaultEventQueueIdentifier config:SFDefaultEventQueueConfig]) {
             self = nil;
             return nil;
         }
+        if (![self addEventQueue:SFDevicePropertiesReporterQueueIdentifier config:SFDevicePropertiesReporterQueueConfig]) {
+            self = nil;
+            return nil;
+        }
 
-        _reporter = [SFMetricsReporter new];
-        if (!_reporter) {
+        _metricsReporter = [SFMetricsReporter new];
+        if (!_metricsReporter) {
+            self = nil;
+            return nil;
+        }
+        _devicePropertiesReporter = [SFDevicePropertiesReporter new];
+        if (!_devicePropertiesReporter) {
             self = nil;
             return nil;
         }
@@ -110,6 +121,12 @@ static const SFQueueConfig SFDefaultEventQueueConfig = {
 }
 
 - (void)dealloc {
+    if (_uploaderTimer) {
+        [_uploaderTimer invalidate];
+    }
+    if (_reporterTimer) {
+        [_reporterTimer invalidate];
+    }
     pthread_rwlock_destroy(&_lock);
     //[super dealloc];  // Provided by compiler!
 }
@@ -206,7 +223,9 @@ static const SFQueueConfig SFDefaultEventQueueConfig = {
 - (void)report {
     @synchronized(self) {
         SFDebug(@"Report metrics...");
-        [_reporter report];
+        [_metricsReporter report];
+        SFDebug(@"Report device properties...");
+        [_devicePropertiesReporter report];
     }
 }
 

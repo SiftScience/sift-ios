@@ -10,6 +10,9 @@
 /** @return the current time stamp in milliseconds. */
 NSInteger SFTimestampMillis(void);
 
+/** @return snake case string, e.g., "camelCase" to "camel_case". */
+NSString *SFCamelCaseToSnakeCase(NSString *camelCase);
+
 /** @return the path to a cache directory. */
 NSString *SFCacheDirPath(void);
 

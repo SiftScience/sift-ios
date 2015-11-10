@@ -22,7 +22,7 @@
 
 static const NSTimeInterval SFUploadInterval = 60;  // 1 minute.
 static const NSTimeInterval SFReportMetricsInterval = 60;  // 1 minute.
-static const NSTimeInterval SFCleanupInterval = 60;  // 1 minute.
+static const NSTimeInterval SFCleanupInterval = 600;  // 10 minutes.
 
 static NSString * const SFServerUrlFormat = @"https://api3.siftscience.com/v3/accounts/%@/mobile_events";
 
@@ -256,6 +256,7 @@ static const SFQueueConfig SFDefaultEventQueueConfig = {
 
 - (void)cleanup {
     SFDebug(@"Clean up...");
+    [_queueDirs cleanup];
     [_uploader cleanup];
 }
 

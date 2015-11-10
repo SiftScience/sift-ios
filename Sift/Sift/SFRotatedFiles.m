@@ -55,12 +55,7 @@ static NSString * const SFFileNamePrefix = @"data-";
 - (void)removeCurrentFile {
     @synchronized(_currentFileLock) {
         [self closeCurrentFile];
-
-        NSError *error;
-        if (![_manager removeItemAtPath:_currentFilePath error:&error]) {
-            SFDebug(@"Could not remove the current file \"%@\" due to %@", _currentFilePath, [error localizedDescription]);
-            [[SFMetrics sharedMetrics] count:SFMetricsKeyNumFileOperationErrors];
-        }
+        SFRemoveFile(_currentFilePath);
     }
 }
 
@@ -117,14 +112,7 @@ static NSString * const SFFileNamePrefix = @"data-";
     @synchronized(_currentFileLock) {
         @synchronized(_nonCurrentFilesLock) {
             [self closeCurrentFile];
-
-            NSError *error;
-            if (![_manager removeItemAtPath:_dirPath error:&error]) {
-                SFDebug(@"Could not remove dir \"%@\" due to %@", _dirPath, [error localizedDescription]);
-                [[SFMetrics sharedMetrics] count:SFMetricsKeyNumFileOperationErrors];
-                return NO;
-            }
-            return YES;
+            return SFRemoveFile(_dirPath);
         }
     }
 }

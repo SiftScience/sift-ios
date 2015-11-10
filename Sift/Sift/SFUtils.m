@@ -49,12 +49,65 @@ NSString *SFCacheDirPath(void) {
     return [NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) objectAtIndex:0];
 }
 
+NSDictionary *SFFileAttrs(NSString *path) {
+    NSFileManager *manager = [NSFileManager defaultManager];
+    NSError *error;
+    NSDictionary *attributes = [manager attributesOfItemAtPath:path error:&error];
+    if (!attributes) {
+        SFDebug(@"Could not get attributes of \"%@\" due to %@", path, [error localizedDescription]);
+        [[SFMetrics sharedMetrics] count:SFMetricsKeyNumFileOperationErrors];
+    }
+    return attributes;
+}
+
+static BOOL SFFileDate(NSString *path, SEL getDate, NSTimeInterval *output) {
+    NSDictionary *attributes = SFFileAttrs(path);
+    if (!attributes) {
+        return NO;
+    }
+    NSDate *date = [attributes performSelector:getDate];
+    NSTimeInterval sinceNow = -[date timeIntervalSinceNow];
+    if (sinceNow < 0) {
+        SFDebug(@"%@ of \"%@\" is in the future: %@", NSStringFromSelector(getDate), path, date);
+        [[SFMetrics sharedMetrics] count:SFMetricsKeyNumMiscErrors];
+        return NO;
+    } else {
+        *output = sinceNow;
+        return YES;
+    }
+}
+
+BOOL SFFileCreationDate(NSString *path, NSTimeInterval *sinceNow) {
+    return SFFileDate(path, @selector(fileCreationDate), sinceNow);
+}
+
+BOOL SFFileModificationDate(NSString *path, NSTimeInterval *sinceNow) {
+    return SFFileDate(path, @selector(fileModificationDate), sinceNow);
+}
+
+NSArray *SFListDir(NSString *path) {
+    NSFileManager *manager = [NSFileManager defaultManager];
+    NSError *error;
+    NSArray *contents = [manager contentsOfDirectoryAtPath:path error:&error];
+    if (!contents) {
+        SFDebug(@"Could not list contents of directory \"%@\" due to %@", path, [error localizedDescription]);
+        [[SFMetrics sharedMetrics] count:SFMetricsKeyNumFileOperationErrors];
+        return nil;
+    }
+    NSMutableArray *paths = [NSMutableArray arrayWithCapacity:contents.count];
+    for (NSString *fileName in contents) {
+        [paths addObject:[path stringByAppendingPathComponent:fileName]];
+    }
+    return paths;
+}
+
 BOOL SFIsDirEmpty(NSString *path) {
     NSFileManager *manager = [NSFileManager defaultManager];
     NSError *error;
     NSArray *contents = [manager contentsOfDirectoryAtPath:path error:&error];
     if (!contents) {
         SFDebug(@"Could not list contents of directory \"%@\" due to %@", path, [error localizedDescription]);
+        [[SFMetrics sharedMetrics] count:SFMetricsKeyNumFileOperationErrors];
         return NO;
     }
     return contents.count == 0;
@@ -105,6 +158,18 @@ BOOL SFTouchDirPath(NSString *path) {
         }
         return okay;
     }
+}
+
+BOOL SFRemoveFile(NSString *path) {
+    NSError *error;
+    BOOL okay = [[NSFileManager defaultManager] removeItemAtPath:path error:&error];
+    if (okay) {
+        SFDebug(@"Remove \"%@\"", path);
+    } else {
+        SFDebug(@"Could not remove \"%@\" due to %@", path, [error localizedDescription]);
+        [[SFMetrics sharedMetrics] count:SFMetricsKeyNumFileOperationErrors];
+    }
+    return okay;
 }
 
 id SFReadJsonFromFile(NSString *filePath) {

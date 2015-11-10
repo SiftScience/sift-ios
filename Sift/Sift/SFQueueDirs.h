@@ -34,6 +34,9 @@
 /** Acquire lock and access the contents of all managed directories. */
 - (BOOL)useDirsWithBlock:(BOOL (^)(SFRotatedFiles *rotatedFiles))block;
 
+/** Clean up outdated, unrecognizable directories. */
+- (void)cleanup;
+
 /** Remove everything. */
 - (void)removeRootDir;
 

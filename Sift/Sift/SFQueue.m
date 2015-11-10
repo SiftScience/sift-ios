@@ -111,11 +111,8 @@ BOOL SFQueueShouldRotateFile(NSFileManager *manager, NSString *currentFilePath, 
         return NO;  // Nothing to rotate.
     }
 
-    NSError *error;
-    NSDictionary *attributes = [manager attributesOfItemAtPath:currentFilePath error:&error];
+    NSDictionary *attributes = SFFileAttrs(currentFilePath);
     if (!attributes) {
-        SFDebug(@"Could not get attributes of the current file \"%@\" due to %@", currentFilePath, [error localizedDescription]);
-        [[SFMetrics sharedMetrics] count:SFMetricsKeyNumFileOperationErrors];
         return NO;
     }
 

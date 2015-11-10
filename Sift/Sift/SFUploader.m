@@ -18,14 +18,13 @@ static NSString * const SFRequestIdHeader = @"X-REQUEST-ID";
  * If a state file is older than this value, we should treat its
  * respective upload has failed and remove it.
  */
-static const NSTimeInterval SFRemoveStateFileOlderThan = 300;  // 5 minute.
+static const NSTimeInterval SFRemoveStateFileOlderThan = 300;  // 5 minutes.
 
 static NSString *SFRequestBodyFilePath(NSString *stateDirPath, uint32_t requestId);
 static NSString *SFSourceListFilePath(NSString *stateDirPath, uint32_t requestId);
 
 @implementation SFUploader {
     SFQueueDirs *_queueDirs;
-    NSFileManager *_manager;
     NSURLSession *_session;
     NSString *_stateDirPath;
     // For testing.
@@ -37,7 +36,6 @@ static NSString *SFSourceListFilePath(NSString *stateDirPath, uint32_t requestId
     if (self) {
         _queueDirs = queueDirs;
 
-        _manager = [NSFileManager defaultManager];
         _stateDirPath = [rootDirPath stringByAppendingPathComponent:SFUploadStateDirName];
         if (!SFTouchDirPath(_stateDirPath)) {
             self = nil;
@@ -56,40 +54,14 @@ static NSString *SFSourceListFilePath(NSString *stateDirPath, uint32_t requestId
 
 - (void)cleanup {
     @synchronized(self) {
-        NSError *error;
-
-        NSArray *fileNames = [_manager contentsOfDirectoryAtPath:_stateDirPath error:&error];
-        if (!fileNames) {
-            SFDebug(@"Could not list contents of directory \"%@\" due to %@", _stateDirPath, [error localizedDescription]);
-            [[SFMetrics sharedMetrics] count:SFMetricsKeyNumFileOperationErrors];
+        NSArray *paths = SFListDir(_stateDirPath);
+        if (!paths || paths.count == 0) {
             return;
         }
-
-        for (NSString *fileName in fileNames) {
-            NSString *path = [_stateDirPath stringByAppendingPathComponent:fileName];
-            NSDictionary *attributes = [_manager attributesOfItemAtPath:path error:&error];
-            if (!attributes) {
-                SFDebug(@"Could not get attributes of file \"%@\" due to %@", path, [error localizedDescription]);
-                [[SFMetrics sharedMetrics] count:SFMetricsKeyNumFileOperationErrors];
-                continue;
-            }
-
-            BOOL remove = NO;
-            NSTimeInterval sinceNow = -[[attributes fileCreationDate] timeIntervalSinceNow];
-            if (sinceNow < 0) {
-                SFDebug(@"File creation date of \"%@\" is in the future: %@", path, [attributes fileCreationDate]);
-                [[SFMetrics sharedMetrics] count:SFMetricsKeyNumMiscErrors];
-                remove = YES;
-            } else if (sinceNow > SFRemoveStateFileOlderThan) {
-                SFDebug(@"Should remove \"%@\" due to creation date: %.2f > %.2f", path, sinceNow, SFRemoveStateFileOlderThan);
-                remove = YES;
-            }
-
-            if (remove) {
-                if (![_manager removeItemAtPath:path error:&error]) {
-                    SFDebug(@"Could not remove \"%@\" due to %@", path, [error localizedDescription]);
-                    [[SFMetrics sharedMetrics] count:SFMetricsKeyNumFileOperationErrors];
-                }
+        for (NSString *path in paths) {
+            NSTimeInterval sinceNow;
+            if (SFFileCreationDate(path, &sinceNow) && sinceNow > SFRemoveStateFileOlderThan) {
+                SFRemoveFile(path);
             }
         }
     }
@@ -118,12 +90,19 @@ static NSString *SFSourceListFilePath(NSString *stateDirPath, uint32_t requestId
         NSString *sourceListFilePath = SFSourceListFilePath(_stateDirPath, requestId);
         NSMutableArray *sourceFilePaths = [NSMutableArray new];
 
+        BOOL okay = NO;
+
         if (!SFTouchFilePath(requestBodyFilePath) || !SFTouchFilePath(sourceListFilePath)) {
-            goto error;
+            goto cleanup;
         }
 
         if (![self collectEventsInto:[NSFileHandle fileHandleForWritingAtPath:requestBodyFilePath] fromFilePaths:sourceFilePaths]) {
-            goto error;
+            goto cleanup;
+        }
+        if (sourceFilePaths.count == 0) {
+            SFDebug(@"Nothing to upload");
+            okay = YES;
+            goto cleanup;
         }
 #ifndef NDEBUG
         {
@@ -138,23 +117,18 @@ static NSString *SFSourceListFilePath(NSString *stateDirPath, uint32_t requestId
 #endif
 
         if (!SFWriteJsonToFile(sourceFilePaths, sourceListFilePath)) {
-            goto error;
+            goto cleanup;
         }
 
         [[SFMetrics sharedMetrics] count:SFMetricsKeyNumUploads];
         [[_session uploadTaskWithRequest:request fromFile:[NSURL fileURLWithPath:requestBodyFilePath isDirectory:NO]] resume];
         return YES;
 
-error:
-        // Error! Clean up before return.
+cleanup:
         for (NSString *path in @[requestBodyFilePath, sourceListFilePath]) {
-            NSError *error;
-            if (![_manager removeItemAtPath:path error:&error]) {
-                SFDebug(@"Could not remove \"%@\" due to %@", path, [error localizedDescription]);
-                [[SFMetrics sharedMetrics] count:SFMetricsKeyNumFileOperationErrors];
-            }
+            SFRemoveFile(path);
         }
-        return NO;
+        return okay;
     }
 }
 
@@ -192,13 +166,8 @@ error:
         return [rotatedFiles accessNonCurrentFilesWithBlock:^BOOL (NSFileManager *manager, NSArray *filePaths) {
             for (NSString *filePath in filePaths) {
                 if ([sourceFilePaths containsObject:filePath]) {
-                    SFDebug(@"Remove \"%@\"", filePath);
-                    NSError *error;
-                    if (![manager removeItemAtPath:filePath error:&error]) {
-                        // We will upload this file again, resulting in duplicated data in the server...
-                        SFDebug(@"Could not remove \"%@\" due to %@", filePath, [error localizedDescription]);
-                        [[SFMetrics sharedMetrics] count:SFMetricsKeyNumFileOperationErrors];
-                    }
+                    // If we failed to remove it, we will upload this file again, resulting in duplicated data in the server...
+                    SFRemoveFile(filePath);
                 }
             }
             return YES;
@@ -235,12 +204,7 @@ error:
         }
         @finally {
             for (NSString *path in @[requestBodyFilePath, sourceListFilePath]) {
-                SFDebug(@"Remove \"%@\"", path);
-                NSError *error;
-                if (![_manager removeItemAtPath:path error:&error]) {
-                    SFDebug(@"Could not remove \"%@\" due to %@", path, [error localizedDescription]);
-                    [[SFMetrics sharedMetrics] count:SFMetricsKeyNumFileOperationErrors];
-                }
+                SFRemoveFile(path);
             }
         }
         // For testing.

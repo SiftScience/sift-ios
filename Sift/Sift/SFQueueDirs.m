@@ -13,6 +13,14 @@
 static NSString * const SFQueueDirName = @"queue";
 static NSString * const SFQueueDirNamePrefix = @"queue-";
 
+/**
+ * Remove unrecognizable directories whose contents' last modification
+ * time is older than this value.
+ */
+static const NSTimeInterval SFRemoveDirOlderThan = 600;  // 10 minutes.
+
+static BOOL SFShouldRemove(NSString *targetPath);
+
 static NSString *SFGetIdentifier(NSString *dirName);
 static NSString *SFMakeQueueDirName(NSString *identifier);
 
@@ -27,8 +35,6 @@ static NSString *SFMakeQueueDirName(NSString *identifier);
     NSMutableDictionary *_rotatedFilesDict;
     pthread_rwlock_t _lock;  // Using a RW lock is easier than dispatch_barrier_async at the moment...
 }
-
-// TODO(clchiou): Purge unknown event dir older than a specific modification date?
 
 - (instancetype)initWithRootDirPath:(NSString *)rootDirPath {
     self = [super init];
@@ -157,16 +163,35 @@ static NSString *SFMakeQueueDirName(NSString *identifier);
     return YES;
 }
 
+- (void)cleanup {
+    pthread_rwlock_rdlock(&_lock);
+    @try {
+        NSArray *paths = SFListDir(_rootDirPath);
+        if (!paths || paths.count == 0) {
+            return;
+        }
+
+        NSMutableSet *recognizables = [NSMutableSet setWithCapacity:_rotatedFilesDict.count];
+        for (NSString *identifier in _rotatedFilesDict) {
+            [recognizables addObject:[self dirPath:identifier]];
+        }
+
+        for (NSString *path in paths) {
+            if (![recognizables containsObject:path] && SFShouldRemove(path)) {
+                SFRemoveFile(path);
+            }
+        }
+    }
+    @finally {
+        pthread_rwlock_unlock(&_lock);
+    }
+}
+
 - (void)removeRootDir {
     pthread_rwlock_wrlock(&_lock);
     @try {
         [_rotatedFilesDict removeAllObjects];
-
-        NSError *error;
-        if (![[NSFileManager defaultManager] removeItemAtPath:_rootDirPath error:&error]) {
-            SFDebug(@"Could not remove root dir \"%@\" due to %@", _rootDirPath, [error localizedDescription]);
-            [[SFMetrics sharedMetrics] count:SFMetricsKeyNumFileOperationErrors];
-        }
+        SFRemoveFile(_rootDirPath);
     }
     @finally {
         pthread_rwlock_unlock(&_lock);
@@ -196,3 +221,40 @@ static NSString *SFMakeQueueDirName(NSString *identifier) {
 }
 
 @end
+
+BOOL SFShouldRemove(NSString *targetPath) {
+    NSFileManager *manager = [NSFileManager defaultManager];
+    BOOL isDirectory;
+    if (![manager fileExistsAtPath:targetPath isDirectory:&isDirectory]) {
+        return NO;
+    } else if (!isDirectory) {
+        SFDebug(@"Remove non-directory \"%@\" for QueueDirs object", targetPath);
+        return YES;
+    }
+
+    NSArray *paths = SFListDir(targetPath);
+    if (!paths) {  // Error!
+        return NO;
+    } else if (paths.count == 0) {
+        SFDebug(@"Remove unrecognizable empty directory \"%@\" for QueueDirs object", targetPath);
+        return YES;
+    }
+
+    // Find the most recnetly modified file.
+    NSTimeInterval sinceNow = -1;
+    for (NSString *path in paths) {
+        NSTimeInterval interval;
+        if (SFFileModificationDate(path, &interval)) {
+            if(sinceNow < 0 || interval < sinceNow) {
+                sinceNow = interval;
+            }
+        }
+    }
+
+    if (sinceNow > SFRemoveDirOlderThan) {
+        SFDebug(@"Remove unrecognizable outdated directory \"%@\" for QueueDirs object: %.2f > %.2f", targetPath, sinceNow, SFRemoveDirOlderThan);
+        return YES;
+    } else {
+        return NO;
+    }
+}

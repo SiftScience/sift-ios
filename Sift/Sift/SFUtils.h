@@ -16,6 +16,26 @@ NSString *SFCamelCaseToSnakeCase(NSString *camelCase);
 /** @return the path to a cache directory. */
 NSString *SFCacheDirPath(void);
 
+/** @return file or directory attributes. */
+NSDictionary *SFFileAttrs(NSString *path);
+
+/**
+ * Store file creation date since now in the output parameter.
+ *
+ * @return YES on success.
+ */
+BOOL SFFileCreationDate(NSString *path, NSTimeInterval *sinceNow);
+
+/**
+ * Store file modification date since now in the output parameter.
+ *
+ * @return YES on success.
+ */
+BOOL SFFileModificationDate(NSString *path, NSTimeInterval *sinceNow);
+
+/** @return directory contents as an array of paths. */
+NSArray *SFListDir(NSString *path);
+
 /** @return YES if the directory is empty. */
 BOOL SFIsDirEmpty(NSString *path);
 
@@ -32,6 +52,13 @@ BOOL SFTouchFilePath(NSString *path);
  * @return YES on success.
  */
 BOOL SFTouchDirPath(NSString *path);
+
+/**
+ * Remove file or directory at path.
+ *
+ * @return YES on success.
+ */
+BOOL SFRemoveFile(NSString *path);
 
 /**
  * @return an object from the contents of a file, parsed in JSON format,

@@ -142,7 +142,7 @@ cleanup:
         SFDebug(@"No queue dirs to collect from (probably a bug?)");
     } else {
         BOOL okay = [_queueDirs useDirsWithBlock:^BOOL (SFRotatedFiles *rotatedFiles) {
-            return [rotatedFiles accessNonCurrentFilesWithBlock:^BOOL (NSFileManager *manager, NSArray *filePaths) {
+            return [rotatedFiles accessNonCurrentFilesWithBlock:^BOOL (NSArray *filePaths) {
                 for (NSString *filePath in filePaths) {
                     SFDebug(@"Collect events from \"%@\"", filePath);
                     if (![converter convert:[NSFileHandle fileHandleForReadingAtPath:filePath]]) {
@@ -163,7 +163,7 @@ cleanup:
 
 - (void)removeSourceFiles:(NSSet *)sourceFilePaths {
     [_queueDirs useDirsWithBlock:^BOOL (SFRotatedFiles *rotatedFiles) {
-        return [rotatedFiles accessNonCurrentFilesWithBlock:^BOOL (NSFileManager *manager, NSArray *filePaths) {
+        return [rotatedFiles accessNonCurrentFilesWithBlock:^BOOL (NSArray *filePaths) {
             for (NSString *filePath in filePaths) {
                 if ([sourceFilePaths containsObject:filePath]) {
                     // If we failed to remove it, we will upload this file again, resulting in duplicated data in the server...

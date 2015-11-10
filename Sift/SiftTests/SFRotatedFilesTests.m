@@ -49,14 +49,14 @@
     [self touch:@"not-data-1"];
 
     NSMutableArray *paths = [NSMutableArray new];
-    [_rotatedFiles accessNonCurrentFilesWithBlock:^BOOL (NSFileManager *manager, NSArray *filePaths){
+    [_rotatedFiles accessNonCurrentFilesWithBlock:^BOOL (NSArray *filePaths){
         XCTAssertEqualObjects(paths, filePaths);
         return YES;
     }];
 
     for (int i = 0; i < 30; i++) {
         [paths addObject:[self touch:[NSString stringWithFormat:@"data-%d", i]]];
-        [_rotatedFiles accessNonCurrentFilesWithBlock:^BOOL (NSFileManager *manager, NSArray *filePaths){
+        [_rotatedFiles accessNonCurrentFilesWithBlock:^BOOL (NSArray *filePaths){
             XCTAssertEqualObjects(paths, filePaths);
             return YES;
         }];

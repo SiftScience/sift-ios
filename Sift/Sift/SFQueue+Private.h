@@ -10,7 +10,7 @@
  *
  * @return YES if we should rotate the current file.
  */
-BOOL SFQueueShouldRotateFile(NSFileManager *manager, NSString *currentFilePath, SFQueueConfig *config);
+BOOL SFQueueShouldRotateFile(NSString *currentFilePath, SFQueueConfig *config);
 
 /**
  * Private methods of `SFQueue`, which should be called in a background

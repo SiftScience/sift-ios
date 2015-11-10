@@ -33,7 +33,7 @@
  *
  * The files are guaranteed to exist at paths of `filePaths`.
  */
-- (BOOL)accessNonCurrentFilesWithBlock:(BOOL (^)(NSFileManager *manager, NSArray *filePaths))block;
+- (BOOL)accessNonCurrentFilesWithBlock:(BOOL (^)(NSArray *filePaths))block;
 
 /**
  * Acquire lock and then access current and non-current files.
@@ -42,7 +42,7 @@
  * at `currentFilePath` (the current file could have not been created
  * yet).
  */
-- (BOOL)accessFilesWithBlock:(BOOL (^)(NSFileManager *manager, NSString *currentFilePath, NSArray *filePaths))block;
+- (BOOL)accessFilesWithBlock:(BOOL (^)(NSString *currentFilePath, NSArray *filePaths))block;
 
 /**
  * Rotate the current file (make it non-current), or do nothing if it

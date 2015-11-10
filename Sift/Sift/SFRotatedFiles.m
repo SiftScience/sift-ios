@@ -19,8 +19,6 @@ static NSString * const SFFileNamePrefix = @"data-";
     // Cache the opened file handle so that we don't have to open it every time.
     NSFileHandle *_currentFile;
 
-    NSFileManager *_manager;
-
     // Acquire these locks by the declaration order.
     NSObject *_currentFileLock;
     NSObject *_nonCurrentFilesLock;
@@ -37,8 +35,6 @@ static NSString * const SFFileNamePrefix = @"data-";
 
         _currentFilePath = [_dirPath stringByAppendingPathComponent:SFCurrentFileName];
         _currentFile = nil;
-
-        _manager = [NSFileManager defaultManager];
 
         _currentFileLock = [NSObject new];
         _nonCurrentFilesLock = [NSObject new];
@@ -59,16 +55,16 @@ static NSString * const SFFileNamePrefix = @"data-";
     }
 }
 
-- (BOOL)accessNonCurrentFilesWithBlock:(BOOL (^)(NSFileManager *manager, NSArray *filePaths))block {
+- (BOOL)accessNonCurrentFilesWithBlock:(BOOL (^)(NSArray *filePaths))block {
     @synchronized(_nonCurrentFilesLock) {
-        return block(_manager, [self filePaths]);
+        return block([self filePaths]);
     }
 }
 
-- (BOOL)accessFilesWithBlock:(BOOL (^)(NSFileManager *manager, NSString *currentFilePath, NSArray *filePaths))block {
+- (BOOL)accessFilesWithBlock:(BOOL (^)(NSString *currentFilePath, NSArray *filePaths))block {
     @synchronized(_currentFileLock) {
         @synchronized(_nonCurrentFilesLock) {
-            return block(_manager, _currentFilePath, [self filePaths]);
+            return block(_currentFilePath, [self filePaths]);
         }
     }
 }
@@ -76,7 +72,9 @@ static NSString * const SFFileNamePrefix = @"data-";
 - (BOOL)rotateFile {
     @synchronized(_currentFileLock) {
         @synchronized(_nonCurrentFilesLock) {
-            if (![_manager isWritableFileAtPath:_currentFilePath]) {
+            NSFileManager *manager = [NSFileManager defaultManager];
+
+            if (![manager isWritableFileAtPath:_currentFilePath]) {
                 return YES;   // Nothing to rotate...
             }
 
@@ -96,7 +94,7 @@ static NSString * const SFFileNamePrefix = @"data-";
             [self closeCurrentFile];
 
             NSError *error;
-            if (![_manager moveItemAtPath:_currentFilePath toPath:newFilePath error:&error]) {
+            if (![manager moveItemAtPath:_currentFilePath toPath:newFilePath error:&error]) {
                 SFDebug(@"Could not rotate the current file \"%@\" to \"%@\" due to %@", _currentFilePath, newFilePath, [error localizedDescription]);
                 [[SFMetrics sharedMetrics] count:SFMetricsKeyNumFileOperationErrors];
                 return NO;
@@ -123,12 +121,8 @@ static NSString * const SFFileNamePrefix = @"data-";
     if (!_currentFile) {
         SFDebug(@"Open the current file \"%@\"", _currentFilePath);
 
-        if (![_manager isWritableFileAtPath:_currentFilePath]) {
-            if (![_manager createFileAtPath:_currentFilePath contents:nil attributes:nil]) {
-                SFDebug(@"Could not create \"%@\"", _currentFilePath);
-                [[SFMetrics sharedMetrics] count:SFMetricsKeyNumFileOperationErrors];
-                return nil;
-            }
+        if (!SFTouchFilePath(_currentFilePath)) {
+            return nil;
         }
 
         _currentFile = [NSFileHandle fileHandleForWritingAtPath:_currentFilePath];
@@ -151,8 +145,9 @@ static NSString * const SFFileNamePrefix = @"data-";
 }
 
 - (NSArray *)filePaths {
+    NSFileManager *manager = [NSFileManager defaultManager];
     NSError *error;
-    NSArray *fileNames = [_manager contentsOfDirectoryAtPath:_dirPath error:&error];
+    NSArray *fileNames = [manager contentsOfDirectoryAtPath:_dirPath error:&error];
     if (!fileNames) {
         SFDebug(@"Could not list contents of directory \"%@\" due to %@", _dirPath, [error localizedDescription]);
         [[SFMetrics sharedMetrics] count:SFMetricsKeyNumFileOperationErrors];

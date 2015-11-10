@@ -68,8 +68,8 @@
 
     // Expect queue dirs should look like this...
     okay = [_queueDirs useDirsWithBlock:^BOOL (SFRotatedFiles *rotatedFiles) {
-        BOOL okay = [rotatedFiles accessFilesWithBlock:^BOOL (NSFileManager *manager, NSString *currentFilePath, NSArray *filePaths) {
-            XCTAssert(![manager fileExistsAtPath:currentFilePath isDirectory:nil]);
+        BOOL okay = [rotatedFiles accessFilesWithBlock:^BOOL (NSString *currentFilePath, NSArray *filePaths) {
+            XCTAssert(![[NSFileManager defaultManager] fileExistsAtPath:currentFilePath isDirectory:nil]);
             XCTAssert(1 == filePaths.count);
             return YES;
         }];
@@ -84,8 +84,8 @@
 
     // Expect queue dirs should look like this after upload...
     okay = [_queueDirs useDirsWithBlock:^BOOL (SFRotatedFiles *rotatedFiles) {
-        BOOL okay = [rotatedFiles accessFilesWithBlock:^BOOL (NSFileManager *manager, NSString *currentFilePath, NSArray *filePaths) {
-            XCTAssert(![manager fileExistsAtPath:currentFilePath isDirectory:nil]);
+        BOOL okay = [rotatedFiles accessFilesWithBlock:^BOOL (NSString *currentFilePath, NSArray *filePaths) {
+            XCTAssert(![[NSFileManager defaultManager] fileExistsAtPath:currentFilePath isDirectory:nil]);
             XCTAssert(0 == filePaths.count);
             return YES;
         }];

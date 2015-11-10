@@ -79,7 +79,7 @@
     XCTAssert(okay);
 
     // Now, upload.
-    [_uploader upload:@"mock+https://127.0.0.1/v3/accounts/%@/mobile_events" accountId:@"account_id" beaconKey:@"beacon_key"];
+    [_uploader upload:@"mock+https://127.0.0.1/v3/accounts/%@/mobile_events" accountId:@"account_id" beaconKey:@"beacon_key" force:NO];
     [self waitForExpectationsWithTimeout:5.0 handler:nil];
 
     // Expect queue dirs should look like this after upload...

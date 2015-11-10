@@ -49,6 +49,17 @@ NSString *SFCacheDirPath(void) {
     return [NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) objectAtIndex:0];
 }
 
+BOOL SFIsDirEmpty(NSString *path) {
+    NSFileManager *manager = [NSFileManager defaultManager];
+    NSError *error;
+    NSArray *contents = [manager contentsOfDirectoryAtPath:path error:&error];
+    if (!contents) {
+        SFDebug(@"Could not list contents of directory \"%@\" due to %@", path, [error localizedDescription]);
+        return NO;
+    }
+    return contents.count == 0;
+}
+
 BOOL SFTouchFilePath(NSString *path) {
     NSFileManager *manager = [NSFileManager defaultManager];
     BOOL isDirectory;
@@ -66,6 +77,30 @@ BOOL SFTouchFilePath(NSString *path) {
             SFDebug(@"Create file \"%@\"", path);
         } else {
             SFDebug(@"Could not create file \"%@\"", path);
+            [[SFMetrics sharedMetrics] count:SFMetricsKeyNumFileOperationErrors];
+        }
+        return okay;
+    }
+}
+
+BOOL SFTouchDirPath(NSString *path) {
+    NSFileManager *manager = [NSFileManager defaultManager];
+    BOOL isDirectory;
+    if ([manager fileExistsAtPath:path isDirectory:&isDirectory]) {
+        if (isDirectory) {
+            return YES;
+        } else {
+            SFDebug(@"\"%@\" is a file", path);
+            [[SFMetrics sharedMetrics] count:SFMetricsKeyNumMiscErrors];
+            return NO;
+        }
+    } else {
+        NSError *error;
+        BOOL okay = [manager createDirectoryAtPath:path withIntermediateDirectories:YES attributes:nil error:&error];
+        if (okay) {
+            SFDebug(@"Create dir \"%@\"", path);
+        } else {
+            SFDebug(@"Could not create dir \"%@\" due to %@", path, [error localizedDescription]);
             [[SFMetrics sharedMetrics] count:SFMetricsKeyNumFileOperationErrors];
         }
         return okay;

@@ -16,12 +16,22 @@ NSString *SFCamelCaseToSnakeCase(NSString *camelCase);
 /** @return the path to a cache directory. */
 NSString *SFCacheDirPath(void);
 
+/** @return YES if the directory is empty. */
+BOOL SFIsDirEmpty(NSString *path);
+
 /**
  * Create a file at path, or do nothing if it has been created already.
  *
  * @return YES on success.
  */
 BOOL SFTouchFilePath(NSString *path);
+
+/**
+ * Create a dir at path, or do nothing if it has been created already.
+ *
+ * @return YES on success.
+ */
+BOOL SFTouchDirPath(NSString *path);
 
 /**
  * @return an object from the contents of a file, parsed in JSON format,

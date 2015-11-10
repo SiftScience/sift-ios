@@ -19,4 +19,7 @@
 /** Call `SFMetricsReporter` to collect and report metrics. */
 - (void)report;
 
+/** Call each component's `cleanup` method. */
+- (void)cleanup;
+
 @end

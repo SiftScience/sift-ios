@@ -6,6 +6,7 @@
 
 #import "SFDebug.h"
 #import "SFMetrics.h"
+#import "SFUtils.h"
 
 #import "SFQueueDirs.h"
 
@@ -33,19 +34,16 @@ static NSString *SFMakeQueueDirName(NSString *identifier);
     self = [super init];
     if (self) {
         _rootDirPath = rootDirPath;
+        if (!SFTouchDirPath(_rootDirPath)) {
+            self = nil;
+            return nil;
+        }
+
         _rotatedFilesDict = [NSMutableDictionary new];
         pthread_rwlock_init(&_lock, NULL);
 
         NSFileManager *manager = [NSFileManager defaultManager];
         NSError *error;
-
-        if (![manager createDirectoryAtPath:_rootDirPath withIntermediateDirectories:YES attributes:nil error:&error]) {
-            SFDebug(@"Could not create root dir \"%@\" due to %@", _rootDirPath, [error localizedDescription]);
-            [[SFMetrics sharedMetrics] count:SFMetricsKeyNumFileOperationErrors];
-            self = nil;
-            return nil;
-        }
-
         NSArray *dirNames = [manager contentsOfDirectoryAtPath:_rootDirPath error:&error];
         if (!dirNames) {
             SFDebug(@"Could not list contents of directory \"%@\" due to %@", _rootDirPath, [error localizedDescription]);

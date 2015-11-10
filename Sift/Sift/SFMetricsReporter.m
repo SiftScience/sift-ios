@@ -12,8 +12,6 @@
 
 #import "SFMetricsReporter.h"
 
-// TODO(clchiou): Handle app lifecycle (and persist metrics data).
-
 static NSString * const SFMetricsReporterPath = @"/sift/metrics";
 
 @interface SFMetricsReporter ()
@@ -55,6 +53,7 @@ static NSString * const SFMetricsReporterPath = @"/sift/metrics";
         _lastReportingDate = nowDate;
         _lastReportingTime = now;
     }
+    SFDebug(@"Collect metrics: %@", report);
     if (report) {
         [[Sift sharedSift] appendEvent:[SFEvent eventWithPath:SFMetricsReporterPath mobileEventType:nil userId:nil fields:report]];
     }

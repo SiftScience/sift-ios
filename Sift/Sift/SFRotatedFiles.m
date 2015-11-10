@@ -4,6 +4,7 @@
 
 #import "SFDebug.h"
 #import "SFMetrics.h"
+#import "SFUtils.h"
 
 #import "SFRotatedFiles.h"
 #import "SFRotatedFiles+Private.h"
@@ -29,20 +30,15 @@ static NSString * const SFFileNamePrefix = @"data-";
     self = [super init];
     if (self) {
         _dirPath = dirPath;
-        _currentFilePath = [_dirPath stringByAppendingPathComponent:SFCurrentFileName];
-
-        _currentFile = nil;
-
-        _manager = [NSFileManager defaultManager];
-
-        SFDebug(@"Create rotated files dir \"%@\"", _dirPath);
-        NSError *error;
-        if (![_manager createDirectoryAtPath:_dirPath withIntermediateDirectories:YES attributes:nil error:&error]) {
-            SFDebug(@"Could not create rotated files dir \"%@\" due to %@", _dirPath, [error localizedDescription]);
-            [[SFMetrics sharedMetrics] count:SFMetricsKeyNumFileOperationErrors];
+        if (!SFTouchDirPath(_dirPath)) {
             self = nil;
             return nil;
         }
+
+        _currentFilePath = [_dirPath stringByAppendingPathComponent:SFCurrentFileName];
+        _currentFile = nil;
+
+        _manager = [NSFileManager defaultManager];
 
         _currentFileLock = [NSObject new];
         _nonCurrentFilesLock = [NSObject new];

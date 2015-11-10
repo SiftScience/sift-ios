@@ -58,8 +58,11 @@
 - (BOOL)appendEvent:(SFEvent *)event;
 
 /**
- * Force an upload of events and return after the HTTP request is sent,
- * but not until we receive the HTTP response from the server.
+ * Issue an upload of events and return after the HTTP request is sent.
+ *
+ * If `force` is NO, the upload will be ignored if an prior upload is in
+ * progress.  NOTE: If you force an upload, you may risk uploading
+ * duplicated events.
  *
  * If one of `accountId`, `beaconId`, or `serverUrlFormat` is nil, this
  * method will do nothing.
@@ -67,6 +70,9 @@
  * This method is blocking and you probably should not call it in the
  * main thread.
  */
+- (BOOL)upload:(BOOL)force;
+
+/** Same as above but with force=NO. */
 - (BOOL)upload;
 
 /**

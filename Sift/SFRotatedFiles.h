@@ -58,6 +58,9 @@
  */
 - (BOOL)rotateFile;
 
+/** Remove data but keep the directories. */
+- (void)removeData;
+
 /** Remove the managed directory. */
 - (BOOL)removeDir;
 

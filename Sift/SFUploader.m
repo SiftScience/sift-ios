@@ -67,6 +67,12 @@ static NSString *SFSourceListFilePath(NSString *stateDirPath, uint32_t requestId
     }
 }
 
+- (void)removeData {
+    @synchronized(self) {
+        SFRemoveFilesInDir(_stateDirPath);
+    }
+}
+
 - (BOOL)upload:(NSString *)serverUrlFormat accountId:(NSString *)accountId beaconKey:(NSString *)beaconKey force:(BOOL)force {
     @synchronized(self) {
         if (!force && !SFIsDirEmpty(_stateDirPath)) {
@@ -76,59 +82,75 @@ static NSString *SFSourceListFilePath(NSString *stateDirPath, uint32_t requestId
 
         uint32_t requestId = arc4random();
 
-        // Initialize variables before the goto statements to make compiler happy...
-
-        NSString *url = [NSString stringWithFormat:serverUrlFormat, accountId];
-        NSString *encodedBeaconKey = [[beaconKey dataUsingEncoding:NSASCIIStringEncoding] base64EncodedStringWithOptions:0];
-        NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:[NSURL URLWithString:url]];
-        [request setHTTPMethod:@"PUT"];
-        [request setValue:[@"Basic " stringByAppendingString:encodedBeaconKey] forHTTPHeaderField:@"Authorization"];
-        [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
-        [request setValue:[NSString stringWithFormat:@"%u", requestId] forHTTPHeaderField:SFRequestIdHeader];
 
         NSString *requestBodyFilePath = SFRequestBodyFilePath(_stateDirPath, requestId);
         NSString *sourceListFilePath = SFSourceListFilePath(_stateDirPath, requestId);
-        NSMutableArray *sourceFilePaths = [NSMutableArray new];
+        BOOL keepFiles = NO;
 
-        BOOL okay = NO;
-
-        if (!SFTouchFilePath(requestBodyFilePath) || !SFTouchFilePath(sourceListFilePath)) {
-            goto cleanup;
-        }
-
-        if (![self collectEventsInto:[NSFileHandle fileHandleForWritingAtPath:requestBodyFilePath] fromFilePaths:sourceFilePaths]) {
-            goto cleanup;
-        }
-        if (sourceFilePaths.count == 0) {
-            SFDebug(@"Nothing to upload");
-            okay = YES;
-            goto cleanup;
-        }
-#ifndef NDEBUG
-        {
-            NSError *error;
-            NSString *listRequestText = [NSString stringWithContentsOfFile:requestBodyFilePath encoding:NSASCIIStringEncoding error:&error];
-            if (listRequestText) {
-                SFDebug(@"Upload list request:\n%@", listRequestText);
-            } else {
-                SFDebug(@"Could not read \"%@\" due to %@", requestBodyFilePath, [error localizedDescription]);
+        @try {
+            if (!SFTouchFilePath(requestBodyFilePath) || !SFTouchFilePath(sourceListFilePath)) {
+                return NO;
             }
-        }
+
+            NSMutableArray *sourceFilePaths = [NSMutableArray new];
+            if (![self collectEventsInto:[NSFileHandle fileHandleForWritingAtPath:requestBodyFilePath] fromFilePaths:sourceFilePaths]) {
+                return NO;
+            }
+            if (sourceFilePaths.count == 0) {
+                SFDebug(@"Nothing to upload");
+                return YES;
+            }
+#ifndef NDEBUG
+            {
+                NSError *error;
+                NSString *listRequestText = [NSString stringWithContentsOfFile:requestBodyFilePath encoding:NSASCIIStringEncoding error:&error];
+                if (listRequestText) {
+                    SFDebug(@"Upload list request:\n%@", listRequestText);
+                } else {
+                    SFDebug(@"Could not read \"%@\" due to %@", requestBodyFilePath, [error localizedDescription]);
+                }
+            }
 #endif
 
-        if (!SFWriteJsonToFile(sourceFilePaths, sourceListFilePath)) {
-            goto cleanup;
-        }
+            if (!SFWriteJsonToFile(sourceFilePaths, sourceListFilePath)) {
+                return NO;
+            }
 
-        [[SFMetrics sharedMetrics] count:SFMetricsKeyNumUploads];
-        [[_session uploadTaskWithRequest:request fromFile:[NSURL fileURLWithPath:requestBodyFilePath isDirectory:NO]] resume];
-        return YES;
+            NSURL *serverUrl = [NSURL URLWithString:[NSString stringWithFormat:serverUrlFormat, accountId]];
+            SFDebug(@"serverUrl: %@", serverUrl);
+            if(!serverUrl) {
+                SFDebug(@"Could not construct server URL");
+                SFDebug(@"serverUrlFormat: %@", serverUrlFormat);
+                SFDebug(@"accountId: %@", accountId);
+                [[SFMetrics sharedMetrics] count:SFMetricsKeyNumMiscErrors];
+                return NO;
+            }
 
-cleanup:
-        for (NSString *path in @[requestBodyFilePath, sourceListFilePath]) {
-            SFRemoveFile(path);
+            NSString *encodedBeaconKey = [[beaconKey dataUsingEncoding:NSASCIIStringEncoding] base64EncodedStringWithOptions:0];
+
+            NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:serverUrl];
+            [request setHTTPMethod:@"PUT"];
+            [request setValue:[@"Basic " stringByAppendingString:encodedBeaconKey] forHTTPHeaderField:@"Authorization"];
+            [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+            [request setValue:[NSString stringWithFormat:@"%u", requestId] forHTTPHeaderField:SFRequestIdHeader];
+            SFDebug(@"request: %@", request);
+
+            NSURL *requestBodyFileUrl = [NSURL fileURLWithPath:requestBodyFilePath isDirectory:NO];
+            SFDebug(@"requestBodyFileUrl: %@", requestBodyFileUrl);
+
+            [[_session uploadTaskWithRequest:request fromFile:requestBodyFileUrl] resume];
+            [[SFMetrics sharedMetrics] count:SFMetricsKeyNumUploads];
+            keepFiles = YES;
+
+            return YES;
         }
-        return okay;
+        @finally {
+            if (!keepFiles) {
+                for (NSString *path in @[requestBodyFilePath, sourceListFilePath]) {
+                    SFRemoveFile(path);
+                }
+            }
+        }
     }
 }
 

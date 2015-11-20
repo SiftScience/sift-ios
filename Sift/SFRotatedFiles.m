@@ -106,6 +106,15 @@ static NSString * const SFFileNamePrefix = @"data-";
     }
 }
 
+- (void)removeData {
+    @synchronized(_currentFileLock) {
+        @synchronized(_nonCurrentFilesLock) {
+            SFRemoveFilesInDir(_dirPath);
+        }
+    }
+}
+
+
 - (BOOL)removeDir {
     @synchronized(_currentFileLock) {
         @synchronized(_nonCurrentFilesLock) {

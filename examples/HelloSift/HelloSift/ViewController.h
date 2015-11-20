@@ -4,6 +4,12 @@
 
 @interface ViewController : UIViewController
 
+@property (weak, nonatomic) IBOutlet UITextField *accountIdTextField;
+
+@property (weak, nonatomic) IBOutlet UITextField *beaconKeyTextField;
+
+@property (weak, nonatomic) IBOutlet UITextField *serverUrlFormatTextField;
+
 @property (weak, nonatomic) IBOutlet UITextField *pathTextField;
 
 @property (weak, nonatomic) IBOutlet UITextField *typeTextField;
@@ -11,9 +17,5 @@
 @property (weak, nonatomic) IBOutlet UITextField *userIdTextField;
 
 @property (weak, nonatomic) IBOutlet UITextField *fieldsTextField;
-
-@property (weak, nonatomic) IBOutlet UIButton *enqueueEventButton;
-
-@property (weak, nonatomic) IBOutlet UIButton *requestUploadButton;
 
 @end

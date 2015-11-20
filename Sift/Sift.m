@@ -21,7 +21,7 @@
 #import "Sift+Private.h"
 
 static const NSTimeInterval SFUploadInterval = 60;  // 1 minute.
-static const NSTimeInterval SFReportMetricsInterval = 60;  // 1 minute.
+static const NSTimeInterval SFReportInterval = 60;  // 1 minute.
 static const NSTimeInterval SFCleanupInterval = 600;  // 10 minutes.
 
 static NSString * const SFServerUrlFormat = @"https://api3.siftscience.com/v3/accounts/%@/mobile_events";
@@ -117,7 +117,7 @@ static const SFQueueConfig SFDefaultEventQueueConfig = {
         self.uploadPeriod = SFUploadInterval;
 
         _reporterTimer = nil;
-        self.reportMetricsPeriod = SFReportMetricsInterval;
+        self.reportPeriod = SFReportInterval;
 
         _cleanupTimer = [NSTimer timerWithTimeInterval:SFCleanupInterval target:self selector:@selector(enqueueMethod:) userInfo:nil repeats:YES];
         [[NSRunLoop mainRunLoop] addTimer:_cleanupTimer forMode:NSDefaultRunLoopMode];
@@ -151,12 +151,18 @@ static const SFQueueConfig SFDefaultEventQueueConfig = {
     }
 }
 
+- (void)removeData {
+    SFDebug(@"Remove data...");
+    [_queueDirs removeData];
+    [_uploader removeData];
+}
+
 - (void)setUploadPeriod:(NSTimeInterval)uploadPeriod {
     [self configureTimer:_uploaderTimer period:&_uploadPeriod newPeriod:uploadPeriod];
 }
 
-- (void)setReportMetricsPeriod:(NSTimeInterval)reportMetricsPeriod {
-    [self configureTimer:_reporterTimer period:&_reportMetricsPeriod newPeriod:reportMetricsPeriod];
+- (void)setReportPeriod:(NSTimeInterval)reportPeriod {
+    [self configureTimer:_reporterTimer period:&_reportPeriod newPeriod:reportPeriod];
 }
 
 - (void)configureTimer:(NSTimer *)timer period:(NSTimeInterval *)period newPeriod:(NSTimeInterval)newPeriod {
@@ -309,6 +315,21 @@ static const SFQueueConfig SFDefaultEventQueueConfig = {
             return NO;
         }
         [queue append:[event makeEvent]];
+        return YES;
+    }
+    @finally {
+        pthread_rwlock_unlock(&_lock);
+    }
+}
+
+- (BOOL)flush {
+    SFDebug(@"Flush out events...");
+    pthread_rwlock_rdlock(&_lock);
+    @try {
+        for (NSString *identifier in _eventQueues) {
+            SFQueue *queue = [_eventQueues objectForKey:identifier];
+            [queue rotateFile];
+        }
         return YES;
     }
     @finally {

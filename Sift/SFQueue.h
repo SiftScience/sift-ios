@@ -26,7 +26,16 @@
 /**
  * Examine the current Record IO file and rotate it if criteria
  * specified in the `SFQueueConfig` are met.  This method is blocking.
+ *
+ * @return YES on success (even if nothing has been rotated).
  */
-- (void)maybeRotateFile;
+- (BOOL)maybeRotateFile;
+
+/**
+ * Rotate the current Record IO file.
+ *
+ * @return YES on success.
+ */
+- (BOOL)rotateFile;
 
 @end

@@ -63,6 +63,53 @@
 - (BOOL)appendEvent:(SFEvent *)event;
 
 /**
+ * @name Configurations.
+ *
+ * At minimum you should configure `accountId` and `beaconKey`, which
+ * default to nil.
+ */
+
+/** Your account ID.  Default to nil. */
+@property NSString *accountId;
+
+/** Your beacon key.  Default to nil. */
+@property NSString *beaconKey;
+
+/**
+ * The interval at which we issue uploads.  You cancel the upload timer
+ * by setting a non-positive value.
+ *
+ * Default to 60 seconds.
+ */
+@property (nonatomic) NSTimeInterval uploadPeriod;
+
+/**
+ * The interval at which we collect internal metrics and device data.
+ * You cancel this timer by setting a non-positive value.
+ *
+ * Default to 60 seconds.
+ */
+@property (nonatomic) NSTimeInterval reportPeriod;
+
+/**
+ * @name Integration helpers.
+ *
+ * The methods and properties of this section are useful for validating
+ * integration (and sometimes useful in production).
+ */
+
+/**
+ * Flush out all events.
+ *
+ * Due to batching, when an event was enqueued, it would not be uploaded
+ * just yet even if you request an upload.  This method makes all events
+ * become "upload-able" immediately.
+ *
+ * @return YES on success.
+ */
+- (BOOL)flush;
+
+/**
  * Issue an upload of events and return after the HTTP request is sent,
  * but before we receive the HTTP response.
  *
@@ -82,18 +129,8 @@
 /** Same as above but with force=NO. */
 - (BOOL)upload;
 
-/**
- * @name Configurations.
- *
- * At minimum you should configure `accountId` and `beaconKey`, which
- * default to nil.
- */
-
-/** Your account ID.  Default to nil. */
-@property NSString *accountId;
-
-/** Your beacon key.  Default to nil. */
-@property NSString *beaconKey;
+/** Remove all data. */
+- (void)removeData;
 
 /**
  * The API endpoint that will receive the upload requests.
@@ -106,21 +143,5 @@
  * where "%@" will be interpolated to `accountId`.
  */
 @property NSString *serverUrlFormat;
-
-/**
- * The interval at which we issue uploads.  You cancel the upload timer
- * by setting a non-positive value.
- *
- * Default to 60 seconds.
- */
-@property (nonatomic) NSTimeInterval uploadPeriod;
-
-/**
- * The interval at which we collect our internal metrics.  You cancel
- * this timer by setting a non-positive value.
- *
- * Default to 60 seconds.
- */
-@property (nonatomic) NSTimeInterval reportMetricsPeriod;
 
 @end

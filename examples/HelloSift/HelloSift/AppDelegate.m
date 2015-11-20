@@ -14,8 +14,8 @@
     // Configure Sift object here.
 
     // At minimum, you should configure these two.
-    [Sift sharedSift].accountId = @"<YOUR_ACCOUND_ID>";
-    [Sift sharedSift].beaconKey = @"<YOUR_BEACON_KEY>";
+    //[Sift sharedSift].accountId = ...;
+    //[Sift sharedSift].beaconKey = ...;
 
     // In addition, if you have any queues, you should set up them here.
     //[[Sift sharedSift] addEventQueue:... config:...];

@@ -14,6 +14,8 @@
 // NOTE: Make sure this does not conflict with SFRotatedFiles managed files.
 static NSString * const SFQueueStateFileName = @"queue-state";
 
+static BOOL SFRotateFile(SFRotatedFiles *rotatedFiles);
+
 static NSDictionary *SFReadLastEvent(NSString *currentFilePath, NSArray *filePaths);
 
 @implementation SFQueue {
@@ -49,6 +51,15 @@ static NSDictionary *SFReadLastEvent(NSString *currentFilePath, NSArray *filePat
 
 - (void)loadState {
     _lastEvent = SFReadJsonFromFile(_stateFilePath);
+    if (!_lastEvent) {
+        // See if we could read the last event from data files...
+        [_queueDirs useDir:_identifier withBlock:^BOOL (SFRotatedFiles *rotatedFiles) {
+            return [rotatedFiles accessFilesWithBlock:^BOOL (NSString *currentFilePath, NSArray *filePaths) {
+                _lastEvent = SFReadLastEvent(currentFilePath, filePaths);
+                return _lastEvent ? YES : NO;
+            }];
+        }];
+    }
 }
 
 - (void)saveState {
@@ -98,19 +109,28 @@ static NSDictionary *SFReadLastEvent(NSString *currentFilePath, NSArray *filePat
     }];
 }
 
-- (void)maybeRotateFile {
-    BOOL rotated = [_queueDirs useDir:_identifier withBlock:^BOOL (SFRotatedFiles *rotatedFiles) {
+- (BOOL)rotateFile {
+    return [_queueDirs useDir:_identifier withBlock:^BOOL (SFRotatedFiles *rotatedFiles) {
         return [rotatedFiles accessFilesWithBlock:^BOOL (NSString *currentFilePath, NSArray *filePaths) {
-            if (_config.appendEventOnlyWhenDifferent && filePaths && filePaths.count > 0) {
-                return NO;  // Maintain strict upload order...
-            }
-            if (!SFQueueShouldRotateFile(currentFilePath, &_config)) {
-                return NO;
-            }
-            return [rotatedFiles rotateFile];
+            return SFRotateFile(rotatedFiles);
         }];
     }];
-    SFDebug(@"Files %s rotated", rotated ? "were" : "weren't");
+}
+
+- (BOOL)maybeRotateFile {
+    return [_queueDirs useDir:_identifier withBlock:^BOOL (SFRotatedFiles *rotatedFiles) {
+        return [rotatedFiles accessFilesWithBlock:^BOOL (NSString *currentFilePath, NSArray *filePaths) {
+            if (_config.appendEventOnlyWhenDifferent && filePaths && filePaths.count > 0) {
+                SFDebug(@"Would rather not rotate files");
+                return YES;  // Maintain strict upload order...
+            }
+            if (!SFQueueShouldRotateFile(currentFilePath, &_config)) {
+                SFDebug(@"Would rather not rotate files");
+                return YES;
+            }
+            return SFRotateFile(rotatedFiles);
+        }];
+    }];
 }
 
 BOOL SFQueueShouldRotateFile(NSString *currentFilePath, SFQueueConfig *config) {
@@ -143,6 +163,16 @@ BOOL SFQueueShouldRotateFile(NSString *currentFilePath, SFQueueConfig *config) {
     return NO;
 }
 
+@end
+
+static BOOL SFRotateFile(SFRotatedFiles *rotatedFiles) {
+    BOOL okay = [rotatedFiles rotateFile];
+    if (okay) {
+        SFDebug(@"Files were rotated");
+    }
+    return okay;
+}
+
 static NSDictionary *SFReadLastEvent(NSString *currentFilePath, NSArray *filePaths) {
     NSString *filePath = nil;
     if (currentFilePath) {
@@ -152,5 +182,3 @@ static NSDictionary *SFReadLastEvent(NSString *currentFilePath, NSArray *filePat
     }
     return filePath ? SFRecordIoReadLastRecord([NSFileHandle fileHandleForReadingAtPath:filePath]) : nil;
 }
-
-@end

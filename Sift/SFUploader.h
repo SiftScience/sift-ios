@@ -30,4 +30,7 @@
 /** Clean up outdated upload state files. */
 - (void)cleanup;
 
+/** Remove data but keep the directories. */
+- (void)removeData;
+
 @end

@@ -37,6 +37,9 @@
 /** Clean up outdated, unrecognizable directories. */
 - (void)cleanup;
 
+/** Remove data but keep the directories. */
+- (void)removeData;
+
 /** Remove everything. */
 - (void)removeRootDir;
 

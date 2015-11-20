@@ -172,6 +172,19 @@ BOOL SFRemoveFile(NSString *path) {
     return okay;
 }
 
+BOOL SFRemoveFilesInDir(NSString *path) {
+    NSArray *filePaths = SFListDir(path);
+    if (!filePaths) {
+        return NO;
+    }
+    for (NSString *filePath in filePaths) {
+        if (!SFRemoveFile(filePath)) {  // Fail fast.
+            return NO;
+        }
+    }
+    return YES;
+}
+
 id SFReadJsonFromFile(NSString *filePath) {
     NSData *data;
     @try {

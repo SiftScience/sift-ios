@@ -61,6 +61,13 @@ BOOL SFTouchDirPath(NSString *path);
 BOOL SFRemoveFile(NSString *path);
 
 /**
+ * Remove files in a directory but keep that directory.
+ *
+ * @return YES on success.
+ */
+BOOL SFRemoveFilesInDir(NSString *path);
+
+/**
  * @return an object from the contents of a file, parsed in JSON format,
  * or nil on failure.
  */

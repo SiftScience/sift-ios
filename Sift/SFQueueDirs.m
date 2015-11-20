@@ -187,6 +187,19 @@ static NSString *SFMakeQueueDirName(NSString *identifier);
     }
 }
 
+- (void)removeData {
+    pthread_rwlock_rdlock(&_lock);
+    @try {
+        for (NSString *identifier in _rotatedFilesDict) {
+            SFRotatedFiles *rotatedFiles = [_rotatedFilesDict objectForKey:identifier];
+            [rotatedFiles removeData];
+        }
+    }
+    @finally {
+        pthread_rwlock_unlock(&_lock);
+    }
+}
+
 - (void)removeRootDir {
     pthread_rwlock_wrlock(&_lock);
     @try {

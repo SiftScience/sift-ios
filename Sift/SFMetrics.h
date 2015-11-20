@@ -3,7 +3,7 @@
 @import Foundation;
 
 /**
- * Predefined list of counters.
+ * The predefined list of counters.
  *
  * A counter counts the number of an event.
  */
@@ -20,10 +20,10 @@
     SF_METRICS_MAKE(NumUploadsSucceeded)
 
 /**
- * Predefined list of meters.
+ * The predefined list of meters.
  *
  * A meter makes measurements and records the first and the second
- * moment (mean and variance).
+ * moment (for calculating mean and variance).
  */
 #define SF_METRICS_METERS(BIN_OP) \
     SF_METRICS_MAKE(RecordSize)
@@ -46,9 +46,15 @@ typedef NS_ENUM(NSInteger, SFMetricsKey) {
 };
 
 /**
+ * @return string representation (useful when printing them out) of the
+ * key, or nil if it is not a valid key.
+ */
+NSString *SFMetricsMetricName(SFMetricsKey key);
+
+/**
  * A meter records the sum of measurements, the sum of the squares of
  * measurements, and the number of measurements.  Together they can be
- * used to calculate the first and the second moment.
+ * used to calculate mean and variance.
  */
 typedef struct {
     double sum;
@@ -56,11 +62,9 @@ typedef struct {
     NSInteger count;
 } SFMetricsMeter;
 
-NSString *SFMetricsMetricName(SFMetricsKey key);
-
 /**
  * Count, measure, and record metric data.  You should use the shared
- * metrics object rather than creating it.
+ * metrics object rather than creating one.
  *
  * The metric data are zero-initialized.
  */
@@ -69,13 +73,22 @@ NSString *SFMetricsMetricName(SFMetricsKey key);
 /** @return the shared metrics object. */
 + (instancetype)sharedMetrics;
 
-/** Count an event of the given counter key. */
+/**
+ * Count an event of the given counter key, or do nothing if it is not a
+ * valid counter key.
+ */
 - (void)count:(SFMetricsKey)counterKey;
 
-/** Count number of occurrence of an event of the given counter key. */
+/**
+ * Count number of occurrence of an event of the given counter key, or
+ * do nothing if it is not a valid counter key.
+ */
 - (void)count:(SFMetricsKey)counterKey value:(NSInteger)value;
 
-/** Make a measurement for the given meter key. */
+/**
+ * Make a measurement for the given meter key, of do nothing if it is
+ * not a valid meter key.
+ */
 - (void)measure:(SFMetricsKey)meterKey value:(double)value;
 
 /** Enumerate counter data. */

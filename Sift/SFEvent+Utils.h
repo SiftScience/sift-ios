@@ -22,7 +22,7 @@ NSDictionary *SFEventMakeEvent(NSInteger time, NSString *path, NSString *mobileE
  * into a single list request JSON object.
  *
  * We are tackling scenarios that Record IO files are guarded by locks
- * that we may not acquire them all simultaneous.  In light of this,
+ * that we may not acquire them all simultaneously.  In light of this,
  * instead of providing a conversion function taking a series of Record
  * IO file handles that you have to acquire locks for all of them prior
  * to the call, we provide a (stateful) class to which you may feed each

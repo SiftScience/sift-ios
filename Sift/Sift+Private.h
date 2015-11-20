@@ -16,7 +16,7 @@
  */
 - (void)enqueueMethod:(NSTimer *)timer;
 
-/** Call `SFMetricsReporter` to collect and report metrics. */
+/** Gather metrics and device properties report. */
 - (void)report;
 
 /** Call each component's `cleanup` method. */

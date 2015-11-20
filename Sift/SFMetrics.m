@@ -8,7 +8,7 @@
 
 #import "SFMetrics.h"
 
-static NSString *const SFMetricsMetricNames[SFMetricsNumMetrics] = {
+static NSString * const SFMetricsMetricNames[SFMetricsNumMetrics] = {
 #define SF_METRICS_MAKE(name) [SFMetricsKey ## name] = @#name
     SF_METRICS_COUNTERS(SF_COMMA),
     SF_METRICS_METERS(SF_COMMA),

@@ -32,9 +32,7 @@ BOOL SFQueueShouldRotateFile(NSString *currentFilePath, SFQueueConfig *config);
  */
 - (BOOL)writeEventToFileWhenDifferent:(NSDictionary *)event lastEvent:(NSDictionary *)lastEvent;
 
-/**
- * Write event to the current file.
- */
+/** Write event to the current file. */
 - (BOOL)writeEventToFile:(NSDictionary *)event;
 
 @end

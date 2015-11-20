@@ -14,7 +14,7 @@
 
 /**
  * Append a record to a Record IO file.  If it fails, the file contents
- * might have been corrupted (and you might want to delete that file).
+ * might be corrupted (and you probably should delete that file).
  *
  * @return YES on success.
  */
@@ -24,9 +24,9 @@ BOOL SFRecordIoAppendRecord(NSFileHandle *handle, NSDictionary *record);
  * Read and return a record from the current position of the Record IO
  * file handle (so if you seek to an invalid position, this function
  * will fail or return garbage).  After it returns, the position points
- * at the start of the next record.
+ * to the start of the next record.
  *
- * @return nil on failure.
+ * @return record or nil on failure.
  */
 NSDictionary *SFRecordIoReadRecord(NSFileHandle *handle);
 
@@ -35,15 +35,15 @@ NSDictionary *SFRecordIoReadRecord(NSFileHandle *handle);
  * return a `NSData` object instead.  It does not guarantee that you may
  * later deserialize the `NSData` object back into a record.
  *
- * @return nil on failure.
+ * @return raw record data or nil on failure.
  */
 NSData *SFRecordIoReadRecordData(NSFileHandle *handle);
 
 /**
  * Seek and return the last record of the Record IO file.  After it
- * returns, the position points at the end of the file.
+ * returns, the position points to the end of the file.
  *
- * @return nil on failure.
+ * @return record or nil on failure.
  */
 NSDictionary *SFRecordIoReadLastRecord(NSFileHandle *handle);
 
@@ -52,6 +52,6 @@ NSDictionary *SFRecordIoReadLastRecord(NSFileHandle *handle);
  * return a `NSData` object instead.  It does not guarantee that you may
  * later deserialize the `NSData` object back into a record.
  *
- * @return nil on failure.
+ * @return raw record data or nil on failure.
  */
 NSData *SFRecordIoReadLastRecordData(NSFileHandle *handle);

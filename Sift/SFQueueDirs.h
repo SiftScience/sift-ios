@@ -6,8 +6,8 @@
 
 /**
  * Manage directories for `SFQueue` objects.  The directory contents are
- * manipulated with `SFRotatedFiles` objects, which let you may write to
- * the current file, rotate it, etc.
+ * manipulated with `SFRotatedFiles` objects, which let you write to the
+ * current file, rotate it, etc.
  *
  * Methods return YES on success.
  */

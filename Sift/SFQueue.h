@@ -16,17 +16,16 @@
 - (instancetype)initWithIdentifier:(NSString *)identifier config:(SFQueueConfig)config operationQueue:(NSOperationQueue *)operationQueue queueDirs:(SFQueueDirs *)queueDirs;
 
 /**
- * Write an event to the file.
+ * Write an event to the file asynchronously.
  *
- * It is safe to call `append`, which is potentially-IO-blocking, in the
- * main thread without fearing that you will block the main thread
- * because they delegate real work to another thread.
+ * Because this call is asynchronous, it is safe to be called in the
+ * main thread without blocking the main thread.
  */
 - (void)append:(NSDictionary *)event;
 
 /**
  * Examine the current Record IO file and rotate it if criteria
- * specified in the `SFQueueConfig` are met.
+ * specified in the `SFQueueConfig` are met.  This method is blocking.
  */
 - (void)maybeRotateFile;
 

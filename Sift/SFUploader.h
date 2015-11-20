@@ -6,10 +6,14 @@
 
 /**
  * Collect and upload events from the Record IO files of queues.  After
- * the upload succeeded, delete the Record IO files of those events.
+ * the upload succeeded, delete those Record IO files.
  */
 @interface SFUploader : NSObject <NSURLSessionDelegate, NSURLSessionTaskDelegate, NSURLSessionDataDelegate>
 
+/**
+ * Create an uploader object.  It will keep update state in files under
+ * `rootDirPath` (which should not conflict with other directories).
+ */
 - (instancetype)initWithRootDirPath:(NSString *)rootDirPath queueDirs:(SFQueueDirs *)queueDirs operationQueue:(NSOperationQueue *)operationQueue config:(NSURLSessionConfiguration *)config;
 
 /**

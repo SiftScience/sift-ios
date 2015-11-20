@@ -4,6 +4,11 @@
 
 #import "SFQueueConfig.h"
 
+/**
+ * Device properties are sent to their own queue, which is configured to
+ * record only difference (we assume that device properties are rarely
+ * changed).
+ */
 extern NSString * const SFDevicePropertiesReporterQueueIdentifier;
 extern const SFQueueConfig SFDevicePropertiesReporterQueueConfig;
 

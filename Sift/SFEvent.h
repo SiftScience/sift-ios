@@ -2,9 +2,15 @@
 
 @import Foundation;
 
+/**
+ * An event has: time, path, (mobile event) type, user ID, and a
+ * dictionary of fields.  All of them are optional.  You may alter them
+ * after the object creation (through properties below) but before the
+ * event object is append to an event queue.
+ */
 @interface SFEvent : NSObject
 
-/** Create an `SFEvent` object. */
+/** Create an `SFEvent` object.  All arguments are nullable. */
 + (SFEvent *)eventWithPath:(NSString *)path mobileEventType:(NSString *)mobileEventType userId:(NSString *)userId fields:(NSDictionary *)fields;
 
 /** @name Event properties. */

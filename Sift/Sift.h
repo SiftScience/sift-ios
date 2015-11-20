@@ -31,6 +31,8 @@
  * Add an event queue that did not exist prior to the call.
  *
  * This method is blocking.
+ *
+ * @return YES on success.
  */
 - (BOOL)addEventQueue:(NSString *)identifier config:(SFQueueConfig)config;
 
@@ -39,36 +41,41 @@
  * queue if `purge` is YES.
  *
  * This method is blocking.
+ *
+ * @return YES on success.
  */
 - (BOOL)removeEventQueue:(NSString *)identifier purge:(BOOL)purge;
 
 /**
- * Send an event to the queue identified by `identifier`.  The arguments
- * `path`, `mobileEventType`, `userId`, and, `fields` are used to
- * compose the event object and may be nil.
+ * Send an event to the queue identified by `identifier`, or fail if the
+ * queue was not created prior to the call.
  *
- * The actual IO is done by a background thread and this method will not
- * block the main thread.
+ * This method is _not_ blocking.
  *
- * This method fails if the queue was not created prior to the call.
+ * @return YES on success.
  */
 - (BOOL)appendEvent:(SFEvent *)event toQueue:(NSString *)identifier;
 
-/** Same as above but use the default queue. */
+/**
+ * Same as above but use the default queue (most of the time you should
+ * probably use this).
+ */
 - (BOOL)appendEvent:(SFEvent *)event;
 
 /**
- * Issue an upload of events and return after the HTTP request is sent.
+ * Issue an upload of events and return after the HTTP request is sent,
+ * but before we receive the HTTP response.
  *
  * If `force` is NO, the upload will be ignored if an prior upload is in
  * progress.  NOTE: If you force an upload, you may risk uploading
  * duplicated events.
  *
- * If one of `accountId`, `beaconId`, or `serverUrlFormat` is nil, this
- * method will do nothing.
+ * If one of `accountId`, `beaconId`, or `serverUrlFormat` property is
+ * nil, this method will do nothing.
  *
- * This method is blocking and you probably should not call it in the
- * main thread.
+ * This method is blocking.
+ *
+ * @return YES on success.
  */
 - (BOOL)upload:(BOOL)force;
 

@@ -12,7 +12,7 @@
 /**
  * Create and open the current file, and then seek to the end.
  *
- * @return nil on failure.
+ * @return the file handle or nil on failure.
  */
 - (NSFileHandle *)currentFile;
 

@@ -61,4 +61,7 @@
 /** Remove the managed directory. */
 - (BOOL)removeDir;
 
+/** Directory assigned to this SFRotatedFiles object. */
+@property (readonly) NSString *dirPath;
+
 @end

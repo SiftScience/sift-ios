@@ -1,6 +1,7 @@
 // Copyright (c) 2015 Sift Science. All rights reserved.
 
 @import Foundation;
+@import UIKit;
 
 #import "SFDebug.h"
 #import "SFMetrics.h"
@@ -10,10 +11,14 @@
 #import "SFQueue.h"
 #import "SFQueue+Private.h"
 
+// NOTE: Make sure this does not conflict with SFRotatedFiles managed files.
+static NSString * const SFQueueStateFileName = @"queue-state";
+
 static NSDictionary *SFReadLastEvent(NSString *currentFilePath, NSArray *filePaths);
 
 @implementation SFQueue {
     NSString *_identifier;
+    NSString *_stateFilePath;
     SFQueueConfig _config;
     NSOperationQueue *_operationQueue;
     SFQueueDirs *_queueDirs;
@@ -27,13 +32,29 @@ static NSDictionary *SFReadLastEvent(NSString *currentFilePath, NSArray *filePat
         _config = config;
         _operationQueue = operationQueue;
         _queueDirs = queueDirs;
-        _lastEvent = nil;
         if (![_queueDirs addDir:_identifier]) {
             self = nil;
             return nil;
         }
+        [_queueDirs useDir:_identifier withBlock:^BOOL (SFRotatedFiles *rotatedFiles) {
+            _stateFilePath = [rotatedFiles.dirPath stringByAppendingPathComponent:SFQueueStateFileName];
+            return YES;
+        }];
+        [self loadState];
+        NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
+        [notificationCenter addObserver:self selector:@selector(saveState) name:UIApplicationDidEnterBackgroundNotification object:nil];
     }
     return self;
+}
+
+- (void)loadState {
+    _lastEvent = SFReadJsonFromFile(_stateFilePath);
+}
+
+- (void)saveState {
+    if (_lastEvent) {
+        SFWriteJsonToFile(_lastEvent, _stateFilePath);
+    }
 }
 
 - (void)append:(NSDictionary *)event {
@@ -46,7 +67,12 @@ static NSDictionary *SFReadLastEvent(NSString *currentFilePath, NSArray *filePat
 - (void)maybeWriteEventToFile:(NSDictionary *)event {
     BOOL result;
     if (_config.appendEventOnlyWhenDifferent) {
-        result = [self writeEventToFileWhenDifferent:event lastEvent:_lastEvent];
+        if (_lastEvent && [_lastEvent isEqualToDictionary:event]) {
+            SFDebug(@"Ignore same event: %@", event);
+            result = YES;
+        } else {
+            result = [self writeEventToFile:event];
+        }
         _lastEvent = event;
     } else {
         result = [self writeEventToFile:event];
@@ -57,25 +83,6 @@ static NSDictionary *SFReadLastEvent(NSString *currentFilePath, NSArray *filePat
         return;
     }
     [self maybeRotateFile];
-}
-
-- (BOOL)writeEventToFileWhenDifferent:(NSDictionary *)event lastEvent:(NSDictionary *)lastEvent {
-    if (!lastEvent) {
-        return [_queueDirs useDir:_identifier withBlock:^BOOL (SFRotatedFiles *rotatedFiles) {
-            return [rotatedFiles accessFilesWithBlock:^BOOL (NSString *currentFilePath, NSArray *filePaths) {
-                NSDictionary *lastEvent = SFReadLastEvent(currentFilePath, filePaths);
-                if (lastEvent) {
-                    return [self writeEventToFileWhenDifferent:event lastEvent:lastEvent];
-                } else {
-                    return [self writeEventToFile:event];
-                }
-            }];
-        }];
-    } else if ([lastEvent isEqualToDictionary:event]) {
-        return YES;
-    } else {
-        return [self writeEventToFile:event];
-    }
 }
 
 - (BOOL)writeEventToFile:(NSDictionary *)event {

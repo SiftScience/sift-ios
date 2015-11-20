@@ -20,17 +20,17 @@ BOOL SFQueueShouldRotateFile(NSString *currentFilePath, SFQueueConfig *config);
  */
 @interface SFQueue ()
 
+/** Read queue state from file. */
+- (void)loadState;
+
+/** Write queue state to file. */
+- (void)saveState;
+
 /**
  * Based on `SFQueueConfig`, optionally write event to file and then
  * optionally rotate the current file.
  */
 - (void)maybeWriteEventToFile:(NSDictionary *)event;
-
-/**
- * Write event to the current file if it is different from the last
- * event written to this queue.
- */
-- (BOOL)writeEventToFileWhenDifferent:(NSDictionary *)event lastEvent:(NSDictionary *)lastEvent;
 
 /** Write event to the current file. */
 - (BOOL)writeEventToFile:(NSDictionary *)event;

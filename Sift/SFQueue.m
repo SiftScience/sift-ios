@@ -147,7 +147,7 @@ BOOL SFQueueShouldRotateFile(NSString *currentFilePath, SFQueueConfig *config) {
 
     unsigned long long fileSize = [attributes fileSize];
     if (fileSize > config->rotateWhenLargerThan) {
-        SFDebug(@"Should rotate file due to file size: %lld > %ld", fileSize, config->rotateWhenLargerThan);
+        SFDebug(@"Should rotate file due to file size: %lld > %ld", fileSize, (long)config->rotateWhenLargerThan);
         return YES;
     }
 

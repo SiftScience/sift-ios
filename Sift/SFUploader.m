@@ -211,7 +211,7 @@ static NSString *SFSourceListFilePath(NSString *stateDirPath, uint32_t requestId
             }
 
             NSInteger statusCode = [(NSHTTPURLResponse *)task.response statusCode];
-            SFDebug(@"PUT %@ status %ld", task.response.URL, statusCode);
+            SFDebug(@"PUT %@ status %ld", task.response.URL, (long)statusCode);
             if (statusCode == 200) {
                 [[SFMetrics sharedMetrics] count:SFMetricsKeyNumUploadsSucceeded];
                 NSArray *sourceFilePaths = SFReadJsonFromFile(SFSourceListFilePath(_stateDirPath, requestId));

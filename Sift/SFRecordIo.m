@@ -23,11 +23,11 @@ BOOL SFRecordIoAppendRecord(NSFileHandle *handle, NSDictionary *record) {
         SFDebug(@"Could not serialize record");
         return NO;
     } else if (data.length <= 0) {
-        SFDebug(@"Do not accept empty records: size=%ld", data.length);
+        SFDebug(@"Do not accept empty records: size=%ld", (long)data.length);
         return NO;
     } else if (data.length > SFRecordDataSizeLimit) {
         // Seriously? Are you really trying to send a record bigger than 64KB?
-        SFDebug(@"Do not accept records bigger than %d bytes: size=%ld", SFRecordDataSizeLimit, data.length);
+        SFDebug(@"Do not accept records bigger than %d bytes: size=%ld", SFRecordDataSizeLimit, (long)data.length);
         [[SFMetrics sharedMetrics] count:SFMetricsKeyNumMiscErrors];
         return NO;
     }

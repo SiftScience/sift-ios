@@ -65,7 +65,8 @@ static BOOL SFFileDate(NSString *path, SEL getDate, NSTimeInterval *output) {
     if (!attributes) {
         return NO;
     }
-    NSDate *date = [attributes performSelector:getDate];
+    NSDate *(*func)(id, SEL) = (void *)[attributes methodForSelector:getDate];
+    NSDate *date = func(attributes, getDate);
     NSTimeInterval sinceNow = -[date timeIntervalSinceNow];
     if (sinceNow < 0) {
         SFDebug(@"%@ of \"%@\" is in the future: %@", NSStringFromSelector(getDate), path, date);

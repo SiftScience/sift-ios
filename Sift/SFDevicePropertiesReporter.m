@@ -28,7 +28,9 @@ const SFQueueConfig SFDevicePropertiesReporterQueueConfig = {
     UIDevice *device = [UIDevice currentDevice];
     [report setObject:[[device identifierForVendor] UUIDString] forKey:@"identifier_for_vendor"];
     for (NSString *propertyName in @[@"name", @"systemName", @"systemVersion", @"model", @"localizedModel"]) {
-        [report setObject:[device performSelector:NSSelectorFromString(propertyName)] forKey:SFCamelCaseToSnakeCase(propertyName)];
+        SEL selector = NSSelectorFromString(propertyName);
+        NSObject *(*func)(id, SEL) = (void *)[device methodForSelector:selector];
+        [report setObject:func(device, selector) forKey:SFCamelCaseToSnakeCase(propertyName)];
     }
 
     // TODO(clchiou): Gather more properties...

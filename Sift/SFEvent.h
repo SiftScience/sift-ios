@@ -27,7 +27,18 @@
 /** User ID.  Default to nil. */
 @property NSString *userId;
 
-/** Custom event fields.  Default to nil. */
+/**
+ * Custom event fields; both key and value must be string typed.
+ * Default to nil.
+ */
 @property NSDictionary *fields;
+
+/** @name Internal properties of Sift (do not use it!). */
+
+/** Device properties.  Default to nil. */
+@property NSDictionary *deviceProperties;
+
+/** Internal metrics.  Default to nil. */
+@property NSDictionary *metrics;
 
 @end

@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		7158BAB61C0F750B00C369D6 /* SFDevicePropertiesReporterTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 7158BAB51C0F750B00C369D6 /* SFDevicePropertiesReporterTests.m */; };
+		7158BAB81C0F78C300C369D6 /* SFMetricsReporterTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 7158BAB71C0F78C300C369D6 /* SFMetricsReporterTests.m */; };
 		71CCDB751BFC04F0001C5791 /* SFDebug.h in Headers */ = {isa = PBXBuildFile; fileRef = 71CCDB591BFC04F0001C5791 /* SFDebug.h */; };
 		71CCDB761BFC04F0001C5791 /* SFDevicePropertiesReporter.h in Headers */ = {isa = PBXBuildFile; fileRef = 71CCDB5A1BFC04F0001C5791 /* SFDevicePropertiesReporter.h */; };
 		71CCDB771BFC04F0001C5791 /* SFDevicePropertiesReporter.m in Sources */ = {isa = PBXBuildFile; fileRef = 71CCDB5B1BFC04F0001C5791 /* SFDevicePropertiesReporter.m */; };
@@ -60,6 +62,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		7158BAB51C0F750B00C369D6 /* SFDevicePropertiesReporterTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SFDevicePropertiesReporterTests.m; sourceTree = "<group>"; };
+		7158BAB71C0F78C300C369D6 /* SFMetricsReporterTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SFMetricsReporterTests.m; sourceTree = "<group>"; };
 		71CCDB591BFC04F0001C5791 /* SFDebug.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SFDebug.h; sourceTree = "<group>"; };
 		71CCDB5A1BFC04F0001C5791 /* SFDevicePropertiesReporter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SFDevicePropertiesReporter.h; sourceTree = "<group>"; };
 		71CCDB5B1BFC04F0001C5791 /* SFDevicePropertiesReporter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SFDevicePropertiesReporter.m; sourceTree = "<group>"; };
@@ -184,6 +188,7 @@
 			isa = PBXGroup;
 			children = (
 				71FB4AE01BFC035A00FE71F2 /* Info.plist */,
+				7158BAB51C0F750B00C369D6 /* SFDevicePropertiesReporterTests.m */,
 				71CCDB911BFC050F001C5791 /* SFEventTests.m */,
 				71CCDB921BFC050F001C5791 /* SFMetricsTests.m */,
 				71CCDB931BFC050F001C5791 /* SFQueueDirsTests.m */,
@@ -195,6 +200,7 @@
 				71CCDB991BFC050F001C5791 /* SFUploaderTests.m */,
 				71CCDB9A1BFC050F001C5791 /* SFUtilsTests.m */,
 				71FB4ADE1BFC035A00FE71F2 /* SiftTests.m */,
+				7158BAB71C0F78C300C369D6 /* SFMetricsReporterTests.m */,
 			);
 			path = SiftTests;
 			sourceTree = "<group>";
@@ -341,6 +347,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7158BAB61C0F750B00C369D6 /* SFDevicePropertiesReporterTests.m in Sources */,
+				7158BAB81C0F78C300C369D6 /* SFMetricsReporterTests.m in Sources */,
 				71CCDBA21BFC050F001C5791 /* SFUploaderTests.m in Sources */,
 				71CCDBA11BFC050F001C5791 /* SFStubHttpProtocol.m in Sources */,
 				71CCDB9E1BFC050F001C5791 /* SFQueueTests.m in Sources */,

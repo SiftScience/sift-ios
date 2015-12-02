@@ -14,4 +14,9 @@
  */
 - (void)report;
 
+/** @name For testing. */
+
+/** Create report. */
+- (NSDictionary *)createReport:(SFMetrics *)metrics startDate:(NSDate *)startDate duration:(CFTimeInterval)duration;
+
 @end

@@ -56,7 +56,7 @@
     // Create events and then rotate files.
     okay = [_queueDirs useDirsWithBlock:^BOOL (SFRotatedFiles *rotatedFiles) {
         BOOL okay = [rotatedFiles writeCurrentFileWithBlock:^BOOL (NSFileHandle *handle) {
-            NSDictionary *event = SFEventMakeEvent(SFTimestampMillis(), @"path", @"mobile_event", @"user_id", @{@"key": @"value"});
+            NSDictionary *event = [[SFEvent eventWithPath:@"path" mobileEventType:@"mobile_event" userId:@"user_id" fields:@{@"key": @"value"}] makeEvent];
             XCTAssert(SFRecordIoAppendRecord(handle, event));
             return YES;
         }];

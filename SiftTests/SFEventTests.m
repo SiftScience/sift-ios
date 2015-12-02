@@ -40,12 +40,12 @@
 
     NSString *tmpPath = [_dirPath stringByAppendingPathComponent:@"tmp"];
     XCTAssert([_manager createFileAtPath:tmpPath contents:nil attributes:0]);
-    
+
     NSDictionary *testdata[] = {
         @{@"key1": @"value1"},
         @{@"key2": @"value2"},
         @{@"key3": @"value3"},
-        SFEventMakeEvent(SFTimestampMillis(), @"path", @"event_type", @"user_id", @{@"key4": @"value4"}),
+        [[SFEvent eventWithPath:@"path" mobileEventType:@"event_type" userId:@"user_id" fields:@{@"key4": @"value4"}] makeEvent],
     };
 
     [self writeEvents:@[] fromPath:tmpPath toPath:filePath];

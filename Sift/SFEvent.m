@@ -37,33 +37,37 @@
         _mobileEventType = nil;
         _userId = nil;
         _fields = nil;
+        _deviceProperties = nil;
+        _metrics = nil;
     }
     return self;
 }
 
 - (NSDictionary *)makeEvent {
-    return SFEventMakeEvent(_time, _path, _mobileEventType, _userId, _fields);
-}
-
-@end
-
-NSDictionary *SFEventMakeEvent(NSInteger time, NSString *path, NSString *mobileEventType, NSString *userId, NSDictionary *fields) {
     NSMutableDictionary *event = [NSMutableDictionary new];
-    [event setObject:[NSNumber numberWithInteger:time] forKey:@"time"];
-    if (path) {
-        [event setObject:path forKey:@"path"];
+    [event setObject:[NSNumber numberWithInteger:_time] forKey:@"time"];
+    if (_path) {
+        [event setObject:_path forKey:@"path"];
     }
-    if (mobileEventType) {
-        [event setObject:mobileEventType forKey:@"mobile_event_type"];
+    if (_mobileEventType) {
+        [event setObject:_mobileEventType forKey:@"mobile_event_type"];
     }
-    if (userId) {
-        [event setObject:userId forKey:@"user_id"];
+    if (_userId) {
+        [event setObject:_userId forKey:@"user_id"];
     }
-    if (fields) {
-        [event setObject:fields forKey:@"fields"];
+    if (_fields) {
+        [event setObject:_fields forKey:@"fields"];
+    }
+    if (_deviceProperties) {
+        [event setObject:_deviceProperties forKey:@"device_properties"];
+    }
+    if (_metrics) {
+        [event setObject:_metrics forKey:@"metrics"];
     }
     return event;
 }
+
+@end
 
 static NSData *SFHeader;
 static NSData *SFFooter;

@@ -12,12 +12,6 @@
 @end
 
 /**
- * Helper function for creating a mobile event in the form of a
- * dictionary.  All the arguments except `time` may be nil.
- */
-NSDictionary *SFEventMakeEvent(NSInteger time, NSString *path, NSString *mobileEventType, NSString *userId, NSDictionary *fields);
-
-/**
  * Merge a series of Record IO files of JSON records and convert them
  * into a single list request JSON object.
  *

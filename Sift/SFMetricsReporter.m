@@ -12,14 +12,6 @@
 
 #import "SFMetricsReporter.h"
 
-static NSString * const SFMetricsReporterPath = @"/sift/metrics";
-
-@interface SFMetricsReporter ()
-
-- (NSDictionary *)createReport:(NSDate *)startDate duration:(CFTimeInterval)duration;
-
-@end
-
 @implementation SFMetricsReporter {
     NSDate *_lastReportingDate;
     CFTimeInterval _lastReportingTime;
@@ -47,38 +39,41 @@ static NSString * const SFMetricsReporterPath = @"/sift/metrics";
             [[SFMetrics sharedMetrics] count:SFMetricsKeyNumMiscErrors];
         } else {
             SFDebug(@"Create report of metrics from %@ with duration %g", _lastReportingDate, duration);
-            report = [self createReport:_lastReportingDate duration:duration];
+            report = [self createReport:metrics startDate:_lastReportingDate duration:duration];
         }
         [metrics reset];
         _lastReportingDate = nowDate;
         _lastReportingTime = now;
     }
-    SFDebug(@"Collect metrics: %@", report);
     if (report) {
-        [[Sift sharedSift] appendEvent:[SFEvent eventWithPath:SFMetricsReporterPath mobileEventType:nil userId:nil fields:report]];
+        SFEvent *event = [SFEvent new];
+        event.metrics = report;
+        [[Sift sharedSift] appendEvent:event];
     }
 }
 
-- (NSDictionary *)createReport:(NSDate *)startDate duration:(CFTimeInterval)duration {
-    SFMetrics *metrics = [SFMetrics sharedMetrics];
-    NSMutableDictionary *counters = [NSMutableDictionary new];
+- (NSDictionary *)createReport:(SFMetrics *)metrics startDate:(NSDate *)startDate duration:(CFTimeInterval)duration {
+    NSMutableDictionary *report = [NSMutableDictionary new];
     [metrics enumerateCountersUsingBlock:^(SFMetricsKey key, NSInteger count) {
-        [counters setObject:[NSNumber numberWithInteger:count] forKey:SFMetricsMetricName(key)];
+        if (count <= 0) {
+            return;
+        }
+        NSString *snakeKey = SFCamelCaseToSnakeCase(SFMetricsMetricName(key));
+        [report setObject:[NSNumber numberWithInteger:count] forKey:snakeKey];
     }];
-    NSMutableDictionary *meters = [NSMutableDictionary new];
     [metrics enumerateMetersUsingBlock:^(SFMetricsKey key, const SFMetricsMeter *meter) {
-        NSMutableDictionary *data = [NSMutableDictionary new];
-        [data setObject:[NSNumber numberWithInteger:meter->count] forKey:@"count"];
-        if (meter->count > 0) {
-            [data setObject:[NSNumber numberWithDouble:(meter->sum / meter->count)] forKey:@"average"];
+        if (meter->count <= 0) {
+            return;
         }
-        if (meter->count > 1) {
-            double stdev = sqrt((meter->sumsq - meter->sum * meter->sum / meter->count) / (meter->count - 1));
-            [data setObject:[NSNumber numberWithDouble:stdev] forKey:@"stdev"];
-        }
-        [meters setObject:data forKey:SFMetricsMetricName(key)];
+        NSString *snakeKey = SFCamelCaseToSnakeCase(SFMetricsMetricName(key));
+        [report setObject:[NSNumber numberWithInteger:meter->count] forKey:[snakeKey stringByAppendingString:@".count"]];
+        [report setObject:[NSNumber numberWithInteger:meter->sum] forKey:[snakeKey stringByAppendingString:@".sum"]];
+        [report setObject:[NSNumber numberWithInteger:meter->sumsq] forKey:[snakeKey stringByAppendingString:@".sum_square"]];
     }];
-    return @{@"start": [NSNumber numberWithDouble:[startDate timeIntervalSince1970]], @"duration": [NSNumber numberWithDouble:duration], @"counters": counters, @"meters": meters};
+    [report setObject:[NSNumber numberWithDouble:[startDate timeIntervalSince1970]] forKey:@"start"];
+    [report setObject:[NSNumber numberWithDouble:duration] forKey:@"duration"];
+    SFDebug(@"Metrics: %@", report);
+    return report;
 }
 
 @end

@@ -18,4 +18,9 @@ extern const SFQueueConfig SFDevicePropertiesReporterQueueConfig;
 /** Report device properties through its own queue. */
 - (void)report;
 
+/** @name For testing. */
+
+/** Create a report. */
+- (NSDictionary *)createReport;
+
 @end

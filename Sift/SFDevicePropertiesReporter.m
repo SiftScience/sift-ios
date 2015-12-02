@@ -12,8 +12,6 @@
 
 NSString * const SFDevicePropertiesReporterQueueIdentifier = @"sift-devprops";
 
-static NSString * const SFDevicePropertiesReporterPath = @"/sift/device-properties";
-
 const SFQueueConfig SFDevicePropertiesReporterQueueConfig = {
     .appendEventOnlyWhenDifferent = YES,
     .rotateWhenLargerThan = 4096,  // 4 KB
@@ -22,21 +20,28 @@ const SFQueueConfig SFDevicePropertiesReporterQueueConfig = {
 
 @implementation SFDevicePropertiesReporter
 
-- (void)report {
+- (NSDictionary *)createReport {
     NSMutableDictionary *report = [NSMutableDictionary new];
 
     UIDevice *device = [UIDevice currentDevice];
     [report setObject:[[device identifierForVendor] UUIDString] forKey:@"identifier_for_vendor"];
     for (NSString *propertyName in @[@"name", @"systemName", @"systemVersion", @"model", @"localizedModel"]) {
         SEL selector = NSSelectorFromString(propertyName);
-        NSObject *(*func)(id, SEL) = (void *)[device methodForSelector:selector];
-        [report setObject:func(device, selector) forKey:SFCamelCaseToSnakeCase(propertyName)];
+        NSString *(*func)(id, SEL) = (void *)[device methodForSelector:selector];
+        NSString *property = [NSString stringWithString:func(device, selector)];
+        [report setObject:property forKey:SFCamelCaseToSnakeCase(propertyName)];
     }
 
     // TODO(clchiou): Gather more properties...
 
-    SFDebug(@"Gather device properties: %@", report);
-    [[Sift sharedSift] appendEvent:[SFEvent eventWithPath:SFDevicePropertiesReporterPath mobileEventType:nil userId:nil fields:report] toQueue:SFDevicePropertiesReporterQueueIdentifier];
+    SFDebug(@"Device properties: %@", report);
+    return report;
+}
+
+- (void)report {
+    SFEvent *event = [SFEvent new];
+    event.deviceProperties = [self createReport];
+    [[Sift sharedSift] appendEvent:event toQueue:SFDevicePropertiesReporterQueueIdentifier];
 }
 
 @end

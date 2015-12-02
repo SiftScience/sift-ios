@@ -11,6 +11,9 @@
 
 @end
 
+/** Compare two events excluding timestamp. */
+BOOL SFEventCompare(NSDictionary *event1, NSDictionary *event2);
+
 /**
  * Merge a series of Record IO files of JSON records and convert them
  * into a single list request JSON object.

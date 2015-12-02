@@ -69,6 +69,14 @@
 
 @end
 
+BOOL SFEventCompare(NSDictionary *event1, NSDictionary *event2) {
+    NSMutableDictionary *e1 = [NSMutableDictionary dictionaryWithDictionary:event1];
+    NSMutableDictionary *e2 = [NSMutableDictionary dictionaryWithDictionary:event2];
+    [e1 removeObjectForKey:@"time"];
+    [e2 removeObjectForKey:@"time"];
+    return [e1 isEqualToDictionary:e2];
+}
+
 static NSData *SFHeader;
 static NSData *SFFooter;
 static NSData *SFComma;

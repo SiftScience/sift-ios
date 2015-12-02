@@ -4,6 +4,7 @@
 @import UIKit;
 
 #import "SFDebug.h"
+#import "SFEvent+Utils.h"
 #import "SFMetrics.h"
 #import "SFRecordIo.h"
 #import "SFUtils.h"
@@ -78,7 +79,7 @@ static NSDictionary *SFReadLastEvent(NSString *currentFilePath, NSArray *filePat
 - (void)maybeWriteEventToFile:(NSDictionary *)event {
     BOOL result;
     if (_config.appendEventOnlyWhenDifferent) {
-        if (_lastEvent && [_lastEvent isEqualToDictionary:event]) {
+        if (_lastEvent && SFEventCompare(_lastEvent, event)) {
             SFDebug(@"Ignore same event: %@", event);
             result = YES;
         } else {

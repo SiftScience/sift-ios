@@ -11,7 +11,6 @@
 #import "SFUploader+Private.h"
 
 static NSString * const SFSessionIdentifier = @"com.sift.UploadSession";
-static NSString * const SFUploadStateDirName = @"upload";
 static NSString * const SFRequestIdHeader = @"X-REQUEST-ID";
 
 /**
@@ -26,7 +25,7 @@ static NSString *SFSourceListFilePath(NSString *stateDirPath, uint32_t requestId
 @implementation SFUploader {
     SFQueueDirs *_queueDirs;
     NSURLSession *_session;
-    NSString *_stateDirPath;
+    NSString *_rootDirPath;
     // For testing.
     CompletionHandlerType _completionHandler;
 }
@@ -36,8 +35,8 @@ static NSString *SFSourceListFilePath(NSString *stateDirPath, uint32_t requestId
     if (self) {
         _queueDirs = queueDirs;
 
-        _stateDirPath = [rootDirPath stringByAppendingPathComponent:SFUploadStateDirName];
-        if (!SFTouchDirPath(_stateDirPath)) {
+        _rootDirPath = rootDirPath;
+        if (!SFTouchDirPath(_rootDirPath)) {
             self = nil;
             return nil;
         }
@@ -54,7 +53,7 @@ static NSString *SFSourceListFilePath(NSString *stateDirPath, uint32_t requestId
 
 - (void)cleanup {
     @synchronized(self) {
-        NSArray *paths = SFListDir(_stateDirPath);
+        NSArray *paths = SFListDir(_rootDirPath);
         if (!paths || paths.count == 0) {
             return;
         }
@@ -69,13 +68,13 @@ static NSString *SFSourceListFilePath(NSString *stateDirPath, uint32_t requestId
 
 - (void)removeData {
     @synchronized(self) {
-        SFRemoveFilesInDir(_stateDirPath);
+        SFRemoveFilesInDir(_rootDirPath);
     }
 }
 
 - (BOOL)upload:(NSString *)serverUrlFormat accountId:(NSString *)accountId beaconKey:(NSString *)beaconKey force:(BOOL)force {
     @synchronized(self) {
-        if (!force && !SFIsDirEmpty(_stateDirPath)) {
+        if (!force && !SFIsDirEmpty(_rootDirPath)) {
             SFDebug(@"An upload is in progress; skip this uplaod request...");
             return YES;
         }
@@ -83,8 +82,8 @@ static NSString *SFSourceListFilePath(NSString *stateDirPath, uint32_t requestId
         uint32_t requestId = arc4random();
 
 
-        NSString *requestBodyFilePath = SFRequestBodyFilePath(_stateDirPath, requestId);
-        NSString *sourceListFilePath = SFSourceListFilePath(_stateDirPath, requestId);
+        NSString *requestBodyFilePath = SFRequestBodyFilePath(_rootDirPath, requestId);
+        NSString *sourceListFilePath = SFSourceListFilePath(_rootDirPath, requestId);
         BOOL keepFiles = NO;
 
         @try {
@@ -200,8 +199,8 @@ static NSString *SFSourceListFilePath(NSString *stateDirPath, uint32_t requestId
 - (void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task didCompleteWithError:(NSError *)error {
     @synchronized(self) {
         uint32_t requestId = (uint32_t)[task.originalRequest valueForHTTPHeaderField:SFRequestIdHeader].integerValue;
-        NSString *requestBodyFilePath = SFRequestBodyFilePath(_stateDirPath, requestId);
-        NSString *sourceListFilePath = SFSourceListFilePath(_stateDirPath, requestId);
+        NSString *requestBodyFilePath = SFRequestBodyFilePath(_rootDirPath, requestId);
+        NSString *sourceListFilePath = SFSourceListFilePath(_rootDirPath, requestId);
 
         @try {
             if (error) {
@@ -214,7 +213,7 @@ static NSString *SFSourceListFilePath(NSString *stateDirPath, uint32_t requestId
             SFDebug(@"PUT %@ status %ld", task.response.URL, (long)statusCode);
             if (statusCode == 200) {
                 [[SFMetrics sharedMetrics] count:SFMetricsKeyNumUploadsSucceeded];
-                NSArray *sourceFilePaths = SFReadJsonFromFile(SFSourceListFilePath(_stateDirPath, requestId));
+                NSArray *sourceFilePaths = SFReadJsonFromFile(SFSourceListFilePath(_rootDirPath, requestId));
                 if (!sourceFilePaths) {
                     SFDebug(@"Could not read sources file paths from disk");
                     return;

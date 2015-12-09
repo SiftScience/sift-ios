@@ -15,7 +15,7 @@ NSString * const SFDevicePropertiesReporterQueueIdentifier = @"sift-devprops";
 const SFQueueConfig SFDevicePropertiesReporterQueueConfig = {
     .appendEventOnlyWhenDifferent = YES,
     .rotateWhenLargerThan = 4096,  // 4 KB
-    .rotateWhenOlderThan = 3600,  // 1 hour
+    .rotateWhenOlderThan = 60,  // 1 minute
 };
 
 @implementation SFDevicePropertiesReporter

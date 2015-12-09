@@ -6,5 +6,7 @@
 #ifdef NDEBUG
 #define SFDebug(...)
 #else
-#define SFDebug(...) NSLog(__VA_ARGS__)
+#define SFDebug(...) SFDebugWithLoc(__FUNCTION__, __LINE__, __VA_ARGS__)
 #endif
+
+void SFDebugWithLoc(const char *func, int line, NSString *format, ...);

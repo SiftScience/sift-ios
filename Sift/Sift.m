@@ -80,13 +80,13 @@ static const SFQueueConfig SFDefaultEventQueueConfig = {
         _eventQueues = [NSMutableDictionary new];
         pthread_rwlock_init(&_lock, NULL);
 
-        _queueDirs = queueDirs ?: [[SFQueueDirs alloc] initWithRootDirPath:rootDirPath];
+        _queueDirs = queueDirs ?: [[SFQueueDirs alloc] initWithRootDirPath:[rootDirPath stringByAppendingPathComponent:@"queues"]];
         if (!_queueDirs) {
             self = nil;
             return nil;
         }
 
-        _uploader = uploader ?: [[SFUploader alloc] initWithRootDirPath:rootDirPath queueDirs:_queueDirs operationQueue:_operationQueue config:nil];
+        _uploader = uploader ?: [[SFUploader alloc] initWithRootDirPath:[rootDirPath stringByAppendingPathComponent:@"upload"] queueDirs:_queueDirs operationQueue:_operationQueue config:nil];
         if (!_uploader) {
             self = nil;
             return nil;

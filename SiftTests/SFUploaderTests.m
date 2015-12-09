@@ -29,10 +29,9 @@
     [super setUp];
     NSString *rootDirName = [NSString stringWithFormat:@"testdata-%07d", arc4random_uniform(1 << 20)];
     _rootDirPath = [SFCacheDirPath() stringByAppendingPathComponent:rootDirName];
-    _queueDirs = [[SFQueueDirs alloc] initWithRootDirPath:_rootDirPath];
     _operationQueue = [NSOperationQueue new];
-    _queueDirs = [[SFQueueDirs alloc] initWithRootDirPath:_rootDirPath];
-    _uploader = [[SFUploader alloc] initWithRootDirPath:_rootDirPath queueDirs:_queueDirs operationQueue:_operationQueue config:SFMakeStubConfig()];
+    _queueDirs = [[SFQueueDirs alloc] initWithRootDirPath:[_rootDirPath stringByAppendingPathComponent:@"queues"]];
+    _uploader = [[SFUploader alloc] initWithRootDirPath:[_rootDirPath stringByAppendingPathComponent:@"upload"] queueDirs:_queueDirs operationQueue:_operationQueue config:SFMakeStubConfig()];
 }
 
 - (void)tearDown {

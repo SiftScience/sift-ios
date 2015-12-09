@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		7158BAB61C0F750B00C369D6 /* SFDevicePropertiesReporterTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 7158BAB51C0F750B00C369D6 /* SFDevicePropertiesReporterTests.m */; };
 		7158BAB81C0F78C300C369D6 /* SFMetricsReporterTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 7158BAB71C0F78C300C369D6 /* SFMetricsReporterTests.m */; };
+		7158BABA1C123A9000C369D6 /* SFDebug.m in Sources */ = {isa = PBXBuildFile; fileRef = 7158BAB91C123A9000C369D6 /* SFDebug.m */; };
 		71CCDB751BFC04F0001C5791 /* SFDebug.h in Headers */ = {isa = PBXBuildFile; fileRef = 71CCDB591BFC04F0001C5791 /* SFDebug.h */; };
 		71CCDB761BFC04F0001C5791 /* SFDevicePropertiesReporter.h in Headers */ = {isa = PBXBuildFile; fileRef = 71CCDB5A1BFC04F0001C5791 /* SFDevicePropertiesReporter.h */; };
 		71CCDB771BFC04F0001C5791 /* SFDevicePropertiesReporter.m in Sources */ = {isa = PBXBuildFile; fileRef = 71CCDB5B1BFC04F0001C5791 /* SFDevicePropertiesReporter.m */; };
@@ -64,6 +65,7 @@
 /* Begin PBXFileReference section */
 		7158BAB51C0F750B00C369D6 /* SFDevicePropertiesReporterTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SFDevicePropertiesReporterTests.m; sourceTree = "<group>"; };
 		7158BAB71C0F78C300C369D6 /* SFMetricsReporterTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SFMetricsReporterTests.m; sourceTree = "<group>"; };
+		7158BAB91C123A9000C369D6 /* SFDebug.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SFDebug.m; sourceTree = "<group>"; };
 		71CCDB591BFC04F0001C5791 /* SFDebug.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SFDebug.h; sourceTree = "<group>"; };
 		71CCDB5A1BFC04F0001C5791 /* SFDevicePropertiesReporter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SFDevicePropertiesReporter.h; sourceTree = "<group>"; };
 		71CCDB5B1BFC04F0001C5791 /* SFDevicePropertiesReporter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SFDevicePropertiesReporter.m; sourceTree = "<group>"; };
@@ -152,6 +154,7 @@
 			children = (
 				71FB4AD41BFC035A00FE71F2 /* Info.plist */,
 				71CCDB591BFC04F0001C5791 /* SFDebug.h */,
+				7158BAB91C123A9000C369D6 /* SFDebug.m */,
 				71CCDB5A1BFC04F0001C5791 /* SFDevicePropertiesReporter.h */,
 				71CCDB5B1BFC04F0001C5791 /* SFDevicePropertiesReporter.m */,
 				71CCDB5C1BFC04F0001C5791 /* SFEvent.h */,
@@ -329,6 +332,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7158BABA1C123A9000C369D6 /* SFDebug.m in Sources */,
 				71CCDB8E1BFC04F0001C5791 /* SFUtils.m in Sources */,
 				71CCDB771BFC04F0001C5791 /* SFDevicePropertiesReporter.m in Sources */,
 				71CCDB801BFC04F0001C5791 /* SFQueue.m in Sources */,

@@ -33,10 +33,9 @@
     [super setUp];
     NSString *rootDirName = [NSString stringWithFormat:@"testdata-%07d", arc4random_uniform(1 << 20)];
     _rootDirPath = [SFCacheDirPath() stringByAppendingPathComponent:rootDirName];
-    _queueDirs = [[SFQueueDirs alloc] initWithRootDirPath:_rootDirPath];
     _operationQueue = [NSOperationQueue new];
-    _queueDirs = [[SFQueueDirs alloc] initWithRootDirPath:_rootDirPath];
-    _uploader = [[SFUploader alloc] initWithRootDirPath:_rootDirPath queueDirs:_queueDirs operationQueue:_operationQueue config:SFMakeStubConfig()];
+    _queueDirs = [[SFQueueDirs alloc] initWithRootDirPath:[_rootDirPath stringByAppendingPathComponent:@"queues"]];
+    _uploader = [[SFUploader alloc] initWithRootDirPath:[_rootDirPath stringByAppendingPathComponent:@"upload"] queueDirs:_queueDirs operationQueue:_operationQueue config:SFMakeStubConfig()];
     _sift = [[Sift alloc] initWithRootDirPath:_rootDirPath operationQueue:_operationQueue queueDir:_queueDirs uploader:_uploader];
     _sift.serverUrlFormat = @"mock+https://127.0.0.1/v3/accounts/%@/mobile_events";
     _sift.uploadPeriod = 0; // Cancel background upload.

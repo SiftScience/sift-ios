@@ -15,7 +15,7 @@
 // NOTE: Make sure this does not conflict with SFRotatedFiles managed files.
 static NSString * const SFQueueStateFileName = @"queue-state";
 
-static BOOL SFRotateFile(SFRotatedFiles *rotatedFiles);
+static BOOL SFRotateFile(NSString *identifier, SFRotatedFiles *rotatedFiles);
 
 static NSDictionary *SFReadLastEvent(NSString *currentFilePath, NSArray *filePaths);
 
@@ -113,7 +113,7 @@ static NSDictionary *SFReadLastEvent(NSString *currentFilePath, NSArray *filePat
 - (BOOL)rotateFile {
     return [_queueDirs useDir:_identifier withBlock:^BOOL (SFRotatedFiles *rotatedFiles) {
         return [rotatedFiles accessFilesWithBlock:^BOOL (NSString *currentFilePath, NSArray *filePaths) {
-            return SFRotateFile(rotatedFiles);
+            return SFRotateFile(_identifier, rotatedFiles);
         }];
     }];
 }
@@ -122,14 +122,14 @@ static NSDictionary *SFReadLastEvent(NSString *currentFilePath, NSArray *filePat
     return [_queueDirs useDir:_identifier withBlock:^BOOL (SFRotatedFiles *rotatedFiles) {
         return [rotatedFiles accessFilesWithBlock:^BOOL (NSString *currentFilePath, NSArray *filePaths) {
             if (_config.appendEventOnlyWhenDifferent && filePaths && filePaths.count > 0) {
-                SFDebug(@"Would rather not rotate files");
-                return YES;  // Maintain strict upload order...
-            }
-            if (!SFQueueShouldRotateFile(currentFilePath, &_config)) {
-                SFDebug(@"Would rather not rotate files");
+                SFDebug(@"Would rather not rotate files of queue %@ for maintaining strict upload order", _identifier);
                 return YES;
             }
-            return SFRotateFile(rotatedFiles);
+            if (!SFQueueShouldRotateFile(currentFilePath, &_config)) {
+                SFDebug(@"Would rather not rotate files of queue %@", _identifier);
+                return YES;
+            }
+            return SFRotateFile(_identifier, rotatedFiles);
         }];
     }];
 }
@@ -166,10 +166,10 @@ BOOL SFQueueShouldRotateFile(NSString *currentFilePath, SFQueueConfig *config) {
 
 @end
 
-static BOOL SFRotateFile(SFRotatedFiles *rotatedFiles) {
+static BOOL SFRotateFile(NSString *identifier, SFRotatedFiles *rotatedFiles) {
     BOOL okay = [rotatedFiles rotateFile];
     if (okay) {
-        SFDebug(@"Files were rotated");
+        SFDebug(@"Files were rotated for queue %@", identifier);
     }
     return okay;
 }

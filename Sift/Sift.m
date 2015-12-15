@@ -59,7 +59,7 @@ static const SFQueueConfig SFDefaultEventQueueConfig = {
     NSTimer *_cleanupTimer;
 }
 
-+ (instancetype)sharedSift {
++ (instancetype)sharedInstance {
     static Sift *instance;
     static dispatch_once_t once;
     dispatch_once(&once, ^{
@@ -143,16 +143,16 @@ static const SFQueueConfig SFDefaultEventQueueConfig = {
 }
 
 - (void)applicationDidEnterBackground:(NSNotification *)notification {
-    SFDebug(@"Enter background...");
+    SF_DEBUG(@"Enter background...");
     // Persist metrics data (simply create a report from them).
     @synchronized(self) {
-        SFDebug(@"Report metrics... (app enters background)");
+        SF_DEBUG(@"Report metrics... (app enters background)");
         [_metricsReporter report];
     }
 }
 
 - (void)removeData {
-    SFDebug(@"Remove data...");
+    SF_DEBUG(@"Remove data...");
     [_queueDirs removeData];
     [_uploader removeData];
 }
@@ -187,7 +187,7 @@ static const SFQueueConfig SFDefaultEventQueueConfig = {
     } else if (timer == _reporterTimer) {
         timerSelection = REPORTER;
     } else {
-        SFDebug(@"Cannot recognize timer %@", timer);
+        SF_DEBUG(@"Cannot recognize timer %@", timer);
         return;
     }
 
@@ -209,11 +209,11 @@ static const SFQueueConfig SFDefaultEventQueueConfig = {
 
     *period = newPeriod;
     if (*period <= 0) {
-        SFDebug(@"Cancel background %@", @[@"uploader", @"reporter"][timerSelection]);
+        SF_DEBUG(@"Cancel background %@", @[@"uploader", @"reporter"][timerSelection]);
         return;
     }
 
-    SFDebug(@"Start background %@ with period %.2f", @[@"uploader", @"reporter"][timerSelection], *period);
+    SF_DEBUG(@"Start background %@ with period %.2f", @[@"uploader", @"reporter"][timerSelection], *period);
     timer = [NSTimer timerWithTimeInterval:*period target:self selector:@selector(enqueueMethod:) userInfo:nil repeats:YES];
     [[NSRunLoop mainRunLoop] addTimer:timer forMode:NSDefaultRunLoopMode];
     SET(timer);
@@ -244,24 +244,24 @@ static const SFQueueConfig SFDefaultEventQueueConfig = {
 
 - (BOOL)upload:(BOOL)force {
     if (!_serverUrlFormat || !_accountId || !_beaconKey) {
-        SFDebug(@"Cannot upload events due to lack of server URL format, account ID, and/or beacon key");
+        SF_DEBUG(@"Cannot upload events due to lack of server URL format, account ID, and/or beacon key");
         return NO;
     }
-    SFDebug(@"Upload events...");
+    SF_DEBUG(@"Upload events...");
     return [_uploader upload:_serverUrlFormat accountId:_accountId beaconKey:_beaconKey force:force];
 }
 
 - (void)report {
     @synchronized(self) {
-        SFDebug(@"Report metrics...");
+        SF_DEBUG(@"Report metrics...");
         [_metricsReporter report];
-        SFDebug(@"Report device properties...");
+        SF_DEBUG(@"Report device properties...");
         [_devicePropertiesReporter report];
     }
 }
 
 - (void)cleanup {
-    SFDebug(@"Clean up...");
+    SF_DEBUG(@"Clean up...");
     [_queueDirs cleanup];
     [_uploader cleanup];
 }
@@ -270,12 +270,12 @@ static const SFQueueConfig SFDefaultEventQueueConfig = {
     pthread_rwlock_wrlock(&_lock);
     @try {
         if ([_eventQueues objectForKey:identifier]) {
-            SFDebug(@"Could not overwrite event queue for identifier \"%@\"", identifier);
+            SF_DEBUG(@"Could not overwrite event queue for identifier \"%@\"", identifier);
             return NO;
         }
         SFQueue *queue = [[SFQueue alloc] initWithIdentifier:identifier config:config operationQueue:_operationQueue queueDirs:_queueDirs];
         if (!queue) {
-            SFDebug(@"Could not create SFEventQueue for identifier \"%@\"", identifier);
+            SF_DEBUG(@"Could not create SFEventQueue for identifier \"%@\"", identifier);
             return NO;
         }
         [_eventQueues setObject:queue forKey:identifier];
@@ -291,7 +291,7 @@ static const SFQueueConfig SFDefaultEventQueueConfig = {
     pthread_rwlock_wrlock(&_lock);
     @try {
         if (![_eventQueues objectForKey:identifier]) {
-            SFDebug(@"Could not find event queue to be removed for identifier \"%@\"", identifier);
+            SF_DEBUG(@"Could not find event queue to be removed for identifier \"%@\"", identifier);
             return NO;
         }
         [_eventQueues removeObjectForKey:identifier];
@@ -311,7 +311,7 @@ static const SFQueueConfig SFDefaultEventQueueConfig = {
     @try {
         SFQueue *queue = [_eventQueues objectForKey:identifier];
         if (!queue) {
-            SFDebug(@"Could not find event queue for identifier \"%@\" and will drop event", identifier);
+            SF_DEBUG(@"Could not find event queue for identifier \"%@\" and will drop event", identifier);
             return NO;
         }
         [queue append:[event makeEvent]];
@@ -323,7 +323,7 @@ static const SFQueueConfig SFDefaultEventQueueConfig = {
 }
 
 - (BOOL)flush {
-    SFDebug(@"Flush out events...");
+    SF_DEBUG(@"Flush out events...");
     pthread_rwlock_rdlock(&_lock);
     @try {
         for (NSString *identifier in _eventQueues) {

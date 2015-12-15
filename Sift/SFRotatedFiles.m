@@ -95,12 +95,12 @@ static NSString * const SFFileNamePrefix = @"data-";
 
             NSError *error;
             if (![manager moveItemAtPath:_currentFilePath toPath:newFilePath error:&error]) {
-                SFDebug(@"Could not rotate the current file \"%@\" to \"%@\" due to %@", _currentFilePath, newFilePath, [error localizedDescription]);
-                [[SFMetrics sharedMetrics] count:SFMetricsKeyNumFileOperationErrors];
+                SF_DEBUG(@"Could not rotate the current file \"%@\" to \"%@\" due to %@", _currentFilePath, newFilePath, [error localizedDescription]);
+                [[SFMetrics sharedInstance] count:SFMetricsKeyNumFileOperationErrors];
                 return NO;
             }
 
-            SFDebug(@"The current file is rotated to \"%@\"", newFilePath);
+            SF_DEBUG(@"The current file is rotated to \"%@\"", newFilePath);
             return YES;
         }
     }
@@ -128,7 +128,7 @@ static NSString * const SFFileNamePrefix = @"data-";
 
 - (NSFileHandle *)currentFile {
     if (!_currentFile) {
-        SFDebug(@"Open the current file \"%@\"", _currentFilePath);
+        SF_DEBUG(@"Open the current file \"%@\"", _currentFilePath);
 
         if (!SFTouchFilePath(_currentFilePath)) {
             return nil;
@@ -136,8 +136,8 @@ static NSString * const SFFileNamePrefix = @"data-";
 
         _currentFile = [NSFileHandle fileHandleForWritingAtPath:_currentFilePath];
         if (!_currentFile) {
-            SFDebug(@"Could not open \"%@\" for writing", _currentFilePath);
-            [[SFMetrics sharedMetrics] count:SFMetricsKeyNumFileOperationErrors];
+            SF_DEBUG(@"Could not open \"%@\" for writing", _currentFilePath);
+            [[SFMetrics sharedInstance] count:SFMetricsKeyNumFileOperationErrors];
             return nil;
         }
 
@@ -158,8 +158,8 @@ static NSString * const SFFileNamePrefix = @"data-";
     NSError *error;
     NSArray *fileNames = [manager contentsOfDirectoryAtPath:_dirPath error:&error];
     if (!fileNames) {
-        SFDebug(@"Could not list contents of directory \"%@\" due to %@", _dirPath, [error localizedDescription]);
-        [[SFMetrics sharedMetrics] count:SFMetricsKeyNumFileOperationErrors];
+        SF_DEBUG(@"Could not list contents of directory \"%@\" due to %@", _dirPath, [error localizedDescription]);
+        [[SFMetrics sharedInstance] count:SFMetricsKeyNumFileOperationErrors];
         return nil;
     }
 

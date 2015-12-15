@@ -29,16 +29,16 @@
 - (void)report {
     NSDictionary *report = nil;
     // NOTE: SFMetrics object use itself for locking.
-    SFMetrics *metrics = [SFMetrics sharedMetrics];
+    SFMetrics *metrics = [SFMetrics sharedInstance];
     @synchronized(metrics) {
         NSDate *nowDate = [NSDate date];
         CFTimeInterval now = CACurrentMediaTime();
         CFTimeInterval duration = now - _lastReportingTime;
         if (duration <= 0.0) {
-            SFDebug(@"CACurrentMediaTime goes backward");
-            [[SFMetrics sharedMetrics] count:SFMetricsKeyNumMiscErrors];
+            SF_DEBUG(@"CACurrentMediaTime goes backward");
+            [[SFMetrics sharedInstance] count:SFMetricsKeyNumMiscErrors];
         } else {
-            SFDebug(@"Create report of metrics from %@ with duration %g", _lastReportingDate, duration);
+            SF_DEBUG(@"Create report of metrics from %@ with duration %g", _lastReportingDate, duration);
             report = [self createReport:metrics startDate:_lastReportingDate duration:duration];
         }
         [metrics reset];
@@ -48,7 +48,7 @@
     if (report) {
         SFEvent *event = [SFEvent new];
         event.metrics = report;
-        [[Sift sharedSift] appendEvent:event];
+        [[Sift sharedInstance] appendEvent:event];
     }
 }
 
@@ -72,7 +72,7 @@
     }];
     [report setObject:[NSNumber numberWithDouble:[startDate timeIntervalSince1970]] forKey:@"start"];
     [report setObject:[NSNumber numberWithDouble:duration] forKey:@"duration"];
-    SFDebug(@"Metrics: %@", report);
+    SF_DEBUG(@"Metrics: %@", report);
     return report;
 }
 

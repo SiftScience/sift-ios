@@ -29,7 +29,7 @@
 - (void)tearDown {
     NSError *error;
     if (![[NSFileManager defaultManager] removeItemAtPath:_dirPath error:&error]) {
-        SFDebug(@"Could not remote \"%@\" due to %@", _dirPath, [error localizedDescription]);
+        SF_DEBUG(@"Could not remote \"%@\" due to %@", _dirPath, [error localizedDescription]);
     }
     [super tearDown];
 }

@@ -24,7 +24,7 @@
 - (void)tearDown {
     NSError *error;
     if (![[NSFileManager defaultManager] removeItemAtPath:_testFilePath error:&error]) {
-        SFDebug(@"Could not remove \"%@\" due to %@", _testFilePath, [error localizedDescription]);
+        SF_DEBUG(@"Could not remove \"%@\" due to %@", _testFilePath, [error localizedDescription]);
     }
     [super tearDown];
 }

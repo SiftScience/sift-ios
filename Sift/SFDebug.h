@@ -4,7 +4,7 @@
 
 /** Debug output that can be turned on/off by NDEBUG. */
 #ifdef NDEBUG
-#define SFDebug(...)
+#define SF_DEBUG(...)
 #else
-#define SFDebug(FORMAT, ...) NSLog(@"%s:%d " FORMAT, __FUNCTION__, __LINE__, ## __VA_ARGS__)
+#define SF_DEBUG(FORMAT, ...) NSLog(@"%s:%d " FORMAT, __FUNCTION__, __LINE__, ## __VA_ARGS__)
 #endif

@@ -15,7 +15,7 @@ NSInteger SFTimestampMillis(void) {
 NSString *SFCamelCaseToSnakeCase(NSString *camelCase) {
     const char *camel = [camelCase cStringUsingEncoding:NSASCIIStringEncoding];
     if (!camel) {
-        SFDebug(@"Cannot encode \"%@\" for ASCII", camelCase);
+        SF_DEBUG(@"Cannot encode \"%@\" for ASCII", camelCase);
         return nil;
     }
 
@@ -54,8 +54,8 @@ NSDictionary *SFFileAttrs(NSString *path) {
     NSError *error;
     NSDictionary *attributes = [manager attributesOfItemAtPath:path error:&error];
     if (!attributes) {
-        SFDebug(@"Could not get attributes of \"%@\" due to %@", path, [error localizedDescription]);
-        [[SFMetrics sharedMetrics] count:SFMetricsKeyNumFileOperationErrors];
+        SF_DEBUG(@"Could not get attributes of \"%@\" due to %@", path, [error localizedDescription]);
+        [[SFMetrics sharedInstance] count:SFMetricsKeyNumFileOperationErrors];
     }
     return attributes;
 }
@@ -69,8 +69,8 @@ static BOOL SFFileDate(NSString *path, SEL getDate, NSTimeInterval *output) {
     NSDate *date = func(attributes, getDate);
     NSTimeInterval sinceNow = -[date timeIntervalSinceNow];
     if (sinceNow < 0) {
-        SFDebug(@"%@ of \"%@\" is in the future: %@", NSStringFromSelector(getDate), path, date);
-        [[SFMetrics sharedMetrics] count:SFMetricsKeyNumMiscErrors];
+        SF_DEBUG(@"%@ of \"%@\" is in the future: %@", NSStringFromSelector(getDate), path, date);
+        [[SFMetrics sharedInstance] count:SFMetricsKeyNumMiscErrors];
         return NO;
     } else {
         *output = sinceNow;
@@ -91,8 +91,8 @@ NSArray *SFListDir(NSString *path) {
     NSError *error;
     NSArray *contents = [manager contentsOfDirectoryAtPath:path error:&error];
     if (!contents) {
-        SFDebug(@"Could not list contents of directory \"%@\" due to %@", path, [error localizedDescription]);
-        [[SFMetrics sharedMetrics] count:SFMetricsKeyNumFileOperationErrors];
+        SF_DEBUG(@"Could not list contents of directory \"%@\" due to %@", path, [error localizedDescription]);
+        [[SFMetrics sharedInstance] count:SFMetricsKeyNumFileOperationErrors];
         return nil;
     }
     NSMutableArray *paths = [NSMutableArray arrayWithCapacity:contents.count];
@@ -107,8 +107,8 @@ BOOL SFIsDirEmpty(NSString *path) {
     NSError *error;
     NSArray *contents = [manager contentsOfDirectoryAtPath:path error:&error];
     if (!contents) {
-        SFDebug(@"Could not list contents of directory \"%@\" due to %@", path, [error localizedDescription]);
-        [[SFMetrics sharedMetrics] count:SFMetricsKeyNumFileOperationErrors];
+        SF_DEBUG(@"Could not list contents of directory \"%@\" due to %@", path, [error localizedDescription]);
+        [[SFMetrics sharedInstance] count:SFMetricsKeyNumFileOperationErrors];
         return NO;
     }
     return contents.count == 0;
@@ -119,8 +119,8 @@ BOOL SFTouchFilePath(NSString *path) {
     BOOL isDirectory;
     if ([manager fileExistsAtPath:path isDirectory:&isDirectory]) {
         if (isDirectory) {
-            SFDebug(@"\"%@\" is a directory", path);
-            [[SFMetrics sharedMetrics] count:SFMetricsKeyNumMiscErrors];
+            SF_DEBUG(@"\"%@\" is a directory", path);
+            [[SFMetrics sharedInstance] count:SFMetricsKeyNumMiscErrors];
             return NO;
         } else {
             return YES;
@@ -128,10 +128,10 @@ BOOL SFTouchFilePath(NSString *path) {
     } else {
         BOOL okay = [manager createFileAtPath:path contents:nil attributes:0];
         if (okay) {
-            SFDebug(@"Create file \"%@\"", path);
+            SF_DEBUG(@"Create file \"%@\"", path);
         } else {
-            SFDebug(@"Could not create file \"%@\"", path);
-            [[SFMetrics sharedMetrics] count:SFMetricsKeyNumFileOperationErrors];
+            SF_DEBUG(@"Could not create file \"%@\"", path);
+            [[SFMetrics sharedInstance] count:SFMetricsKeyNumFileOperationErrors];
         }
         return okay;
     }
@@ -144,18 +144,18 @@ BOOL SFTouchDirPath(NSString *path) {
         if (isDirectory) {
             return YES;
         } else {
-            SFDebug(@"\"%@\" is a file", path);
-            [[SFMetrics sharedMetrics] count:SFMetricsKeyNumMiscErrors];
+            SF_DEBUG(@"\"%@\" is a file", path);
+            [[SFMetrics sharedInstance] count:SFMetricsKeyNumMiscErrors];
             return NO;
         }
     } else {
         NSError *error;
         BOOL okay = [manager createDirectoryAtPath:path withIntermediateDirectories:YES attributes:nil error:&error];
         if (okay) {
-            SFDebug(@"Create dir \"%@\"", path);
+            SF_DEBUG(@"Create dir \"%@\"", path);
         } else {
-            SFDebug(@"Could not create dir \"%@\" due to %@", path, [error localizedDescription]);
-            [[SFMetrics sharedMetrics] count:SFMetricsKeyNumFileOperationErrors];
+            SF_DEBUG(@"Could not create dir \"%@\" due to %@", path, [error localizedDescription]);
+            [[SFMetrics sharedInstance] count:SFMetricsKeyNumFileOperationErrors];
         }
         return okay;
     }
@@ -165,10 +165,10 @@ BOOL SFRemoveFile(NSString *path) {
     NSError *error;
     BOOL okay = [[NSFileManager defaultManager] removeItemAtPath:path error:&error];
     if (okay) {
-        SFDebug(@"Remove \"%@\"", path);
+        SF_DEBUG(@"Remove \"%@\"", path);
     } else {
-        SFDebug(@"Could not remove \"%@\" due to %@", path, [error localizedDescription]);
-        [[SFMetrics sharedMetrics] count:SFMetricsKeyNumFileOperationErrors];
+        SF_DEBUG(@"Could not remove \"%@\" due to %@", path, [error localizedDescription]);
+        [[SFMetrics sharedInstance] count:SFMetricsKeyNumFileOperationErrors];
     }
     return okay;
 }
@@ -193,20 +193,20 @@ id SFReadJsonFromFile(NSString *filePath) {
         data = [handle readDataToEndOfFile];
     }
     @catch (NSException *exception) {
-        SFDebug(@"Could not read from file \"%@\" due to %@:%@\n%@", filePath, exception.name, exception.reason, exception.callStackSymbols);
-        [[SFMetrics sharedMetrics] count:SFMetricsKeyNumFileIoErrors];
+        SF_DEBUG(@"Could not read from file \"%@\" due to %@:%@\n%@", filePath, exception.name, exception.reason, exception.callStackSymbols);
+        [[SFMetrics sharedInstance] count:SFMetricsKeyNumFileIoErrors];
         return nil;
     }
     if (!data) {
-        SFDebug(@"Could not read contents of \"%@\"", filePath);
-        [[SFMetrics sharedMetrics] count:SFMetricsKeyNumFileIoErrors];
+        SF_DEBUG(@"Could not read contents of \"%@\"", filePath);
+        [[SFMetrics sharedInstance] count:SFMetricsKeyNumFileIoErrors];
         return nil;
     }
     NSError *error;
     id object = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
     if (!object) {
-        SFDebug(@"Could not deserialize JSON object from \"%@\" due to %@", filePath, [error localizedDescription]);
-        [[SFMetrics sharedMetrics] count:SFMetricsKeyNumMiscErrors];
+        SF_DEBUG(@"Could not deserialize JSON object from \"%@\" due to %@", filePath, [error localizedDescription]);
+        [[SFMetrics sharedInstance] count:SFMetricsKeyNumMiscErrors];
     }
     return object;
 }
@@ -215,8 +215,8 @@ BOOL SFWriteJsonToFile(id object, NSString *filePath) {
     NSError *error;
     NSData *data = [NSJSONSerialization dataWithJSONObject:object options:0 error:&error];
     if (!data) {
-        SFDebug(@"Could not serialize object");
-        [[SFMetrics sharedMetrics] count:SFMetricsKeyNumMiscErrors];
+        SF_DEBUG(@"Could not serialize object");
+        [[SFMetrics sharedInstance] count:SFMetricsKeyNumMiscErrors];
         return NO;
     }
     @try {
@@ -225,8 +225,8 @@ BOOL SFWriteJsonToFile(id object, NSString *filePath) {
         [handle closeFile];
     }
     @catch (NSException *exception) {
-        SFDebug(@"Could not write to file \"%@\" due to %@:%@\n%@", filePath, exception.name, exception.reason, exception.callStackSymbols);
-        [[SFMetrics sharedMetrics] count:SFMetricsKeyNumFileIoErrors];
+        SF_DEBUG(@"Could not write to file \"%@\" due to %@:%@\n%@", filePath, exception.name, exception.reason, exception.callStackSymbols);
+        [[SFMetrics sharedInstance] count:SFMetricsKeyNumFileIoErrors];
         return NO;
     }
     return YES;

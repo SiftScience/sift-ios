@@ -36,7 +36,7 @@ NSString *SFMetricsMetricName(SFMetricsKey key) {
     SFMetricsMeter _meters[SFMetricsNumMeters];
 }
 
-+ (instancetype)sharedMetrics {
++ (instancetype)sharedInstance {
     static SFMetrics *instance;
     static dispatch_once_t once;
     dispatch_once(&once, ^{
@@ -78,9 +78,9 @@ NSString *SFMetricsMetricName(SFMetricsKey key) {
 }
 
 - (void)count:(SFMetricsKey)counterKey value:(NSInteger)value {
-    SFDebug(@"Count %ld for key %@", (long)value, SFMetricsMetricName(counterKey));
+    SF_DEBUG(@"Count %ld for key %@", (long)value, SFMetricsMetricName(counterKey));
     if (counterKey < SFMetricsFirstCounterKey || counterKey > SFMetricsLastCounterKey) {
-        SFDebug(@"Counter key %ld is out of range", (long)counterKey);
+        SF_DEBUG(@"Counter key %ld is out of range", (long)counterKey);
         return;
     }
     @synchronized(self) {
@@ -89,9 +89,9 @@ NSString *SFMetricsMetricName(SFMetricsKey key) {
 }
 
 - (void)measure:(SFMetricsKey)meterKey value:(double)value {
-    SFDebug(@"Measure %lf for key %@", value, SFMetricsMetricName(meterKey));
+    SF_DEBUG(@"Measure %lf for key %@", value, SFMetricsMetricName(meterKey));
     if (meterKey < SFMetricsFirstMeterKey || meterKey > SFMetricsLastMeterKey) {
-        SFDebug(@"Meter key %ld is out of range", (long)meterKey);
+        SF_DEBUG(@"Meter key %ld is out of range", (long)meterKey);
         return;
     }
     @synchronized(self) {

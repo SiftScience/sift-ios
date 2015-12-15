@@ -25,7 +25,7 @@
 @interface Sift : NSObject
 
 /** @return the shared instance of Sift. */
-+ (instancetype)sharedSift;
++ (instancetype)sharedInstance;
 
 /**
  * Add an event queue that did not exist prior to the call.

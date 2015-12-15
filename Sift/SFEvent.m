@@ -109,26 +109,26 @@ static NSData *SFComma;
 
 - (BOOL)writeListRequestWithBlock:(BOOL (^)())block {
     if (!_listRequest) {
-        SFDebug(@"This converter is not started yet");
+        SF_DEBUG(@"This converter is not started yet");
         return NO;
     }
     @try {
         return block();
     }
     @catch (NSException *exception) {
-        SFDebug(@"Could not write to list request file due to %@:%@\n%@", exception.name, exception.reason, exception.callStackSymbols);
-        [[SFMetrics sharedMetrics] count:SFMetricsKeyNumFileIoErrors];
+        SF_DEBUG(@"Could not write to list request file due to %@:%@\n%@", exception.name, exception.reason, exception.callStackSymbols);
+        [[SFMetrics sharedInstance] count:SFMetricsKeyNumFileIoErrors];
         return NO;
     }
 }
 
 - (BOOL)start:(NSFileHandle *)listRequest {
     if (_listRequest) {
-        SFDebug(@"This converter has already been started");
+        SF_DEBUG(@"This converter has already been started");
         return NO;
     }
     if (!listRequest) {
-        SFDebug(@"listRequest is nil");
+        SF_DEBUG(@"listRequest is nil");
         return NO;
     }
     _listRequest = listRequest;
@@ -140,7 +140,7 @@ static NSData *SFComma;
 
 - (BOOL)convert:(NSFileHandle *)recordIo {
     if (!recordIo) {
-        SFDebug(@"recordIo is nil");
+        SF_DEBUG(@"recordIo is nil");
         return NO;
     }
     return [self writeListRequestWithBlock:^BOOL () {
@@ -158,7 +158,7 @@ static NSData *SFComma;
 
 - (BOOL)end {
     if (!_listRequest) {
-        SFDebug(@"This converter is not started yet");
+        SF_DEBUG(@"This converter is not started yet");
         return NO;
     }
     BOOL okay = [self writeListRequestWithBlock:^BOOL (){

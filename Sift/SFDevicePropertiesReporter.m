@@ -34,14 +34,14 @@ const SFQueueConfig SFDevicePropertiesReporterQueueConfig = {
 
     // TODO(clchiou): Gather more properties...
 
-    SFDebug(@"Device properties: %@", report);
+    SF_DEBUG(@"Device properties: %@", report);
     return report;
 }
 
 - (void)report {
     SFEvent *event = [SFEvent new];
     event.deviceProperties = [self createReport];
-    [[Sift sharedSift] appendEvent:event toQueue:SFDevicePropertiesReporterQueueIdentifier];
+    [[Sift sharedInstance] appendEvent:event toQueue:SFDevicePropertiesReporterQueueIdentifier];
 }
 
 @end

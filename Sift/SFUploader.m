@@ -75,7 +75,7 @@ static NSString *SFSourceListFilePath(NSString *stateDirPath, uint32_t requestId
 - (BOOL)upload:(NSString *)serverUrlFormat accountId:(NSString *)accountId beaconKey:(NSString *)beaconKey force:(BOOL)force {
     @synchronized(self) {
         if (!force && !SFIsDirEmpty(_rootDirPath)) {
-            SFDebug(@"An upload is in progress; skip this uplaod request...");
+            SF_DEBUG(@"An upload is in progress; skip this uplaod request...");
             return YES;
         }
 
@@ -96,7 +96,7 @@ static NSString *SFSourceListFilePath(NSString *stateDirPath, uint32_t requestId
                 return NO;
             }
             if (sourceFilePaths.count == 0) {
-                SFDebug(@"Nothing to upload");
+                SF_DEBUG(@"Nothing to upload");
                 return YES;
             }
 #ifndef NDEBUG
@@ -104,9 +104,9 @@ static NSString *SFSourceListFilePath(NSString *stateDirPath, uint32_t requestId
                 NSError *error;
                 NSString *listRequestText = [NSString stringWithContentsOfFile:requestBodyFilePath encoding:NSASCIIStringEncoding error:&error];
                 if (listRequestText) {
-                    SFDebug(@"Upload list request:\n%@", listRequestText);
+                    SF_DEBUG(@"Upload list request:\n%@", listRequestText);
                 } else {
-                    SFDebug(@"Could not read \"%@\" due to %@", requestBodyFilePath, [error localizedDescription]);
+                    SF_DEBUG(@"Could not read \"%@\" due to %@", requestBodyFilePath, [error localizedDescription]);
                 }
             }
 #endif
@@ -116,12 +116,12 @@ static NSString *SFSourceListFilePath(NSString *stateDirPath, uint32_t requestId
             }
 
             NSURL *serverUrl = [NSURL URLWithString:[NSString stringWithFormat:serverUrlFormat, accountId]];
-            SFDebug(@"serverUrl: %@", serverUrl);
+            SF_DEBUG(@"serverUrl: %@", serverUrl);
             if(!serverUrl) {
-                SFDebug(@"Could not construct server URL");
-                SFDebug(@"serverUrlFormat: %@", serverUrlFormat);
-                SFDebug(@"accountId: %@", accountId);
-                [[SFMetrics sharedMetrics] count:SFMetricsKeyNumMiscErrors];
+                SF_DEBUG(@"Could not construct server URL");
+                SF_DEBUG(@"serverUrlFormat: %@", serverUrlFormat);
+                SF_DEBUG(@"accountId: %@", accountId);
+                [[SFMetrics sharedInstance] count:SFMetricsKeyNumMiscErrors];
                 return NO;
             }
 
@@ -132,13 +132,13 @@ static NSString *SFSourceListFilePath(NSString *stateDirPath, uint32_t requestId
             [request setValue:[@"Basic " stringByAppendingString:encodedBeaconKey] forHTTPHeaderField:@"Authorization"];
             [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
             [request setValue:[NSString stringWithFormat:@"%u", requestId] forHTTPHeaderField:SFRequestIdHeader];
-            SFDebug(@"request: %@", request);
+            SF_DEBUG(@"request: %@", request);
 
             NSURL *requestBodyFileUrl = [NSURL fileURLWithPath:requestBodyFilePath isDirectory:NO];
-            SFDebug(@"requestBodyFileUrl: %@", requestBodyFileUrl);
+            SF_DEBUG(@"requestBodyFileUrl: %@", requestBodyFileUrl);
 
             [[_session uploadTaskWithRequest:request fromFile:requestBodyFileUrl] resume];
-            [[SFMetrics sharedMetrics] count:SFMetricsKeyNumUploads];
+            [[SFMetrics sharedInstance] count:SFMetricsKeyNumUploads];
             keepFiles = YES;
 
             return YES;
@@ -160,12 +160,12 @@ static NSString *SFSourceListFilePath(NSString *stateDirPath, uint32_t requestId
     }
 
     if (_queueDirs.numDirs == 0) {
-        SFDebug(@"No queue dirs to collect from (probably a bug?)");
+        SF_DEBUG(@"No queue dirs to collect from (probably a bug?)");
     } else {
         BOOL okay = [_queueDirs useDirsWithBlock:^BOOL (SFRotatedFiles *rotatedFiles) {
             return [rotatedFiles accessNonCurrentFilesWithBlock:^BOOL (NSArray *filePaths) {
                 for (NSString *filePath in filePaths) {
-                    SFDebug(@"Collect events from \"%@\"", filePath);
+                    SF_DEBUG(@"Collect events from \"%@\"", filePath);
                     if (![converter convert:[NSFileHandle fileHandleForReadingAtPath:filePath]]) {
                         return NO;
                     }
@@ -204,23 +204,23 @@ static NSString *SFSourceListFilePath(NSString *stateDirPath, uint32_t requestId
 
         @try {
             if (error) {
-                SFDebug(@"Could not complete upload due to %@", [error localizedDescription]);
-                [[SFMetrics sharedMetrics] count:SFMetricsKeyNumNetworkErrors];
+                SF_DEBUG(@"Could not complete upload due to %@", [error localizedDescription]);
+                [[SFMetrics sharedInstance] count:SFMetricsKeyNumNetworkErrors];
                 return;
             }
 
             NSInteger statusCode = [(NSHTTPURLResponse *)task.response statusCode];
-            SFDebug(@"PUT %@ status %ld", task.response.URL, (long)statusCode);
+            SF_DEBUG(@"PUT %@ status %ld", task.response.URL, (long)statusCode);
             if (statusCode == 200) {
-                [[SFMetrics sharedMetrics] count:SFMetricsKeyNumUploadsSucceeded];
+                [[SFMetrics sharedInstance] count:SFMetricsKeyNumUploadsSucceeded];
                 NSArray *sourceFilePaths = SFReadJsonFromFile(SFSourceListFilePath(_rootDirPath, requestId));
                 if (!sourceFilePaths) {
-                    SFDebug(@"Could not read sources file paths from disk");
+                    SF_DEBUG(@"Could not read sources file paths from disk");
                     return;
                 }
                 [self removeSourceFiles:[NSSet setWithArray:sourceFilePaths]];
             } else {
-                [[SFMetrics sharedMetrics] count:SFMetricsKeyNumHttpErrors];
+                [[SFMetrics sharedInstance] count:SFMetricsKeyNumHttpErrors];
             }
         }
         @finally {

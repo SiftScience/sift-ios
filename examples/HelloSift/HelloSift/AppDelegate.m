@@ -14,14 +14,14 @@
     // Configure Sift object here.
 
     // At minimum, you should configure these two.
-    //[Sift sharedSift].accountId = ...;
-    //[Sift sharedSift].beaconKey = ...;
+    //[Sift sharedInstance].accountId = ...;
+    //[Sift sharedInstance].beaconKey = ...;
 
     // In addition, if you have any queues, you should set up them here.
-    //[[Sift sharedSift] addEventQueue:... config:...];
+    //[[Sift sharedInstance] addEventQueue:... config:...];
 
     // During integration, you may set this URL to a RequestBin or a private server to validate that your integration works.
-    //[Sift sharedSift].serverUrlFormat = @"http://localhost:8080";
+    //[Sift sharedInstance].serverUrlFormat = @"http://localhost:8080";
 
     return YES;
 }

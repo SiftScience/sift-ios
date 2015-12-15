@@ -71,7 +71,7 @@ typedef struct {
 @interface SFMetrics : NSObject
 
 /** @return the shared metrics object. */
-+ (instancetype)sharedMetrics;
++ (instancetype)sharedInstance;
 
 /**
  * Count an event of the given counter key, or do nothing if it is not a

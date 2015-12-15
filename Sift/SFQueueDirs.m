@@ -52,8 +52,8 @@ static NSString *SFMakeQueueDirName(NSString *identifier);
         NSError *error;
         NSArray *dirNames = [manager contentsOfDirectoryAtPath:_rootDirPath error:&error];
         if (!dirNames) {
-            SFDebug(@"Could not list contents of directory \"%@\" due to %@", _rootDirPath, [error localizedDescription]);
-            [[SFMetrics sharedMetrics] count:SFMetricsKeyNumFileOperationErrors];
+            SF_DEBUG(@"Could not list contents of directory \"%@\" due to %@", _rootDirPath, [error localizedDescription]);
+            [[SFMetrics sharedInstance] count:SFMetricsKeyNumFileOperationErrors];
             self = nil;
             return nil;
         }
@@ -87,13 +87,13 @@ static NSString *SFMakeQueueDirName(NSString *identifier);
     pthread_rwlock_wrlock(&_lock);
     @try {
         if ([_rotatedFilesDict objectForKey:identifier]) {
-            SFDebug(@"Do not overwrite queue dir entry for \"%@\"", identifier);
+            SF_DEBUG(@"Do not overwrite queue dir entry for \"%@\"", identifier);
             return YES;  // Don't overwrite...
         }
 
         SFRotatedFiles *rotatedFiles = [[SFRotatedFiles alloc] initWithDirPath:[self dirPath:identifier]];
         if (!rotatedFiles) {
-            SFDebug(@"Could not create rotated files for \"%@\"", identifier);
+            SF_DEBUG(@"Could not create rotated files for \"%@\"", identifier);
             return NO;
         }
 
@@ -110,7 +110,7 @@ static NSString *SFMakeQueueDirName(NSString *identifier);
     @try {
         SFRotatedFiles *rotatedFiles = [_rotatedFilesDict objectForKey:identifier];
         if (!rotatedFiles) {
-            SFDebug(@"Could not find rotated files dir for identifier to remove \"%@\"", identifier);
+            SF_DEBUG(@"Could not find rotated files dir for identifier to remove \"%@\"", identifier);
             return NO;
         }
         [_rotatedFilesDict removeObjectForKey:identifier];
@@ -241,7 +241,7 @@ BOOL SFShouldRemove(NSString *targetPath) {
     if (![manager fileExistsAtPath:targetPath isDirectory:&isDirectory]) {
         return NO;
     } else if (!isDirectory) {
-        SFDebug(@"Remove non-directory \"%@\" for QueueDirs object", targetPath);
+        SF_DEBUG(@"Remove non-directory \"%@\" for QueueDirs object", targetPath);
         return YES;
     }
 
@@ -249,7 +249,7 @@ BOOL SFShouldRemove(NSString *targetPath) {
     if (!paths) {  // Error!
         return NO;
     } else if (paths.count == 0) {
-        SFDebug(@"Remove unrecognizable empty directory \"%@\" for QueueDirs object", targetPath);
+        SF_DEBUG(@"Remove unrecognizable empty directory \"%@\" for QueueDirs object", targetPath);
         return YES;
     }
 
@@ -265,7 +265,7 @@ BOOL SFShouldRemove(NSString *targetPath) {
     }
 
     if (sinceNow > SFRemoveDirOlderThan) {
-        SFDebug(@"Remove unrecognizable outdated directory \"%@\" for QueueDirs object: %.2f > %.2f", targetPath, sinceNow, SFRemoveDirOlderThan);
+        SF_DEBUG(@"Remove unrecognizable outdated directory \"%@\" for QueueDirs object: %.2f > %.2f", targetPath, sinceNow, SFRemoveDirOlderThan);
         return YES;
     } else {
         return NO;

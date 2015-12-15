@@ -14,14 +14,14 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
 
-    if ([Sift sharedSift].accountId) {
-        self.accountIdTextField.text = [Sift sharedSift].accountId;
+    if ([Sift sharedInstance].accountId) {
+        self.accountIdTextField.text = [Sift sharedInstance].accountId;
     }
-    if ([Sift sharedSift].beaconKey) {
-        self.beaconKeyTextField.text = [Sift sharedSift].beaconKey;
+    if ([Sift sharedInstance].beaconKey) {
+        self.beaconKeyTextField.text = [Sift sharedInstance].beaconKey;
     }
-    if ([Sift sharedSift].serverUrlFormat) {
-        self.serverUrlFormatTextField.text = [Sift sharedSift].serverUrlFormat;
+    if ([Sift sharedInstance].serverUrlFormat) {
+        self.serverUrlFormatTextField.text = [Sift sharedInstance].serverUrlFormat;
     }
 }
 
@@ -38,10 +38,10 @@
 }
 
 - (void)setProperty:(UITextField *)textField getter:(SEL)getter setter:(SEL)setter {
-    NSString *oldValue = [[Sift sharedSift] performSelector:getter];
+    NSString *oldValue = [[Sift sharedInstance] performSelector:getter];
     NSString *newValue = textField.text;
     NSLog(@"%@: %@ -> %@", NSStringFromSelector(getter), oldValue, newValue);
-    [[Sift sharedSift] performSelector:setter withObject:newValue];
+    [[Sift sharedInstance] performSelector:setter withObject:newValue];
 }
 
 - (IBAction)handleEnqueueEventButtonClick:(id)sender {
@@ -76,27 +76,27 @@
         }
     }
 
-    [[Sift sharedSift] appendEvent:[SFEvent eventWithPath:path mobileEventType:mobileEventType userId:userId fields:fields]];
+    [[Sift sharedInstance] appendEvent:[SFEvent eventWithPath:path mobileEventType:mobileEventType userId:userId fields:fields]];
 }
 
 - (IBAction)handleRequestUploadButtonClick:(id)sender {
     NSLog(@"Button \"Request Upload\" was clicked");
-    [[Sift sharedSift] upload];
+    [[Sift sharedInstance] upload];
 }
 
 - (IBAction)handleForceUploadButtonClick:(id)sender {
     NSLog(@"Button \"Force Upload\" was clicked");
-    [[Sift sharedSift] upload:YES];
+    [[Sift sharedInstance] upload:YES];
 }
 
 - (IBAction)handleFlushEventsButtonClick:(id)sender {
     NSLog(@"Button \"Flush Events\" was clicked");
-    [[Sift sharedSift] flush];
+    [[Sift sharedInstance] flush];
 }
 
 - (IBAction)handleDeleteEverything:(id)sender {
     NSLog(@"Button \"Delete EVERYTHING\" was clicked");
-    [[Sift sharedSift] removeData];
+    [[Sift sharedInstance] removeData];
 }
 
 @end

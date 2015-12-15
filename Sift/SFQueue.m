@@ -70,7 +70,7 @@ static NSDictionary *SFReadLastEvent(NSString *currentFilePath, NSArray *filePat
 }
 
 - (void)append:(NSDictionary *)event {
-    [[SFMetrics sharedMetrics] count:SFMetricsKeyNumEvents];
+    [[SFMetrics sharedInstance] count:SFMetricsKeyNumEvents];
     [_operationQueue addOperation:[[NSInvocationOperation alloc] initWithTarget:self selector:@selector(maybeWriteEventToFile:) object:event]];
 }
 
@@ -80,7 +80,7 @@ static NSDictionary *SFReadLastEvent(NSString *currentFilePath, NSArray *filePat
     BOOL result;
     if (_config.appendEventOnlyWhenDifferent) {
         if (_lastEvent && SFEventCompare(_lastEvent, event)) {
-            SFDebug(@"Ignore same event: %@", event);
+            SF_DEBUG(@"Ignore same event: %@", event);
             result = YES;
         } else {
             result = [self writeEventToFile:event];
@@ -90,8 +90,8 @@ static NSDictionary *SFReadLastEvent(NSString *currentFilePath, NSArray *filePat
         result = [self writeEventToFile:event];
     }
     if (!result) {
-        SFDebug(@"Could not append event to file and will drop it: %@", event);
-        [[SFMetrics sharedMetrics] count:SFMetricsKeyNumEventsDropped];
+        SF_DEBUG(@"Could not append event to file and will drop it: %@", event);
+        [[SFMetrics sharedInstance] count:SFMetricsKeyNumEventsDropped];
         return;
     }
     [self maybeRotateFile];
@@ -122,11 +122,11 @@ static NSDictionary *SFReadLastEvent(NSString *currentFilePath, NSArray *filePat
     return [_queueDirs useDir:_identifier withBlock:^BOOL (SFRotatedFiles *rotatedFiles) {
         return [rotatedFiles accessFilesWithBlock:^BOOL (NSString *currentFilePath, NSArray *filePaths) {
             if (_config.appendEventOnlyWhenDifferent && filePaths && filePaths.count > 0) {
-                SFDebug(@"Would rather not rotate files of queue %@ for maintaining strict upload order", _identifier);
+                SF_DEBUG(@"Would rather not rotate files of queue %@ for maintaining strict upload order", _identifier);
                 return YES;
             }
             if (!SFQueueShouldRotateFile(currentFilePath, &_config)) {
-                SFDebug(@"Would rather not rotate files of queue %@", _identifier);
+                SF_DEBUG(@"Would rather not rotate files of queue %@", _identifier);
                 return YES;
             }
             return SFRotateFile(_identifier, rotatedFiles);
@@ -148,16 +148,16 @@ BOOL SFQueueShouldRotateFile(NSString *currentFilePath, SFQueueConfig *config) {
 
     unsigned long long fileSize = [attributes fileSize];
     if (fileSize > config->rotateWhenLargerThan) {
-        SFDebug(@"Should rotate file due to file size: %lld > %ld", fileSize, (long)config->rotateWhenLargerThan);
+        SF_DEBUG(@"Should rotate file due to file size: %lld > %ld", fileSize, (long)config->rotateWhenLargerThan);
         return YES;
     }
 
     NSTimeInterval sinceNow = -[[attributes fileModificationDate] timeIntervalSinceNow];
     if (sinceNow < 0) {
-        SFDebug(@"File modification date of \"%@\" is in the future: %@", currentFilePath, [attributes fileModificationDate]);
-        [[SFMetrics sharedMetrics] count:SFMetricsKeyNumMiscErrors];
+        SF_DEBUG(@"File modification date of \"%@\" is in the future: %@", currentFilePath, [attributes fileModificationDate]);
+        [[SFMetrics sharedInstance] count:SFMetricsKeyNumMiscErrors];
     } else if (sinceNow > config->rotateWhenOlderThan) {
-        SFDebug(@"Should rotate file due to modification date: %.2f > %.2f", sinceNow, config->rotateWhenOlderThan);
+        SF_DEBUG(@"Should rotate file due to modification date: %.2f > %.2f", sinceNow, config->rotateWhenOlderThan);
         return YES;
     }
 
@@ -169,7 +169,7 @@ BOOL SFQueueShouldRotateFile(NSString *currentFilePath, SFQueueConfig *config) {
 static BOOL SFRotateFile(NSString *identifier, SFRotatedFiles *rotatedFiles) {
     BOOL okay = [rotatedFiles rotateFile];
     if (okay) {
-        SFDebug(@"Files were rotated for queue %@", identifier);
+        SF_DEBUG(@"Files were rotated for queue %@", identifier);
     }
     return okay;
 }

@@ -76,6 +76,14 @@
 @property NSString *beaconKey;
 
 /**
+ * User ID for this device.  Default to nil.
+ *
+ * We store device fingerprints under this user's records - if you don't
+ * set this, we wouldn't be able collect device fingerprints.
+ */
+@property NSString *userId;
+
+/**
  * The interval at which we issue uploads.  You cancel the upload timer
  * by setting a non-positive value.
  *

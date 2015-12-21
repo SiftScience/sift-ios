@@ -68,6 +68,9 @@
                                 <rect key="frame" x="95" y="231" width="475" height="30"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
+                                <connections>
+                                    <action selector="handleUserIdChanged:" destination="BYZ-38-t0r" eventType="editingDidEnd" id="aqK-FL-COj"/>
+                                </connections>
                             </textField>
                             <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="JSON String (default: nil)" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="24B-7z-P32" userLabel="Round Style Text Field Fields">
                                 <rect key="frame" x="95" y="272" width="475" height="30"/>

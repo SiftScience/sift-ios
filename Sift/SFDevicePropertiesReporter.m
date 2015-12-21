@@ -200,8 +200,11 @@ static NSString *SFSysctlReadInt64(const char *name) {
     return randomUuid;
 }
 
-- (void)report {
+- (void)report:(NSString *)userId {
+    NSAssert(!SFEventIsEmptyUserId(userId), @"userId is empty");
+
     SFEvent *event = [SFEvent new];
+    event.userId = userId;
     event.deviceProperties = [self createReport];
     [[Sift sharedInstance] appendEvent:event toQueue:SFDevicePropertiesReporterQueueIdentifier];
 }

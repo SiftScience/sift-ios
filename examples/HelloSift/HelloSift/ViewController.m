@@ -25,6 +25,12 @@
     }
 }
 
+- (IBAction)handleUserIdChanged:(id)sender {
+    NSString *userId = self.userIdTextField.text;
+    NSLog(@"New user ID is \"%@\"", userId);
+    [Sift sharedInstance].userId = userId;
+}
+
 - (IBAction)handleAccountIdChanged:(id)sender {
     [self setProperty:sender getter:@selector(accountId) setter:@selector(setAccountId:)];
 }
@@ -46,6 +52,12 @@
 
 - (IBAction)handleEnqueueEventButtonClick:(id)sender {
     NSLog(@"Button \"Enqueue Event\" was clicked");
+    NSString *userId = self.userIdTextField.text;
+    if (SFEventIsEmptyUserId(userId)) {
+        NSLog(@"user ID is _NOT_ optional");
+        return;
+    }
+    NSLog(@"userId: \"%@\"", userId);
 
     NSLog(@"path: \"%@\"", self.pathTextField.text);
     NSString *path = self.pathTextField.text;
@@ -57,12 +69,6 @@
     NSString *mobileEventType = self.typeTextField.text;
     if ([@"" isEqualToString:mobileEventType]) {
         mobileEventType = nil;
-    }
-
-    NSLog(@"userId: \"%@\"", self.userIdTextField.text);
-    NSString *userId = self.userIdTextField.text;
-    if ([@"" isEqualToString:userId]) {
-        userId = nil;
     }
 
     NSLog(@"fields: \"%@\"", self.fieldsTextField.text);

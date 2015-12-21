@@ -4,9 +4,11 @@
 
 /**
  * An event has: time, path, (mobile event) type, user ID, and a
- * dictionary of fields.  All of them are optional.  You may alter them
- * after the object creation (through properties below) but before the
- * event object is append to an event queue.
+ * dictionary of fields.  All of them except user ID are optional.  You
+ * may alter them after the object creation (through properties below)
+ * but before the event object is append to an event queue.
+ *
+ * NOTE: User ID is _NOT_ optional.
  */
 @interface SFEvent : NSObject
 
@@ -24,7 +26,7 @@
 /** Event type.  Default to nil. */
 @property NSString *mobileEventType;
 
-/** User ID.  Default to nil. */
+/** User ID.  Default to nil.  It is _NOT_ optional. */
 @property NSString *userId;
 
 /**
@@ -42,3 +44,6 @@
 @property NSDictionary *metrics;
 
 @end
+
+/** @return true if userId is nil or an empty string. */
+BOOL SFEventIsEmptyUserId(NSString *userId);

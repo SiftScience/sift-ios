@@ -74,6 +74,7 @@ static const SFQueueConfig SFDefaultEventQueueConfig = {
         _serverUrlFormat = SFServerUrlFormat;
         _accountId = nil;
         _beaconKey = nil;
+        _userId = nil;
 
         _operationQueue = operationQueue ?: [NSOperationQueue new];
 
@@ -147,7 +148,7 @@ static const SFQueueConfig SFDefaultEventQueueConfig = {
     // Persist metrics data (simply create a report from them).
     @synchronized(self) {
         SF_DEBUG(@"Report metrics... (app enters background)");
-        [_metricsReporter report];
+        [_metricsReporter report:_userId];
     }
 }
 
@@ -253,10 +254,14 @@ static const SFQueueConfig SFDefaultEventQueueConfig = {
 
 - (void)report {
     @synchronized(self) {
+        if (!SFEventIsEmptyUserId(_userId)) {
+            SF_DEBUG(@"Refuse to collect device fingerprint when no user ID is present");
+            return;
+        }
         SF_DEBUG(@"Report metrics...");
-        [_metricsReporter report];
+        [_metricsReporter report:_userId];
         SF_DEBUG(@"Report device properties...");
-        [_devicePropertiesReporter report];
+        [_devicePropertiesReporter report:_userId];
     }
 }
 
@@ -313,6 +318,14 @@ static const SFQueueConfig SFDefaultEventQueueConfig = {
         if (!queue) {
             SF_DEBUG(@"Could not find event queue for identifier \"%@\" and will drop event", identifier);
             return NO;
+        }
+        if (SFEventIsEmptyUserId(event.userId)) {
+            if (SFEventIsEmptyUserId(_userId)) {
+                SF_DEBUG(@"event.userId is not optional");
+                return NO;
+            }
+            SF_DEBUG(@"The event's userId is empty; use Sift object's userId: \"%@\"", _userId);
+            event.userId = _userId;
         }
         [queue append:[event makeEvent]];
         return YES;

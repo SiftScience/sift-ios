@@ -10,6 +10,10 @@
 #import "SFEvent.h"
 #import "SFEvent+Utils.h"
 
+BOOL SFEventIsEmptyUserId(NSString *userId) {
+    return !userId || [userId isEqualToString:@""];
+}
+
 @implementation SFEvent
 
 + (SFEvent *)eventWithPath:(NSString *)path mobileEventType:(NSString *)mobileEventType userId:(NSString *)userId fields:(NSDictionary *)fields {
@@ -44,6 +48,8 @@
 }
 
 - (NSDictionary *)makeEvent {
+    NSAssert(!SFEventIsEmptyUserId(_userId), @"userId is _NOT_ optional");
+
     NSMutableDictionary *event = [NSMutableDictionary new];
     [event setObject:[NSNumber numberWithInteger:_time] forKey:@"time"];
     if (_path) {
@@ -52,9 +58,7 @@
     if (_mobileEventType) {
         [event setObject:_mobileEventType forKey:@"mobile_event_type"];
     }
-    if (_userId) {
-        [event setObject:_userId forKey:@"user_id"];
-    }
+    [event setObject:_userId forKey:@"user_id"];
     if (_fields) {
         [event setObject:_fields forKey:@"fields"];
     }

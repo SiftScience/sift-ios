@@ -12,7 +12,7 @@
  * Collect and report metrics through the default event queue, and then
  * reset the metrics data.
  */
-- (void)report;
+- (void)report:(NSString *)userId;
 
 /** @name For testing. */
 

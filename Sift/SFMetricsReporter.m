@@ -26,7 +26,9 @@
     return self;
 }
 
-- (void)report {
+- (void)report:(NSString *)userId {
+    NSAssert(!SFEventIsEmptyUserId(userId), @"userId is empty");
+
     NSDictionary *report = nil;
     // NOTE: SFMetrics object use itself for locking.
     SFMetrics *metrics = [SFMetrics sharedInstance];
@@ -47,6 +49,7 @@
     }
     if (report) {
         SFEvent *event = [SFEvent new];
+        event.userId = userId;
         event.metrics = report;
         [[Sift sharedInstance] appendEvent:event];
     }

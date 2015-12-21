@@ -16,7 +16,7 @@ extern const SFQueueConfig SFDevicePropertiesReporterQueueConfig;
 @interface SFDevicePropertiesReporter : NSObject
 
 /** Report device properties through its own queue. */
-- (void)report;
+- (void)report:(NSString *)userId;
 
 /** @name For testing. */
 

@@ -73,6 +73,10 @@
         [report setObject:[NSNumber numberWithInteger:meter->sum] forKey:[snakeKey stringByAppendingString:@".sum"]];
         [report setObject:[NSNumber numberWithInteger:meter->sumsq] forKey:[snakeKey stringByAppendingString:@".sum_square"]];
     }];
+    if (!report.count) {
+        SF_DEBUG(@"No metrics data");
+        return nil;
+    }
     [report setObject:[NSNumber numberWithDouble:[startDate timeIntervalSince1970]] forKey:@"start"];
     [report setObject:[NSNumber numberWithDouble:duration] forKey:@"duration"];
     SF_DEBUG(@"Metrics: %@", report);

@@ -9,7 +9,7 @@
 #import "SFUtils.h"
 
 NSInteger SFTimestampMillis(void) {
-    return [[NSDate date] timeIntervalSince1970] * 1000.0;
+    return [[NSDate date] timeIntervalSince1970] * 1000;
 }
 
 NSString *SFCamelCaseToSnakeCase(NSString *camelCase) {
@@ -60,7 +60,7 @@ NSDictionary *SFFileAttrs(NSString *path) {
     return attributes;
 }
 
-static BOOL SFFileDate(NSString *path, SEL getDate, NSTimeInterval *output) {
+static BOOL SFFileDate(NSString *path, SEL getDate, NSTimeInterval *sinceNowOut, NSInteger *timestampOut) {
     NSDictionary *attributes = SFFileAttrs(path);
     if (!attributes) {
         return NO;
@@ -73,7 +73,12 @@ static BOOL SFFileDate(NSString *path, SEL getDate, NSTimeInterval *output) {
         [[SFMetrics sharedInstance] count:SFMetricsKeyNumMiscErrors];
         return NO;
     } else {
-        *output = sinceNow;
+        if (sinceNowOut) {
+            *sinceNowOut = sinceNow;
+        }
+        if (timestampOut) {
+            *timestampOut = [date timeIntervalSince1970] * 1000;
+        }
         return YES;
     }
 }
@@ -83,11 +88,15 @@ BOOL SFFileExists(NSString *path) {
 }
 
 BOOL SFFileCreationDate(NSString *path, NSTimeInterval *sinceNow) {
-    return SFFileDate(path, @selector(fileCreationDate), sinceNow);
+    return SFFileDate(path, @selector(fileCreationDate), sinceNow, nil);
 }
 
 BOOL SFFileModificationDate(NSString *path, NSTimeInterval *sinceNow) {
-    return SFFileDate(path, @selector(fileModificationDate), sinceNow);
+    return SFFileDate(path, @selector(fileModificationDate), sinceNow, nil);
+}
+
+BOOL SFFileModificationTimestamp(NSString *path, NSInteger *timestamp) {
+    return SFFileDate(path, @selector(fileModificationDate), nil, timestamp);
 }
 
 NSArray *SFListDir(NSString *path) {

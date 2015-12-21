@@ -15,6 +15,9 @@
 // NOTE: Make sure this does not conflict with SFRotatedFiles managed files.
 static NSString * const SFQueueStateFileName = @"queue-state";
 
+// TODO(clchiou): Make this part of SFQueueConfig.
+static const NSInteger SFKeepLastState = 60 * 60 * 1000;
+
 static BOOL SFRotateFile(NSString *identifier, SFRotatedFiles *rotatedFiles);
 
 static NSDictionary *SFReadLastEvent(NSString *currentFilePath, NSArray *filePaths);
@@ -26,6 +29,7 @@ static NSDictionary *SFReadLastEvent(NSString *currentFilePath, NSArray *filePat
     NSOperationQueue *_operationQueue;
     SFQueueDirs *_queueDirs;
     NSDictionary *_lastEvent;
+    NSInteger _lastEventTimestamp;
 }
 
 - (instancetype)initWithIdentifier:(NSString *)identifier config:(SFQueueConfig)config operationQueue:(NSOperationQueue *)operationQueue queueDirs:(SFQueueDirs *)queueDirs {
@@ -43,7 +47,12 @@ static NSDictionary *SFReadLastEvent(NSString *currentFilePath, NSArray *filePat
             _stateFilePath = [rotatedFiles.dirPath stringByAppendingPathComponent:SFQueueStateFileName];
             return YES;
         }];
-        [self loadState];
+        // Currently, we only keep state for appendEventOnlyWhenDifferent queues.
+        _lastEvent = nil;
+        _lastEventTimestamp = 0;
+        if (_config.appendEventOnlyWhenDifferent) {
+            [self loadState];
+        }
         NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
         [notificationCenter addObserver:self selector:@selector(saveState) name:UIApplicationDidEnterBackgroundNotification object:nil];
     }
@@ -51,12 +60,27 @@ static NSDictionary *SFReadLastEvent(NSString *currentFilePath, NSArray *filePat
 }
 
 - (void)loadState {
-    _lastEvent = SFFileExists(_stateFilePath) ? SFReadJsonFromFile(_stateFilePath) : nil;
-    if (!_lastEvent) {
+    SF_DEBUG(@"Load _lastEvent");
+    NSDictionary *state = SFFileExists(_stateFilePath) ? SFReadJsonFromFile(_stateFilePath) : nil;
+    if (state) {
+        _lastEvent = state[@"last_event"];
+        _lastEventTimestamp = [state[@"last_event_timestamp"] integerValue];
+    } else {
         // See if we could read the last event from data files...
         [_queueDirs useDir:_identifier withBlock:^BOOL (SFRotatedFiles *rotatedFiles) {
             return [rotatedFiles accessFilesWithBlock:^BOOL (NSString *currentFilePath, NSArray *filePaths) {
                 _lastEvent = SFReadLastEvent(currentFilePath, filePaths);
+                if (_lastEvent) {
+                    NSString *path = currentFilePath;
+                    if (!path) {
+                        path = [filePaths lastObject];
+                    }
+                    if (!path || !SFFileModificationTimestamp(path, &_lastEventTimestamp)) {
+                        SF_DEBUG(@"Could not read last modification date from data files");
+                        _lastEvent = nil;
+                        _lastEventTimestamp = 0;
+                    }
+                }
                 return _lastEvent ? YES : NO;
             }];
         }];
@@ -65,7 +89,8 @@ static NSDictionary *SFReadLastEvent(NSString *currentFilePath, NSArray *filePat
 
 - (void)saveState {
     if (_lastEvent) {
-        SFWriteJsonToFile(_lastEvent, _stateFilePath);
+        SF_DEBUG(@"Save _lastEvent");
+        SFWriteJsonToFile(@{@"last_event": _lastEvent, @"last_event_timestamp": [NSNumber numberWithInteger:_lastEventTimestamp]}, _stateFilePath);
     }
 }
 
@@ -78,13 +103,21 @@ static NSDictionary *SFReadLastEvent(NSString *currentFilePath, NSArray *filePat
 - (void)maybeWriteEventToFile:(NSDictionary *)event {
     BOOL result;
     if (_config.appendEventOnlyWhenDifferent) {
+        NSInteger now = SFTimestampMillis();
+        SF_DEBUG(@"lastEventTimestamp=%ld now=%ld", _lastEventTimestamp, now);
+        if (_lastEventTimestamp + SFKeepLastState < now) {
+            SF_DEBUG(@"discard lastEvent");
+            _lastEvent = nil;
+            _lastEventTimestamp = 0;
+        }
         if (_lastEvent && SFEventCompare(_lastEvent, event)) {
-            SF_DEBUG(@"Ignore same event: %@", event);
+            SF_DEBUG(@"Ignore same event");
             result = YES;
         } else {
             result = [self writeEventToFile:event];
         }
         _lastEvent = event;
+        _lastEventTimestamp = SFTimestampMillis();
     } else {
         result = [self writeEventToFile:event];
     }

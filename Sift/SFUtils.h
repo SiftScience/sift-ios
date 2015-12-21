@@ -35,6 +35,7 @@ BOOL SFFileCreationDate(NSString *path, NSTimeInterval *sinceNow);
  * @return YES on success.
  */
 BOOL SFFileModificationDate(NSString *path, NSTimeInterval *sinceNow);
+BOOL SFFileModificationTimestamp(NSString *path, NSInteger *timestamp);
 
 /** @return directory contents as an array of paths. */
 NSArray *SFListDir(NSString *path);

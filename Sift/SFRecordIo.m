@@ -32,7 +32,6 @@ BOOL SFRecordIoAppendRecord(NSFileHandle *handle, NSDictionary *record) {
         return NO;
     }
 
-    [[SFMetrics sharedInstance] measure:SFMetricsKeyRecordSize value:data.length];
     uint16_t length = CFSwapInt16HostToLittle(data.length);
     @try {
         [handle writeData:[NSData dataWithBytes:&length length:sizeof(length)]];

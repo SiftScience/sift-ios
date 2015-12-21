@@ -78,6 +78,10 @@ static BOOL SFFileDate(NSString *path, SEL getDate, NSTimeInterval *output) {
     }
 }
 
+BOOL SFFileExists(NSString *path) {
+    return [[NSFileManager defaultManager] fileExistsAtPath:path];
+}
+
 BOOL SFFileCreationDate(NSString *path, NSTimeInterval *sinceNow) {
     return SFFileDate(path, @selector(fileCreationDate), sinceNow);
 }

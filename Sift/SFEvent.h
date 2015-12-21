@@ -45,5 +45,5 @@
 
 @end
 
-/** @return true if userId is nil or an empty string. */
+/** @return YES if userId is nil or an empty string. */
 BOOL SFEventIsEmptyUserId(NSString *userId);

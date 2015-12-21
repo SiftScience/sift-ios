@@ -28,7 +28,7 @@ static NSString * const SFServerUrlFormat = @"https://api3.siftscience.com/v3/ac
 
 static NSString * const SFRootDirName = @"sift-v0_0_1";
 
-static NSString * const SFDefaultEventQueueIdentifier = @"";
+static NSString * const SFDefaultEventQueueIdentifier = @"sift-default";
 
 // TODO(clchiou): Experiment a sensible config for the default event queue.
 static const SFQueueConfig SFDefaultEventQueueConfig = {

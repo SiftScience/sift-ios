@@ -14,19 +14,18 @@
     SF_METRICS_MAKE(NumHttpErrors) BIN_OP \
     SF_METRICS_MAKE(NumMiscErrors) BIN_OP \
     SF_METRICS_MAKE(NumNetworkErrors) BIN_OP \
-    SF_METRICS_MAKE(NumEvents) BIN_OP \
-    SF_METRICS_MAKE(NumEventsDropped) BIN_OP \
-    SF_METRICS_MAKE(NumUploads) BIN_OP \
-    SF_METRICS_MAKE(NumUploadsSucceeded)
+    SF_METRICS_MAKE(NumEventsDropped)
 
 /**
  * The predefined list of meters.
  *
  * A meter makes measurements and records the first and the second
  * moment (for calculating mean and variance).
+ *
+ * NOTE: At the moment there is no meters.
  */
 #define SF_METRICS_METERS(BIN_OP) \
-    SF_METRICS_MAKE(RecordSize)
+    SF_METRICS_MAKE(PlaceHolderForNoMeters)
 
 #define SF_COMMA ,
 
@@ -55,6 +54,8 @@ NSString *SFMetricsMetricName(SFMetricsKey key);
  * A meter records the sum of measurements, the sum of the squares of
  * measurements, and the number of measurements.  Together they can be
  * used to calculate mean and variance.
+ *
+ * TODO(clchiou): It's probably not a great idea to report mean/stdev.
  */
 typedef struct {
     double sum;

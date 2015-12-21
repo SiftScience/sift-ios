@@ -51,7 +51,7 @@ static NSDictionary *SFReadLastEvent(NSString *currentFilePath, NSArray *filePat
 }
 
 - (void)loadState {
-    _lastEvent = SFReadJsonFromFile(_stateFilePath);
+    _lastEvent = SFFileExists(_stateFilePath) ? SFReadJsonFromFile(_stateFilePath) : nil;
     if (!_lastEvent) {
         // See if we could read the last event from data files...
         [_queueDirs useDir:_identifier withBlock:^BOOL (SFRotatedFiles *rotatedFiles) {
@@ -70,7 +70,6 @@ static NSDictionary *SFReadLastEvent(NSString *currentFilePath, NSArray *filePat
 }
 
 - (void)append:(NSDictionary *)event {
-    [[SFMetrics sharedInstance] count:SFMetricsKeyNumEvents];
     [_operationQueue addOperation:[[NSInvocationOperation alloc] initWithTarget:self selector:@selector(maybeWriteEventToFile:) object:event]];
 }
 

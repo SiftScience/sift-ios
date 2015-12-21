@@ -138,7 +138,6 @@ static NSString *SFSourceListFilePath(NSString *stateDirPath, uint32_t requestId
             SF_DEBUG(@"requestBodyFileUrl: %@", requestBodyFileUrl);
 
             [[_session uploadTaskWithRequest:request fromFile:requestBodyFileUrl] resume];
-            [[SFMetrics sharedInstance] count:SFMetricsKeyNumUploads];
             keepFiles = YES;
 
             return YES;
@@ -212,7 +211,6 @@ static NSString *SFSourceListFilePath(NSString *stateDirPath, uint32_t requestId
             NSInteger statusCode = [(NSHTTPURLResponse *)task.response statusCode];
             SF_DEBUG(@"PUT %@ status %ld", task.response.URL, (long)statusCode);
             if (statusCode == 200) {
-                [[SFMetrics sharedInstance] count:SFMetricsKeyNumUploadsSucceeded];
                 NSArray *sourceFilePaths = SFReadJsonFromFile(SFSourceListFilePath(_rootDirPath, requestId));
                 if (!sourceFilePaths) {
                     SF_DEBUG(@"Could not read sources file paths from disk");

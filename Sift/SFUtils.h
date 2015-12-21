@@ -19,6 +19,9 @@ NSString *SFCacheDirPath(void);
 /** @return file or directory attributes. */
 NSDictionary *SFFileAttrs(NSString *path);
 
+/** @return YES if file exists at path */
+BOOL SFFileExists(NSString *path);
+
 /**
  * Store file creation date since now in the output parameter.
  *

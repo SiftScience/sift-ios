@@ -98,8 +98,8 @@
     XCTAssert([_sift addEventQueue:@"q1" config:config]);
     XCTAssert(![_sift addEventQueue:@"q1" config:config]);
 
-    XCTAssert([_sift removeEventQueue:@"" purge:NO]);  // The default event queue.
-    XCTAssert(![_sift removeEventQueue:@"" purge:NO]);
+    XCTAssert([_sift removeEventQueue:@"sift-default" purge:NO]);  // The default event queue.
+    XCTAssert(![_sift removeEventQueue:@"sift-default" purge:NO]);
 
     XCTAssert([_sift removeEventQueue:@"q1" purge:YES]);
     XCTAssert(![_sift removeEventQueue:@"q1" purge:YES]);

@@ -44,10 +44,12 @@
 }
 
 - (void)setProperty:(UITextField *)textField getter:(SEL)getter setter:(SEL)setter {
-    NSString *oldValue = [[Sift sharedInstance] performSelector:getter];
+    NSString *(*getterFunc)(id, SEL) = (void *)[[Sift sharedInstance] methodForSelector:getter];
+    NSString *oldValue = getterFunc([Sift sharedInstance], getter);
     NSString *newValue = textField.text;
     NSLog(@"%@: %@ -> %@", NSStringFromSelector(getter), oldValue, newValue);
-    [[Sift sharedInstance] performSelector:setter withObject:newValue];
+    void (*setterFunc)(id, SEL, NSString*) = (void *)[[Sift sharedInstance] methodForSelector:setter];
+    setterFunc([Sift sharedInstance], setter, newValue);
 }
 
 - (IBAction)handleEnqueueEventButtonClick:(id)sender {

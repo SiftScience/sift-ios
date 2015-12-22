@@ -252,6 +252,16 @@ static const SFQueueConfig SFDefaultEventQueueConfig = {
         SF_DEBUG(@"Cannot upload events due to lack of server URL format, account ID, and/or beacon key");
         return NO;
     }
+    SF_DEBUG(@"Rotate queues...");
+    pthread_rwlock_rdlock(&_lock);
+    @try {
+        for (NSString *identifier in _eventQueues) {
+            [[_eventQueues objectForKey:identifier] maybeRotateFile];
+        }
+    }
+    @finally {
+        pthread_rwlock_unlock(&_lock);
+    }
     SF_DEBUG(@"Upload events...");
     return [_uploader upload:_serverUrlFormat accountId:_accountId beaconKey:_beaconKey force:force];
 }

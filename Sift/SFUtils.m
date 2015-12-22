@@ -8,8 +8,8 @@
 #import "SFMetrics.h"
 #import "SFUtils.h"
 
-NSInteger SFTimestampMillis(void) {
-    return [[NSDate date] timeIntervalSince1970] * 1000;
+SFTimestamp SFCurrentTime(void) {
+    return [[NSDate date] timeIntervalSince1970] * 1000.0;
 }
 
 NSString *SFCamelCaseToSnakeCase(NSString *camelCase) {
@@ -60,7 +60,7 @@ NSDictionary *SFFileAttrs(NSString *path) {
     return attributes;
 }
 
-static BOOL SFFileDate(NSString *path, SEL getDate, NSTimeInterval *sinceNowOut, NSInteger *timestampOut) {
+static BOOL SFFileDate(NSString *path, SEL getDate, NSTimeInterval *sinceNowOut, SFTimestamp *timestampOut) {
     NSDictionary *attributes = SFFileAttrs(path);
     if (!attributes) {
         return NO;
@@ -95,7 +95,7 @@ BOOL SFFileModificationDate(NSString *path, NSTimeInterval *sinceNow) {
     return SFFileDate(path, @selector(fileModificationDate), sinceNow, nil);
 }
 
-BOOL SFFileModificationTimestamp(NSString *path, NSInteger *timestamp) {
+BOOL SFFileModificationTimestamp(NSString *path, SFTimestamp *timestamp) {
     return SFFileDate(path, @selector(fileModificationDate), nil, timestamp);
 }
 

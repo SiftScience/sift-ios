@@ -29,7 +29,7 @@ static NSDictionary *SFReadLastEvent(NSString *currentFilePath, NSArray *filePat
     NSOperationQueue *_operationQueue;
     SFQueueDirs *_queueDirs;
     NSDictionary *_lastEvent;
-    NSInteger _lastEventTimestamp;
+    SFTimestamp _lastEventTimestamp;
 }
 
 - (instancetype)initWithIdentifier:(NSString *)identifier config:(SFQueueConfig)config operationQueue:(NSOperationQueue *)operationQueue queueDirs:(SFQueueDirs *)queueDirs {
@@ -90,7 +90,7 @@ static NSDictionary *SFReadLastEvent(NSString *currentFilePath, NSArray *filePat
 - (void)saveState {
     if (_lastEvent) {
         SF_DEBUG(@"Save _lastEvent");
-        SFWriteJsonToFile(@{@"last_event": _lastEvent, @"last_event_timestamp": [NSNumber numberWithInteger:_lastEventTimestamp]}, _stateFilePath);
+        SFWriteJsonToFile(@{@"last_event": _lastEvent, @"last_event_timestamp": [NSNumber numberWithUnsignedLongLong:_lastEventTimestamp]}, _stateFilePath);
     }
 }
 
@@ -103,8 +103,8 @@ static NSDictionary *SFReadLastEvent(NSString *currentFilePath, NSArray *filePat
 - (void)maybeWriteEventToFile:(NSDictionary *)event {
     BOOL result;
     if (_config.appendEventOnlyWhenDifferent) {
-        NSInteger now = SFTimestampMillis();
-        SF_DEBUG(@"lastEventTimestamp=%ld now=%ld", _lastEventTimestamp, now);
+        SFTimestamp now = SFCurrentTime();
+        SF_DEBUG(@"lastEventTimestamp=%lld now=%lld", (long long)_lastEventTimestamp, (long long)now);
         if (_lastEventTimestamp + SFKeepLastState < now) {
             SF_DEBUG(@"discard lastEvent");
             _lastEvent = nil;
@@ -117,7 +117,7 @@ static NSDictionary *SFReadLastEvent(NSString *currentFilePath, NSArray *filePat
             result = [self writeEventToFile:event];
         }
         _lastEvent = event;
-        _lastEventTimestamp = SFTimestampMillis();
+        _lastEventTimestamp = SFCurrentTime();
     } else {
         result = [self writeEventToFile:event];
     }

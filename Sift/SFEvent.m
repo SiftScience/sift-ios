@@ -36,7 +36,7 @@ BOOL SFEventIsEmptyUserId(NSString *userId) {
 - (instancetype)init {
     self = [super init];
     if (self) {
-        _time = SFTimestampMillis();
+        _time = SFCurrentTime();
         _path = nil;
         _mobileEventType = nil;
         _userId = nil;
@@ -51,7 +51,7 @@ BOOL SFEventIsEmptyUserId(NSString *userId) {
     NSAssert(!SFEventIsEmptyUserId(_userId), @"userId is _NOT_ optional");
 
     NSMutableDictionary *event = [NSMutableDictionary new];
-    [event setObject:[NSNumber numberWithInteger:_time] forKey:@"time"];
+    [event setObject:[NSNumber numberWithUnsignedLongLong:_time] forKey:@"time"];
     if (_path) {
         [event setObject:_path forKey:@"path"];
     }

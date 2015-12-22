@@ -197,7 +197,7 @@ static NSString *SFSourceListFilePath(NSString *stateDirPath, uint32_t requestId
 
 - (void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task didCompleteWithError:(NSError *)error {
     @synchronized(self) {
-        uint32_t requestId = (uint32_t)[task.originalRequest valueForHTTPHeaderField:SFRequestIdHeader].integerValue;
+        uint32_t requestId = (uint32_t)[task.originalRequest valueForHTTPHeaderField:SFRequestIdHeader].longLongValue;
         NSString *requestBodyFilePath = SFRequestBodyFilePath(_rootDirPath, requestId);
         NSString *sourceListFilePath = SFSourceListFilePath(_rootDirPath, requestId);
 

@@ -18,7 +18,7 @@
 /** @name Event properties. */
 
 /** Event time.  Default to now. */
-@property NSInteger time;
+@property uint64_t time;
 
 /** Event path.  Default to nil. */
 @property NSString *path;

@@ -48,15 +48,15 @@ static NSString *SFSysctlReadString(const char *name) {
     return value;
 }
 
-static NSString *SFSysctlReadInt32(const char *name) {
-    int32_t value;
+static NSString *SFSysctlReadUInt32(const char *name) {
+    uint32_t value;
     size_t size = sizeof(value);
     int err = sysctlbyname(name, &value, &size, NULL, 0);
     if (err) {
         SF_DEBUG(@"sysctlbyname(\"%s\", ...): %s", name, strerror(errno));
         return nil;
     } else {
-        return [NSString stringWithFormat:@"%d", value];
+        return [NSString stringWithFormat:@"%u", value];
     }
 }
 
@@ -124,23 +124,23 @@ static NSString *SFSysctlReadInt64(const char *name) {
         {"kern.uuid", SFSysctlReadString},
         {"kern.version", SFSysctlReadString},
 
-        {"hw.ncpu", SFSysctlReadInt32},
-        {"hw.byteorder", SFSysctlReadInt32},
-        {"hw.activecpu", SFSysctlReadInt32},
-        {"hw.physicalcpu", SFSysctlReadInt32},
-        {"hw.physicalcpu_max", SFSysctlReadInt32},
-        {"hw.logicalcpu", SFSysctlReadInt32},
-        {"hw.logicalcpu_max", SFSysctlReadInt32},
-        {"hw.cputype", SFSysctlReadInt32},
-        {"hw.cpusubtype", SFSysctlReadInt32},
-        {"hw.cpu64bit_capable", SFSysctlReadInt32},
-        {"hw.cpufamily", SFSysctlReadInt32},
-        {"hw.packages", SFSysctlReadInt32},
-        {"hw.optional.floatingpoint", SFSysctlReadInt32},
-        {"kern.hostid", SFSysctlReadInt32},
-        {"kern.osrevision", SFSysctlReadInt32},
-        {"kern.posix1version", SFSysctlReadInt32},
-        {"user.posix2_version", SFSysctlReadInt32},
+        {"hw.ncpu", SFSysctlReadUInt32},
+        {"hw.byteorder", SFSysctlReadUInt32},
+        {"hw.activecpu", SFSysctlReadUInt32},
+        {"hw.physicalcpu", SFSysctlReadUInt32},
+        {"hw.physicalcpu_max", SFSysctlReadUInt32},
+        {"hw.logicalcpu", SFSysctlReadUInt32},
+        {"hw.logicalcpu_max", SFSysctlReadUInt32},
+        {"hw.cputype", SFSysctlReadUInt32},
+        {"hw.cpusubtype", SFSysctlReadUInt32},
+        {"hw.cpu64bit_capable", SFSysctlReadUInt32},
+        {"hw.cpufamily", SFSysctlReadUInt32},
+        {"hw.packages", SFSysctlReadUInt32},
+        {"hw.optional.floatingpoint", SFSysctlReadUInt32},
+        {"kern.hostid", SFSysctlReadUInt32},
+        {"kern.osrevision", SFSysctlReadUInt32},
+        {"kern.posix1version", SFSysctlReadUInt32},
+        {"user.posix2_version", SFSysctlReadUInt32},
 
         {"hw.busfrequency", SFSysctlReadInt64},
         {"hw.busfrequency_min", SFSysctlReadInt64},

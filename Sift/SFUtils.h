@@ -7,8 +7,10 @@
 /** Short hand of NSAssert(false, ...) */
 #define SFFail() NSAssert(false, @"SFFail() at %s:%d", __FUNCTION__, __LINE__)
 
+typedef uint64_t SFTimestamp;
+
 /** @return the current time stamp in milliseconds. */
-NSInteger SFTimestampMillis(void);
+SFTimestamp SFCurrentTime(void);
 
 /** @return snake case string, e.g., "camelCase" to "camel_case". */
 NSString *SFCamelCaseToSnakeCase(NSString *camelCase);
@@ -35,7 +37,7 @@ BOOL SFFileCreationDate(NSString *path, NSTimeInterval *sinceNow);
  * @return YES on success.
  */
 BOOL SFFileModificationDate(NSString *path, NSTimeInterval *sinceNow);
-BOOL SFFileModificationTimestamp(NSString *path, NSInteger *timestamp);
+BOOL SFFileModificationTimestamp(NSString *path, SFTimestamp *timestamp);
 
 /** @return directory contents as an array of paths. */
 NSArray *SFListDir(NSString *path);

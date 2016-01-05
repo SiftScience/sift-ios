@@ -13,7 +13,23 @@
 		71E96AF21BFC074D0037AC23 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 71E96AF01BFC074D0037AC23 /* Main.storyboard */; };
 		71E96AF41BFC074D0037AC23 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 71E96AF31BFC074D0037AC23 /* Assets.xcassets */; };
 		71E96AF71BFC074D0037AC23 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 71E96AF51BFC074D0037AC23 /* LaunchScreen.storyboard */; };
+		71EA2F331C3B4CB200B6977F /* Sift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 71EA2F321C3B4CB200B6977F /* Sift.framework */; };
+		71EA2F341C3B4CB200B6977F /* Sift.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 71EA2F321C3B4CB200B6977F /* Sift.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		71EA2F351C3B4CB200B6977F /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				71EA2F341C3B4CB200B6977F /* Sift.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		71E96AE41BFC074D0037AC23 /* HelloSift.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HelloSift.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -26,6 +42,7 @@
 		71E96AF31BFC074D0037AC23 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		71E96AF61BFC074D0037AC23 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		71E96AF81BFC074D0037AC23 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		71EA2F321C3B4CB200B6977F /* Sift.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Sift.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -33,6 +50,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				71EA2F331C3B4CB200B6977F /* Sift.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -42,6 +60,7 @@
 		71E96ADB1BFC074D0037AC23 = {
 			isa = PBXGroup;
 			children = (
+				71EA2F321C3B4CB200B6977F /* Sift.framework */,
 				71E96AE61BFC074D0037AC23 /* HelloSift */,
 				71E96AE51BFC074D0037AC23 /* Products */,
 			);
@@ -89,6 +108,7 @@
 				71E96AE01BFC074D0037AC23 /* Sources */,
 				71E96AE11BFC074D0037AC23 /* Frameworks */,
 				71E96AE21BFC074D0037AC23 /* Resources */,
+				71EA2F351C3B4CB200B6977F /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -300,6 +320,7 @@
 				71E96AFD1BFC074D0037AC23 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

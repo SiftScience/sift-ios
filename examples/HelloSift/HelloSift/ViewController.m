@@ -1,5 +1,7 @@
 // Copyright (c) 2015 Sift Science. All rights reserved.
 
+@import CoreLocation;
+
 #import "Sift/SFEvent.h"
 #import "Sift/Sift.h"
 
@@ -9,7 +11,9 @@
 
 @end
 
-@implementation ViewController
+@implementation ViewController {
+    CLLocationManager *_manager;
+}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -22,6 +26,13 @@
     }
     if ([Sift sharedInstance].serverUrlFormat) {
         self.serverUrlFormatTextField.text = [Sift sharedInstance].serverUrlFormat;
+    }
+
+    CLAuthorizationStatus status = [CLLocationManager authorizationStatus];
+    NSLog(@"Ask for permission of location service: status=%d", status);
+    if (status == kCLAuthorizationStatusNotDetermined) {
+        _manager = [CLLocationManager new];
+        [_manager requestAlwaysAuthorization];
     }
 }
 

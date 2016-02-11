@@ -12,6 +12,9 @@ typedef uint64_t SFTimestamp;
 /** @return the current time stamp in milliseconds. */
 SFTimestamp SFCurrentTime(void);
 
+/** @return the converted string. */
+NSString *SFDoubleToString(double value);
+
 /** @return snake case string, e.g., "camelCase" to "camel_case". */
 NSString *SFCamelCaseToSnakeCase(NSString *camelCase);
 

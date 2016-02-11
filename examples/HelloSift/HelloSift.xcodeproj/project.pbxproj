@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		712A42191C6D3FAA005AEC79 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 712A42171C6D3E9F005AEC79 /* CoreLocation.framework */; };
+		712A421B1C6D5744005AEC79 /* CoreMotion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 712A421A1C6D5744005AEC79 /* CoreMotion.framework */; };
 		71E96AE91BFC074D0037AC23 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 71E96AE81BFC074D0037AC23 /* main.m */; };
 		71E96AEC1BFC074D0037AC23 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 71E96AEB1BFC074D0037AC23 /* AppDelegate.m */; };
 		71E96AEF1BFC074D0037AC23 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 71E96AEE1BFC074D0037AC23 /* ViewController.m */; };
@@ -32,6 +34,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		712A42171C6D3E9F005AEC79 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
+		712A421A1C6D5744005AEC79 /* CoreMotion.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMotion.framework; path = System/Library/Frameworks/CoreMotion.framework; sourceTree = SDKROOT; };
 		71E96AE41BFC074D0037AC23 /* HelloSift.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HelloSift.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		71E96AE81BFC074D0037AC23 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		71E96AEA1BFC074D0037AC23 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -50,6 +54,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				712A421B1C6D5744005AEC79 /* CoreMotion.framework in Frameworks */,
+				712A42191C6D3FAA005AEC79 /* CoreLocation.framework in Frameworks */,
 				71EA2F331C3B4CB200B6977F /* Sift.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -60,6 +66,8 @@
 		71E96ADB1BFC074D0037AC23 = {
 			isa = PBXGroup;
 			children = (
+				712A421A1C6D5744005AEC79 /* CoreMotion.framework */,
+				712A42171C6D3E9F005AEC79 /* CoreLocation.framework */,
 				71EA2F321C3B4CB200B6977F /* Sift.framework */,
 				71E96AE61BFC074D0037AC23 /* HelloSift */,
 				71E96AE51BFC074D0037AC23 /* Products */,

@@ -23,7 +23,7 @@ extern const SFQueueConfig SFDevicePropertiesReporterQueueConfig;
 /** Create a report. */
 - (NSDictionary *)createReport;
 
-/** @return a persistent ID of this device. */
-- (NSString *)getPersistentUniqueId;
+/** @return a persistent, unique key of this device. */
+- (NSString *)getPersistentUniqueKey;
 
 @end

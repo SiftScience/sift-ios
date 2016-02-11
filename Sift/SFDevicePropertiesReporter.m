@@ -95,7 +95,7 @@ static NSString *SFSysctlReadInt64(const char *name) {
     [report setObject:[identifierManager.advertisingIdentifier UUIDString] forKey:@"apple_ifa"];
     [report setObject:[[device identifierForVendor] UUIDString] forKey:@"apple_ifv"];
 
-    [report setObject:[self getPersistentUniqueId] forKey:@"device_id"];
+    [report setObject:[self getPersistentUniqueKey] forKey:@"unique_key"];
 
     CTTelephonyNetworkInfo *networkInfo = [CTTelephonyNetworkInfo new];
     CTCarrier *carrier = [networkInfo subscriberCellularProvider];
@@ -169,7 +169,7 @@ static NSString *SFSysctlReadInt64(const char *name) {
     return report;
 }
 
-- (NSString *)getPersistentUniqueId {
+- (NSString *)getPersistentUniqueKey {
     NSMutableDictionary *keychainItemBase = [NSMutableDictionary new];
     keychainItemBase[(__bridge id)kSecClass] = (__bridge id)kSecClassGenericPassword;
     keychainItemBase[(__bridge id)kSecAttrAccessible] = (__bridge id)kSecAttrAccessibleAlways;

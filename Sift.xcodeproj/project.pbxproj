@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		712A42141C6D0B0F005AEC79 /* SFLocationReporter.h in Headers */ = {isa = PBXBuildFile; fileRef = 712A42131C6D0B0F005AEC79 /* SFLocationReporter.h */; };
+		712A42161C6D0B42005AEC79 /* SFLocationReporter.m in Sources */ = {isa = PBXBuildFile; fileRef = 712A42151C6D0B42005AEC79 /* SFLocationReporter.m */; };
+		712A421D1C6D5797005AEC79 /* SFMotionReporter.h in Headers */ = {isa = PBXBuildFile; fileRef = 712A421C1C6D5797005AEC79 /* SFMotionReporter.h */; };
+		712A421F1C6D57A6005AEC79 /* SFMotionReporter.m in Sources */ = {isa = PBXBuildFile; fileRef = 712A421E1C6D57A6005AEC79 /* SFMotionReporter.m */; };
 		7158BAB61C0F750B00C369D6 /* SFDevicePropertiesReporterTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 7158BAB51C0F750B00C369D6 /* SFDevicePropertiesReporterTests.m */; };
 		7158BAB81C0F78C300C369D6 /* SFMetricsReporterTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 7158BAB71C0F78C300C369D6 /* SFMetricsReporterTests.m */; };
 		71CCDB751BFC04F0001C5791 /* SFDebug.h in Headers */ = {isa = PBXBuildFile; fileRef = 71CCDB591BFC04F0001C5791 /* SFDebug.h */; };
@@ -62,6 +66,10 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		712A42131C6D0B0F005AEC79 /* SFLocationReporter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SFLocationReporter.h; sourceTree = "<group>"; };
+		712A42151C6D0B42005AEC79 /* SFLocationReporter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SFLocationReporter.m; sourceTree = "<group>"; };
+		712A421C1C6D5797005AEC79 /* SFMotionReporter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SFMotionReporter.h; sourceTree = "<group>"; };
+		712A421E1C6D57A6005AEC79 /* SFMotionReporter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SFMotionReporter.m; sourceTree = "<group>"; };
 		7158BAB51C0F750B00C369D6 /* SFDevicePropertiesReporterTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SFDevicePropertiesReporterTests.m; sourceTree = "<group>"; };
 		7158BAB71C0F78C300C369D6 /* SFMetricsReporterTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SFMetricsReporterTests.m; sourceTree = "<group>"; };
 		71CCDB591BFC04F0001C5791 /* SFDebug.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SFDebug.h; sourceTree = "<group>"; };
@@ -157,10 +165,14 @@
 				71CCDB5C1BFC04F0001C5791 /* SFEvent.h */,
 				71CCDB5D1BFC04F0001C5791 /* SFEvent.m */,
 				71CCDB5E1BFC04F0001C5791 /* SFEvent+Utils.h */,
+				712A42131C6D0B0F005AEC79 /* SFLocationReporter.h */,
+				712A42151C6D0B42005AEC79 /* SFLocationReporter.m */,
 				71CCDB5F1BFC04F0001C5791 /* SFMetrics.h */,
 				71CCDB601BFC04F0001C5791 /* SFMetrics.m */,
 				71CCDB611BFC04F0001C5791 /* SFMetricsReporter.h */,
 				71CCDB621BFC04F0001C5791 /* SFMetricsReporter.m */,
+				712A421C1C6D5797005AEC79 /* SFMotionReporter.h */,
+				712A421E1C6D57A6005AEC79 /* SFMotionReporter.m */,
 				71CCDB631BFC04F0001C5791 /* SFQueue.h */,
 				71CCDB641BFC04F0001C5791 /* SFQueue.m */,
 				71CCDB651BFC04F0001C5791 /* SFQueue+Private.h */,
@@ -225,7 +237,9 @@
 				71CCDB901BFC04F0001C5791 /* Sift+Private.h in Headers */,
 				71CCDB7A1BFC04F0001C5791 /* SFEvent+Utils.h in Headers */,
 				71CCDB811BFC04F0001C5791 /* SFQueue+Private.h in Headers */,
+				712A421D1C6D5797005AEC79 /* SFMotionReporter.h in Headers */,
 				71CCDB7F1BFC04F0001C5791 /* SFQueue.h in Headers */,
+				712A42141C6D0B0F005AEC79 /* SFLocationReporter.h in Headers */,
 				71CCDB891BFC04F0001C5791 /* SFRotatedFiles+Private.h in Headers */,
 				71CCDB8D1BFC04F0001C5791 /* SFUtils.h in Headers */,
 				71CCDB751BFC04F0001C5791 /* SFDebug.h in Headers */,
@@ -331,12 +345,14 @@
 			files = (
 				71CCDB8E1BFC04F0001C5791 /* SFUtils.m in Sources */,
 				71CCDB771BFC04F0001C5791 /* SFDevicePropertiesReporter.m in Sources */,
+				712A421F1C6D57A6005AEC79 /* SFMotionReporter.m in Sources */,
 				71CCDB801BFC04F0001C5791 /* SFQueue.m in Sources */,
 				71CCDB881BFC04F0001C5791 /* SFRotatedFiles.m in Sources */,
 				71CCDB7E1BFC04F0001C5791 /* SFMetricsReporter.m in Sources */,
 				71CCDB8B1BFC04F0001C5791 /* SFUploader.m in Sources */,
 				71CCDB791BFC04F0001C5791 /* SFEvent.m in Sources */,
 				71CCDB861BFC04F0001C5791 /* SFRecordIo.m in Sources */,
+				712A42161C6D0B42005AEC79 /* SFLocationReporter.m in Sources */,
 				71CCDB8F1BFC04F0001C5791 /* Sift.m in Sources */,
 				71CCDB841BFC04F0001C5791 /* SFQueueDirs.m in Sources */,
 				71CCDB7C1BFC04F0001C5791 /* SFMetrics.m in Sources */,

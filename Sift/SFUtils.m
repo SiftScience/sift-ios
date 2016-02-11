@@ -12,6 +12,10 @@ SFTimestamp SFCurrentTime(void) {
     return [[NSDate date] timeIntervalSince1970] * 1000.0;
 }
 
+NSString *SFDoubleToString(double value) {
+    return [NSNumber numberWithDouble:value].stringValue;
+}
+
 NSString *SFCamelCaseToSnakeCase(NSString *camelCase) {
     const char *camel = [camelCase cStringUsingEncoding:NSASCIIStringEncoding];
     if (!camel) {

@@ -9,8 +9,10 @@
 #import "SFDevicePropertiesReporter.h"
 #import "SFEvent.h"
 #import "SFEvent+Utils.h"
+#import "SFLocationReporter.h"
 #import "SFMetrics.h"
 #import "SFMetricsReporter.h"
+#import "SFMotionReporter.h"
 #import "SFQueue.h"
 #import "SFQueueConfig.h"
 #import "SFQueueDirs.h"
@@ -54,6 +56,8 @@ static const SFQueueConfig SFDefaultEventQueueConfig = {
 
     SFMetricsReporter *_metricsReporter;
     SFDevicePropertiesReporter *_devicePropertiesReporter;
+    SFLocationReporter *_locationReporter;
+    SFMotionReporter *_motionReporter;
     NSTimer *_reporterTimer;
 
     NSTimer *_cleanupTimer;
@@ -113,6 +117,19 @@ static const SFQueueConfig SFDefaultEventQueueConfig = {
             self = nil;
             return nil;
         }
+        _locationReporter = [SFLocationReporter new];
+        if (!_locationReporter) {
+            self = nil;
+            return nil;
+        }
+        _motionReporter = [SFMotionReporter new];
+        if (!_motionReporter) {
+            self = nil;
+            return nil;
+        }
+
+        [_locationReporter start];
+        [_motionReporter start];
 
         _uploaderTimer = nil;
         self.uploadPeriod = SFUploadInterval;
@@ -124,6 +141,7 @@ static const SFQueueConfig SFDefaultEventQueueConfig = {
         [[NSRunLoop mainRunLoop] addTimer:_cleanupTimer forMode:NSDefaultRunLoopMode];
 
         NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
+        [notificationCenter addObserver:self selector:@selector(applicationDidBecomeActive:) name:UIApplicationDidBecomeActiveNotification object:nil];
         [notificationCenter addObserver:self selector:@selector(applicationDidEnterBackground:) name:UIApplicationDidEnterBackgroundNotification object:nil];
     }
     return self;
@@ -143,6 +161,16 @@ static const SFQueueConfig SFDefaultEventQueueConfig = {
     //[super dealloc];  // Provided by compiler!
 }
 
+- (void)applicationDidBecomeActive:(UIApplication *)application {
+    SF_DEBUG(@"Enter foreground...");
+    // If for any reason that the location reporter is stopped, let's start it again.
+    if (!_locationReporter.started) {
+        [_locationReporter start];
+    }
+    // Restart the motion reporter.
+    [_motionReporter start];
+}
+
 - (void)applicationDidEnterBackground:(NSNotification *)notification {
     SF_DEBUG(@"Enter background...");
     // Persist metrics data (simply create a report from them).
@@ -154,6 +182,8 @@ static const SFQueueConfig SFDefaultEventQueueConfig = {
         }
         [_metricsReporter report:_userId];
     }
+    // Stop motion reporter (as it's very, very chatty).
+    [_motionReporter stop];
 }
 
 - (void)removeData {

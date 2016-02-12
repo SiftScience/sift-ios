@@ -33,6 +33,44 @@ BOOL SFEventIsEmptyUserId(NSString *userId) {
     return event;
 }
 
+NSString *viewType = @"$view";
+NSString *updateSettingsType = @"$update_settings";
+NSString *loginType = @"$login";
+NSString *logoutType = @"$logout";
+NSString *loadAppType = @"$load_app";
+NSString *backgroundAppType = @"$background_app";
+NSString *unloadAppType = @"$unload_app";
+
+
++ (SFEvent *) viewWithPath:(NSString *)path userId:(NSString *)userId fields:(NSDictionary *)fields {
+    return [SFEvent eventWithPath:path mobileEventType:viewType userId:userId fields:fields];
+}
+
++ (SFEvent *) updateSettings:userId:(NSString *)userId fields:(NSDictionary *)fields {
+    return [SFEvent eventWithPath:nil mobileEventType:updateSettingsType userId:userId fields:fields];
+}
+
++ (SFEvent *) login:userId:(NSString *)userId fields:(NSDictionary *)fields {
+    return [SFEvent eventWithPath:nil mobileEventType:loginType userId:userId fields:fields];
+}
+
++ (SFEvent *) logout:userId:(NSString *)userId fields:(NSDictionary *)fields {
+    return [SFEvent eventWithPath:nil mobileEventType:logoutType userId:userId fields:fields];
+}
+
++ (SFEvent *) loadApp:userId:(NSString *)userId fields:(NSDictionary *)fields {
+    return [SFEvent eventWithPath:nil mobileEventType:loadAppType userId:userId fields:fields];
+}
+
++ (SFEvent *) backgroundApp:userId:(NSString *)userId fields:(NSDictionary *)fields {
+    return [SFEvent eventWithPath:nil mobileEventType:backgroundAppType userId:userId fields:fields];
+}
+
++ (SFEvent *) unloadApp:userId:(NSString *)userId fields:(NSDictionary *)fields {
+    return [SFEvent eventWithPath:nil mobileEventType:unloadAppType userId:userId fields:fields];
+}
+
+
 - (instancetype)init {
     self = [super init];
     if (self) {

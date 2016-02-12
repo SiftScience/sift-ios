@@ -10,10 +10,10 @@
 #import "SFUtils.h"
 #import "Sift.h"
 
-static NSString *LOCATION_EVENT_TYPE = @"$location";
-static NSString *LOCATION_HEADING_EVENT_TYPE = @"$location_heading";
+static NSString * const SFLocationEventType = @"$location";
+static NSString * const SFLocationHeadingEventType = @"$location_heading";
 
-static const SFLocationReporterConfig DEFAULT_CONFIG = {
+static const SFLocationReporterConfig SFDefaultLocationReporterConfig = {
     .useStandardLocationService = YES,
     .distanceFilter = 10,
     .headingFilter = 30,
@@ -39,7 +39,7 @@ static const SFLocationReporterConfig DEFAULT_CONFIG = {
         }
 
         _started = NO;
-        _config = DEFAULT_CONFIG;
+        _config = SFDefaultLocationReporterConfig;
 
         _manager.delegate = self;
     }
@@ -156,7 +156,7 @@ static const SFLocationReporterConfig DEFAULT_CONFIG = {
         if (location.course >= 0) {
             fields[@"course"] = SFDoubleToString(location.course);
         }
-        SFEvent *event = [SFEvent eventWithPath:nil mobileEventType:LOCATION_EVENT_TYPE userId:sift.userId fields:fields];
+        SFEvent *event = [SFEvent eventWithPath:nil mobileEventType:SFLocationEventType userId:sift.userId fields:fields];
         event.time = [location.timestamp timeIntervalSince1970] * 1000.0;
         [sift appendEvent:event];
     }
@@ -176,7 +176,7 @@ static const SFLocationReporterConfig DEFAULT_CONFIG = {
     fields[@"magnetic_field_x"] = SFDoubleToString(heading.x);
     fields[@"magnetic_field_y"] = SFDoubleToString(heading.y);
     fields[@"magnetic_field_z"] = SFDoubleToString(heading.z);
-    SFEvent *event = [SFEvent eventWithPath:nil mobileEventType:LOCATION_HEADING_EVENT_TYPE userId:sift.userId fields:fields];
+    SFEvent *event = [SFEvent eventWithPath:nil mobileEventType:SFLocationHeadingEventType userId:sift.userId fields:fields];
     event.time = [heading.timestamp timeIntervalSince1970] * 1000.0;
     [sift appendEvent:event];
 }

@@ -5,6 +5,7 @@
 
 #import "pthread.h"
 
+#import "SFAppEventReporter.h"
 #import "SFDebug.h"
 #import "SFDevicePropertiesReporter.h"
 #import "SFEvent.h"
@@ -56,9 +57,11 @@ static const SFQueueConfig SFDefaultEventQueueConfig = {
 
     SFMetricsReporter *_metricsReporter;
     SFDevicePropertiesReporter *_devicePropertiesReporter;
+    NSTimer *_reporterTimer;
+
+    SFAppEventReporter *_appEventReporter;
     SFLocationReporter *_locationReporter;
     SFMotionReporter *_motionReporter;
-    NSTimer *_reporterTimer;
 
     NSTimer *_cleanupTimer;
 }
@@ -114,6 +117,12 @@ static const SFQueueConfig SFDefaultEventQueueConfig = {
         }
         _devicePropertiesReporter = [SFDevicePropertiesReporter new];
         if (!_devicePropertiesReporter) {
+            self = nil;
+            return nil;
+        }
+
+        _appEventReporter = [[SFAppEventReporter alloc] initWithQueue:_operationQueue];
+        if (!_appEventReporter) {
             self = nil;
             return nil;
         }

@@ -9,9 +9,9 @@
 #import "SFUtils.h"
 #import "Sift.h"
 
-static NSString *MOTION_EVENT_TYPE = @"$motion";
+static NSString * const SFMotionEventType = @"$motion";
 
-static const SFMotionReporterConfig DEFAULT_CONFIG = {
+static const SFMotionReporterConfig SFDefaultMotionReporterConfig = {
     .readAccelerometer = YES,
     .accelerometerUpdateInterval = 1,
 
@@ -34,7 +34,7 @@ static const SFMotionReporterConfig DEFAULT_CONFIG = {
 - (instancetype)init {
     self = [super init];
     if (self) {
-        _config = DEFAULT_CONFIG;
+        _config = SFDefaultMotionReporterConfig;
         _manager = [CMMotionManager new];
         _queue = [NSOperationQueue new];
     }
@@ -62,7 +62,7 @@ static const SFMotionReporterConfig DEFAULT_CONFIG = {
             NSDictionary *fields = @{@"raw_acceleration_x": SFDoubleToString(data.acceleration.x),
                                      @"raw_acceleration_y": SFDoubleToString(data.acceleration.y),
                                      @"raw_acceleration_z": SFDoubleToString(data.acceleration.z)};
-            SFEvent *event = [SFEvent eventWithPath:nil mobileEventType:MOTION_EVENT_TYPE userId:sift.userId fields:fields];
+            SFEvent *event = [SFEvent eventWithPath:nil mobileEventType:SFMotionEventType userId:sift.userId fields:fields];
             event.time = data.timestamp * 1000.0;
             [sift appendEvent:event];
         }];
@@ -81,7 +81,7 @@ static const SFMotionReporterConfig DEFAULT_CONFIG = {
             NSDictionary *fields = @{@"raw_rotation_rate_x": SFDoubleToString(data.rotationRate.x),
                                      @"raw_rotation_rate_y": SFDoubleToString(data.rotationRate.y),
                                      @"raw_rotation_rate_z": SFDoubleToString(data.rotationRate.z)};
-            SFEvent *event = [SFEvent eventWithPath:nil mobileEventType:MOTION_EVENT_TYPE userId:sift.userId fields:fields];
+            SFEvent *event = [SFEvent eventWithPath:nil mobileEventType:SFMotionEventType userId:sift.userId fields:fields];
             event.time = data.timestamp * 1000.0;
             [sift appendEvent:event];
         }];
@@ -100,7 +100,7 @@ static const SFMotionReporterConfig DEFAULT_CONFIG = {
             NSDictionary *fields = @{@"raw_magnetic_field_x": SFDoubleToString(data.magneticField.x),
                                      @"raw_magnetic_field_y": SFDoubleToString(data.magneticField.y),
                                      @"raw_magnetic_field_z": SFDoubleToString(data.magneticField.z)};
-            SFEvent *event = [SFEvent eventWithPath:nil mobileEventType:MOTION_EVENT_TYPE userId:sift.userId fields:fields];
+            SFEvent *event = [SFEvent eventWithPath:nil mobileEventType:SFMotionEventType userId:sift.userId fields:fields];
             event.time = data.timestamp * 1000.0;
             [sift appendEvent:event];
         }];
@@ -146,7 +146,7 @@ static const SFMotionReporterConfig DEFAULT_CONFIG = {
                 fields[@"magnetic_field_z"] = SFDoubleToString(data.magneticField.field.z);
                 fields[@"magnetic_field_accuracy"] = [NSNumber numberWithInteger:data.magneticField.accuracy].stringValue;
             }
-            SFEvent *event = [SFEvent eventWithPath:nil mobileEventType:MOTION_EVENT_TYPE userId:sift.userId fields:fields];
+            SFEvent *event = [SFEvent eventWithPath:nil mobileEventType:SFMotionEventType userId:sift.userId fields:fields];
             event.time = data.timestamp * 1000.0;
             [sift appendEvent:event];
         }];

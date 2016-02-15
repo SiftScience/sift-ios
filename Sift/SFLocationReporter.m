@@ -101,9 +101,11 @@ static const SFLocationReporterConfig SFDefaultLocationReporterConfig = {
 
     SF_DEBUG(@"Stop location reporting");
 
-    if ([CLLocationManager significantLocationChangeMonitoringAvailable]) {
+    if (!_config.useStandardLocationService && [CLLocationManager significantLocationChangeMonitoringAvailable]) {
+        SF_DEBUG(@"Stop significant location change service");
         [_manager stopMonitoringSignificantLocationChanges];
     } else {
+        SF_DEBUG(@"Stop standard location service");
         [_manager stopUpdatingLocation];
     }
 

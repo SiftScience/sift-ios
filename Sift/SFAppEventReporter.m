@@ -10,13 +10,13 @@
 
 static NSString * const SFAppEventType = @"$app";
 
-// White list of notification name prefixes that we care. (Or should we just listen all of them?)
+// Whitelist of notification prefixes that a fraud analyst might care.
+//
+// TODO(clchiou): Add more notifications here (and before you add them,
+// make sure a fraud analyst would be able to understand their meaning).
 static NSString * const SFNotificationNamePrefixes[] = {
-    @"UIApplication",
-    @"UIDevice",
-    @"UIKeyboard",
-    @"UIScreen",
-    @"UIWindow",
+    @"UIApplicationDidEnterBackground",
+    @"UIApplicationDidBecomeActive",
     nil,
 };
 

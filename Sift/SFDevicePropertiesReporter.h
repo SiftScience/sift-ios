@@ -26,4 +26,6 @@ extern const SFQueueConfig SFDevicePropertiesReporterQueueConfig;
 /** @return a persistent, unique key of this device. */
 - (NSString *)getPersistentUniqueKey;
 
+- (void)collectSystemProperties:(NSMutableDictionary *)report;
+
 @end

@@ -20,4 +20,11 @@
     }
 }
 
+- (void)testJailBroken {
+    NSMutableDictionary *report = [NSMutableDictionary new];
+    [[SFDevicePropertiesReporter new] collectSystemProperties:report];
+    // A simulator should trigger a few suspicious signs.
+    XCTAssertGreaterThan(report.count, 0);
+}
+
 @end

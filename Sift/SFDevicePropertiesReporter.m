@@ -5,8 +5,15 @@
 @import Foundation;
 @import UIKit;
 
+#include <ctype.h>
+#include <stdlib.h>
+#include <string.h>
 #include <sys/types.h>
 #include <sys/sysctl.h>
+#include <sys/stat.h>
+#include <unistd.h>
+
+#include <mach-o/dyld.h>
 
 #import "SFDebug.h"
 #import "SFUtils.h"
@@ -165,6 +172,8 @@ static NSString *SFSysctlReadInt64(const char *name) {
         }
     }
 
+    [self collectSystemProperties:report];
+
     SF_DEBUG(@"Device properties: %@", report);
     return report;
 }
@@ -207,6 +216,159 @@ static NSString *SFSysctlReadInt64(const char *name) {
     event.userId = userId;
     event.deviceProperties = [self createReport];
     [[Sift sharedInstance] appendEvent:event toQueue:SFDevicePropertiesReporterQueueIdentifier];
+}
+
+// TODO(clchiou): Test this on a jailbroken device and see how many suspicious things we could find.
+
+/**
+ * Collect properties for detecting whether this device is jail broken.
+ *
+ * The detections implemented here are from public sources, meaning a
+ * determined jail breaker should know and be able to patch around all
+ * of them.
+ *
+ * NOTE: Don't leave "obvious" string constants or exposed symbol names
+ * like "jail broken" in the compiled binary - this would make reverse
+ * engineer's job slightly harder of finding the detection code with
+ * simple full text search (and patching around it).
+ */
+- (void)collectSystemProperties:(NSMutableDictionary *)report {
+
+    // 1. Filesystem-based detection.
+
+    // Files that are typical to a jail-broken device, which are ROT13
+    // encoded to hide from simple full text search - it can't stop a
+    // determined mind but could slow it down a bit.
+    char paths[] = \
+        "/cevingr/ine/fgnfu\n"
+        "/cevingr/ine/yvo/ncg\n"
+        "/cevingr/ine/gzc/plqvn.ybt\n"
+        "/cevingr/ine/yvo/plqvn\n"
+        "/cevingr/ine/zbovyr/Yvoenel/FOFrggvatf/Gurzrf\n"
+        "/Yvoenel/ZbovyrFhofgengr/ZbovyrFhofgengr.qlyvo\n"
+        "/Yvoenel/ZbovyrFhofgengr/QlanzvpYvoenevrf/Irrapl.cyvfg\n"
+        "/Yvoenel/ZbovyrFhofgengr/QlanzvpYvoenevrf/YvirPybpx.cyvfg\n"
+        "/Flfgrz/Yvoenel/YnhapuQnrzbaf/pbz.vxrl.oobg.cyvfg\n"
+        "/Flfgrz/Yvoenel/YnhapuQnrzbaf/pbz.fnhevx.Plqvn.Fgneghc.cyvfg\n"
+        "/ine/pnpur/ncg\n"
+        "/ine/yvo/ncg\n"
+        "/ine/yvo/plqvn\n"
+        "/ine/ybt/flfybt\n"
+        "/ine/gzc/plqvn.ybt\n"
+        "/ova/onfu\n"
+        "/ova/fu\n"
+        "/hfe/fova/ffuq\n"
+        "/hfe/yvorkrp/ffu-xrlfvta\n"
+        "/hfe/fova/ffuq\n"
+        "/hfe/ova/ffuq\n"
+        "/hfe/yvorkrp/fsgc-freire\n"
+        "/rgp/ffu/ffuq_pbasvt\n"
+        "/rgp/ncg\n"
+        "/Nccyvpngvbaf/Plqvn.ncc\n"
+        "/Nccyvpngvbaf/EbpxNcc.ncc\n"
+        "/Nccyvpngvbaf/Vpl.ncc\n"
+        "/Nccyvpngvbaf/JvagreObneq.ncc\n"
+        "/Nccyvpngvbaf/FOFrggvatf.ncc\n"
+        "/Nccyvpngvbaf/ZkGhor.ncc\n"
+        "/Nccyvpngvbaf/VagryyvFperra.ncc\n"
+        "/Nccyvpngvbaf/SnxrPneevre.ncc\n"
+        "/Nccyvpngvbaf/oynpxen1a.ncc\n"
+        "/Nccyvpngvbaf/oynpxfa0j.ncc\n"
+        "/Nccyvpngvbaf/terracbvf0a.ncc\n"
+        "/Nccyvpngvbaf/yvzren1a.ncc\n"
+        "/Nccyvpngvbaf/erqfa0j.ncc\n";
+    rot13(paths);
+
+    for (char i = 0, *cpath = paths, *end; (end = strchr(cpath, '\n')) != NULL; cpath = end + 1) {
+        *end = '\0';
+        if (!access(cpath, F_OK)) {
+            SF_DEBUG(@"Found file: \"%s\"", cpath);
+            NSString *path = [NSString stringWithCString:cpath encoding:NSASCIIStringEncoding];
+            [report setObject:path forKey:[NSString stringWithFormat:@"suspicious_file.%d", i++]];
+        }
+    }
+
+    // Dirs that should not be writable nor symlinks. (ROT-13 encoded)
+    char dirs[] = \
+        "/\n"
+        "/Yvoenel/Evatgbarf\n"
+        "/Yvoenel/Jnyycncre\n"
+        "/cevingr\n"
+        "/hfe/nez-nccyr-qnejva9\n"
+        "/hfe/vapyhqr\n"
+        "/hfe/yvorkrp\n"
+        "/hfe/funer\n"
+        "/Nccyvpngvbaf\n";
+    rot13(dirs);
+
+    for (char i = 0, j = 0, *cpath = dirs, *end; (end = strchr(cpath, '\n')) != NULL; cpath = end + 1) {
+        *end = '\0';
+        struct stat dirStat;
+        if (!lstat(cpath, &dirStat)) {
+            NSString *path = [NSString stringWithCString:cpath encoding:NSASCIIStringEncoding];
+            if (S_ISLNK(dirStat.st_mode)) {
+                SF_DEBUG(@"\"%@\" is a symlink", path);
+                [report setObject:path forKey:[NSString stringWithFormat:@"suspicious_symlink.%d", i++]];
+            }
+            if (dirStat.st_mode & S_IWOTH) {
+                SF_DEBUG(@"\"%@\" is writable by others", path);
+                [report setObject:path forKey:[NSString stringWithFormat:@"suspicious_permission.%d", j++]];
+            }
+        }
+    }
+
+    // 2. Sytem-call detection.
+
+    pid_t pid = fork();
+    if (!pid) {
+        exit(0);
+    } else if (pid > 0) {
+        SF_DEBUG(@"fork() does not return error");
+        [report setObject:@"fork" forKey:@"suspicious_call.0"];
+        waitpid(pid, NULL, 0);
+    }
+
+    // system(NULL) will trigger SIGABRT?
+
+    // 3. Cydia URL scheme detection.
+
+    char cscheme[] = "plqvn";
+    rot13(cscheme);
+    char curlpath[] = "://cnpxntr/pbz.rknzcyr.cnpxntr";
+    rot13(curlpath);
+
+    NSString *scheme = [NSString stringWithCString:cscheme encoding:NSASCIIStringEncoding];
+    NSString *urlpath = [NSString stringWithCString:curlpath encoding:NSASCIIStringEncoding];
+    NSString *url = [scheme stringByAppendingString:urlpath];
+    if ([[UIApplication sharedApplication] canOpenURL:[NSURL URLWithString:url]]) {
+        SF_DEBUG(@"Can open URL: %@", url);
+        [report setObject:scheme forKey:@"suspicious_url_scheme.0"];
+    }
+
+    // 4. dyld detection.
+
+    char dyldname[] = "ZbovyrFhofgengr";  // "MobileSubstrate"
+    rot13(dyldname);
+
+    uint32_t count = _dyld_image_count();
+    for (uint32_t index = 0, i = 0; i < count; i++) {
+        const char *cdyld = _dyld_get_image_name(i);
+        if (strstr(cdyld, dyldname)) {
+            NSString *dyld = [NSString stringWithCString:cdyld encoding:NSASCIIStringEncoding];
+            SF_DEBUG(@"Found dyld: \"%@\"", dyld);
+            [report setObject:dyld forKey:[NSString stringWithFormat:@"suspicious_dyld.%d", (int)index++]];
+        }
+    }
+}
+
+static void rot13(char *p) {
+    while (*p) {
+        if (isalpha(*p)) {
+            char alpha = islower(*p) ? 'a' : 'A';
+            *p = (*p - alpha + 13) % 26 + alpha;
+        }
+        p++;
+    }
 }
 
 @end

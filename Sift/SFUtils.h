@@ -18,6 +18,9 @@ NSString *SFDoubleToString(double value);
 /** @return snake case string, e.g., "camelCase" to "camel_case". */
 NSString *SFCamelCaseToSnakeCase(NSString *camelCase);
 
+/** @return YES if app is in the foreground. */
+BOOL SFIsAppActive(void);
+
 /** @return the path to a cache directory. */
 NSString *SFCacheDirPath(void);
 

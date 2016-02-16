@@ -1,6 +1,7 @@
 // Copyright (c) 2015 Sift Science. All rights reserved.
 
 @import Foundation;
+@import UIKit;
 
 #import "ctype.h"
 
@@ -47,6 +48,11 @@ NSString *SFCamelCaseToSnakeCase(NSString *camelCase) {
     [snakeCase appendString:[NSString stringWithCString:snake encoding:NSASCIIStringEncoding]];
 
     return snakeCase;
+}
+
+BOOL SFIsAppActive(void) {
+    UIApplicationState state = [UIApplication sharedApplication].applicationState;
+    return state == UIApplicationStateActive;
 }
 
 NSString *SFCacheDirPath(void) {

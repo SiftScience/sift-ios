@@ -21,7 +21,12 @@ typedef struct {
 
 @interface SFLocationReporter : NSObject<CLLocationManagerDelegate>
 
-@property (nonatomic, readonly) BOOL started;
+/**
+ * Enable/disable location collection.
+ *
+ * Default to NO.
+ */
+@property (nonatomic) BOOL enabled;
 
 /**
  * Start background location collection with the last config you set.

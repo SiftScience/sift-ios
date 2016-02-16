@@ -15,6 +15,13 @@ typedef struct {
 
 @interface SFMotionReporter : NSObject
 
+/**
+ * Enable/disable motion collection.
+ *
+ * Default to NO.
+ */
+@property (nonatomic) BOOL enabled;
+
 /** Start motion data collection. */
 - (void)start:(SFMotionReporterConfig)config;
 - (void)start;

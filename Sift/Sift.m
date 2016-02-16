@@ -137,9 +137,6 @@ static const SFQueueConfig SFDefaultEventQueueConfig = {
             return nil;
         }
 
-        [_locationReporter start];
-        [_motionReporter start];
-
         _uploaderTimer = nil;
         self.uploadPeriod = SFUploadInterval;
 
@@ -150,7 +147,6 @@ static const SFQueueConfig SFDefaultEventQueueConfig = {
         [[NSRunLoop mainRunLoop] addTimer:_cleanupTimer forMode:NSDefaultRunLoopMode];
 
         NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
-        [notificationCenter addObserver:self selector:@selector(applicationDidBecomeActive:) name:UIApplicationDidBecomeActiveNotification object:nil];
         [notificationCenter addObserver:self selector:@selector(applicationDidEnterBackground:) name:UIApplicationDidEnterBackgroundNotification object:nil];
     }
     return self;
@@ -170,16 +166,6 @@ static const SFQueueConfig SFDefaultEventQueueConfig = {
     //[super dealloc];  // Provided by compiler!
 }
 
-- (void)applicationDidBecomeActive:(UIApplication *)application {
-    SF_DEBUG(@"Enter foreground...");
-    // If for any reason that the location reporter is stopped, let's start it again.
-    if (!_locationReporter.started) {
-        [_locationReporter start];
-    }
-    // Restart the motion reporter.
-    [_motionReporter start];
-}
-
 - (void)applicationDidEnterBackground:(NSNotification *)notification {
     SF_DEBUG(@"Enter background...");
     // Persist metrics data (simply create a report from them).
@@ -191,8 +177,6 @@ static const SFQueueConfig SFDefaultEventQueueConfig = {
         }
         [_metricsReporter report:_userId];
     }
-    // Stop motion reporter (as it's very, very chatty).
-    [_motionReporter stop];
 }
 
 - (void)removeData {
@@ -263,6 +247,22 @@ static const SFQueueConfig SFDefaultEventQueueConfig = {
     SET(timer);
 
 #undef SET
+}
+
+- (BOOL)collectLocation {
+    return _locationReporter.enabled;
+}
+
+- (void)setCollectLocation:(BOOL)collectLocation {
+    _locationReporter.enabled = collectLocation;
+}
+
+- (BOOL)collectMotion {
+    return _motionReporter.enabled;
+}
+
+- (void)setCollectMotion:(BOOL)collectMotion {
+    _motionReporter.enabled = collectMotion;
 }
 
 - (void)enqueueMethod:(NSTimer *)timer {

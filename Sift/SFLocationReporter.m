@@ -25,7 +25,7 @@ static const SFLocationReporterConfig SFDefaultLocationReporterConfig = {
 
 @implementation SFLocationReporter {
     CLLocationManager *_manager;
-    BOOL _started;
+    BOOL _enabled, _started;
     SFLocationReporterConfig _config;
 }
 
@@ -38,12 +38,42 @@ static const SFLocationReporterConfig SFDefaultLocationReporterConfig = {
             return nil;
         }
 
+        _enabled = NO;
+
         _started = NO;
         _config = SFDefaultLocationReporterConfig;
 
         _manager.delegate = self;
+
+        NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
+        [notificationCenter addObserver:self selector:@selector(applicationDidBecomeActive:) name:UIApplicationDidBecomeActiveNotification object:nil];
+        [notificationCenter addObserver:self selector:@selector(applicationDidEnterBackground:) name:UIApplicationDidEnterBackgroundNotification object:nil];
     }
     return self;
+}
+
+- (BOOL)enabled {
+    return _enabled;
+}
+
+- (void)setEnabled:(BOOL)enabled {
+    _enabled = enabled;
+    if (_enabled) {
+        [self start];
+    } else {
+        [self stop];
+    }
+}
+
+- (void)applicationDidBecomeActive:(UIApplication *)application {
+    [self start];
+}
+
+- (void)applicationDidEnterBackground:(NSNotification *)notification {
+    CLAuthorizationStatus status = [CLLocationManager authorizationStatus];
+    if (status != kCLAuthorizationStatusAuthorizedAlways) {
+        [self stop];
+    }
 }
 
 - (BOOL)start:(SFLocationReporterConfig)config {
@@ -52,15 +82,25 @@ static const SFLocationReporterConfig SFDefaultLocationReporterConfig = {
 }
 
 - (BOOL)start {
+    if (!_enabled) {
+        SF_DEBUG(@"Disabled");
+        return NO;
+    }
+
     if (_started) {
         SF_DEBUG(@"Started already");
-        return NO;
+        return YES;
     }
 
     // Start location service _ONLY_ if we've already been granted to do so.
     CLAuthorizationStatus status = [CLLocationManager authorizationStatus];
     if (status != kCLAuthorizationStatusAuthorizedAlways && status != kCLAuthorizationStatusAuthorizedWhenInUse) {
         SF_DEBUG("User did not (yet?) authorize us to use location: status=%d", status);
+        return NO;
+    }
+
+    if (status != kCLAuthorizationStatusAuthorizedAlways && !SFIsAppActive()) {
+        SF_DEBUG(@"Not in the foreground");
         return NO;
     }
 
@@ -101,13 +141,10 @@ static const SFLocationReporterConfig SFDefaultLocationReporterConfig = {
 
     SF_DEBUG(@"Stop location reporting");
 
-    if (!_config.useStandardLocationService && [CLLocationManager significantLocationChangeMonitoringAvailable]) {
-        SF_DEBUG(@"Stop significant location change service");
+    if ([CLLocationManager significantLocationChangeMonitoringAvailable]) {
         [_manager stopMonitoringSignificantLocationChanges];
-    } else {
-        SF_DEBUG(@"Stop standard location service");
-        [_manager stopUpdatingLocation];
     }
+    [_manager stopUpdatingLocation];
 
     if ([CLLocationManager headingAvailable]) {
         [_manager stopUpdatingHeading];

@@ -100,6 +100,33 @@
 @property (nonatomic) NSTimeInterval reportPeriod;
 
 /**
+ * Enable/disable automatic location collection (GPS and compass).
+ *
+ * The SDK will detect and will not request location service more than
+ * what has already been granted to the app.  So if an app has not been
+ * granted to request location service, setting `YES` to this property
+ * alone will not start location collection.
+ *
+ * If the app has not been granted for `kCLAuthorizationStatusAuthorizedAlways`,
+ * the SDK will stop location collection once the app enters into the
+ * background.
+ *
+ * Default to NO.
+ */
+@property (nonatomic) BOOL collectLocation;
+
+/**
+ * Enable/disable automatic motion collection (accelerometer, gyroscope,
+ * and magnetometer).
+ *
+ * The SDK stops motion collection once the app enters into the
+ * background.
+ *
+ * Default to NO.
+ */
+@property (nonatomic) BOOL collectMotion;
+
+/**
  * @name Integration helpers.
  *
  * The methods and properties of this section are useful for validating

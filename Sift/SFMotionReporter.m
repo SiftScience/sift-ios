@@ -2,6 +2,7 @@
 
 @import CoreMotion;
 @import Foundation;
+@import UIKit;
 
 #import "SFDebug.h"
 #import "SFEvent.h"
@@ -26,9 +27,10 @@ static const SFMotionReporterConfig SFDefaultMotionReporterConfig = {
 };
 
 @implementation SFMotionReporter {
-    SFMotionReporterConfig _config;
+    BOOL _enabled;
     CMMotionManager *_manager;
     NSOperationQueue *_queue;
+    SFMotionReporterConfig _config;
 }
 
 - (instancetype)init {
@@ -37,9 +39,37 @@ static const SFMotionReporterConfig SFDefaultMotionReporterConfig = {
         _config = SFDefaultMotionReporterConfig;
         _manager = [CMMotionManager new];
         _queue = [NSOperationQueue new];
+        _enabled = NO;
+
+        NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
+        [notificationCenter addObserver:self selector:@selector(applicationDidBecomeActive:) name:UIApplicationDidBecomeActiveNotification object:nil];
+        [notificationCenter addObserver:self selector:@selector(applicationDidEnterBackground:) name:UIApplicationDidEnterBackgroundNotification object:nil];
     }
     return self;
 }
+
+- (BOOL)enabled {
+    return _enabled;
+}
+
+- (void)setEnabled:(BOOL)enabled {
+    _enabled = enabled;
+    if (_enabled) {
+        [self start];
+    } else {
+        [self stop];
+    }
+}
+
+- (void)applicationDidBecomeActive:(UIApplication *)application {
+    [self start];
+}
+
+- (void)applicationDidEnterBackground:(NSNotification *)notification {
+    // Stop motion collection in the background since it's very chatty.
+    [self stop];
+}
+
 
 - (void)start:(SFMotionReporterConfig)config {
     _config = config;
@@ -49,6 +79,16 @@ static const SFMotionReporterConfig SFDefaultMotionReporterConfig = {
 // TODO(clchiou): Measure how much data motion reporter generates (probably too much data?).
 
 - (void)start {
+    if (!_enabled) {
+        SF_DEBUG(@"Disabled");
+        return;
+    }
+
+    if (!SFIsAppActive()) {
+        SF_DEBUG(@"Not in the foreground");
+        return;
+    }
+
     if (_config.readAccelerometer && _manager.accelerometerAvailable && !_manager.accelerometerActive) {
         SF_DEBUG(@"Start accelerometer");
         _manager.accelerometerUpdateInterval = _config.accelerometerUpdateInterval;

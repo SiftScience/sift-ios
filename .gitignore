@@ -6,3 +6,8 @@
 #
 # Pods/
 
+.*.swp
+
+.DS_Store
+
+xcuserdata

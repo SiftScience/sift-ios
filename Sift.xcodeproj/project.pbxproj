@@ -1,0 +1,575 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		712A42141C6D0B0F005AEC79 /* SFLocationReporter.h in Headers */ = {isa = PBXBuildFile; fileRef = 712A42131C6D0B0F005AEC79 /* SFLocationReporter.h */; };
+		712A42161C6D0B42005AEC79 /* SFLocationReporter.m in Sources */ = {isa = PBXBuildFile; fileRef = 712A42151C6D0B42005AEC79 /* SFLocationReporter.m */; };
+		712A421D1C6D5797005AEC79 /* SFMotionReporter.h in Headers */ = {isa = PBXBuildFile; fileRef = 712A421C1C6D5797005AEC79 /* SFMotionReporter.h */; };
+		712A421F1C6D57A6005AEC79 /* SFMotionReporter.m in Sources */ = {isa = PBXBuildFile; fileRef = 712A421E1C6D57A6005AEC79 /* SFMotionReporter.m */; };
+		712A42211C6E884D005AEC79 /* SFAppEventReporter.h in Headers */ = {isa = PBXBuildFile; fileRef = 712A42201C6E884D005AEC79 /* SFAppEventReporter.h */; };
+		712A42231C6E885D005AEC79 /* SFAppEventReporter.m in Sources */ = {isa = PBXBuildFile; fileRef = 712A42221C6E885D005AEC79 /* SFAppEventReporter.m */; };
+		7158BAB61C0F750B00C369D6 /* SFDevicePropertiesReporterTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 7158BAB51C0F750B00C369D6 /* SFDevicePropertiesReporterTests.m */; };
+		7158BAB81C0F78C300C369D6 /* SFMetricsReporterTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 7158BAB71C0F78C300C369D6 /* SFMetricsReporterTests.m */; };
+		71CCDB751BFC04F0001C5791 /* SFDebug.h in Headers */ = {isa = PBXBuildFile; fileRef = 71CCDB591BFC04F0001C5791 /* SFDebug.h */; };
+		71CCDB761BFC04F0001C5791 /* SFDevicePropertiesReporter.h in Headers */ = {isa = PBXBuildFile; fileRef = 71CCDB5A1BFC04F0001C5791 /* SFDevicePropertiesReporter.h */; };
+		71CCDB771BFC04F0001C5791 /* SFDevicePropertiesReporter.m in Sources */ = {isa = PBXBuildFile; fileRef = 71CCDB5B1BFC04F0001C5791 /* SFDevicePropertiesReporter.m */; };
+		71CCDB781BFC04F0001C5791 /* SFEvent.h in Headers */ = {isa = PBXBuildFile; fileRef = 71CCDB5C1BFC04F0001C5791 /* SFEvent.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		71CCDB791BFC04F0001C5791 /* SFEvent.m in Sources */ = {isa = PBXBuildFile; fileRef = 71CCDB5D1BFC04F0001C5791 /* SFEvent.m */; };
+		71CCDB7A1BFC04F0001C5791 /* SFEvent+Utils.h in Headers */ = {isa = PBXBuildFile; fileRef = 71CCDB5E1BFC04F0001C5791 /* SFEvent+Utils.h */; };
+		71CCDB7B1BFC04F0001C5791 /* SFMetrics.h in Headers */ = {isa = PBXBuildFile; fileRef = 71CCDB5F1BFC04F0001C5791 /* SFMetrics.h */; };
+		71CCDB7C1BFC04F0001C5791 /* SFMetrics.m in Sources */ = {isa = PBXBuildFile; fileRef = 71CCDB601BFC04F0001C5791 /* SFMetrics.m */; };
+		71CCDB7D1BFC04F0001C5791 /* SFMetricsReporter.h in Headers */ = {isa = PBXBuildFile; fileRef = 71CCDB611BFC04F0001C5791 /* SFMetricsReporter.h */; };
+		71CCDB7E1BFC04F0001C5791 /* SFMetricsReporter.m in Sources */ = {isa = PBXBuildFile; fileRef = 71CCDB621BFC04F0001C5791 /* SFMetricsReporter.m */; };
+		71CCDB7F1BFC04F0001C5791 /* SFQueue.h in Headers */ = {isa = PBXBuildFile; fileRef = 71CCDB631BFC04F0001C5791 /* SFQueue.h */; };
+		71CCDB801BFC04F0001C5791 /* SFQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = 71CCDB641BFC04F0001C5791 /* SFQueue.m */; };
+		71CCDB811BFC04F0001C5791 /* SFQueue+Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 71CCDB651BFC04F0001C5791 /* SFQueue+Private.h */; };
+		71CCDB821BFC04F0001C5791 /* SFQueueConfig.h in Headers */ = {isa = PBXBuildFile; fileRef = 71CCDB661BFC04F0001C5791 /* SFQueueConfig.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		71CCDB831BFC04F0001C5791 /* SFQueueDirs.h in Headers */ = {isa = PBXBuildFile; fileRef = 71CCDB671BFC04F0001C5791 /* SFQueueDirs.h */; };
+		71CCDB841BFC04F0001C5791 /* SFQueueDirs.m in Sources */ = {isa = PBXBuildFile; fileRef = 71CCDB681BFC04F0001C5791 /* SFQueueDirs.m */; };
+		71CCDB851BFC04F0001C5791 /* SFRecordIo.h in Headers */ = {isa = PBXBuildFile; fileRef = 71CCDB691BFC04F0001C5791 /* SFRecordIo.h */; };
+		71CCDB861BFC04F0001C5791 /* SFRecordIo.m in Sources */ = {isa = PBXBuildFile; fileRef = 71CCDB6A1BFC04F0001C5791 /* SFRecordIo.m */; };
+		71CCDB871BFC04F0001C5791 /* SFRotatedFiles.h in Headers */ = {isa = PBXBuildFile; fileRef = 71CCDB6B1BFC04F0001C5791 /* SFRotatedFiles.h */; };
+		71CCDB881BFC04F0001C5791 /* SFRotatedFiles.m in Sources */ = {isa = PBXBuildFile; fileRef = 71CCDB6C1BFC04F0001C5791 /* SFRotatedFiles.m */; };
+		71CCDB891BFC04F0001C5791 /* SFRotatedFiles+Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 71CCDB6D1BFC04F0001C5791 /* SFRotatedFiles+Private.h */; };
+		71CCDB8A1BFC04F0001C5791 /* SFUploader.h in Headers */ = {isa = PBXBuildFile; fileRef = 71CCDB6E1BFC04F0001C5791 /* SFUploader.h */; };
+		71CCDB8B1BFC04F0001C5791 /* SFUploader.m in Sources */ = {isa = PBXBuildFile; fileRef = 71CCDB6F1BFC04F0001C5791 /* SFUploader.m */; };
+		71CCDB8C1BFC04F0001C5791 /* SFUploader+Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 71CCDB701BFC04F0001C5791 /* SFUploader+Private.h */; };
+		71CCDB8D1BFC04F0001C5791 /* SFUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = 71CCDB711BFC04F0001C5791 /* SFUtils.h */; };
+		71CCDB8E1BFC04F0001C5791 /* SFUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 71CCDB721BFC04F0001C5791 /* SFUtils.m */; };
+		71CCDB8F1BFC04F0001C5791 /* Sift.m in Sources */ = {isa = PBXBuildFile; fileRef = 71CCDB731BFC04F0001C5791 /* Sift.m */; };
+		71CCDB901BFC04F0001C5791 /* Sift+Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 71CCDB741BFC04F0001C5791 /* Sift+Private.h */; };
+		71CCDB9B1BFC050F001C5791 /* SFEventTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 71CCDB911BFC050F001C5791 /* SFEventTests.m */; };
+		71CCDB9C1BFC050F001C5791 /* SFMetricsTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 71CCDB921BFC050F001C5791 /* SFMetricsTests.m */; };
+		71CCDB9D1BFC050F001C5791 /* SFQueueDirsTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 71CCDB931BFC050F001C5791 /* SFQueueDirsTests.m */; };
+		71CCDB9E1BFC050F001C5791 /* SFQueueTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 71CCDB941BFC050F001C5791 /* SFQueueTests.m */; };
+		71CCDB9F1BFC050F001C5791 /* SFRecordIoTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 71CCDB951BFC050F001C5791 /* SFRecordIoTests.m */; };
+		71CCDBA01BFC050F001C5791 /* SFRotatedFilesTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 71CCDB961BFC050F001C5791 /* SFRotatedFilesTests.m */; };
+		71CCDBA11BFC050F001C5791 /* SFStubHttpProtocol.m in Sources */ = {isa = PBXBuildFile; fileRef = 71CCDB981BFC050F001C5791 /* SFStubHttpProtocol.m */; };
+		71CCDBA21BFC050F001C5791 /* SFUploaderTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 71CCDB991BFC050F001C5791 /* SFUploaderTests.m */; };
+		71CCDBA31BFC050F001C5791 /* SFUtilsTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 71CCDB9A1BFC050F001C5791 /* SFUtilsTests.m */; };
+		71FB4AD31BFC035A00FE71F2 /* Sift.h in Headers */ = {isa = PBXBuildFile; fileRef = 71FB4AD21BFC035A00FE71F2 /* Sift.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		71FB4ADA1BFC035A00FE71F2 /* Sift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 71FB4ACF1BFC035A00FE71F2 /* Sift.framework */; };
+		71FB4ADF1BFC035A00FE71F2 /* SiftTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 71FB4ADE1BFC035A00FE71F2 /* SiftTests.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		71FB4ADB1BFC035A00FE71F2 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 71FB4AC61BFC035A00FE71F2 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 71FB4ACE1BFC035A00FE71F2;
+			remoteInfo = Sift;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		712A42131C6D0B0F005AEC79 /* SFLocationReporter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SFLocationReporter.h; sourceTree = "<group>"; };
+		712A42151C6D0B42005AEC79 /* SFLocationReporter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SFLocationReporter.m; sourceTree = "<group>"; };
+		712A421C1C6D5797005AEC79 /* SFMotionReporter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SFMotionReporter.h; sourceTree = "<group>"; };
+		712A421E1C6D57A6005AEC79 /* SFMotionReporter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SFMotionReporter.m; sourceTree = "<group>"; };
+		712A42201C6E884D005AEC79 /* SFAppEventReporter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SFAppEventReporter.h; sourceTree = "<group>"; };
+		712A42221C6E885D005AEC79 /* SFAppEventReporter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SFAppEventReporter.m; sourceTree = "<group>"; };
+		7158BAB51C0F750B00C369D6 /* SFDevicePropertiesReporterTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SFDevicePropertiesReporterTests.m; sourceTree = "<group>"; };
+		7158BAB71C0F78C300C369D6 /* SFMetricsReporterTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SFMetricsReporterTests.m; sourceTree = "<group>"; };
+		71CCDB591BFC04F0001C5791 /* SFDebug.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SFDebug.h; sourceTree = "<group>"; };
+		71CCDB5A1BFC04F0001C5791 /* SFDevicePropertiesReporter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SFDevicePropertiesReporter.h; sourceTree = "<group>"; };
+		71CCDB5B1BFC04F0001C5791 /* SFDevicePropertiesReporter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SFDevicePropertiesReporter.m; sourceTree = "<group>"; };
+		71CCDB5C1BFC04F0001C5791 /* SFEvent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SFEvent.h; sourceTree = "<group>"; };
+		71CCDB5D1BFC04F0001C5791 /* SFEvent.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SFEvent.m; sourceTree = "<group>"; };
+		71CCDB5E1BFC04F0001C5791 /* SFEvent+Utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "SFEvent+Utils.h"; sourceTree = "<group>"; };
+		71CCDB5F1BFC04F0001C5791 /* SFMetrics.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SFMetrics.h; sourceTree = "<group>"; };
+		71CCDB601BFC04F0001C5791 /* SFMetrics.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SFMetrics.m; sourceTree = "<group>"; };
+		71CCDB611BFC04F0001C5791 /* SFMetricsReporter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SFMetricsReporter.h; sourceTree = "<group>"; };
+		71CCDB621BFC04F0001C5791 /* SFMetricsReporter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SFMetricsReporter.m; sourceTree = "<group>"; };
+		71CCDB631BFC04F0001C5791 /* SFQueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SFQueue.h; sourceTree = "<group>"; };
+		71CCDB641BFC04F0001C5791 /* SFQueue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SFQueue.m; sourceTree = "<group>"; };
+		71CCDB651BFC04F0001C5791 /* SFQueue+Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "SFQueue+Private.h"; sourceTree = "<group>"; };
+		71CCDB661BFC04F0001C5791 /* SFQueueConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SFQueueConfig.h; sourceTree = "<group>"; };
+		71CCDB671BFC04F0001C5791 /* SFQueueDirs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SFQueueDirs.h; sourceTree = "<group>"; };
+		71CCDB681BFC04F0001C5791 /* SFQueueDirs.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SFQueueDirs.m; sourceTree = "<group>"; };
+		71CCDB691BFC04F0001C5791 /* SFRecordIo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SFRecordIo.h; sourceTree = "<group>"; };
+		71CCDB6A1BFC04F0001C5791 /* SFRecordIo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SFRecordIo.m; sourceTree = "<group>"; };
+		71CCDB6B1BFC04F0001C5791 /* SFRotatedFiles.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SFRotatedFiles.h; sourceTree = "<group>"; };
+		71CCDB6C1BFC04F0001C5791 /* SFRotatedFiles.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SFRotatedFiles.m; sourceTree = "<group>"; };
+		71CCDB6D1BFC04F0001C5791 /* SFRotatedFiles+Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "SFRotatedFiles+Private.h"; sourceTree = "<group>"; };
+		71CCDB6E1BFC04F0001C5791 /* SFUploader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SFUploader.h; sourceTree = "<group>"; };
+		71CCDB6F1BFC04F0001C5791 /* SFUploader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SFUploader.m; sourceTree = "<group>"; };
+		71CCDB701BFC04F0001C5791 /* SFUploader+Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "SFUploader+Private.h"; sourceTree = "<group>"; };
+		71CCDB711BFC04F0001C5791 /* SFUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SFUtils.h; sourceTree = "<group>"; };
+		71CCDB721BFC04F0001C5791 /* SFUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SFUtils.m; sourceTree = "<group>"; };
+		71CCDB731BFC04F0001C5791 /* Sift.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Sift.m; sourceTree = "<group>"; };
+		71CCDB741BFC04F0001C5791 /* Sift+Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Sift+Private.h"; sourceTree = "<group>"; };
+		71CCDB911BFC050F001C5791 /* SFEventTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SFEventTests.m; sourceTree = "<group>"; };
+		71CCDB921BFC050F001C5791 /* SFMetricsTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SFMetricsTests.m; sourceTree = "<group>"; };
+		71CCDB931BFC050F001C5791 /* SFQueueDirsTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SFQueueDirsTests.m; sourceTree = "<group>"; };
+		71CCDB941BFC050F001C5791 /* SFQueueTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SFQueueTests.m; sourceTree = "<group>"; };
+		71CCDB951BFC050F001C5791 /* SFRecordIoTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SFRecordIoTests.m; sourceTree = "<group>"; };
+		71CCDB961BFC050F001C5791 /* SFRotatedFilesTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SFRotatedFilesTests.m; sourceTree = "<group>"; };
+		71CCDB971BFC050F001C5791 /* SFStubHttpProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SFStubHttpProtocol.h; sourceTree = "<group>"; };
+		71CCDB981BFC050F001C5791 /* SFStubHttpProtocol.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SFStubHttpProtocol.m; sourceTree = "<group>"; };
+		71CCDB991BFC050F001C5791 /* SFUploaderTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SFUploaderTests.m; sourceTree = "<group>"; };
+		71CCDB9A1BFC050F001C5791 /* SFUtilsTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SFUtilsTests.m; sourceTree = "<group>"; };
+		71FB4ACF1BFC035A00FE71F2 /* Sift.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Sift.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		71FB4AD21BFC035A00FE71F2 /* Sift.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Sift.h; sourceTree = "<group>"; };
+		71FB4AD41BFC035A00FE71F2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		71FB4AD91BFC035A00FE71F2 /* SiftTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SiftTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		71FB4ADE1BFC035A00FE71F2 /* SiftTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SiftTests.m; sourceTree = "<group>"; };
+		71FB4AE01BFC035A00FE71F2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		71FB4ACB1BFC035A00FE71F2 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		71FB4AD61BFC035A00FE71F2 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				71FB4ADA1BFC035A00FE71F2 /* Sift.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		71FB4AC51BFC035A00FE71F2 = {
+			isa = PBXGroup;
+			children = (
+				71FB4AD11BFC035A00FE71F2 /* Sift */,
+				71FB4ADD1BFC035A00FE71F2 /* SiftTests */,
+				71FB4AD01BFC035A00FE71F2 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		71FB4AD01BFC035A00FE71F2 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				71FB4ACF1BFC035A00FE71F2 /* Sift.framework */,
+				71FB4AD91BFC035A00FE71F2 /* SiftTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		71FB4AD11BFC035A00FE71F2 /* Sift */ = {
+			isa = PBXGroup;
+			children = (
+				71FB4AD41BFC035A00FE71F2 /* Info.plist */,
+				712A42201C6E884D005AEC79 /* SFAppEventReporter.h */,
+				712A42221C6E885D005AEC79 /* SFAppEventReporter.m */,
+				71CCDB591BFC04F0001C5791 /* SFDebug.h */,
+				71CCDB5A1BFC04F0001C5791 /* SFDevicePropertiesReporter.h */,
+				71CCDB5B1BFC04F0001C5791 /* SFDevicePropertiesReporter.m */,
+				71CCDB5C1BFC04F0001C5791 /* SFEvent.h */,
+				71CCDB5D1BFC04F0001C5791 /* SFEvent.m */,
+				71CCDB5E1BFC04F0001C5791 /* SFEvent+Utils.h */,
+				712A42131C6D0B0F005AEC79 /* SFLocationReporter.h */,
+				712A42151C6D0B42005AEC79 /* SFLocationReporter.m */,
+				71CCDB5F1BFC04F0001C5791 /* SFMetrics.h */,
+				71CCDB601BFC04F0001C5791 /* SFMetrics.m */,
+				71CCDB611BFC04F0001C5791 /* SFMetricsReporter.h */,
+				71CCDB621BFC04F0001C5791 /* SFMetricsReporter.m */,
+				712A421C1C6D5797005AEC79 /* SFMotionReporter.h */,
+				712A421E1C6D57A6005AEC79 /* SFMotionReporter.m */,
+				71CCDB631BFC04F0001C5791 /* SFQueue.h */,
+				71CCDB641BFC04F0001C5791 /* SFQueue.m */,
+				71CCDB651BFC04F0001C5791 /* SFQueue+Private.h */,
+				71CCDB661BFC04F0001C5791 /* SFQueueConfig.h */,
+				71CCDB671BFC04F0001C5791 /* SFQueueDirs.h */,
+				71CCDB681BFC04F0001C5791 /* SFQueueDirs.m */,
+				71CCDB691BFC04F0001C5791 /* SFRecordIo.h */,
+				71CCDB6A1BFC04F0001C5791 /* SFRecordIo.m */,
+				71CCDB6B1BFC04F0001C5791 /* SFRotatedFiles.h */,
+				71CCDB6C1BFC04F0001C5791 /* SFRotatedFiles.m */,
+				71CCDB6D1BFC04F0001C5791 /* SFRotatedFiles+Private.h */,
+				71CCDB6E1BFC04F0001C5791 /* SFUploader.h */,
+				71CCDB6F1BFC04F0001C5791 /* SFUploader.m */,
+				71CCDB701BFC04F0001C5791 /* SFUploader+Private.h */,
+				71CCDB711BFC04F0001C5791 /* SFUtils.h */,
+				71CCDB721BFC04F0001C5791 /* SFUtils.m */,
+				71FB4AD21BFC035A00FE71F2 /* Sift.h */,
+				71CCDB731BFC04F0001C5791 /* Sift.m */,
+				71CCDB741BFC04F0001C5791 /* Sift+Private.h */,
+			);
+			path = Sift;
+			sourceTree = "<group>";
+		};
+		71FB4ADD1BFC035A00FE71F2 /* SiftTests */ = {
+			isa = PBXGroup;
+			children = (
+				71FB4AE01BFC035A00FE71F2 /* Info.plist */,
+				7158BAB51C0F750B00C369D6 /* SFDevicePropertiesReporterTests.m */,
+				71CCDB911BFC050F001C5791 /* SFEventTests.m */,
+				71CCDB921BFC050F001C5791 /* SFMetricsTests.m */,
+				71CCDB931BFC050F001C5791 /* SFQueueDirsTests.m */,
+				71CCDB941BFC050F001C5791 /* SFQueueTests.m */,
+				71CCDB951BFC050F001C5791 /* SFRecordIoTests.m */,
+				71CCDB961BFC050F001C5791 /* SFRotatedFilesTests.m */,
+				71CCDB971BFC050F001C5791 /* SFStubHttpProtocol.h */,
+				71CCDB981BFC050F001C5791 /* SFStubHttpProtocol.m */,
+				71CCDB991BFC050F001C5791 /* SFUploaderTests.m */,
+				71CCDB9A1BFC050F001C5791 /* SFUtilsTests.m */,
+				71FB4ADE1BFC035A00FE71F2 /* SiftTests.m */,
+				7158BAB71C0F78C300C369D6 /* SFMetricsReporterTests.m */,
+			);
+			path = SiftTests;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		71FB4ACC1BFC035A00FE71F2 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				71CCDB871BFC04F0001C5791 /* SFRotatedFiles.h in Headers */,
+				71FB4AD31BFC035A00FE71F2 /* Sift.h in Headers */,
+				71CCDB821BFC04F0001C5791 /* SFQueueConfig.h in Headers */,
+				71CCDB7D1BFC04F0001C5791 /* SFMetricsReporter.h in Headers */,
+				71CCDB761BFC04F0001C5791 /* SFDevicePropertiesReporter.h in Headers */,
+				71CCDB8C1BFC04F0001C5791 /* SFUploader+Private.h in Headers */,
+				71CCDB781BFC04F0001C5791 /* SFEvent.h in Headers */,
+				71CCDB8A1BFC04F0001C5791 /* SFUploader.h in Headers */,
+				71CCDB831BFC04F0001C5791 /* SFQueueDirs.h in Headers */,
+				71CCDB851BFC04F0001C5791 /* SFRecordIo.h in Headers */,
+				712A42211C6E884D005AEC79 /* SFAppEventReporter.h in Headers */,
+				71CCDB901BFC04F0001C5791 /* Sift+Private.h in Headers */,
+				71CCDB7A1BFC04F0001C5791 /* SFEvent+Utils.h in Headers */,
+				71CCDB811BFC04F0001C5791 /* SFQueue+Private.h in Headers */,
+				712A421D1C6D5797005AEC79 /* SFMotionReporter.h in Headers */,
+				71CCDB7F1BFC04F0001C5791 /* SFQueue.h in Headers */,
+				712A42141C6D0B0F005AEC79 /* SFLocationReporter.h in Headers */,
+				71CCDB891BFC04F0001C5791 /* SFRotatedFiles+Private.h in Headers */,
+				71CCDB8D1BFC04F0001C5791 /* SFUtils.h in Headers */,
+				71CCDB751BFC04F0001C5791 /* SFDebug.h in Headers */,
+				71CCDB7B1BFC04F0001C5791 /* SFMetrics.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		71FB4ACE1BFC035A00FE71F2 /* Sift */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 71FB4AE31BFC035A00FE71F2 /* Build configuration list for PBXNativeTarget "Sift" */;
+			buildPhases = (
+				71FB4ACA1BFC035A00FE71F2 /* Sources */,
+				71FB4ACB1BFC035A00FE71F2 /* Frameworks */,
+				71FB4ACC1BFC035A00FE71F2 /* Headers */,
+				71FB4ACD1BFC035A00FE71F2 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Sift;
+			productName = Sift;
+			productReference = 71FB4ACF1BFC035A00FE71F2 /* Sift.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+		71FB4AD81BFC035A00FE71F2 /* SiftTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 71FB4AE61BFC035A00FE71F2 /* Build configuration list for PBXNativeTarget "SiftTests" */;
+			buildPhases = (
+				71FB4AD51BFC035A00FE71F2 /* Sources */,
+				71FB4AD61BFC035A00FE71F2 /* Frameworks */,
+				71FB4AD71BFC035A00FE71F2 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				71FB4ADC1BFC035A00FE71F2 /* PBXTargetDependency */,
+			);
+			name = SiftTests;
+			productName = SiftTests;
+			productReference = 71FB4AD91BFC035A00FE71F2 /* SiftTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		71FB4AC61BFC035A00FE71F2 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0710;
+				ORGANIZATIONNAME = "Sift Science";
+				TargetAttributes = {
+					71FB4ACE1BFC035A00FE71F2 = {
+						CreatedOnToolsVersion = 7.1;
+					};
+					71FB4AD81BFC035A00FE71F2 = {
+						CreatedOnToolsVersion = 7.1;
+					};
+				};
+			};
+			buildConfigurationList = 71FB4AC91BFC035A00FE71F2 /* Build configuration list for PBXProject "Sift" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 71FB4AC51BFC035A00FE71F2;
+			productRefGroup = 71FB4AD01BFC035A00FE71F2 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				71FB4ACE1BFC035A00FE71F2 /* Sift */,
+				71FB4AD81BFC035A00FE71F2 /* SiftTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		71FB4ACD1BFC035A00FE71F2 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		71FB4AD71BFC035A00FE71F2 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		71FB4ACA1BFC035A00FE71F2 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				712A42231C6E885D005AEC79 /* SFAppEventReporter.m in Sources */,
+				71CCDB8E1BFC04F0001C5791 /* SFUtils.m in Sources */,
+				71CCDB771BFC04F0001C5791 /* SFDevicePropertiesReporter.m in Sources */,
+				712A421F1C6D57A6005AEC79 /* SFMotionReporter.m in Sources */,
+				71CCDB801BFC04F0001C5791 /* SFQueue.m in Sources */,
+				71CCDB881BFC04F0001C5791 /* SFRotatedFiles.m in Sources */,
+				71CCDB7E1BFC04F0001C5791 /* SFMetricsReporter.m in Sources */,
+				71CCDB8B1BFC04F0001C5791 /* SFUploader.m in Sources */,
+				71CCDB791BFC04F0001C5791 /* SFEvent.m in Sources */,
+				71CCDB861BFC04F0001C5791 /* SFRecordIo.m in Sources */,
+				712A42161C6D0B42005AEC79 /* SFLocationReporter.m in Sources */,
+				71CCDB8F1BFC04F0001C5791 /* Sift.m in Sources */,
+				71CCDB841BFC04F0001C5791 /* SFQueueDirs.m in Sources */,
+				71CCDB7C1BFC04F0001C5791 /* SFMetrics.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		71FB4AD51BFC035A00FE71F2 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7158BAB61C0F750B00C369D6 /* SFDevicePropertiesReporterTests.m in Sources */,
+				7158BAB81C0F78C300C369D6 /* SFMetricsReporterTests.m in Sources */,
+				71CCDBA21BFC050F001C5791 /* SFUploaderTests.m in Sources */,
+				71CCDBA11BFC050F001C5791 /* SFStubHttpProtocol.m in Sources */,
+				71CCDB9E1BFC050F001C5791 /* SFQueueTests.m in Sources */,
+				71CCDB9D1BFC050F001C5791 /* SFQueueDirsTests.m in Sources */,
+				71FB4ADF1BFC035A00FE71F2 /* SiftTests.m in Sources */,
+				71CCDB9F1BFC050F001C5791 /* SFRecordIoTests.m in Sources */,
+				71CCDB9C1BFC050F001C5791 /* SFMetricsTests.m in Sources */,
+				71CCDBA01BFC050F001C5791 /* SFRotatedFilesTests.m in Sources */,
+				71CCDBA31BFC050F001C5791 /* SFUtilsTests.m in Sources */,
+				71CCDB9B1BFC050F001C5791 /* SFEventTests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		71FB4ADC1BFC035A00FE71F2 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 71FB4ACE1BFC035A00FE71F2 /* Sift */;
+			targetProxy = 71FB4ADB1BFC035A00FE71F2 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		71FB4AE11BFC035A00FE71F2 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.1;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Debug;
+		};
+		71FB4AE21BFC035A00FE71F2 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.1;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Release;
+		};
+		71FB4AE41BFC035A00FE71F2 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = Sift/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				ONLY_ACTIVE_ARCH = NO;
+				PRODUCT_BUNDLE_IDENTIFIER = com.sift.Sift;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+			};
+			name = Debug;
+		};
+		71FB4AE51BFC035A00FE71F2 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = Sift/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				ONLY_ACTIVE_ARCH = NO;
+				PRODUCT_BUNDLE_IDENTIFIER = com.sift.Sift;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+			};
+			name = Release;
+		};
+		71FB4AE71BFC035A00FE71F2 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				INFOPLIST_FILE = SiftTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.sift.SiftTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		71FB4AE81BFC035A00FE71F2 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				INFOPLIST_FILE = SiftTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.sift.SiftTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		71FB4AC91BFC035A00FE71F2 /* Build configuration list for PBXProject "Sift" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				71FB4AE11BFC035A00FE71F2 /* Debug */,
+				71FB4AE21BFC035A00FE71F2 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		71FB4AE31BFC035A00FE71F2 /* Build configuration list for PBXNativeTarget "Sift" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				71FB4AE41BFC035A00FE71F2 /* Debug */,
+				71FB4AE51BFC035A00FE71F2 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		71FB4AE61BFC035A00FE71F2 /* Build configuration list for PBXNativeTarget "SiftTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				71FB4AE71BFC035A00FE71F2 /* Debug */,
+				71FB4AE81BFC035A00FE71F2 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 71FB4AC61BFC035A00FE71F2 /* Project object */;
+}

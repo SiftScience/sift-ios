@@ -8,7 +8,7 @@
  * An event has: time, (mobile event) type, path, user ID, and a
  * dictionary of custom fields.
  */
-@interface SFEvent : NSObject
+@interface SFEvent : NSObject <NSCoding>
 
 /** Create an `SFEvent` object.  All arguments are nullable. */
 + (SFEvent *)eventWithType:(NSString *)type path:(NSString *)path fields:(NSDictionary *)fields;
@@ -45,5 +45,8 @@
 
 /** Internal metrics.  Default to nil. */
 @property NSDictionary *metrics;
+
+/** Compare event contents except `time`. */
+- (BOOL)isEssentiallyEqualTo:(SFEvent *)event;
 
 @end

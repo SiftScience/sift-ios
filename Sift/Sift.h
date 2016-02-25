@@ -32,27 +32,20 @@
 /**
  * Add an event queue that did not exist prior to the call.
  *
- * This method is blocking.
- *
  * @return YES on success.
  */
 - (BOOL)addEventQueue:(NSString *)identifier config:(SFQueueConfig)config;
 
 /**
- * Remove an event queue and optionally remove the data files of the
- * queue if `purge` is YES.
- *
- * This method is blocking.
+ * Remove an event queue.
  *
  * @return YES on success.
  */
-- (BOOL)removeEventQueue:(NSString *)identifier purge:(BOOL)purge;
+- (BOOL)removeEventQueue:(NSString *)identifier;
 
 /**
  * Send an event to the queue identified by `identifier`, or fail if the
  * queue was not created prior to the call.
- *
- * This method is _not_ blocking.
  *
  * @return YES on success.
  */
@@ -87,22 +80,6 @@
 @property NSString *userId;
 
 /**
- * The interval at which we issue uploads.  You cancel the upload timer
- * by setting a non-positive value.
- *
- * Default to 60 seconds.
- */
-@property (nonatomic) NSTimeInterval uploadPeriod;
-
-/**
- * The interval at which we collect internal metrics and device data.
- * You cancel this timer by setting a non-positive value.
- *
- * Default to 60 seconds.
- */
-@property (nonatomic) NSTimeInterval reportPeriod;
-
-/**
  * @name Integration helpers.
  *
  * The methods and properties of this section are useful for validating
@@ -110,38 +87,15 @@
  */
 
 /**
- * Flush out all events.
- *
- * Due to batching, when an event was enqueued, it would not be uploaded
- * just yet even if you request an upload.  This method makes all events
- * become "upload-able" immediately.
- *
- * @return YES on success.
- */
-- (BOOL)flush;
-
-/**
  * Issue an upload of events and return after the HTTP request is sent,
  * but before we receive the HTTP response.
- *
- * If `force` is NO, the upload will be ignored if an prior upload is in
- * progress.  NOTE: If you force an upload, you may risk uploading
- * duplicated events.
  *
  * If one of `accountId`, `beaconId`, `userId`, or `serverUrlFormat`
  * property is nil, this method will do nothing.
  *
- * This method is blocking.
- *
  * @return YES on success.
  */
-- (BOOL)upload:(BOOL)force;
-
-/** Same as above but with force=NO. */
 - (BOOL)upload;
-
-/** Remove all data. */
-- (void)removeData;
 
 /**
  * The API endpoint that will receive the upload requests.

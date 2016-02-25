@@ -76,7 +76,7 @@ static const SFQueueConfig SFDefaultEventQueueConfig = {
             return NO;
         }
         NSString *archivePath = [self archivePathForQueue:identifier];
-        SFQueue *queue = [[SFQueue alloc] initWithIdentifier:identifier config:config archivePath:archivePath];
+        SFQueue *queue = [[SFQueue alloc] initWithIdentifier:identifier config:config archivePath:archivePath sift:self];
         if (!queue) {
             SF_DEBUG(@"Could not create SFEventQueue for identifier \"%@\"", identifier);
             return NO;

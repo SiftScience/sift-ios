@@ -69,8 +69,38 @@
     XCTAssertEqualObjects([(SFEvent *)[events objectAtIndex:2] path], @"path-2");
 }
 
+- (void)testReadyForUploadMoreThan {
+    SFQueueConfig config = {
+        .appendEventOnlyWhenDifferent = NO,
+        .uploadWhenMoreThan = 1,
+        .uploadWhenOlderThan = 3600,
+    };
+    SFQueue *queue = [self makeQueue:config];
+    XCTAssertFalse(queue.readyForUpload);
+
+    [queue append:[SFEvent eventWithType:nil path:@"path-0" fields:nil]];
+    XCTAssertFalse(queue.readyForUpload);
+
+    [queue append:[SFEvent eventWithType:nil path:@"path-0" fields:nil]];
+    XCTAssertTrue(queue.readyForUpload);
+}
+
+- (void)testReadyForUploadOlderThan {
+    SFQueueConfig config = {
+        .appendEventOnlyWhenDifferent = NO,
+        .uploadWhenMoreThan = 65536,
+        .uploadWhenOlderThan = 0,
+    };
+    SFQueue *queue = [self makeQueue:config];
+    XCTAssertFalse(queue.readyForUpload);
+
+    [queue append:[SFEvent eventWithType:nil path:@"path-0" fields:nil]];
+    [NSThread sleepForTimeInterval:0.01];
+    XCTAssertTrue(queue.readyForUpload);
+}
+
 - (SFQueue *)makeQueue:(SFQueueConfig)config {
-    return [[SFQueue alloc] initWithIdentifier:@"id" config:config archivePath:_archivePath];
+    return [[SFQueue alloc] initWithIdentifier:@"id" config:config archivePath:_archivePath sift:nil];
 }
 
 @end

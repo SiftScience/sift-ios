@@ -4,6 +4,7 @@
 
 #import "SFEvent.h"
 #import "SFQueueConfig.h"
+#import "Sift.h"
 
 /**
  * A queue is simply a `NSArray` of `SFEvent` objects with an
@@ -11,7 +12,7 @@
  */
 @interface SFQueue : NSObject
 
-- (instancetype)initWithIdentifier:(NSString *)identifier config:(SFQueueConfig)config archivePath:(NSString *)archivePath;
+- (instancetype)initWithIdentifier:(NSString *)identifier config:(SFQueueConfig)config archivePath:(NSString *)archivePath sift:(Sift *)sift;
 
 /**
  * Persist events to disk (call this when app enters into background).
@@ -22,6 +23,9 @@
 
 /** Append an event to the queue. */
 - (void)append:(SFEvent *)event;
+
+/** @return YES if queued events are ready for upload. */
+- (BOOL)readyForUpload;
 
 /** Transfer ownership of the queue of events to the caller. */
 - (NSArray *)transfer;

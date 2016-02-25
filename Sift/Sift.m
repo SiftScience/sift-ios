@@ -7,6 +7,7 @@
 #import "SFEvent.h"
 #import "SFQueue.h"
 #import "SFQueueConfig.h"
+#import "SFUploader.h"
 #import "SFUtils.h"
 
 #import "Sift.h"
@@ -26,8 +27,9 @@ static const SFQueueConfig SFDefaultEventQueueConfig = {
 };
 
 @implementation Sift {
-    NSMutableDictionary *_eventQueues;
     NSString *_rootDirPath;
+    NSMutableDictionary *_eventQueues;
+    SFUploader *_uploader;
 }
 
 + (instancetype)sharedInstance {
@@ -47,8 +49,14 @@ static const SFQueueConfig SFDefaultEventQueueConfig = {
         _beaconKey = nil;
         _userId = nil;
 
-        _eventQueues = [NSMutableDictionary new];
         _rootDirPath = rootDirPath;
+        _eventQueues = [NSMutableDictionary new];
+
+        _uploader = [[SFUploader alloc] initWithArchivePath:self.archivePathForUploader sift:self];
+        if (!_uploader) {
+            self = nil;
+            return nil;
+        }
 
         // Create the default event queue.
         if (![self addEventQueue:SFDefaultEventQueueIdentifier config:SFDefaultEventQueueConfig]) {
@@ -123,15 +131,40 @@ static const SFQueueConfig SFDefaultEventQueueConfig = {
 }
 
 - (BOOL)upload {
-    return NO;  // TODO(clchiou): Implement this.
+    if (!_accountId || !_beaconKey || !_serverUrlFormat) {
+        SF_DEBUG(@"Lack _accountId, _beaconKey, and/or _serverUrlFormat");
+        return NO;
+    }
+
+    NSMutableArray *events = [NSMutableArray new];
+    @synchronized(_eventQueues) {
+        for (NSString *identifier in _eventQueues) {
+            SFQueue *queue = [_eventQueues objectForKey:identifier];
+            if (queue.readyForUpload) {
+                [events addObjectsFromArray:[queue transfer]];
+            }
+        }
+    }
+    if (!events.count) {
+        SF_DEBUG(@"No events to uplaod");
+        return NO;
+    }
+
+    [_uploader upload:events];
+    return YES;
 }
 
 #pragma mark - NSKeyedArchiver/NSKeyedUnarchiver
 
 static NSString * const SF_QUEUE_DIR = @"queues";
+static NSString * const SF_UPLOADER = @"uploader";
 
 - (NSString *)archivePathForQueue:(NSString *)identifier {
     return [[_rootDirPath stringByAppendingPathComponent:SF_QUEUE_DIR] stringByAppendingPathComponent:identifier];
+}
+
+- (NSString *)archivePathForUploader {
+    return [_rootDirPath stringByAppendingPathComponent:SF_UPLOADER];
 }
 
 - (void)archive {
@@ -140,6 +173,7 @@ static NSString * const SF_QUEUE_DIR = @"queues";
             [[_eventQueues objectForKey:identifier] archive];
         }
     }
+    [_uploader archive];
 }
 
 @end

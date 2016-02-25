@@ -13,6 +13,8 @@
 		7168EE1C1C7E61E900A88245 /* SFEventTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 7168EE1B1C7E61E900A88245 /* SFEventTests.m */; };
 		7168EE1E1C7E7A6800A88245 /* SFQueue.h in Headers */ = {isa = PBXBuildFile; fileRef = 7168EE1D1C7E7A6800A88245 /* SFQueue.h */; };
 		7168EE201C7E7B6700A88245 /* SFQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = 7168EE1F1C7E7B6700A88245 /* SFQueue.m */; };
+		7168EE221C7F978D00A88245 /* Sift+Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 7168EE211C7F978D00A88245 /* Sift+Private.h */; };
+		7168EE241C7F99AF00A88245 /* SFQueueTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 7168EE231C7F99AF00A88245 /* SFQueueTests.m */; };
 		716BEB871C7D304D009C3706 /* SFDebug.h in Headers */ = {isa = PBXBuildFile; fileRef = 716BEB861C7D304D009C3706 /* SFDebug.h */; };
 		716BEB8A1C7D336B009C3706 /* SFEvent.h in Headers */ = {isa = PBXBuildFile; fileRef = 716BEB881C7D336B009C3706 /* SFEvent.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		716BEB8B1C7D336B009C3706 /* SFQueueConfig.h in Headers */ = {isa = PBXBuildFile; fileRef = 716BEB891C7D336B009C3706 /* SFQueueConfig.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -42,6 +44,8 @@
 		7168EE1B1C7E61E900A88245 /* SFEventTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SFEventTests.m; sourceTree = "<group>"; };
 		7168EE1D1C7E7A6800A88245 /* SFQueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SFQueue.h; sourceTree = "<group>"; };
 		7168EE1F1C7E7B6700A88245 /* SFQueue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SFQueue.m; sourceTree = "<group>"; };
+		7168EE211C7F978D00A88245 /* Sift+Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Sift+Private.h"; sourceTree = "<group>"; };
+		7168EE231C7F99AF00A88245 /* SFQueueTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SFQueueTests.m; sourceTree = "<group>"; };
 		716BEB861C7D304D009C3706 /* SFDebug.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SFDebug.h; sourceTree = "<group>"; };
 		716BEB881C7D336B009C3706 /* SFEvent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SFEvent.h; sourceTree = "<group>"; };
 		716BEB891C7D336B009C3706 /* SFQueueConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SFQueueConfig.h; sourceTree = "<group>"; };
@@ -102,6 +106,7 @@
 				716BEB8E1C7D3695009C3706 /* SFUtils.m */,
 				7168EE041C7B977500A88245 /* Sift.h */,
 				716BEB8F1C7D3695009C3706 /* Sift.m */,
+				7168EE211C7F978D00A88245 /* Sift+Private.h */,
 			);
 			path = Sift;
 			sourceTree = "<group>";
@@ -111,6 +116,7 @@
 			children = (
 				7168EE121C7B977500A88245 /* Info.plist */,
 				7168EE1B1C7E61E900A88245 /* SFEventTests.m */,
+				7168EE231C7F99AF00A88245 /* SFQueueTests.m */,
 				7168EE101C7B977500A88245 /* SiftTests.m */,
 			);
 			path = SiftTests;
@@ -125,6 +131,7 @@
 			files = (
 				716BEB911C7D3695009C3706 /* SFUtils.h in Headers */,
 				716BEB8A1C7D336B009C3706 /* SFEvent.h in Headers */,
+				7168EE221C7F978D00A88245 /* Sift+Private.h in Headers */,
 				716BEB8B1C7D336B009C3706 /* SFQueueConfig.h in Headers */,
 				7168EE1E1C7E7A6800A88245 /* SFQueue.h in Headers */,
 				7168EE051C7B977500A88245 /* Sift.h in Headers */,
@@ -241,6 +248,7 @@
 			files = (
 				7168EE111C7B977500A88245 /* SiftTests.m in Sources */,
 				7168EE1C1C7E61E900A88245 /* SFEventTests.m in Sources */,
+				7168EE241C7F99AF00A88245 /* SFQueueTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

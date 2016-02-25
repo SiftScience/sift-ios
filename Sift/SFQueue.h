@@ -11,7 +11,14 @@
  */
 @interface SFQueue : NSObject
 
-- (instancetype)initWithIdentifier:(NSString *)identifier config:(SFQueueConfig)config;
+- (instancetype)initWithIdentifier:(NSString *)identifier config:(SFQueueConfig)config archivePath:(NSString *)archivePath;
+
+/**
+ * Persist events to disk (call this when app enters into background).
+ *
+ * NOTE: This method is blocking (don't call it in the main thread).
+ */
+- (void)archive;
 
 /** Append an event to the queue. */
 - (void)append:(SFEvent *)event;

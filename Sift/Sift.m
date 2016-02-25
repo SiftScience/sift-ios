@@ -1,6 +1,7 @@
 // Copyright (c) 2016 Sift Science. All rights reserved.
 
 @import Foundation;
+@import UIKit;
 
 #import "SFDebug.h"
 #import "SFEvent.h"
@@ -9,8 +10,11 @@
 #import "SFUtils.h"
 
 #import "Sift.h"
+#import "Sift+Private.h"
 
 static NSString * const SFServerUrlFormat = @"https://api3.siftscience.com/v3/accounts/%@/mobile_events";
+
+static NSString * const SFRootDirName = @"sift-v0_0_1";
 
 static NSString * const SFDefaultEventQueueIdentifier = @"sift-default";
 
@@ -23,18 +27,19 @@ static const SFQueueConfig SFDefaultEventQueueConfig = {
 
 @implementation Sift {
     NSMutableDictionary *_eventQueues;
+    NSString *_rootDirPath;
 }
 
 + (instancetype)sharedInstance {
     static Sift *instance;
     static dispatch_once_t once;
     dispatch_once(&once, ^{
-        instance = [Sift new];
+        instance = [[Sift alloc] initWithRootDirPath:[SFCacheDirPath() stringByAppendingPathComponent:SFRootDirName]];
     });
     return instance;
 }
 
-- (instancetype)init {
+- (instancetype)initWithRootDirPath:(NSString *)rootDirPath {
     self = [super init];
     if (self) {
         _serverUrlFormat = SFServerUrlFormat;
@@ -43,14 +48,25 @@ static const SFQueueConfig SFDefaultEventQueueConfig = {
         _userId = nil;
 
         _eventQueues = [NSMutableDictionary new];
+        _rootDirPath = rootDirPath;
 
         // Create the default event queue.
         if (![self addEventQueue:SFDefaultEventQueueIdentifier config:SFDefaultEventQueueConfig]) {
             self = nil;
             return nil;
         }
+
+        NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
+        [notificationCenter addObserver:self selector:@selector(applicationDidEnterBackground:) name:UIApplicationDidEnterBackgroundNotification object:nil];
     }
     return self;
+}
+
+- (void)applicationDidEnterBackground:(NSNotification *)notification {
+    SF_DEBUG(@"Enter background");
+    dispatch_async(dispatch_get_global_queue(QOS_CLASS_BACKGROUND, 0), ^{
+        [self archive];
+    });
 }
 
 - (BOOL)addEventQueue:(NSString *)identifier config:(SFQueueConfig)config {
@@ -59,7 +75,8 @@ static const SFQueueConfig SFDefaultEventQueueConfig = {
             SF_DEBUG(@"Could not overwrite event queue for identifier \"%@\"", identifier);
             return NO;
         }
-        SFQueue *queue = [[SFQueue alloc] initWithIdentifier:identifier config:config];
+        NSString *archivePath = [self archivePathForQueue:identifier];
+        SFQueue *queue = [[SFQueue alloc] initWithIdentifier:identifier config:config archivePath:archivePath];
         if (!queue) {
             SF_DEBUG(@"Could not create SFEventQueue for identifier \"%@\"", identifier);
             return NO;
@@ -107,6 +124,22 @@ static const SFQueueConfig SFDefaultEventQueueConfig = {
 
 - (BOOL)upload {
     return NO;  // TODO(clchiou): Implement this.
+}
+
+#pragma mark - NSKeyedArchiver/NSKeyedUnarchiver
+
+static NSString * const SF_QUEUE_DIR = @"queues";
+
+- (NSString *)archivePathForQueue:(NSString *)identifier {
+    return [[_rootDirPath stringByAppendingPathComponent:SF_QUEUE_DIR] stringByAppendingPathComponent:identifier];
+}
+
+- (void)archive {
+    @synchronized(_eventQueues) {
+        for (NSString *identifier in _eventQueues) {
+            [[_eventQueues objectForKey:identifier] archive];
+        }
+    }
 }
 
 @end

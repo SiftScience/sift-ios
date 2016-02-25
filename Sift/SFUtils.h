@@ -11,3 +11,6 @@ typedef uint64_t SFTimestamp;
 
 /** @return the current time stamp in milliseconds. */
 SFTimestamp SFCurrentTime(void);
+
+/** @return the path to a cache directory. */
+NSString *SFCacheDirPath(void);

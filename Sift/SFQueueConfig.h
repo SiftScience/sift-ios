@@ -20,9 +20,13 @@ typedef struct {
     BOOL appendEventOnlyWhenDifferent;
 
     /**
-     * Specify when the current Record IO file of an `SFQueue` should be
-     * rotated.
+     * The following criteria are combined by "or", meaning if one of
+     * them is met, the events of the queue will be uploaded.
      */
-    NSInteger rotateWhenLargerThan;
-    NSTimeInterval rotateWhenOlderThan;
+
+    /** Upload events if there are more events than this. */
+    NSInteger uploadWhenMoreThan;
+
+    /** Upload events when the last event is older than this. */
+    NSTimeInterval uploadWhenOlderThan;
 } SFQueueConfig;

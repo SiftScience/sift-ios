@@ -1,6 +1,8 @@
 // Copyright (c) 2015 Sift Science. All rights reserved.
 
-#import <XCTest/XCTest.h>
+@import XCTest;
+
+#import "Sift.h"
 
 @interface SiftTests : XCTestCase
 
@@ -8,26 +10,13 @@
 
 @implementation SiftTests
 
-- (void)setUp {
-    [super setUp];
-    // Put setup code here. This method is called before the invocation of each test method in the class.
-}
+- (void)testAppendEvent {
+    Sift *sift = [Sift new];
 
-- (void)tearDown {
-    // Put teardown code here. This method is called after the invocation of each test method in the class.
-    [super tearDown];
-}
+    XCTAssertFalse([sift appendEvent:[SFEvent eventWithType:nil path:nil fields:nil]]);
 
-- (void)testExample {
-    // This is an example of a functional test case.
-    // Use XCTAssert and related functions to verify your tests produce the correct results.
-}
-
-- (void)testPerformanceExample {
-    // This is an example of a performance test case.
-    [self measureBlock:^{
-        // Put the code you want to measure the time of here.
-    }];
+    sift.userId = @"1234";
+    XCTAssertTrue([sift appendEvent:[SFEvent eventWithType:nil path:nil fields:nil]]);
 }
 
 @end

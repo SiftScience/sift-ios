@@ -39,6 +39,7 @@ static const int64_t SF_BACKOFF = NSEC_PER_SEC;  // Starting from 1 second.
 
 - (void)upload:(NSArray *)events {
     dispatch_async(_serial, ^{
+        SF_DEBUG(@"Batch size: %lu", (unsigned long)events.count);
         [_batches addObject:events];
 
         if (UIApplication.sharedApplication.applicationState == UIApplicationStateBackground) {

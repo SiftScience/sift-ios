@@ -5,6 +5,7 @@
 
 #import "SFDebug.h"
 #import "SFUtils.h"
+#import "Sift.h"
 
 #import "SFQueue.h"
 
@@ -15,15 +16,28 @@
     SFEvent *_lastEvent;
     SFTimestamp _lastEventTimestamp;
     NSString *_archivePath;
+    // Weak reference back to the parent.
+    Sift * __weak _sift;
 }
 
-- (instancetype)initWithIdentifier:(NSString *)identifier config:(SFQueueConfig)config archivePath:(NSString *)archivePath {
+- (instancetype)initWithIdentifier:(NSString *)identifier config:(SFQueueConfig)config archivePath:(NSString *)archivePath sift:(Sift *)sift {
     self = [super init];
     if (self) {
         _identifier = identifier;
         _config = config;
         _archivePath = archivePath;
+        _sift = sift;
+
         [self unarchive];
+
+        // In case we just wake up from a long sleep...
+        dispatch_async(dispatch_get_global_queue(QOS_CLASS_BACKGROUND, 0), ^{
+            if (self.readyForUpload) {
+                [self requestUpload];
+            } else {
+                [self checkUploadReadinessLater];
+            }
+        });
     }
     return self;
 }
@@ -36,6 +50,7 @@
         if (_config.appendEventOnlyWhenDifferent && _lastEvent && [_lastEvent isEssentiallyEqualTo:event]) {
             return;  // Drop the same event as configured.
         }
+
         [_queue addObject:event];
         _lastEvent = event;
         _lastEventTimestamp = SFCurrentTime();
@@ -48,6 +63,12 @@
             dispatch_async(dispatch_get_global_queue(QOS_CLASS_BACKGROUND, 0), ^{
                 [self archive];
             });
+        }
+
+        if (self.readyForUpload) {
+            [self requestUpload];
+        } else {
+            [self checkUploadReadinessLater];
         }
     }
 }
@@ -91,6 +112,44 @@ static NSString * const SF_LAST_EVENT_TIMESTAMP = @"lastEventTimestamp";
         }
         SF_DEBUG(@"Unarchive: _lastEventTimestamp=%llu", _lastEventTimestamp);
     }
+}
+
+#pragma mark - Upload
+
+- (BOOL)readyForUpload {
+    if (_queue.count > _config.uploadWhenMoreThan) {
+        SF_DEBUG(@"Too many events");
+        return YES;
+    }
+
+    SFTimestamp age = SFCurrentTime() - _lastEventTimestamp;
+    if (age > _config.uploadWhenOlderThan * 1000 && _queue.count > 0) {
+        SF_DEBUG(@"Events get old");
+        return YES;
+    }
+
+    return NO;
+}
+
+- (void)requestUpload {
+    SF_DEBUG(@"Request upload");
+    Sift *sift = _sift;
+    if (sift) {
+        if (![sift upload]) {
+            SF_DEBUG(@"Upload request was rejected");
+        }
+    } else {
+        SF_DEBUG(@"Reference to Sift object was lost");
+    }
+}
+
+- (void)checkUploadReadinessLater {
+    const SFTimestamp ERROR_MARGIN = 1;
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (_config.uploadWhenOlderThan + ERROR_MARGIN) * NSEC_PER_SEC), dispatch_get_global_queue(QOS_CLASS_BACKGROUND, 0), ^{
+        if (self.readyForUpload) {
+            [self requestUpload];
+        }
+    });
 }
 
 @end

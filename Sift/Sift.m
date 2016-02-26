@@ -88,10 +88,12 @@ static const SFQueueConfig SFDefaultEventQueueConfig = {
 
 - (BOOL)removeEventQueue:(NSString *)identifier {
     @synchronized(_eventQueues) {
-        if (![_eventQueues objectForKey:identifier]) {
+        SFQueue *queue = [_eventQueues objectForKey:identifier];
+        if (!queue) {
             SF_DEBUG(@"Could not find event queue to be removed for identifier \"%@\"", identifier);
             return NO;
         }
+        [queue removeData];
         [_eventQueues removeObjectForKey:identifier];
         return YES;
     }

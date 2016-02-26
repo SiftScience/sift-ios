@@ -20,6 +20,9 @@
  */
 - (void)archive;
 
+/** Remove persisted events from disk. */
+- (void)removeData;
+
 /** Append an event to the queue. */
 - (void)append:(SFEvent *)event;
 

@@ -67,6 +67,12 @@
     XCTAssertEqualObjects([(SFEvent *)[events objectAtIndex:0] path], @"path-0");
     XCTAssertEqualObjects([(SFEvent *)[events objectAtIndex:1] path], @"path-1");
     XCTAssertEqualObjects([(SFEvent *)[events objectAtIndex:2] path], @"path-2");
+
+    // Remove persisted data...
+    [queue removeData];
+    anotherQueue = [self makeQueue:config];
+    events = [anotherQueue transfer];
+    XCTAssertEqual(events.count, 0);
 }
 
 - (SFQueue *)makeQueue:(SFQueueConfig)config {

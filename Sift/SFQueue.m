@@ -93,4 +93,13 @@ static NSString * const SF_LAST_EVENT_TIMESTAMP = @"lastEventTimestamp";
     }
 }
 
+- (void)removeData {
+    @synchronized(self) {
+        NSError *error;
+        if (![[NSFileManager defaultManager] removeItemAtPath:_archivePath error:&error]) {
+            SF_DEBUG(@"Could not remove queue archive \"%@\" due to %@", _archivePath, [error localizedDescription]);
+        }
+    }
+}
+
 @end

@@ -90,9 +90,12 @@ static NSString * const SF_LAST_EVENT_TIMESTAMP = @"lastEventTimestamp";
 
 - (void)archive {
     @synchronized(self) {
-        NSDictionary *archive = @{SF_QUEUE: _queue,
-                                  SF_LAST_EVENT: _lastEvent,
-                                  SF_LAST_EVENT_TIMESTAMP: @(_lastEventTimestamp)};
+        NSMutableDictionary *archive = [NSMutableDictionary new];
+        [archive setObject:_queue forKey:SF_QUEUE];
+        if (_lastEvent) {
+            [archive setObject:_lastEvent forKey:SF_LAST_EVENT];
+        }
+        [archive setObject:@(_lastEventTimestamp) forKey:SF_LAST_EVENT_TIMESTAMP];
         [NSKeyedArchiver archiveRootObject:archive toFile:_archivePath];
     }
 }

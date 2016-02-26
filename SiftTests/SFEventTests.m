@@ -37,4 +37,37 @@
     XCTAssertEqual(actual.time, expect.time);
 }
 
+- (void)testListRequest {
+    NSArray *events;
+    NSDictionary *expect, *actual;
+
+    events = @[];
+    expect = @{@"data": @[]};
+    actual = [NSJSONSerialization JSONObjectWithData:[SFEvent listRequest:events] options:0 error:nil];
+    XCTAssertEqualObjects(expect, actual);
+
+    // Lack user ID.
+    events = @[[SFEvent eventWithType:@"t" path:@"p" fields:nil]];
+    expect = @{@"data": @[]};
+    actual = [NSJSONSerialization JSONObjectWithData:[SFEvent listRequest:events] options:0 error:nil];
+    XCTAssertEqualObjects(expect, actual);
+
+    events = SFBeNice(@[[SFEvent eventWithType:@"some-type" path:@"some-path" fields:nil],
+                        [SFEvent eventWithType:nil path:nil fields:@{@"key": @"value"}],
+                        [SFEvent eventWithType:nil path:nil fields:@{@1: @"value"}],  // Key is not string typed.
+                        [SFEvent eventWithType:nil path:nil fields:@{@"key": @1}]]);  // Value is not string typed.
+    expect = @{@"data": @[@{@"time": @0, @"mobile_event_type": @"some-type", @"path": @"some-path", @"user_id": @"some-id"},
+                          @{@"time": @0, @"user_id": @"some-id", @"fields": @{@"key": @"value"}}]};
+    actual = [NSJSONSerialization JSONObjectWithData:[SFEvent listRequest:events] options:0 error:nil];
+    XCTAssertEqualObjects(expect, actual);
+}
+
+static NSArray *SFBeNice(NSArray *events) {
+    for (SFEvent *event in events) {
+        event.userId = @"some-id";
+        event.time = 0;
+    }
+    return events;
+}
+
 @end

@@ -49,4 +49,9 @@
 /** Compare event contents except `time`. */
 - (BOOL)isEssentiallyEqualTo:(SFEvent *)event;
 
+/** @name List request object. */
+
+/** Create a JSON-encoded list request object. */
++ (NSData *)listRequest:(NSArray *)events;
+
 @end

@@ -4,6 +4,7 @@
 @import UIKit;
 
 #import "SFDebug.h"
+#import "SFEvent.h"
 
 #import "SFUploader.h"
 
@@ -109,13 +110,9 @@ static const int64_t SF_BACKOFF = NSEC_PER_SEC;  // Starting from 1 second.
     [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
     SF_DEBUG(@"request: %@", request);
 
-    NSString *body = [self makeListRequest:[_batches objectAtIndex:0]];
-    NSURLSessionUploadTask *task = [_session uploadTaskWithRequest:request fromData:[body dataUsingEncoding:NSUTF8StringEncoding]];
+    NSData *body = [SFEvent listRequest:[_batches objectAtIndex:0]];
+    NSURLSessionUploadTask *task = [_session uploadTaskWithRequest:request fromData:body];
     [task resume];
-}
-
-- (NSString*)makeListRequest:(NSArray *)events {
-    return @"{}";  // TODO(clchiou): Implement this.
 }
 
 #pragma mark - NSKeyedArchiver/NSKeyedUnarchiver

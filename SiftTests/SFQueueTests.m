@@ -99,6 +99,61 @@
     XCTAssertTrue(queue.readyForUpload);
 }
 
+- (void)testappendEventOnlyWhenDifferent {
+    SFQueueConfig config = {
+        .appendEventOnlyWhenDifferent = YES,
+        .acceptSameEventAfter = 3600,
+        .uploadWhenMoreThan = 65536,
+        .uploadWhenOlderThan = 3600,
+    };
+    SFQueue *queue = [self makeQueue:config];
+
+    [queue append:[SFEvent eventWithType:nil path:@"path" fields:nil]];
+    [queue append:[SFEvent eventWithType:nil path:@"path" fields:nil]];
+    [queue append:[SFEvent eventWithType:nil path:@"path" fields:nil]];
+
+    NSArray *events = [queue transfer];
+    XCTAssertEqual(events.count, 1);
+    XCTAssertEqualObjects([(SFEvent *)[events objectAtIndex:0] path], @"path");
+
+    [queue append:[SFEvent eventWithType:nil path:@"path" fields:nil]];
+    [queue append:[SFEvent eventWithType:nil path:@"path" fields:nil]];
+    [queue append:[SFEvent eventWithType:nil path:@"path" fields:nil]];
+
+    events = [queue transfer];
+    XCTAssertEqual(events.count, 0);
+}
+
+- (void)testappendSameEventImmediately {
+    SFQueueConfig config = {
+        .appendEventOnlyWhenDifferent = YES,
+        .acceptSameEventAfter = -1,  // Trick to accept another immediately.
+        .uploadWhenMoreThan = 65536,
+        .uploadWhenOlderThan = 3600,
+    };
+    SFQueue *queue = [self makeQueue:config];
+
+    [queue append:[SFEvent eventWithType:nil path:@"path" fields:nil]];
+    [queue append:[SFEvent eventWithType:nil path:@"path" fields:nil]];
+    [queue append:[SFEvent eventWithType:nil path:@"path" fields:nil]];
+
+    NSArray *events = [queue transfer];
+    XCTAssertEqual(events.count, 3);
+    XCTAssertEqualObjects([(SFEvent *)[events objectAtIndex:0] path], @"path");
+    XCTAssertEqualObjects([(SFEvent *)[events objectAtIndex:1] path], @"path");
+    XCTAssertEqualObjects([(SFEvent *)[events objectAtIndex:2] path], @"path");
+
+    [queue append:[SFEvent eventWithType:nil path:@"path" fields:nil]];
+    [queue append:[SFEvent eventWithType:nil path:@"path" fields:nil]];
+    [queue append:[SFEvent eventWithType:nil path:@"path" fields:nil]];
+
+    events = [queue transfer];
+    XCTAssertEqual(events.count, 3);
+    XCTAssertEqualObjects([(SFEvent *)[events objectAtIndex:0] path], @"path");
+    XCTAssertEqualObjects([(SFEvent *)[events objectAtIndex:1] path], @"path");
+    XCTAssertEqualObjects([(SFEvent *)[events objectAtIndex:2] path], @"path");
+}
+
 - (SFQueue *)makeQueue:(SFQueueConfig)config {
     return [[SFQueue alloc] initWithIdentifier:@"id" config:config archivePath:_archivePath sift:nil];
 }

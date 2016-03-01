@@ -20,6 +20,14 @@ typedef struct {
     BOOL appendEventOnlyWhenDifferent;
 
     /**
+     * When `appendEventOnlyWhenDifferent` is `YES`, the queue will
+     * accept the same event again after this amount of time.
+     *
+     * Setting this to 0 is treated as infinite.
+     */
+    NSTimeInterval acceptSameEventAfter;
+
+    /**
      * The following criteria are combined by "or", meaning if one of
      * them is met, the events of the queue will be uploaded.
      */

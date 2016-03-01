@@ -19,6 +19,7 @@
 		7168EE281C7FB80C00A88245 /* SFUploader.m in Sources */ = {isa = PBXBuildFile; fileRef = 7168EE261C7FB80C00A88245 /* SFUploader.m */; };
 		716BEB871C7D304D009C3706 /* SFDebug.h in Headers */ = {isa = PBXBuildFile; fileRef = 716BEB861C7D304D009C3706 /* SFDebug.h */; };
 		716BEB8A1C7D336B009C3706 /* SFEvent.h in Headers */ = {isa = PBXBuildFile; fileRef = 716BEB881C7D336B009C3706 /* SFEvent.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		7168EE2C1C86250100A88245 /* SFEvent+Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 7168EE2B1C86250100A88245 /* SFEvent+Private.h */; };
 		716BEB8B1C7D336B009C3706 /* SFQueueConfig.h in Headers */ = {isa = PBXBuildFile; fileRef = 716BEB891C7D336B009C3706 /* SFQueueConfig.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		716BEB901C7D3695009C3706 /* SFEvent.m in Sources */ = {isa = PBXBuildFile; fileRef = 716BEB8C1C7D3695009C3706 /* SFEvent.m */; };
 		716BEB911C7D3695009C3706 /* SFUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = 716BEB8D1C7D3695009C3706 /* SFUtils.h */; };
@@ -52,6 +53,7 @@
 		7168EE261C7FB80C00A88245 /* SFUploader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SFUploader.m; sourceTree = "<group>"; };
 		716BEB861C7D304D009C3706 /* SFDebug.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SFDebug.h; sourceTree = "<group>"; };
 		716BEB881C7D336B009C3706 /* SFEvent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SFEvent.h; sourceTree = "<group>"; };
+		7168EE2B1C86250100A88245 /* SFEvent+Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "SFEvent+Private.h"; sourceTree = "<group>"; };
 		716BEB891C7D336B009C3706 /* SFQueueConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SFQueueConfig.h; sourceTree = "<group>"; };
 		716BEB8C1C7D3695009C3706 /* SFEvent.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SFEvent.m; sourceTree = "<group>"; };
 		716BEB8D1C7D3695009C3706 /* SFUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SFUtils.h; sourceTree = "<group>"; };
@@ -103,6 +105,7 @@
 				716BEB861C7D304D009C3706 /* SFDebug.h */,
 				716BEB881C7D336B009C3706 /* SFEvent.h */,
 				716BEB8C1C7D3695009C3706 /* SFEvent.m */,
+				7168EE2B1C86250100A88245 /* SFEvent+Private.h */,
 				7168EE1D1C7E7A6800A88245 /* SFQueue.h */,
 				7168EE1F1C7E7B6700A88245 /* SFQueue.m */,
 				716BEB891C7D336B009C3706 /* SFQueueConfig.h */,
@@ -135,6 +138,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7168EE2C1C86250100A88245 /* SFEvent+Private.h in Headers */,
 				716BEB911C7D3695009C3706 /* SFUtils.h in Headers */,
 				716BEB8A1C7D336B009C3706 /* SFEvent.h in Headers */,
 				7168EE221C7F978D00A88245 /* Sift+Private.h in Headers */,

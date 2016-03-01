@@ -6,6 +6,7 @@
 #import "SFUtils.h"
 
 #import "SFEvent.h"
+#import "SFEvent+Private.h"
 
 @implementation SFEvent
 
@@ -45,6 +46,15 @@
            ((!_fields && !event.fields) || [_fields isEqualToDictionary:event.fields]) &&
            ((!_deviceProperties && !event.deviceProperties) || [_deviceProperties isEqualToDictionary:event.deviceProperties]) &&
            ((!_metrics && !event.metrics) || [_metrics isEqualToDictionary:event.metrics]);
+}
+
+- (BOOL)sanityCheck {
+    // 1. userId is not optional (but all others are optional).
+    // 2. Dictionaries must be string-keyed and string-valued.
+    return _userId.length &&
+           (!_fields || SFIsDictKeyAndValueStringTyped(_fields)) &&
+           (!_deviceProperties || SFIsDictKeyAndValueStringTyped(_deviceProperties)) &&
+           (!_metrics || SFIsDictKeyAndValueStringTyped(_metrics));
 }
 
 #pragma mark - NSCoding

@@ -36,15 +36,15 @@
  * Custom event fields; both key and value must be string typed.
  * Default to nil.
  */
-@property NSDictionary *fields;
+@property NSDictionary<NSString *, NSString *> *fields;
 
 /** @name Internal properties of Sift (do not use it!). */
 
 /** Device properties.  Default to nil. */
-@property NSDictionary *deviceProperties;
+@property NSDictionary<NSString *, NSString *> *deviceProperties;
 
 /** Internal metrics.  Default to nil. */
-@property NSDictionary *metrics;
+@property NSDictionary<NSString *, NSString *> *metrics;
 
 /** Compare event contents except `time`. */
 - (BOOL)isEssentiallyEqualTo:(SFEvent *)event;

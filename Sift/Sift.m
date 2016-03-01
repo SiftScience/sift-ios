@@ -5,6 +5,7 @@
 
 #import "SFDebug.h"
 #import "SFEvent.h"
+#import "SFEvent+Private.h"
 #import "SFQueue.h"
 #import "SFQueueConfig.h"
 #import "SFUploader.h"
@@ -124,6 +125,10 @@ static const SFQueueConfig SFDefaultEventQueueConfig = {
             }
             SF_DEBUG(@"The event's userId is empty; use Sift object's userId: \"%@\"", _userId);
             event.userId = _userId;
+        }
+        if (![event sanityCheck]) {
+            SF_DEBUG(@"drop event due to incorrect contents: %@", event);
+            return NO;
         }
         [queue append:event];
         return YES;

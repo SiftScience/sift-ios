@@ -13,11 +13,15 @@
     dispatch_queue_t _serial;
     NSURLSession *_session;
     NSMutableArray *_batches;
+    int _numRejects;
     int64_t _backoff;
     NSString *_archivePath;
     // Weak reference back to the parent.
     Sift * __weak _sift;
 }
+
+// Drop a batch if our backend has rejected it `SF_REJECT_LIMIT` times.
+static const int SF_REJECT_LIMIT = 3;
 
 static const int64_t SF_BACKOFF = NSEC_PER_SEC;  // Starting from 1 second.
 
@@ -69,7 +73,15 @@ static const int64_t SF_BACKOFF = NSEC_PER_SEC;  // Starting from 1 second.
             SF_DEBUG(@"PUT %@ status %ld", task.response.URL, (long)statusCode);
             if (statusCode == 200) {
                 [_batches removeObjectAtIndex:0];
+                _numRejects = 0;
                 success = YES;
+            } else if (statusCode == 400) {
+                _numRejects++;
+                if (_numRejects >= SF_REJECT_LIMIT) {
+                    SF_DEBUG(@"Drop a batch due to reject limit reached");
+                    [_batches removeObjectAtIndex:0];
+                    _numRejects = 0;
+                }
             }
         }
         // Keep working on unfinished upload jobs.
@@ -118,10 +130,11 @@ static const int64_t SF_BACKOFF = NSEC_PER_SEC;  // Starting from 1 second.
 #pragma mark - NSKeyedArchiver/NSKeyedUnarchiver
 
 static NSString * const SF_BATCHES = @"batches";
+static NSString * const SF_NUM_REJECTS = @"numRejects";
 
 - (void)archive {
     dispatch_async(_serial, ^{
-        NSDictionary *archive = @{SF_BATCHES: _batches};
+        NSDictionary *archive = @{SF_BATCHES: _batches, SF_NUM_REJECTS: @(_numRejects)};
         [NSKeyedArchiver archiveRootObject:archive toFile:_archivePath];
     });
 }
@@ -131,8 +144,10 @@ static NSString * const SF_BATCHES = @"batches";
     NSDictionary *archive = [NSKeyedUnarchiver unarchiveObjectWithFile:_archivePath];
     if (archive) {
         _batches = [NSMutableArray arrayWithArray:[archive objectForKey:SF_BATCHES]];
+        _numRejects = ((NSNumber *)[archive objectForKey:SF_NUM_REJECTS]).intValue;
     } else {
         _batches = [NSMutableArray new];
+        _numRejects = 0;
     }
     SF_DEBUG(@"Unarchive %ld batches", _batches.count);
 }

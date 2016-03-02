@@ -6,6 +6,7 @@
 #import "SFDebug.h"
 #import "SFEvent.h"
 #import "SFEvent+Private.h"
+#import "SFMotionReporter.h"
 #import "SFQueue.h"
 #import "SFQueueConfig.h"
 #import "SFUploader.h"
@@ -31,6 +32,8 @@ static const SFQueueConfig SFDefaultEventQueueConfig = {
     NSString *_rootDirPath;
     NSMutableDictionary *_eventQueues;
     SFUploader *_uploader;
+
+    SFMotionReporter *_motionReporter;
 }
 
 + (instancetype)sharedInstance {
@@ -67,6 +70,8 @@ static const SFQueueConfig SFDefaultEventQueueConfig = {
 
         NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
         [notificationCenter addObserver:self selector:@selector(applicationDidEnterBackground:) name:UIApplicationDidEnterBackgroundNotification object:nil];
+
+        _motionReporter = [SFMotionReporter new];
     }
     return self;
 }
@@ -133,6 +138,10 @@ static const SFQueueConfig SFDefaultEventQueueConfig = {
         [queue append:event];
         return YES;
     }
+}
+
+- (void)collectMotionData:(NSTimeInterval)delay period:(NSTimeInterval)period numSamples:(int)numSamples {
+    [_motionReporter collect:delay period:period numSamples:numSamples];
 }
 
 - (BOOL)upload {

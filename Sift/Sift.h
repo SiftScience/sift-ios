@@ -58,6 +58,12 @@
 - (BOOL)appendEvent:(SFEvent *)event;
 
 /**
+ * Start collecting motion data after `delay` seconds for `period`
+ * seconds of time, and collect `numSamples` of data per second.
+ */
+- (void)collectMotionData:(NSTimeInterval)delay period:(NSTimeInterval)period numSamples:(int)numSamples;
+
+/**
  * @name Configurations.
  *
  * At minimum you should configure `accountId`, `beaconKey`, and

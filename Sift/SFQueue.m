@@ -48,6 +48,7 @@
             return;  // Don't append nil.
         }
         if (_config.appendEventOnlyWhenDifferent && _lastEvent && [_lastEvent isEssentiallyEqualTo:event]) {
+            SF_DEBUG(@"Drop the same event");
             return;  // Drop the same event as configured.
         }
 

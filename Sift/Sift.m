@@ -4,6 +4,7 @@
 @import UIKit;
 
 #import "SFDebug.h"
+#import "SFDevicePropertiesReporter.h"
 #import "SFEvent.h"
 #import "SFEvent+Private.h"
 #import "SFQueue.h"
@@ -31,6 +32,9 @@ static const SFQueueConfig SFDefaultEventQueueConfig = {
     NSString *_rootDirPath;
     NSMutableDictionary *_eventQueues;
     SFUploader *_uploader;
+
+    // Extra collection mechanisms.
+    SFDevicePropertiesReporter *_devicePropertiesReporter;
 }
 
 + (instancetype)sharedInstance {
@@ -67,6 +71,14 @@ static const SFQueueConfig SFDefaultEventQueueConfig = {
 
         NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
         [notificationCenter addObserver:self selector:@selector(applicationDidEnterBackground:) name:UIApplicationDidEnterBackgroundNotification object:nil];
+
+        // Create autonomous data collection.
+        dispatch_async(dispatch_get_global_queue(QOS_CLASS_BACKGROUND, 0), ^{
+            _devicePropertiesReporter = [SFDevicePropertiesReporter new];
+            if (!_devicePropertiesReporter) {
+                SF_DEBUG(@"Could not create _devicePropertiesReporter");
+            }
+        });
     }
     return self;
 }

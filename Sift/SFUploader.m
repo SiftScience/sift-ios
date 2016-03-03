@@ -14,6 +14,7 @@
     NSURLSession *_session;
     NSMutableArray *_batches;
     int _numRejects;
+    int64_t _backoffBase;
     int64_t _backoff;
     NSString *_archivePath;
     // Weak reference back to the parent.
@@ -26,12 +27,17 @@ static const int SF_REJECT_LIMIT = 3;
 static const int64_t SF_BACKOFF = NSEC_PER_SEC;  // Starting from 1 second.
 
 - (instancetype)initWithArchivePath:(NSString *)archivePath sift:(Sift *)sift {
+    return [self initWithArchivePath:archivePath sift:sift config:[NSURLSessionConfiguration defaultSessionConfiguration] backoffBase:SF_BACKOFF];
+}
+
+- (instancetype)initWithArchivePath:(NSString *)archivePath sift:(Sift *)sift config:(NSURLSessionConfiguration *)config backoffBase:(int64_t)backoffBase {
     self = [super init];
     if (self) {
         _serial = dispatch_queue_create("com.sift.SFUploader", NULL);
         _archivePath = archivePath;
-        _session = [NSURLSession sessionWithConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration] delegate:self delegateQueue:nil];
-        _backoff = SF_BACKOFF;
+        _session = [NSURLSession sessionWithConfiguration:config delegate:self delegateQueue:nil];
+        _backoffBase = backoffBase;
+        _backoff = backoffBase;
         _sift = sift;
 
         [self unarchive];
@@ -86,7 +92,7 @@ static const int64_t SF_BACKOFF = NSEC_PER_SEC;  // Starting from 1 second.
         }
         // Keep working on unfinished upload jobs.
         if (success) {
-            _backoff = SF_BACKOFF;
+            _backoff = _backoffBase;
             [self doUpload];
         } else {
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, _backoff), _serial, ^{[self doUpload];});

@@ -8,6 +8,9 @@
 
 - (instancetype)initWithArchivePath:(NSString *)archivePath sift:(Sift *)sift;
 
+/** For testing. */
+- (instancetype)initWithArchivePath:(NSString *)archivePath sift:(Sift *)sift config:(NSURLSessionConfiguration *)config backoffBase:(int64_t)backoffBase;
+
 /** Persist uploader state to disk. */
 - (void)archive;
 

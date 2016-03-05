@@ -4,6 +4,7 @@
 @import UIKit;
 
 #import "SFDebug.h"
+#import "SFEvent.h"
 
 #import "SFUploader.h"
 
@@ -12,21 +13,31 @@
     dispatch_queue_t _serial;
     NSURLSession *_session;
     NSMutableArray *_batches;
+    int _numRejects;
+    int64_t _backoffBase;
     int64_t _backoff;
     NSString *_archivePath;
     // Weak reference back to the parent.
     Sift * __weak _sift;
 }
 
+// Drop a batch if our backend has rejected it `SF_REJECT_LIMIT` times.
+static const int SF_REJECT_LIMIT = 3;
+
 static const int64_t SF_BACKOFF = NSEC_PER_SEC;  // Starting from 1 second.
 
 - (instancetype)initWithArchivePath:(NSString *)archivePath sift:(Sift *)sift {
+    return [self initWithArchivePath:archivePath sift:sift config:[NSURLSessionConfiguration defaultSessionConfiguration] backoffBase:SF_BACKOFF];
+}
+
+- (instancetype)initWithArchivePath:(NSString *)archivePath sift:(Sift *)sift config:(NSURLSessionConfiguration *)config backoffBase:(int64_t)backoffBase {
     self = [super init];
     if (self) {
         _serial = dispatch_queue_create("com.sift.SFUploader", NULL);
         _archivePath = archivePath;
-        _session = [NSURLSession sessionWithConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration] delegate:self delegateQueue:nil];
-        _backoff = SF_BACKOFF;
+        _session = [NSURLSession sessionWithConfiguration:config delegate:self delegateQueue:nil];
+        _backoffBase = backoffBase;
+        _backoff = backoffBase;
         _sift = sift;
 
         [self unarchive];
@@ -68,12 +79,20 @@ static const int64_t SF_BACKOFF = NSEC_PER_SEC;  // Starting from 1 second.
             SF_DEBUG(@"PUT %@ status %ld", task.response.URL, (long)statusCode);
             if (statusCode == 200) {
                 [_batches removeObjectAtIndex:0];
+                _numRejects = 0;
                 success = YES;
+            } else if (statusCode == 400) {
+                _numRejects++;
+                if (_numRejects >= SF_REJECT_LIMIT) {
+                    SF_DEBUG(@"Drop a batch due to reject limit reached");
+                    [_batches removeObjectAtIndex:0];
+                    _numRejects = 0;
+                }
             }
         }
         // Keep working on unfinished upload jobs.
         if (success) {
-            _backoff = SF_BACKOFF;
+            _backoff = _backoffBase;
             [self doUpload];
         } else {
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, _backoff), _serial, ^{[self doUpload];});
@@ -109,22 +128,19 @@ static const int64_t SF_BACKOFF = NSEC_PER_SEC;  // Starting from 1 second.
     [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
     SF_DEBUG(@"request: %@", request);
 
-    NSString *body = [self makeListRequest:[_batches objectAtIndex:0]];
-    NSURLSessionUploadTask *task = [_session uploadTaskWithRequest:request fromData:[body dataUsingEncoding:NSUTF8StringEncoding]];
+    NSData *body = [SFEvent listRequest:[_batches objectAtIndex:0]];
+    NSURLSessionUploadTask *task = [_session uploadTaskWithRequest:request fromData:body];
     [task resume];
-}
-
-- (NSString*)makeListRequest:(NSArray *)events {
-    return @"{}";  // TODO(clchiou): Implement this.
 }
 
 #pragma mark - NSKeyedArchiver/NSKeyedUnarchiver
 
 static NSString * const SF_BATCHES = @"batches";
+static NSString * const SF_NUM_REJECTS = @"numRejects";
 
 - (void)archive {
     dispatch_async(_serial, ^{
-        NSDictionary *archive = @{SF_BATCHES: _batches};
+        NSDictionary *archive = @{SF_BATCHES: _batches, SF_NUM_REJECTS: @(_numRejects)};
         [NSKeyedArchiver archiveRootObject:archive toFile:_archivePath];
     });
 }
@@ -134,8 +150,10 @@ static NSString * const SF_BATCHES = @"batches";
     NSDictionary *archive = [NSKeyedUnarchiver unarchiveObjectWithFile:_archivePath];
     if (archive) {
         _batches = [NSMutableArray arrayWithArray:[archive objectForKey:SF_BATCHES]];
+        _numRejects = ((NSNumber *)[archive objectForKey:SF_NUM_REJECTS]).intValue;
     } else {
         _batches = [NSMutableArray new];
+        _numRejects = 0;
     }
     SF_DEBUG(@"Unarchive %ld batches", _batches.count);
 }

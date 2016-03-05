@@ -22,6 +22,8 @@
 		7168EE351C864A4100A88245 /* SFDevicePropertiesReporter.m in Sources */ = {isa = PBXBuildFile; fileRef = 7168EE331C864A4100A88245 /* SFDevicePropertiesReporter.m */; };
 		7168EE381C8665A200A88245 /* SFAppEventsReporter.h in Headers */ = {isa = PBXBuildFile; fileRef = 7168EE361C8665A200A88245 /* SFAppEventsReporter.h */; };
 		7168EE391C8665A200A88245 /* SFAppEventsReporter.m in Sources */ = {isa = PBXBuildFile; fileRef = 7168EE371C8665A200A88245 /* SFAppEventsReporter.m */; };
+		7168EE411C88C91900A88245 /* SFStubHttpProtocol.m in Sources */ = {isa = PBXBuildFile; fileRef = 7168EE3F1C88C91900A88245 /* SFStubHttpProtocol.m */; };
+		7168EE421C88C91900A88245 /* SFUploaderTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 7168EE401C88C91900A88245 /* SFUploaderTests.m */; };
 		716BEB871C7D304D009C3706 /* SFDebug.h in Headers */ = {isa = PBXBuildFile; fileRef = 716BEB861C7D304D009C3706 /* SFDebug.h */; };
 		716BEB8A1C7D336B009C3706 /* SFEvent.h in Headers */ = {isa = PBXBuildFile; fileRef = 716BEB881C7D336B009C3706 /* SFEvent.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		716BEB8B1C7D336B009C3706 /* SFQueueConfig.h in Headers */ = {isa = PBXBuildFile; fileRef = 716BEB891C7D336B009C3706 /* SFQueueConfig.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -60,6 +62,9 @@
 		7168EE331C864A4100A88245 /* SFDevicePropertiesReporter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SFDevicePropertiesReporter.m; sourceTree = "<group>"; };
 		7168EE361C8665A200A88245 /* SFAppEventsReporter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SFAppEventsReporter.h; sourceTree = "<group>"; };
 		7168EE371C8665A200A88245 /* SFAppEventsReporter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SFAppEventsReporter.m; sourceTree = "<group>"; };
+		7168EE3E1C88C91900A88245 /* SFStubHttpProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SFStubHttpProtocol.h; sourceTree = "<group>"; };
+		7168EE3F1C88C91900A88245 /* SFStubHttpProtocol.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SFStubHttpProtocol.m; sourceTree = "<group>"; };
+		7168EE401C88C91900A88245 /* SFUploaderTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SFUploaderTests.m; sourceTree = "<group>"; };
 		716BEB861C7D304D009C3706 /* SFDebug.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SFDebug.h; sourceTree = "<group>"; };
 		716BEB881C7D336B009C3706 /* SFEvent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SFEvent.h; sourceTree = "<group>"; };
 		716BEB891C7D336B009C3706 /* SFQueueConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SFQueueConfig.h; sourceTree = "<group>"; };
@@ -138,6 +143,9 @@
 				7168EE121C7B977500A88245 /* Info.plist */,
 				7168EE1B1C7E61E900A88245 /* SFEventTests.m */,
 				7168EE231C7F99AF00A88245 /* SFQueueTests.m */,
+				7168EE3E1C88C91900A88245 /* SFStubHttpProtocol.h */,
+				7168EE3F1C88C91900A88245 /* SFStubHttpProtocol.m */,
+				7168EE401C88C91900A88245 /* SFUploaderTests.m */,
 				7168EE101C7B977500A88245 /* SiftTests.m */,
 			);
 			path = SiftTests;
@@ -274,9 +282,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7168EE411C88C91900A88245 /* SFStubHttpProtocol.m in Sources */,
 				7168EE111C7B977500A88245 /* SiftTests.m in Sources */,
 				7168EE1C1C7E61E900A88245 /* SFEventTests.m in Sources */,
 				7168EE241C7F99AF00A88245 /* SFQueueTests.m in Sources */,
+				7168EE421C88C91900A88245 /* SFUploaderTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -47,14 +47,19 @@
         if (!event) {
             return;  // Don't append nil.
         }
-        if (_config.appendEventOnlyWhenDifferent && _lastEvent && [_lastEvent isEssentiallyEqualTo:event]) {
+
+        SFTimestamp now = SFCurrentTime();
+        if (_config.appendEventOnlyWhenDifferent &&
+            _lastEvent &&
+            [_lastEvent isEssentiallyEqualTo:event] &&
+            (!_config.acceptSameEventAfter || now - _lastEventTimestamp < _config.acceptSameEventAfter * 1000)) {
             SF_DEBUG(@"Drop the same event");
             return;  // Drop the same event as configured.
         }
 
         [_queue addObject:event];
         _lastEvent = event;
-        _lastEventTimestamp = SFCurrentTime();
+        _lastEventTimestamp = now;
 
         // Unfortunately iOS does not guarantee to always call you
         // before terminating your app and thus we have to persist data

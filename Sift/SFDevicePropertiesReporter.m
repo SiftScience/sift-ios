@@ -29,6 +29,7 @@
  */
 static const SFQueueConfig SFDevicePropertiesReporterQueueConfig = {
     .appendEventOnlyWhenDifferent = YES,  // Only track difference.
+    .acceptSameEventAfter = 600,  // 10 minutes
     .uploadWhenMoreThan = 8,  // More than 8 events
     .uploadWhenOlderThan = 60,  // 1 minute
 };

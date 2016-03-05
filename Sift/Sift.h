@@ -64,10 +64,18 @@
  * `userId`.
  */
 
-/** Your account ID.  Default to nil. */
+/**
+ * Your account ID.  Default to nil.
+ *
+ * NOTE: This is persisted to device's storage.
+ */
 @property NSString *accountId;
 
-/** Your beacon key.  Default to nil. */
+/**
+ * Your beacon key.  Default to nil.
+ *
+ * NOTE: This is persisted to device's storage.
+ */
 @property NSString *beaconKey;
 
 /**
@@ -76,6 +84,8 @@
  * All the events you send are associated with a user - if you don't set
  * this, the events you send will be dropped at the server side (this
  * might be unfortunate for apps that don't identify individual users).
+ *
+ * NOTE: This is persisted to device's storage.
  */
 @property NSString *userId;
 

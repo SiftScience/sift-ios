@@ -31,6 +31,11 @@ static const SFQueueConfig SFDefaultEventQueueConfig = {
 
 @implementation Sift {
     NSString *_rootDirPath;
+
+    NSString *_accountId;
+    NSString *_beaconKey;
+    NSString *_userId;
+
     NSMutableDictionary *_eventQueues;
     SFUploader *_uploader;
 
@@ -51,12 +56,12 @@ static const SFQueueConfig SFDefaultEventQueueConfig = {
 - (instancetype)initWithRootDirPath:(NSString *)rootDirPath {
     self = [super init];
     if (self) {
-        _serverUrlFormat = SFServerUrlFormat;
-        _accountId = nil;
-        _beaconKey = nil;
-        _userId = nil;
-
         _rootDirPath = rootDirPath;
+
+        _serverUrlFormat = SFServerUrlFormat;
+
+        [self unarchiveKeys];
+
         _eventQueues = [NSMutableDictionary new];
 
         _uploader = [[SFUploader alloc] initWithArchivePath:self.archivePathForUploader sift:self];
@@ -177,10 +182,48 @@ static const SFQueueConfig SFDefaultEventQueueConfig = {
     return YES;
 }
 
+#pragma mark - Account keys
+
+- (NSString *)accountId {
+    return _accountId;
+}
+
+- (void)setAccountId:(NSString *)accountId {
+    _accountId = accountId;
+    [self archiveKeys];
+}
+
+- (NSString *)beaconKey {
+    return _beaconKey;
+}
+
+- (void)setBeaconKey:(NSString *)beaconKey {
+    _beaconKey = beaconKey;
+    [self archiveKeys];
+}
+
+- (NSString *)userId {
+    return _userId;
+}
+
+- (void)setUserId:(NSString *)userId {
+    _userId = userId;
+    [self archiveKeys];
+}
+
 #pragma mark - NSKeyedArchiver/NSKeyedUnarchiver
+
+static NSString * const SF_SIFT = @"sift";
+static NSString * const SF_SIFT_ACCOUNT_ID = @"accountId";
+static NSString * const SF_SIFT_BEACON_KEY = @"beaconKey";
+static NSString * const SF_SIFT_USER_ID = @"userId";
 
 static NSString * const SF_QUEUE_DIR = @"queues";
 static NSString * const SF_UPLOADER = @"uploader";
+
+- (NSString *)archivePathForKeys {
+    return [_rootDirPath stringByAppendingPathComponent:SF_SIFT];
+}
 
 - (NSString *)archivePathForQueue:(NSString *)identifier {
     return [[_rootDirPath stringByAppendingPathComponent:SF_QUEUE_DIR] stringByAppendingPathComponent:identifier];
@@ -191,12 +234,41 @@ static NSString * const SF_UPLOADER = @"uploader";
 }
 
 - (void)archive {
+    [self archiveKeys];
     @synchronized(_eventQueues) {
         for (NSString *identifier in _eventQueues) {
             [[_eventQueues objectForKey:identifier] archive];
         }
     }
     [_uploader archive];
+}
+
+- (void)archiveKeys {
+    NSMutableDictionary *archive = [NSMutableDictionary new];
+    if (_accountId) {
+        [archive setObject:_accountId forKey:SF_SIFT_ACCOUNT_ID];
+    }
+    if (_beaconKey) {
+        [archive setObject:_beaconKey forKey:SF_SIFT_BEACON_KEY];
+    }
+    if (_userId) {
+        [archive setObject:_userId forKey:SF_SIFT_USER_ID];
+    }
+    [NSKeyedArchiver archiveRootObject:archive toFile:[self archivePathForKeys]];
+}
+
+- (void)unarchiveKeys {
+    NSDictionary *archive = [NSKeyedUnarchiver unarchiveObjectWithFile:[self archivePathForKeys]];
+    if (archive) {
+        _accountId = [archive objectForKey:SF_SIFT_ACCOUNT_ID];
+        _beaconKey = [archive objectForKey:SF_SIFT_BEACON_KEY];
+        _userId = [archive objectForKey:SF_SIFT_USER_ID];
+    } else {
+        _accountId = nil;
+        _beaconKey = nil;
+        _userId = nil;
+    }
+    SF_DEBUG(@"Unarchive: accountId=%@ beaconKey=%@ userId=%@", _accountId, _beaconKey, _userId);
 }
 
 @end

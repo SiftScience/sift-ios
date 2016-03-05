@@ -136,7 +136,7 @@ static NSString * const SF_BATCHES = @"batches";
     } else {
         _batches = [NSMutableArray new];
     }
-    SF_DEBUG(@"Unarchive %ld batches", _batches.count);
+    SF_DEBUG(@"Unarchive %lu batches", (unsigned long)_batches.count);
 }
 
 @end

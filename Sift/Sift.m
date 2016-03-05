@@ -154,6 +154,10 @@ static const SFQueueConfig SFDefaultEventQueueConfig = {
 }
 
 - (BOOL)upload {
+    return [self upload:NO];
+}
+
+- (BOOL)upload:(BOOL)force {
     if (!_accountId || !_beaconKey || !_serverUrlFormat) {
         SF_DEBUG(@"Lack _accountId, _beaconKey, and/or _serverUrlFormat");
         return NO;
@@ -163,7 +167,7 @@ static const SFQueueConfig SFDefaultEventQueueConfig = {
     @synchronized(_eventQueues) {
         for (NSString *identifier in _eventQueues) {
             SFQueue *queue = [_eventQueues objectForKey:identifier];
-            if (queue.readyForUpload) {
+            if (force || queue.readyForUpload) {
                 [events addObjectsFromArray:[queue transfer]];
             }
         }

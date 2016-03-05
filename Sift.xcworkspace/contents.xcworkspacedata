@@ -4,4 +4,7 @@
    <FileRef
       location = "group:Sift.xcodeproj">
    </FileRef>
+   <FileRef
+      location = "group:HelloSift.xcodeproj">
+   </FileRef>
 </Workspace>

@@ -87,8 +87,10 @@
  */
 
 /**
- * Issue an upload of events and return after the HTTP request is sent,
- * but before we receive the HTTP response.
+ * Request an upload.  Sift will collect events from every queue to make
+ * an upload batch, and put that batch in upload queue.  When collecting
+ * events, Sift will comply with their queue config (so the latest event
+ * might not be collected).
  *
  * If one of `accountId`, `beaconId`, `userId`, or `serverUrlFormat`
  * property is nil, this method will do nothing.
@@ -96,6 +98,9 @@
  * @return YES on success.
  */
 - (BOOL)upload;
+
+/** Same as above but disregard queue config if `force` is YES. */
+- (BOOL)upload:(BOOL)force;
 
 /**
  * The API endpoint that will receive the upload requests.

@@ -155,7 +155,7 @@ static NSString * const SF_NUM_REJECTS = @"numRejects";
         _batches = [NSMutableArray new];
         _numRejects = 0;
     }
-    SF_DEBUG(@"Unarchive %ld batches", _batches.count);
+    SF_DEBUG(@"Unarchive %lu batches", (unsigned long)_batches.count);
 }
 
 @end

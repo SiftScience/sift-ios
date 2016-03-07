@@ -65,12 +65,6 @@
 
 - (IBAction)handleEnqueueEventButtonClick:(id)sender {
     NSLog(@"Button \"Enqueue Event\" was clicked");
-    NSString *userId = self.userIdTextField.text;
-    if (!userId.length) {
-        NSLog(@"user ID is _NOT_ optional");
-        return;
-    }
-    NSLog(@"userId: \"%@\"", userId);
 
     NSLog(@"path: \"%@\"", self.pathTextField.text);
     NSString *path = self.pathTextField.text;

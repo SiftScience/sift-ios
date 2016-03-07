@@ -28,7 +28,7 @@
  * User ID.
  *
  * If not set, the event queue will use the user ID set in the shared
- * Sift object.  It is an error if neither are set.
+ * Sift object.
  */
 @property NSString *userId;
 
@@ -37,21 +37,5 @@
  * Default to nil.
  */
 @property NSDictionary<NSString *, NSString *> *fields;
-
-/** @name Internal properties of Sift (do not use it!). */
-
-/** Device properties.  Default to nil. */
-@property NSDictionary<NSString *, NSString *> *deviceProperties;
-
-/** Internal metrics.  Default to nil. */
-@property NSDictionary<NSString *, NSString *> *metrics;
-
-/** Compare event contents except `time`. */
-- (BOOL)isEssentiallyEqualTo:(SFEvent *)event;
-
-/** @name List request object. */
-
-/** Create a JSON-encoded list request object. */
-+ (NSData *)listRequest:(NSArray *)events;
 
 @end

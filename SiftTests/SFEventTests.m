@@ -3,6 +3,8 @@
 @import XCTest;
 
 #import "SFEvent.h"
+#import "SFEvent+Private.h"
+#import "SFInstallationId.h"
 
 @interface SFEventTests : XCTestCase
 
@@ -46,18 +48,13 @@
     actual = [NSJSONSerialization JSONObjectWithData:[SFEvent listRequest:events] options:0 error:nil];
     XCTAssertEqualObjects(expect, actual);
 
-    // Lack user ID.
-    events = @[[SFEvent eventWithType:@"t" path:@"p" fields:nil]];
-    expect = @{@"data": @[]};
-    actual = [NSJSONSerialization JSONObjectWithData:[SFEvent listRequest:events] options:0 error:nil];
-    XCTAssertEqualObjects(expect, actual);
-
     events = SFBeNice(@[[SFEvent eventWithType:@"some-type" path:@"some-path" fields:nil],
                         [SFEvent eventWithType:nil path:nil fields:@{@"key": @"value"}],
                         [SFEvent eventWithType:nil path:nil fields:@{@1: @"value"}],  // Key is not string typed.
                         [SFEvent eventWithType:nil path:nil fields:@{@"key": @1}]]);  // Value is not string typed.
-    expect = @{@"data": @[@{@"time": @0, @"mobile_event_type": @"some-type", @"path": @"some-path", @"user_id": @"some-id"},
-                          @{@"time": @0, @"user_id": @"some-id", @"fields": @{@"key": @"value"}}]};
+    NSString *installationId = SFGetInstallationId();
+    expect = @{@"data": @[@{@"time": @0, @"mobile_event_type": @"some-type", @"path": @"some-path", @"user_id": @"some-id", @"installation_id": installationId},
+                          @{@"time": @0, @"user_id": @"some-id", @"installation_id": installationId, @"fields": @{@"key": @"value"}}]};
     actual = [NSJSONSerialization JSONObjectWithData:[SFEvent listRequest:events] options:0 error:nil];
     XCTAssertEqualObjects(expect, actual);
 }

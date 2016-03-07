@@ -4,6 +4,8 @@
 @import UIKit;
 
 #import "SFDebug.h"
+#import "SFEvent.h"
+#import "SFEvent+Private.h"
 #import "SFUtils.h"
 #import "Sift.h"
 

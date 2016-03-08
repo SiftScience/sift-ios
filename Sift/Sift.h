@@ -47,14 +47,20 @@
  * Send an event to the queue identified by `identifier`, or fail if the
  * queue was not created prior to the call.
  *
+ * If set `withLocation` to YES, Sift will automatically augment the
+ * event with location data.
+ *
  * @return YES on success.
  */
-- (BOOL)appendEvent:(SFEvent *)event toQueue:(NSString *)identifier;
+- (BOOL)appendEvent:(SFEvent *)event withLocation:(BOOL)withLocation toQueue:(NSString *)identifier;
 
 /**
  * Same as above but use the default queue (most of the time you should
  * probably use this).
  */
+- (BOOL)appendEvent:(SFEvent *)event withLocation:(BOOL)withLocation;
+
+/** Same as above but set `withLocation` to NO. */
 - (BOOL)appendEvent:(SFEvent *)event;
 
 /**

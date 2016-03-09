@@ -101,7 +101,7 @@ static const int64_t SF_LEEWAY = 5 * NSEC_PER_SEC;
     SF_DEBUG(@"Device properties: %@", report);
     SFEvent *event = [SFEvent new];
     event.deviceProperties = report;
-    [sift appendEvent:event toQueue:SFDevicePropertiesReporterQueueIdentifier];
+    [sift appendEvent:event withLocation:NO toQueue:SFDevicePropertiesReporterQueueIdentifier];
 }
 
 #pragma mark - Device properties.

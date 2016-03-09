@@ -30,7 +30,7 @@ static NSString * const SFNotificationNames[] = {
         for (int i = 0; SFNotificationNames[i]; i++) {
             [[NSNotificationCenter defaultCenter] addObserverForName:SFNotificationNames[i] object:nil queue:_queue usingBlock:^(NSNotification *note) {
                 SF_DEBUG(@"Notified with \"%@\"", note.name);
-                [[Sift sharedInstance] appendEvent:[SFEvent eventWithType:note.name path:nil fields:nil]];
+                [[Sift sharedInstance] appendEvent:[SFEvent eventWithType:note.name path:nil fields:nil] withLocation:NO];
             }];
         }
     }

@@ -9,7 +9,8 @@
 /* Begin PBXBuildFile section */
 		712A42191C6D3FAA005AEC79 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 712A42171C6D3E9F005AEC79 /* CoreLocation.framework */; };
 		712A421B1C6D5744005AEC79 /* CoreMotion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 712A421A1C6D5744005AEC79 /* CoreMotion.framework */; };
-		7168EE2A1C80F5C800A88245 /* Sift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7168EE291C80F5C800A88245 /* Sift.framework */; };
+		71C8C4291C90B4F800C1B9D2 /* Sift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 71C8C4281C90B4F800C1B9D2 /* Sift.framework */; };
+		71C8C42A1C90B4F800C1B9D2 /* Sift.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 71C8C4281C90B4F800C1B9D2 /* Sift.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		71E96AE91BFC074D0037AC23 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 71E96AE81BFC074D0037AC23 /* main.m */; };
 		71E96AEC1BFC074D0037AC23 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 71E96AEB1BFC074D0037AC23 /* AppDelegate.m */; };
 		71E96AEF1BFC074D0037AC23 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 71E96AEE1BFC074D0037AC23 /* ViewController.m */; };
@@ -25,6 +26,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				71C8C42A1C90B4F800C1B9D2 /* Sift.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -34,7 +36,7 @@
 /* Begin PBXFileReference section */
 		712A42171C6D3E9F005AEC79 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		712A421A1C6D5744005AEC79 /* CoreMotion.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMotion.framework; path = System/Library/Frameworks/CoreMotion.framework; sourceTree = SDKROOT; };
-		7168EE291C80F5C800A88245 /* Sift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Sift.framework; path = "../build/Debug-iphoneos/Sift.framework"; sourceTree = "<group>"; };
+		71C8C4281C90B4F800C1B9D2 /* Sift.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Sift.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		71E96AE41BFC074D0037AC23 /* HelloSift.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HelloSift.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		71E96AE81BFC074D0037AC23 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		71E96AEA1BFC074D0037AC23 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -52,9 +54,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7168EE2A1C80F5C800A88245 /* Sift.framework in Frameworks */,
 				712A421B1C6D5744005AEC79 /* CoreMotion.framework in Frameworks */,
 				712A42191C6D3FAA005AEC79 /* CoreLocation.framework in Frameworks */,
+				71C8C4291C90B4F800C1B9D2 /* Sift.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -64,7 +66,7 @@
 		71E96ADB1BFC074D0037AC23 = {
 			isa = PBXGroup;
 			children = (
-				7168EE291C80F5C800A88245 /* Sift.framework */,
+				71C8C4281C90B4F800C1B9D2 /* Sift.framework */,
 				712A421A1C6D5744005AEC79 /* CoreMotion.framework */,
 				712A42171C6D3E9F005AEC79 /* CoreLocation.framework */,
 				71E96AE61BFC074D0037AC23 /* HelloSift */,

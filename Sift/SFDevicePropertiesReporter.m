@@ -159,8 +159,9 @@ static NSString *SFSysctlReadInt64(const char *name) {
     for (NSString *propertyName in @[@"name", @"systemName", @"systemVersion", @"model", @"localizedModel"]) {
         SEL selector = NSSelectorFromString(propertyName);
         NSString *(*func)(id, SEL) = (void *)[device methodForSelector:selector];
-        NSString *property = [NSString stringWithString:func(device, selector)];
+        NSString *property = func(device, selector);
         if (property) {
+            property = [NSString stringWithString:property];
             [report setObject:property forKey:SFCamelCaseToSnakeCase(propertyName)];
         }
     }
@@ -183,8 +184,9 @@ static NSString *SFSysctlReadInt64(const char *name) {
         for (NSString *propertyName in @[@"carrierName", @"isoCountryCode", @"mobileCountryCode", @"mobileNetworkCode"]) {
             SEL selector = NSSelectorFromString(propertyName);
             NSString *(*func)(id, SEL) = (void *)[carrier methodForSelector:selector];
-            NSString *property = [NSString stringWithString:func(carrier, selector)];
+            NSString *property = func(carrier, selector);
             if (property) {
+                property = [NSString stringWithString:property];
                 [report setObject:property forKey:SFCamelCaseToSnakeCase(propertyName)];
             }
         }

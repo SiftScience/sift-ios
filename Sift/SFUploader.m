@@ -5,6 +5,7 @@
 
 #import "SFDebug.h"
 #import "SFEvent.h"
+#import "SFEvent+Private.h"
 
 #import "SFUploader.h"
 
@@ -62,6 +63,12 @@ static const int64_t SF_BACKOFF = NSEC_PER_SEC;  // Starting from 1 second.
 
         if (_batches.count > 1) {
             SF_DEBUG(@"An upload is (probably) in progress");
+            return;
+        }
+
+        Sift *sift = _sift;
+        if (!sift.accountId || !sift.beaconKey || !sift.serverUrlFormat) {
+            SF_DEBUG(@"Lack accountId (%@), beaconKey (%@), and/or serverUrlFormat (%@)", sift.accountId, sift.beaconKey, sift.serverUrlFormat);
             return;
         }
 

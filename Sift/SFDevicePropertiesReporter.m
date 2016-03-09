@@ -16,6 +16,8 @@
 #include <mach-o/dyld.h>
 
 #import "SFDebug.h"
+#import "SFEvent.h"
+#import "SFEvent+Private.h"
 #import "SFQueueConfig.h"
 #import "SFUtils.h"
 #import "Sift.h"
@@ -47,9 +49,6 @@ static const int64_t SF_LEEWAY = 5 * NSEC_PER_SEC;
 
 /** Collect ordinary system properties. */
 - (void)collectProperties:(NSMutableDictionary<NSString *, NSString *> *)report;
-
-/** @return a persistent, unique key of this device. */
-- (NSString *)getPersistentUniqueKey;
 
 /** Detect signs of a jail-broken device. */
 - (void)collectSystemProperties:(NSMutableDictionary<NSString *, NSString *> *)report;
@@ -83,12 +82,6 @@ static const int64_t SF_LEEWAY = 5 * NSEC_PER_SEC;
     SF_DEBUG(@"Collect device properties...");
 
     Sift *sift = [Sift sharedInstance];
-
-    NSString *userId = sift.userId;
-    if (!userId.length) {
-        SF_DEBUG(@"userId is empty");
-        return;
-    }
 
     NSMutableDictionary<NSString *, NSString *> *report = [NSMutableDictionary new];
     [self collectProperties:report];
@@ -176,8 +169,6 @@ static NSString *SFSysctlReadInt64(const char *name) {
     [report setObject:[identifierManager.advertisingIdentifier UUIDString] forKey:@"apple_ifa"];
     [report setObject:[[device identifierForVendor] UUIDString] forKey:@"apple_ifv"];
 
-    [report setObject:[self getPersistentUniqueKey] forKey:@"unique_key"];
-
     CTTelephonyNetworkInfo *networkInfo = [CTTelephonyNetworkInfo new];
     CTCarrier *carrier = [networkInfo subscriberCellularProvider];
     if (carrier) {
@@ -246,39 +237,6 @@ static NSString *SFSysctlReadInt64(const char *name) {
             [report setObject:property forKey:key];
         }
     }
-}
-
-#pragma mark - Unique key
-
-- (NSString *)getPersistentUniqueKey {
-    NSMutableDictionary *keychainItemBase = [NSMutableDictionary new];
-    keychainItemBase[(__bridge id)kSecClass] = (__bridge id)kSecClassGenericPassword;
-    keychainItemBase[(__bridge id)kSecAttrAccessible] = (__bridge id)kSecAttrAccessibleAlways;
-    keychainItemBase[(__bridge id)kSecAttrAccount] = @"device_id";
-    keychainItemBase[(__bridge id)kSecAttrService] = @"siftscience.keychain";
-
-    NSMutableDictionary *keychainItem;
-
-    keychainItem = [NSMutableDictionary dictionaryWithDictionary:keychainItemBase];
-    keychainItem[(__bridge id)kSecReturnAttributes] = (__bridge id)kCFBooleanTrue;
-    keychainItem[(__bridge id)kSecReturnData] = (__bridge id)kCFBooleanTrue;
-    CFDictionaryRef dict = nil;
-    if (SecItemCopyMatching((__bridge CFDictionaryRef)keychainItem, (CFTypeRef *)&dict) == noErr) {
-        NSDictionary *item = (__bridge_transfer NSDictionary *)dict;
-        NSData *data = item[(__bridge id)kSecValueData];
-        NSString *persistentUniqueId = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-        SF_DEBUG(@"Return persistent unique ID: %@", persistentUniqueId);
-        return persistentUniqueId;
-    }
-
-    NSString *randomUuid = [[NSUUID UUID] UUIDString];
-    SF_DEBUG(@"Create new persistent unique ID: %@", randomUuid);
-
-    keychainItem = [NSMutableDictionary dictionaryWithDictionary:keychainItemBase];
-    keychainItem[(__bridge id)kSecValueData] = [randomUuid dataUsingEncoding:NSUTF8StringEncoding];
-    SecItemAdd((__bridge CFDictionaryRef)keychainItem, NULL);
-
-    return randomUuid;
 }
 
 #pragma mark - Jail-broken

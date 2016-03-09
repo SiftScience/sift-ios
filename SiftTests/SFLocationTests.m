@@ -3,6 +3,7 @@
 @import XCTest;
 
 #import "SFEvent.h"
+#import "SFEvent+Private.h"
 
 #import "SFLocation.h"
 

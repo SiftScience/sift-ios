@@ -66,8 +66,7 @@
 /**
  * @name Configurations.
  *
- * At minimum you should configure `accountId`, `beaconKey`, and
- * `userId`.
+ * You should configure `accountId`, `beaconKey`, and `userId`.
  */
 
 /**
@@ -87,10 +86,6 @@
 /**
  * User ID.  Default to nil.
  *
- * All the events you send are associated with a user - if you don't set
- * this, the events you send will be dropped at the server side (this
- * might be unfortunate for apps that don't identify individual users).
- *
  * NOTE: This is persisted to device's storage.
  */
 @property NSString *userId;
@@ -108,8 +103,8 @@
  * events, Sift will comply with their queue config (so the latest event
  * might not be collected).
  *
- * If one of `accountId`, `beaconId`, `userId`, or `serverUrlFormat`
- * property is nil, this method will do nothing.
+ * If one of `accountId`, `beaconId`, or `serverUrlFormat` property is
+ * nil, this method will do nothing.
  *
  * @return YES on success.
  */

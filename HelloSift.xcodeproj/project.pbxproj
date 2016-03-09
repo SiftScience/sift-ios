@@ -36,7 +36,7 @@
 /* Begin PBXFileReference section */
 		712A42171C6D3E9F005AEC79 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		712A421A1C6D5744005AEC79 /* CoreMotion.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMotion.framework; path = System/Library/Frameworks/CoreMotion.framework; sourceTree = SDKROOT; };
-		71C8C4281C90B4F800C1B9D2 /* Sift.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; name = Sift.framework; path = "/Users/clchiou/Library/Developer/Xcode/DerivedData/Sift-fexskjgjepfhczabyhtgpkyqdmki/Build/Products/Debug-iphoneos/Sift.framework"; sourceTree = "<absolute>"; };
+		71C8C4281C90B4F800C1B9D2 /* Sift.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Sift.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		71E96AE41BFC074D0037AC23 /* HelloSift.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HelloSift.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		71E96AE81BFC074D0037AC23 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		71E96AEA1BFC074D0037AC23 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };

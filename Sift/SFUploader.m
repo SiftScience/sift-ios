@@ -12,7 +12,9 @@
 @implementation SFUploader {
     // Use serial queue as an alternative to locking.
     dispatch_queue_t _serial;
+    dispatch_source_t _source;
     NSURLSession *_session;
+    NSURLSessionUploadTask *_uploadTask;
     NSMutableArray *_batches;
     int _numRejects;
     int64_t _backoffBase;
@@ -27,6 +29,10 @@ static const int SF_REJECT_LIMIT = 3;
 
 static const int64_t SF_BACKOFF = NSEC_PER_SEC;  // Starting from 1 second.
 
+// Periodically check if we have unfinished batches.
+static const int64_t SF_CHECK_UPLOAD_PERIOD = 60 * NSEC_PER_SEC;
+static const int64_t SF_CHECK_UPLOAD_LEEWAY = 5 * NSEC_PER_SEC;
+
 - (instancetype)initWithArchivePath:(NSString *)archivePath sift:(Sift *)sift {
     return [self initWithArchivePath:archivePath sift:sift config:[NSURLSessionConfiguration defaultSessionConfiguration] backoffBase:SF_BACKOFF];
 }
@@ -37,14 +43,18 @@ static const int64_t SF_BACKOFF = NSEC_PER_SEC;  // Starting from 1 second.
         _serial = dispatch_queue_create("com.sift.SFUploader", NULL);
         _archivePath = archivePath;
         _session = [NSURLSession sessionWithConfiguration:config delegate:self delegateQueue:nil];
+        _uploadTask = nil;
         _backoffBase = backoffBase;
         _backoff = backoffBase;
         _sift = sift;
 
         [self unarchive];
 
-        // In case we have unfinished upload jobs...
-        dispatch_async(_serial, ^{[self doUpload];});
+        _source = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0, _serial);
+        dispatch_source_set_timer(_source, dispatch_time(DISPATCH_TIME_NOW, 0), SF_CHECK_UPLOAD_PERIOD, SF_CHECK_UPLOAD_LEEWAY);
+        SFUploader * __weak weakSelf = self;
+        dispatch_source_set_event_handler(_source, ^{[weakSelf doUpload];});
+        dispatch_resume(_source);
     }
     return self;
 }
@@ -53,31 +63,18 @@ static const int64_t SF_BACKOFF = NSEC_PER_SEC;  // Starting from 1 second.
     dispatch_async(_serial, ^{
         SF_DEBUG(@"Batch size: %lu", (unsigned long)events.count);
         [_batches addObject:events];
-
         if (UIApplication.sharedApplication.applicationState == UIApplicationStateBackground) {
-            SF_DEBUG(@"App is in background");
             // Back up aggressively if we are in the background.
             [self archive];
-            return;
         }
-
-        if (_batches.count > 1) {
-            SF_DEBUG(@"An upload is (probably) in progress");
-            return;
-        }
-
-        Sift *sift = _sift;
-        if (!sift.accountId || !sift.beaconKey || !sift.serverUrlFormat) {
-            SF_DEBUG(@"Lack accountId (%@), beaconKey (%@), and/or serverUrlFormat (%@)", sift.accountId, sift.beaconKey, sift.serverUrlFormat);
-            return;
-        }
-
         [self doUpload];
     });
 }
 
 - (void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task didCompleteWithError:(NSError *)error {
     dispatch_async(_serial, ^{
+        _uploadTask = nil;
+
         BOOL success = NO;
         if (error) {
             SF_DEBUG(@"Could not complete upload due to %@", [error localizedDescription]);
@@ -97,6 +94,7 @@ static const int64_t SF_BACKOFF = NSEC_PER_SEC;  // Starting from 1 second.
                 }
             }
         }
+
         // Keep working on unfinished upload jobs.
         if (success) {
             _backoff = _backoffBase;
@@ -110,13 +108,27 @@ static const int64_t SF_BACKOFF = NSEC_PER_SEC;  // Starting from 1 second.
 
 // NOTE: Unprotected access - call this from within the serial dispatch queue.
 - (void)doUpload {
-    if (!_batches.count || UIApplication.sharedApplication.applicationState == UIApplicationStateBackground) {
+    if (UIApplication.sharedApplication.applicationState == UIApplicationStateBackground) {
+        SF_DEBUG(@"App is in background");
+        return;
+    }
+    if (_uploadTask) {
+        SF_DEBUG(@"An upload is in progress");
+        return;
+    }
+    if (!_batches.count) {
+        SF_DEBUG(@"No batches to upload");
         return;
     }
 
     Sift *sift = _sift;
     if (!sift) {
         SF_DEBUG(@"Reference to Sift object was lost");
+        return;
+    }
+
+    if (!sift.accountId.length || !sift.beaconKey.length || !sift.serverUrlFormat.length) {
+        SF_DEBUG(@"Lack accountId (%@), beaconKey (%@), and/or serverUrlFormat (%@)", sift.accountId, sift.beaconKey, sift.serverUrlFormat);
         return;
     }
 
@@ -136,8 +148,8 @@ static const int64_t SF_BACKOFF = NSEC_PER_SEC;  // Starting from 1 second.
     SF_DEBUG(@"request: %@", request);
 
     NSData *body = [SFEvent listRequest:[_batches objectAtIndex:0]];
-    NSURLSessionUploadTask *task = [_session uploadTaskWithRequest:request fromData:body];
-    [task resume];
+    _uploadTask = [_session uploadTaskWithRequest:request fromData:body];
+    [_uploadTask resume];
 }
 
 #pragma mark - NSKeyedArchiver/NSKeyedUnarchiver

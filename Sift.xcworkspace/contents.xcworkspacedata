@@ -5,6 +5,6 @@
       location = "group:Sift.xcodeproj">
    </FileRef>
    <FileRef
-      location = "group:HelloSift.xcodeproj">
+      location = "group:HelloSift/HelloSift.xcodeproj">
    </FileRef>
 </Workspace>

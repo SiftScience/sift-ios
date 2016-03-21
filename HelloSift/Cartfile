@@ -1,0 +1,3 @@
+# The SDK repo is not public yet.
+#github "SiftScience/sift-ios" ~> 0.1.0
+git "git@github.com:SiftScience/sift-ios.git" ~> 0.1.0

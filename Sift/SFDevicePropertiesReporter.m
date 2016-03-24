@@ -165,8 +165,6 @@ static NSString *SFSysctlReadInt64(const char *name) {
     [report setObject:[@(width) stringValue] forKey:@"screen_width"];
     [report setObject:[@(height) stringValue] forKey:@"screen_height"];
 
-    ASIdentifierManager *identifierManager = [ASIdentifierManager sharedManager];
-    [report setObject:[identifierManager.advertisingIdentifier UUIDString] forKey:@"apple_ifa"];
     [report setObject:[[device identifierForVendor] UUIDString] forKey:@"apple_ifv"];
 
     CTTelephonyNetworkInfo *networkInfo = [CTTelephonyNetworkInfo new];

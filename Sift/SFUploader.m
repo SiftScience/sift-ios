@@ -77,10 +77,13 @@ static const int64_t SF_CHECK_UPLOAD_LEEWAY = 5 * NSEC_PER_SEC;
 
         BOOL success = NO;
         if (error) {
-            SF_DEBUG(@"Could not complete upload due to %@", [error localizedDescription]);
+            SF_IMPORTANT(@"Could not complete upload due to %@", [error localizedDescription]);
         } else {
             NSInteger statusCode = [(NSHTTPURLResponse *)task.response statusCode];
             SF_DEBUG(@"PUT %@ status %ld", task.response.URL, (long)statusCode);
+            if (statusCode != 200) {
+                SF_IMPORTANT(@"Server returns error while upload events to \"%@\" (HTTP status code %ld)", task.response.URL, (long)statusCode);
+            }
             if (statusCode == 200) {
                 [_batches removeObjectAtIndex:0];
                 _numRejects = 0;
@@ -88,7 +91,7 @@ static const int64_t SF_CHECK_UPLOAD_LEEWAY = 5 * NSEC_PER_SEC;
             } else if (statusCode == 400) {
                 _numRejects++;
                 if (_numRejects >= SF_REJECT_LIMIT) {
-                    SF_DEBUG(@"Drop a batch due to reject limit reached");
+                    SF_IMPORTANT(@"Drop a batch due to reject limit reached");
                     [_batches removeObjectAtIndex:0];
                     _numRejects = 0;
                 }
@@ -150,6 +153,7 @@ static const int64_t SF_CHECK_UPLOAD_LEEWAY = 5 * NSEC_PER_SEC;
     NSData *body = [SFEvent listRequest:[_batches objectAtIndex:0]];
     _uploadTask = [_session uploadTaskWithRequest:request fromData:body];
     [_uploadTask resume];
+    SF_IMPORTANT(@"Upload a batch of %ld events to server", (unsigned long)[[_batches objectAtIndex:0] count]);
 }
 
 #pragma mark - NSKeyedArchiver/NSKeyedUnarchiver

@@ -85,6 +85,7 @@ static const SFQueueConfig SFDefaultEventQueueConfig = {
             self = nil;
             return nil;
         }
+        _defaultQueueIdentifier = SFDefaultEventQueueIdentifier;
 
         NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
         [notificationCenter addObserver:self selector:@selector(applicationDidEnterBackground:) name:UIApplicationDidEnterBackgroundNotification object:nil];
@@ -144,7 +145,7 @@ static const SFQueueConfig SFDefaultEventQueueConfig = {
 }
 
 - (BOOL)appendEvent:(SFEvent *)event withLocation:(BOOL)withLocation {
-    return [self appendEvent:event withLocation:withLocation toQueue:SFDefaultEventQueueIdentifier];
+    return [self appendEvent:event withLocation:withLocation toQueue:_defaultQueueIdentifier];
 }
 
 - (BOOL)appendEvent:(SFEvent *)event withLocation:(BOOL)withLocation toQueue:(NSString *)identifier {

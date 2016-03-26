@@ -15,6 +15,7 @@
     dispatch_source_t _source;
     NSURLSession *_session;
     NSURLSessionUploadTask *_uploadTask;
+    NSMutableData *_responseBody;
     NSMutableArray *_batches;
     int _numRejects;
     int64_t _backoffBase;
@@ -71,9 +72,17 @@ static const int64_t SF_CHECK_UPLOAD_LEEWAY = 5 * NSEC_PER_SEC;
     });
 }
 
+- (void)URLSession:(NSURLSession *)session dataTask:(NSURLSessionDataTask *)dataTask didReceiveData:(NSData *)data {
+    dispatch_async(_serial, ^{
+        [_responseBody appendData:data];
+    });
+}
+
 - (void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task didCompleteWithError:(NSError *)error {
     dispatch_async(_serial, ^{
+        NSData *responseBody = _responseBody;
         _uploadTask = nil;
+        _responseBody = nil;
 
         BOOL success = NO;
         if (error) {
@@ -83,6 +92,12 @@ static const int64_t SF_CHECK_UPLOAD_LEEWAY = 5 * NSEC_PER_SEC;
             SF_DEBUG(@"PUT %@ status %ld", task.response.URL, (long)statusCode);
             if (statusCode != 200) {
                 SF_IMPORTANT(@"Server returns error while upload events to \"%@\" (HTTP status code %ld)", task.response.URL, (long)statusCode);
+                if (responseBody) {
+                    id response = [NSJSONSerialization JSONObjectWithData:responseBody options:0 error:nil];
+                    if (response) {
+                        SF_IMPORTANT(@"Server response: %@", response);
+                    }
+                }
             }
             if (statusCode == 200) {
                 [_batches removeObjectAtIndex:0];
@@ -150,6 +165,7 @@ static const int64_t SF_CHECK_UPLOAD_LEEWAY = 5 * NSEC_PER_SEC;
     [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
     SF_DEBUG(@"request: %@", request);
 
+    _responseBody = [NSMutableData new];
     NSData *body = [SFEvent listRequest:[_batches objectAtIndex:0]];
     _uploadTask = [_session uploadTaskWithRequest:request fromData:body];
     [_uploadTask resume];

@@ -9,6 +9,7 @@
 #define SF_DEBUG(...)
 #endif
 
-// TODO(clchiou): Consider turning this off in release build? */
 /** Log messages to console that are important to the SDK users. */
+#ifdef DEBUG
 #define SF_IMPORTANT(FORMAT, ...) NSLog(@"%s:%d " FORMAT, __FUNCTION__, __LINE__, ## __VA_ARGS__)
+#endif

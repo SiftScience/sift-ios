@@ -163,6 +163,7 @@ static const SFQueueConfig SFDefaultEventQueueConfig = {
             SF_DEBUG(@"Drop event due to incorrect contents: %@", event);
             return NO;
         }
+        SF_IMPORTANT(@"Append an event of type \"%@\" to queue \"%@\"", event.type, identifier);
         if (withLocation) {
             // Use a weak reference to the queue so that if the queue is
             // removed before the block is called, we won't append event

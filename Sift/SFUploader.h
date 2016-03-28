@@ -4,7 +4,7 @@
 
 #import "Sift.h"
 
-@interface SFUploader : NSObject <NSURLSessionTaskDelegate>
+@interface SFUploader : NSObject <NSURLSessionTaskDelegate, NSURLSessionDataDelegate>
 
 - (instancetype)initWithArchivePath:(NSString *)archivePath sift:(Sift *)sift;
 

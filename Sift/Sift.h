@@ -70,6 +70,13 @@
  */
 
 /**
+ * The default queue identifier.
+ *
+ * This is used when you call `appendEvent` without an identifier.
+ */
+@property NSString *defaultQueueIdentifier;
+
+/**
  * Your account ID.  Default to nil.
  *
  * NOTE: This is persisted to device's storage.

@@ -12,4 +12,6 @@
 /** Log messages to console that are important to the SDK users. */
 #ifdef DEBUG
 #define SF_IMPORTANT(FORMAT, ...) NSLog(@"%s:%d " FORMAT, __FUNCTION__, __LINE__, ## __VA_ARGS__)
+#else
+#define SF_IMPORTANT(...)
 #endif

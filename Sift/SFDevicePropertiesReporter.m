@@ -352,6 +352,12 @@ static NSString *SFSysctlReadInt64(const char *name) {
     // system(NULL) will trigger SIGABRT?
 
     // 3. Cydia URL scheme detection.
+    // Because when we poke iOS about this, it reports an error, and
+    // that sometimes confuses SDK users, we will only poke once per
+    // process.
+
+    static BOOL hasTestedCscheme = NO;
+    static BOOL cschemeTestResult = NO;
 
     char cscheme[] = "plqvn";
     rot13(cscheme);
@@ -361,7 +367,11 @@ static NSString *SFSysctlReadInt64(const char *name) {
     NSString *scheme = [NSString stringWithCString:cscheme encoding:NSASCIIStringEncoding];
     NSString *urlpath = [NSString stringWithCString:curlpath encoding:NSASCIIStringEncoding];
     NSString *url = [scheme stringByAppendingString:urlpath];
-    if ([[UIApplication sharedApplication] canOpenURL:[NSURL URLWithString:url]]) {
+    if (!hasTestedCscheme) {
+        cschemeTestResult = [[UIApplication sharedApplication] canOpenURL:[NSURL URLWithString:url]];
+        hasTestedCscheme = YES;
+    }
+    if (cschemeTestResult) {
         SF_DEBUG(@"Can open URL: %@", url);
         [report setObject:scheme forKey:@"suspicious_url_scheme.0"];
     }

@@ -340,6 +340,9 @@ static NSString *SFSysctlReadInt64(const char *name) {
 
     // 2. Sytem-call detection.
 
+    // This is not fork-safe; disable it until we figure out how to do
+    // it safely.
+#if 0
     pid_t pid = fork();
     if (!pid) {
         exit(0);
@@ -348,6 +351,7 @@ static NSString *SFSysctlReadInt64(const char *name) {
         [report setObject:@"fork" forKey:@"suspicious_call.0"];
         waitpid(pid, NULL, 0);
     }
+#endif
 
     // system(NULL) will trigger SIGABRT?
 
@@ -356,6 +360,9 @@ static NSString *SFSysctlReadInt64(const char *name) {
     // that sometimes confuses SDK users, we will only poke once per
     // process.
 
+    // iOS 9 requires white-listing URL schemes; until we figure how to
+    // detect this unobtrusively, disable this detection for now.
+#if 0
     static BOOL hasTestedCscheme = NO;
     static BOOL cschemeTestResult = NO;
 
@@ -375,6 +382,7 @@ static NSString *SFSysctlReadInt64(const char *name) {
         SF_DEBUG(@"Can open URL: %@", url);
         [report setObject:scheme forKey:@"suspicious_url_scheme.0"];
     }
+#endif
 
     // 4. dyld detection.
 

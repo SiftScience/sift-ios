@@ -13,6 +13,7 @@
 #include <sys/stat.h>
 #include <unistd.h>
 
+#include <Availability.h>
 #include <mach-o/dyld.h>
 
 #import "SFDebug.h"
@@ -360,29 +361,33 @@ static NSString *SFSysctlReadInt64(const char *name) {
     // that sometimes confuses SDK users, we will only poke once per
     // process.
 
-    // iOS 9 requires white-listing URL schemes; until we figure how to
-    // detect this unobtrusively, disable this detection for now.
-#if 0
     static BOOL hasTestedCscheme = NO;
     static BOOL cschemeTestResult = NO;
 
-    char cscheme[] = "plqvn";
+    char cscheme[] = "plqvn";  // "cydia"
     rot13(cscheme);
-    char curlpath[] = "://cnpxntr/pbz.rknzcyr.cnpxntr";
-    rot13(curlpath);
-
     NSString *scheme = [NSString stringWithCString:cscheme encoding:NSASCIIStringEncoding];
-    NSString *urlpath = [NSString stringWithCString:curlpath encoding:NSASCIIStringEncoding];
-    NSString *url = [scheme stringByAppendingString:urlpath];
+
     if (!hasTestedCscheme) {
-        cschemeTestResult = [[UIApplication sharedApplication] canOpenURL:[NSURL URLWithString:url]];
+        // iOS 9 requires white-listing URL schemes.
+        // TODO(clchiou): How about tvOS, watchOs, or other OSes?
+        if (__IPHONE_OS_VERSION_MIN_REQUIRED < __IPHONE_9_0 || [self isUrlSchemeWhitelisted:scheme]) {
+            SF_DEBUG(@"Check URL scheme %@", scheme);
+            char curlpath[] = "://cnpxntr/pbz.rknzcyr.cnpxntr";  // "://package/com.example.package"
+            rot13(curlpath);
+            NSString *urlpath = [NSString stringWithCString:curlpath encoding:NSASCIIStringEncoding];
+            NSString *url = [scheme stringByAppendingString:urlpath];
+            if ([[UIApplication sharedApplication] canOpenURL:[NSURL URLWithString:url]]) {
+                SF_DEBUG(@"Can open URL: %@", url);
+                cschemeTestResult = YES;
+            }
+        }
         hasTestedCscheme = YES;
     }
+
     if (cschemeTestResult) {
-        SF_DEBUG(@"Can open URL: %@", url);
         [report setObject:scheme forKey:@"suspicious_url_scheme.0"];
     }
-#endif
 
     // 4. dyld detection.
 
@@ -398,6 +403,22 @@ static NSString *SFSysctlReadInt64(const char *name) {
             [report setObject:dyld forKey:[NSString stringWithFormat:@"suspicious_dyld.%d", (int)index++]];
         }
     }
+}
+
+- (BOOL)isUrlSchemeWhitelisted:(NSString *)targetScheme {
+    NSDictionary *infos = [[NSBundle mainBundle] infoDictionary];
+    NSArray *schemes = [infos objectForKey:@"LSApplicationQueriesSchemes"];
+    if (!schemes) {
+        SF_DEBUG(@"Did not find LSApplicationQueriesSchemes");
+        return NO;
+    }
+    for (NSString *scheme in schemes) {
+        SF_DEBUG(@"Whitelist scheme: %@", scheme);
+        if ([scheme isEqualToString:targetScheme]) {
+            return YES;
+        }
+    }
+    return NO;
 }
 
 static void rot13(char *p) {

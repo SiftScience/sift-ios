@@ -232,6 +232,8 @@ static NSString *SFSysctlReadInt64(const char *name) {
         NSString *property = sysctlProperties[i].read(sysctlProperties[i].name);
         if (property) {
             NSString *key = [NSString stringWithCString:sysctlProperties[i].name encoding:NSASCIIStringEncoding];
+            // We can't have "." in property names :(
+            key = [key stringByReplacingOccurrencesOfString:@"." withString:@"_"];
             [report setObject:property forKey:key];
         }
     }
@@ -305,7 +307,7 @@ static NSString *SFSysctlReadInt64(const char *name) {
         if (!access(cpath, F_OK)) {
             SF_DEBUG(@"Found file: \"%s\"", cpath);
             NSString *path = [NSString stringWithCString:cpath encoding:NSASCIIStringEncoding];
-            [report setObject:path forKey:[NSString stringWithFormat:@"suspicious_file.%d", i++]];
+            [report setObject:path forKey:[NSString stringWithFormat:@"suspicious_file_%d", i++]];
         }
     }
 
@@ -329,11 +331,11 @@ static NSString *SFSysctlReadInt64(const char *name) {
             NSString *path = [NSString stringWithCString:cpath encoding:NSASCIIStringEncoding];
             if (S_ISLNK(dirStat.st_mode)) {
                 SF_DEBUG(@"\"%@\" is a symlink", path);
-                [report setObject:path forKey:[NSString stringWithFormat:@"suspicious_symlink.%d", i++]];
+                [report setObject:path forKey:[NSString stringWithFormat:@"suspicious_symlink_%d", i++]];
             }
             if (dirStat.st_mode & S_IWOTH) {
                 SF_DEBUG(@"\"%@\" is writable by others", path);
-                [report setObject:path forKey:[NSString stringWithFormat:@"suspicious_permission.%d", j++]];
+                [report setObject:path forKey:[NSString stringWithFormat:@"suspicious_permission_%d", j++]];
             }
         }
     }
@@ -348,7 +350,7 @@ static NSString *SFSysctlReadInt64(const char *name) {
         exit(0);
     } else if (pid > 0) {
         SF_DEBUG(@"fork() does not return error");
-        [report setObject:@"fork" forKey:@"suspicious_call.0"];
+        [report setObject:@"fork" forKey:@"suspicious_call_0"];
         waitpid(pid, NULL, 0);
     }
 #endif
@@ -380,7 +382,7 @@ static NSString *SFSysctlReadInt64(const char *name) {
     }
     if (cschemeTestResult) {
         SF_DEBUG(@"Can open URL: %@", url);
-        [report setObject:scheme forKey:@"suspicious_url_scheme.0"];
+        [report setObject:scheme forKey:@"suspicious_url_scheme_0"];
     }
 #endif
 
@@ -395,7 +397,7 @@ static NSString *SFSysctlReadInt64(const char *name) {
         if (strstr(cdyld, dyldname)) {
             NSString *dyld = [NSString stringWithCString:cdyld encoding:NSASCIIStringEncoding];
             SF_DEBUG(@"Found dyld: \"%@\"", dyld);
-            [report setObject:dyld forKey:[NSString stringWithFormat:@"suspicious_dyld.%d", (int)index++]];
+            [report setObject:dyld forKey:[NSString stringWithFormat:@"suspicious_dyld_%d", (int)index++]];
         }
     }
 }

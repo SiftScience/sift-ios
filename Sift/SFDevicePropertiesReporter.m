@@ -8,6 +8,10 @@
 #include <ctype.h>
 #include <stdlib.h>
 #include <string.h>
+
+#include <arpa/inet.h>
+#include <ifaddrs.h>
+#include <net/if.h>
 #include <sys/types.h>
 #include <sys/sysctl.h>
 #include <sys/stat.h>
@@ -18,6 +22,7 @@
 #import "SFDebug.h"
 #import "SFEvent.h"
 #import "SFEvent+Private.h"
+#import "SFIosDeviceProperties.h"
 #import "SFQueueConfig.h"
 #import "SFUtils.h"
 #import "Sift.h"
@@ -48,10 +53,13 @@ static const int64_t SF_LEEWAY = 5 * NSEC_PER_SEC;
 - (void)report;
 
 /** Collect ordinary system properties. */
-- (void)collectProperties:(NSMutableDictionary<NSString *, NSString *> *)report;
+- (void)collectProperties:(SFIosDeviceProperties *)iosDeviceProperties;
+
+/** Return device's IP addresses. */
+- (NSArray<NSString *> *)getIpAddresses;
 
 /** Detect signs of a jail-broken device. */
-- (void)collectSystemProperties:(NSMutableDictionary<NSString *, NSString *> *)report;
+- (void)collectSystemProperties:(SFIosDeviceProperties *)iosDeviceProperties;
 
 @end
 
@@ -83,17 +91,13 @@ static const int64_t SF_LEEWAY = 5 * NSEC_PER_SEC;
 
     Sift *sift = [Sift sharedInstance];
 
-    NSMutableDictionary<NSString *, NSString *> *report = [NSMutableDictionary new];
-    [self collectProperties:report];
-    [self collectSystemProperties:report];
-    if (!report.count) {
-        SF_DEBUG(@"Nothing to report about");
-        return;
-    }
+    SFIosDeviceProperties *iosDeviceProperties = [SFIosDeviceProperties new];
+    [self collectProperties:iosDeviceProperties];
+    [self collectSystemProperties:iosDeviceProperties];
 
-    SF_DEBUG(@"Device properties: %@", report);
+    SF_DEBUG(@"Device properties: %@", iosDeviceProperties.properties);
     SFEvent *event = [SFEvent new];
-    event.deviceProperties = report;
+    event.iosDeviceProperties = iosDeviceProperties;
     [sift appendEvent:event withLocation:NO toQueue:SFDevicePropertiesReporterQueueIdentifier];
 }
 
@@ -123,118 +127,103 @@ static NSString *SFSysctlReadString(const char *name) {
     return value;
 }
 
-static NSString *SFSysctlReadUInt32(const char *name) {
-    uint32_t value;
-    size_t size = sizeof(value);
-    int err = sysctlbyname(name, &value, &size, NULL, 0);
+static BOOL SFSysctlReadInt32(const char *name, int32_t *output) {
+    size_t size = sizeof(*output);
+    int err = sysctlbyname(name, output, &size, NULL, 0);
     if (err) {
         SF_DEBUG(@"sysctlbyname(\"%s\", ...): %s", name, strerror(errno));
-        return nil;
+        return NO;
     } else {
-        return [NSString stringWithFormat:@"%u", value];
+        return YES;
     }
 }
 
-static NSString *SFSysctlReadInt64(const char *name) {
-    int64_t value;
-    size_t size = sizeof(value);
-    int err = sysctlbyname(name, &value, &size, NULL, 0);
+static BOOL SFSysctlReadInt64(const char *name, int64_t *output) {
+    size_t size = sizeof(*output);
+    int err = sysctlbyname(name, output, &size, NULL, 0);
     if (err) {
         SF_DEBUG(@"sysctlbyname(\"%s\", ...): %s", name, strerror(errno));
-        return nil;
+        return NO;
     } else {
-        return [NSString stringWithFormat:@"%lld", value];
+        return YES;
     }
 }
 
-- (void)collectProperties:(NSMutableDictionary<NSString *, NSString *> *)report {
+- (void)collectProperties:(SFIosDeviceProperties *)iosDeviceProperties {
+
+    NSDictionary *infoDictionary = [[NSBundle mainBundle] infoDictionary];
+    [iosDeviceProperties setProperty:@"app_name" value:[infoDictionary objectForKey:(NSString *)kCFBundleNameKey]];
+    [iosDeviceProperties setProperty:@"app_version" value:[infoDictionary objectForKey:(NSString *)kCFBundleVersionKey]];
+    [iosDeviceProperties setProperty:@"app_version_short" value:[infoDictionary objectForKey:@"CFBundleShortVersionString"]];
+
     UIDevice *device = [UIDevice currentDevice];
-    for (NSString *propertyName in @[@"name", @"systemName", @"systemVersion", @"model", @"localizedModel"]) {
-        SEL selector = NSSelectorFromString(propertyName);
-        NSString *(*func)(id, SEL) = (void *)[device methodForSelector:selector];
-        NSString *property = func(device, selector);
-        if (property) {
-            property = [NSString stringWithString:property];
-            [report setObject:property forKey:SFCamelCaseToSnakeCase(propertyName)];
-        }
-    }
+    [iosDeviceProperties setProperty:@"device_name" value:device.name];
+    [iosDeviceProperties setProperty:@"device_ifv" value:device.identifierForVendor.UUIDString];
+    [iosDeviceProperties setProperty:@"device_model" value:device.model];
+    [iosDeviceProperties setProperty:@"device_localized_model" value:device.localizedModel];
+    [iosDeviceProperties setProperty:@"device_system_name" value:device.systemName];
+    [iosDeviceProperties setProperty:@"device_system_version" value:device.systemVersion];
 
     UIScreen *screen = [UIScreen mainScreen];
-    NSInteger width = screen.fixedCoordinateSpace.bounds.size.width * screen.scale;
-    NSInteger height = screen.fixedCoordinateSpace.bounds.size.height * screen.scale;
-    [report setObject:[@(width) stringValue] forKey:@"screen_width"];
-    [report setObject:[@(height) stringValue] forKey:@"screen_height"];
-
-    [report setObject:[[device identifierForVendor] UUIDString] forKey:@"apple_ifv"];
+    [iosDeviceProperties setProperty:@"device_screen_width" value:[NSNumber numberWithInt:(screen.fixedCoordinateSpace.bounds.size.width * screen.scale)]];
+    [iosDeviceProperties setProperty:@"device_screen_height" value:[NSNumber numberWithInt:(screen.fixedCoordinateSpace.bounds.size.height * screen.scale)]];
 
     CTTelephonyNetworkInfo *networkInfo = [CTTelephonyNetworkInfo new];
     CTCarrier *carrier = [networkInfo subscriberCellularProvider];
     if (carrier) {
-        for (NSString *propertyName in @[@"carrierName", @"isoCountryCode", @"mobileCountryCode", @"mobileNetworkCode"]) {
-            SEL selector = NSSelectorFromString(propertyName);
-            NSString *(*func)(id, SEL) = (void *)[carrier methodForSelector:selector];
-            NSString *property = func(carrier, selector);
-            if (property) {
-                property = [NSString stringWithString:property];
-                [report setObject:property forKey:SFCamelCaseToSnakeCase(propertyName)];
-            }
-        }
+        [iosDeviceProperties setProperty:@"mobile_carrier_name" value:carrier.carrierName];
+        [iosDeviceProperties setProperty:@"mobile_iso_country_code" value:carrier.isoCountryCode];
+        [iosDeviceProperties setProperty:@"mobile_country_code" value:carrier.mobileCountryCode];
+        [iosDeviceProperties setProperty:@"mobile_network_code" value:carrier.mobileNetworkCode];
     }
 
-    struct {
-        const char *name;
-        NSString *(*read)(const char *);
-    } sysctlProperties[] = {
-        {"hw.machine", SFSysctlReadString},
-        {"hw.model", SFSysctlReadString},
-        {"kern.bootsessionuuid", SFSysctlReadString},
-        {"kern.bootsignature", SFSysctlReadString},
-        {"kern.hostname", SFSysctlReadString},
-        {"kern.ostype", SFSysctlReadString},
-        {"kern.osrelease", SFSysctlReadString},
-        {"kern.uuid", SFSysctlReadString},
-        {"kern.version", SFSysctlReadString},
+    [iosDeviceProperties setProperty:@"network_addresses" value:[self getIpAddresses]];
 
-        {"hw.ncpu", SFSysctlReadUInt32},
-        {"hw.byteorder", SFSysctlReadUInt32},
-        {"hw.activecpu", SFSysctlReadUInt32},
-        {"hw.physicalcpu", SFSysctlReadUInt32},
-        {"hw.physicalcpu_max", SFSysctlReadUInt32},
-        {"hw.logicalcpu", SFSysctlReadUInt32},
-        {"hw.logicalcpu_max", SFSysctlReadUInt32},
-        {"hw.cputype", SFSysctlReadUInt32},
-        {"hw.cpusubtype", SFSysctlReadUInt32},
-        {"hw.cpu64bit_capable", SFSysctlReadUInt32},
-        {"hw.cpufamily", SFSysctlReadUInt32},
-        {"hw.packages", SFSysctlReadUInt32},
-        {"hw.optional.floatingpoint", SFSysctlReadUInt32},
-        {"kern.hostid", SFSysctlReadUInt32},
-        {"kern.osrevision", SFSysctlReadUInt32},
-        {"kern.posix1version", SFSysctlReadUInt32},
-        {"user.posix2_version", SFSysctlReadUInt32},
+    for (NSString *name in SFIosDevicePropertySpec.specs) {
+        SFIosDevicePropertySpec *spec = [SFIosDevicePropertySpec.specs objectForKey:name];
+        if (!spec.sysctlName) {
+            continue;
+        }
 
-        {"hw.busfrequency", SFSysctlReadInt64},
-        {"hw.busfrequency_min", SFSysctlReadInt64},
-        {"hw.busfrequency_max", SFSysctlReadInt64},
-        {"hw.cachelinesize", SFSysctlReadInt64},
-        {"hw.cpufrequency", SFSysctlReadInt64},
-        {"hw.cpufrequency_max", SFSysctlReadInt64},
-        {"hw.cpufrequency_min", SFSysctlReadInt64},
-        {"hw.l1icachesize", SFSysctlReadInt64},
-        {"hw.l1dcachesize", SFSysctlReadInt64},
-        {"hw.l2cachesize", SFSysctlReadInt64},
-        {"hw.l3cachesize", SFSysctlReadInt64},
-        {"hw.memsize", SFSysctlReadInt64},
-        {"hw.pagesize", SFSysctlReadInt64},
-        {"hw.tbfrequency", SFSysctlReadInt64},
-    };
-    for (int i = 0; i < sizeof(sysctlProperties) / sizeof(sysctlProperties[0]); i++) {
-        NSString *property = sysctlProperties[i].read(sysctlProperties[i].name);
-        if (property) {
-            NSString *key = [NSString stringWithCString:sysctlProperties[i].name encoding:NSASCIIStringEncoding];
-            // We can't have "." in property names :(
-            key = [key stringByReplacingOccurrencesOfString:@"." withString:@"_"];
-            [report setObject:property forKey:key];
+        id value = nil;
+        switch (spec.sysctlType) {
+            case SFIosDevicePropertySysctlTypeInt32:
+                {
+                    int32_t buffer;
+                    if (SFSysctlReadInt32(spec.sysctlName.UTF8String, &buffer)) {
+                        switch (spec.type) {
+                            case SFIosDevicePropertyTypeBool:
+                                value = [NSNumber numberWithBool:buffer];
+                                break;
+                            case SFIosDevicePropertyTypeInteger:
+                                value = [NSNumber numberWithLong:buffer];
+                                break;
+                            case SFIosDevicePropertyTypeString:
+                                value = [NSString stringWithFormat:@"%ld", (long)buffer];
+                                break;
+                            default:
+                                SFFail();  // Unknown type.
+                        }
+                    }
+                    break;
+                }
+            case SFIosDevicePropertySysctlTypeInt64:
+                {
+                    int64_t buffer;
+                    if (SFSysctlReadInt64(spec.sysctlName.UTF8String, &buffer)) {
+                        value = [NSNumber numberWithLongLong:buffer];
+                    }
+                    break;
+                }
+            case SFIosDevicePropertySysctlTypeString:
+                value = SFSysctlReadString(spec.sysctlName.UTF8String);
+                break;
+            default:
+                SFFail();  // Unknown type.
+        }
+
+        if (value) {
+            [iosDeviceProperties setProperty:name value:value];
         }
     }
 }
@@ -255,7 +244,7 @@ static NSString *SFSysctlReadInt64(const char *name) {
  * engineer's job slightly harder of finding the detection code with
  * simple full text search (and patching around it).
  */
-- (void)collectSystemProperties:(NSMutableDictionary<NSString *, NSString *> *)report {
+- (void)collectSystemProperties:(SFIosDeviceProperties *)iosDeviceProperties {
 
     // 1. Filesystem-based detection.
 
@@ -302,14 +291,16 @@ static NSString *SFSysctlReadInt64(const char *name) {
         "/Nccyvpngvbaf/erqfa0j.ncc\n";
     rot13(paths);
 
-    for (char i = 0, *cpath = paths, *end; (end = strchr(cpath, '\n')) != NULL; cpath = end + 1) {
+    NSMutableArray<NSString *> *filesPresent = [NSMutableArray new];
+    for (char *cpath = paths, *end; (end = strchr(cpath, '\n')) != NULL; cpath = end + 1) {
         *end = '\0';
         if (!access(cpath, F_OK)) {
             SF_DEBUG(@"Found file: \"%s\"", cpath);
             NSString *path = [NSString stringWithCString:cpath encoding:NSASCIIStringEncoding];
-            [report setObject:path forKey:[NSString stringWithFormat:@"suspicious_file_%d", i++]];
+            [filesPresent addObject:path];
         }
     }
+    [iosDeviceProperties setProperty:@"evidence_files_present" value:filesPresent];
 
     // Dirs that should not be writable nor symlinks. (ROT-13 encoded)
     char dirs[] = \
@@ -324,23 +315,29 @@ static NSString *SFSysctlReadInt64(const char *name) {
         "/Nccyvpngvbaf\n";
     rot13(dirs);
 
-    for (char i = 0, j = 0, *cpath = dirs, *end; (end = strchr(cpath, '\n')) != NULL; cpath = end + 1) {
+    NSMutableArray<NSString *> *dirsSymlinked = [NSMutableArray new];
+    NSMutableArray<NSString *> *dirsWritable = [NSMutableArray new];
+    for (char *cpath = dirs, *end; (end = strchr(cpath, '\n')) != NULL; cpath = end + 1) {
         *end = '\0';
         struct stat dirStat;
         if (!lstat(cpath, &dirStat)) {
             NSString *path = [NSString stringWithCString:cpath encoding:NSASCIIStringEncoding];
             if (S_ISLNK(dirStat.st_mode)) {
                 SF_DEBUG(@"\"%@\" is a symlink", path);
-                [report setObject:path forKey:[NSString stringWithFormat:@"suspicious_symlink_%d", i++]];
+                [dirsSymlinked addObject:path];
             }
             if (dirStat.st_mode & S_IWOTH) {
                 SF_DEBUG(@"\"%@\" is writable by others", path);
-                [report setObject:path forKey:[NSString stringWithFormat:@"suspicious_permission_%d", j++]];
+                [dirsWritable addObject:path];
             }
         }
     }
+    [iosDeviceProperties setProperty:@"evidence_directories_symlinked" value:dirsSymlinked];
+    [iosDeviceProperties setProperty:@"evidence_directories_writable" value:dirsWritable];
 
     // 2. Sytem-call detection.
+
+    NSMutableArray<NSString *> *syscallsSucceeded = [NSMutableArray new];
 
     // This is not fork-safe; disable it until we figure out how to do
     // it safely.
@@ -350,17 +347,21 @@ static NSString *SFSysctlReadInt64(const char *name) {
         exit(0);
     } else if (pid > 0) {
         SF_DEBUG(@"fork() does not return error");
-        [report setObject:@"fork" forKey:@"suspicious_call_0"];
         waitpid(pid, NULL, 0);
+        [syscallsSucceeded addObject:@"fork"];
     }
 #endif
 
     // system(NULL) will trigger SIGABRT?
 
+    [iosDeviceProperties setProperty:@"evidence_syscalls_succeeded" value:syscallsSucceeded];
+
     // 3. Cydia URL scheme detection.
     // Because when we poke iOS about this, it reports an error, and
     // that sometimes confuses SDK users, we will only poke once per
     // process.
+
+    NSMutableArray<NSString *> *urlSchemesOpenable = [NSMutableArray new];
 
     // iOS 9 requires white-listing URL schemes; until we figure how to
     // detect this unobtrusively, disable this detection for now.
@@ -382,24 +383,30 @@ static NSString *SFSysctlReadInt64(const char *name) {
     }
     if (cschemeTestResult) {
         SF_DEBUG(@"Can open URL: %@", url);
-        [report setObject:scheme forKey:@"suspicious_url_scheme_0"];
+        [urlSchemesOpenable addObject:scheme];
     }
 #endif
 
+    [iosDeviceProperties setProperty:@"evidence_url_schemes_openable" value:urlSchemesOpenable];
+
     // 4. dyld detection.
+
+    NSMutableArray<NSString *> *dyldsPresent = [NSMutableArray new];
 
     char dyldname[] = "ZbovyrFhofgengr";  // "MobileSubstrate"
     rot13(dyldname);
 
     uint32_t count = _dyld_image_count();
-    for (uint32_t index = 0, i = 0; i < count; i++) {
+    for (uint32_t i = 0; i < count; i++) {
         const char *cdyld = _dyld_get_image_name(i);
         if (strstr(cdyld, dyldname)) {
             NSString *dyld = [NSString stringWithCString:cdyld encoding:NSASCIIStringEncoding];
             SF_DEBUG(@"Found dyld: \"%@\"", dyld);
-            [report setObject:dyld forKey:[NSString stringWithFormat:@"suspicious_dyld_%d", (int)index++]];
+            [dyldsPresent addObject:dyld];
         }
     }
+
+    [iosDeviceProperties setProperty:@"evidence_dylds_present" value:dyldsPresent];
 }
 
 static void rot13(char *p) {
@@ -410,6 +417,52 @@ static void rot13(char *p) {
         }
         p++;
     }
+}
+
+- (NSArray<NSString *> *)getIpAddresses {
+    struct ifaddrs *interfaces;
+    if (getifaddrs(&interfaces)) {
+        SF_DEBUG(@"Cannot get network interface: %s", strerror(errno));
+        return nil;
+    }
+
+    NSMutableArray<NSString *> *addresses = [NSMutableArray new];
+    for (struct ifaddrs *interface = interfaces; interface; interface = interface->ifa_next) {
+        if (!(interface->ifa_flags & IFF_UP)) {
+            continue;  // Skip interfaces that are down.
+        }
+        if (interface->ifa_flags & IFF_LOOPBACK) {
+            continue;  // Skip loopback interface.
+        }
+
+        const struct sockaddr_in *address = (const struct sockaddr_in*)interface->ifa_addr;
+        if (!address) {
+            continue;  // Skip interfaces that have no address.
+        }
+
+        SF_DEBUG(@"Read address from interface: %s", interface->ifa_name);
+        char address_buffer[MAX(INET_ADDRSTRLEN, INET6_ADDRSTRLEN)];
+        if (address->sin_family == AF_INET) {
+            if (!inet_ntop(AF_INET, &address->sin_addr, address_buffer, INET_ADDRSTRLEN)) {
+                SF_DEBUG(@"Cannot convert INET address: %s", strerror(errno));
+                continue;
+            }
+        } else if (address->sin_family == AF_INET6) {
+            const struct sockaddr_in6 *address_inet6 = (const struct sockaddr_in6*)interface->ifa_addr;
+            if (!inet_ntop(AF_INET6, &address_inet6->sin6_addr, address_buffer, INET6_ADDRSTRLEN)) {
+                SF_DEBUG(@"Cannot convert INET6 address: %s", strerror(errno));
+                continue;
+            }
+        } else {
+            continue;  // Skip non-IPv4 and non-IPv6 interface.
+        }
+
+        [addresses addObject:[NSString stringWithUTF8String:address_buffer]];
+    }
+
+    free(interfaces);
+
+    return addresses;
 }
 
 @end

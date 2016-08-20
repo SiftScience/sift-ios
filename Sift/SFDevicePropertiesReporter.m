@@ -342,18 +342,14 @@ static NSString *SFSysctlReadInt64(const char *name) {
 
     // 2. Sytem-call detection.
 
-    // This is not fork-safe; disable it until we figure out how to do
-    // it safely.
-#if 0
     pid_t pid = fork();
     if (!pid) {
-        exit(0);
+        _exit(0);  // _exit() is fork safe but exit() is not.
     } else if (pid > 0) {
         SF_DEBUG(@"fork() does not return error");
         [report setObject:@"fork" forKey:@"suspicious_call_0"];
         waitpid(pid, NULL, 0);
     }
-#endif
 
     // system(NULL) will trigger SIGABRT?
 

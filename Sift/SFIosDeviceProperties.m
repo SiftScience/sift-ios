@@ -186,6 +186,9 @@
 - (void)setProperty:(NSString *)name value:(id)value {
     SFIosDevicePropertySpec *spec = [SFIosDevicePropertySpec.specs objectForKey:name];
     NSAssert(spec != nil, @"Could not find property name: %@", name);
+    if (value == nil) {
+        return;
+    }
     switch (spec.type) {
         case SFIosDevicePropertyTypeBool:  // Fall through.
         case SFIosDevicePropertyTypeInteger:  // Fall through.

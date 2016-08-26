@@ -2,7 +2,7 @@
 
 // This is a public header.
 
-#import <Foundation/Foundation.h>
+@import Foundation;
 
 /**
  * An event has: time, (mobile event) type, path, user ID, and a

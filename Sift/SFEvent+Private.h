@@ -3,6 +3,7 @@
 @import Foundation;
 
 #import "SFEvent.h"
+#import "SFIosDeviceProperties.h"
 
 @interface SFEvent ()
 
@@ -11,6 +12,9 @@
 
 /** Device properties.  Default to nil. */
 @property NSDictionary<NSString *, NSString *> *deviceProperties;
+
+/** Structured iOS device properties.  Default to nil. */
+@property SFIosDeviceProperties *iosDeviceProperties;
 
 /** Internal metrics.  Default to nil. */
 @property NSDictionary<NSString *, NSString *> *metrics;

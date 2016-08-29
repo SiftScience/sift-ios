@@ -155,6 +155,7 @@ static BOOL SFSysctlReadInt64(const char *name, int64_t *output) {
     [iosDeviceProperties setProperty:@"app_name" value:[infoDictionary objectForKey:(NSString *)kCFBundleNameKey]];
     [iosDeviceProperties setProperty:@"app_version" value:[infoDictionary objectForKey:(NSString *)kCFBundleVersionKey]];
     [iosDeviceProperties setProperty:@"app_version_short" value:[infoDictionary objectForKey:@"CFBundleShortVersionString"]];
+    [iosDeviceProperties setProperty:@"sdk_version" value:Sift.sharedInstance.sdkVersion];
 
     UIDevice *device = [UIDevice currentDevice];
     [iosDeviceProperties setProperty:@"device_name" value:device.name];

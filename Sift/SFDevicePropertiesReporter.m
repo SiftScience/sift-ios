@@ -158,11 +158,22 @@ static BOOL SFSysctlReadInt64(const char *name, int64_t *output) {
 
     UIDevice *device = [UIDevice currentDevice];
     [iosDeviceProperties setProperty:@"device_name" value:device.name];
-    [iosDeviceProperties setProperty:@"device_ifv" value:device.identifierForVendor.UUIDString];
     [iosDeviceProperties setProperty:@"device_model" value:device.model];
     [iosDeviceProperties setProperty:@"device_localized_model" value:device.localizedModel];
     [iosDeviceProperties setProperty:@"device_system_name" value:device.systemName];
     [iosDeviceProperties setProperty:@"device_system_version" value:device.systemVersion];
+
+    ASIdentifierManager *asIdentifierManager = [ASIdentifierManager sharedManager];
+    if (asIdentifierManager.advertisingTrackingEnabled) {
+        NSUUID *ifa = asIdentifierManager.advertisingIdentifier;
+        if (ifa) {  // IFA could be nil.
+            [iosDeviceProperties setProperty:@"device_ifa" value:ifa.UUIDString];
+        }
+    }
+    NSUUID *ifv = device.identifierForVendor;
+    if (ifv) {  // IFV could be nil.
+        [iosDeviceProperties setProperty:@"device_ifv" value:ifv.UUIDString];
+    }
 
     UIScreen *screen = [UIScreen mainScreen];
     [iosDeviceProperties setProperty:@"device_screen_width" value:[NSNumber numberWithInt:(screen.fixedCoordinateSpace.bounds.size.width * screen.scale)]];

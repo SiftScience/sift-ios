@@ -22,6 +22,7 @@
 
         ADD_PROP(@"device_name", SFIosDevicePropertyTypeString, nil, SFIosDevicePropertySysctlTypeNone);
 
+        ADD_PROP(@"device_ifa", SFIosDevicePropertyTypeString, nil, SFIosDevicePropertySysctlTypeNone);
         ADD_PROP(@"device_ifv", SFIosDevicePropertyTypeString, nil, SFIosDevicePropertySysctlTypeNone);
 
         ADD_PROP(@"device_screen_width",  SFIosDevicePropertyTypeInteger, nil, SFIosDevicePropertySysctlTypeNone);

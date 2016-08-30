@@ -29,6 +29,8 @@
 /** @return the shared instance of Sift. */
 + (instancetype)sharedInstance;
 
+@property (readonly) NSString *sdkVersion;
+
 /**
  * Add an event queue that did not exist prior to the call.
  *

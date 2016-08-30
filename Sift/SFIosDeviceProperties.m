@@ -18,6 +18,7 @@
         ADD_PROP(@"app_name",          SFIosDevicePropertyTypeString, nil, SFIosDevicePropertySysctlTypeNone);
         ADD_PROP(@"app_version",       SFIosDevicePropertyTypeString, nil, SFIosDevicePropertySysctlTypeNone);
         ADD_PROP(@"app_version_short", SFIosDevicePropertyTypeString, nil, SFIosDevicePropertySysctlTypeNone);
+        ADD_PROP(@"sdk_version",       SFIosDevicePropertyTypeString, nil, SFIosDevicePropertySysctlTypeNone);
 
         ADD_PROP(@"device_name", SFIosDevicePropertyTypeString, nil, SFIosDevicePropertySysctlTypeNone);
 

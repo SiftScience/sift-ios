@@ -14,6 +14,7 @@ static NSString * const ROOT_VIEW_CONTROLLER_TITLE = @"root_view_controller_titl
 @implementation SFAppEventsReporter {
     NSOperationQueue *_queue;
     NSHashTable *_windows;
+    NSHashTable *_buttons;
     NSString *_rootViewControllerKeyPath;
 }
 
@@ -54,6 +55,7 @@ static NSString * const ROOT_VIEW_CONTROLLER_TITLE = @"root_view_controller_titl
         }
 
         // Walk down UIView hierarchy and find all buttons for observation.
+        _buttons = [NSHashTable weakObjectsHashTable];
         [notification addObserverForName:UIWindowDidBecomeVisibleNotification object:nil queue:_queue usingBlock:^(NSNotification *note) {
             UIWindow *window = note.object;
             [self findAndAddObserverToButton:window.rootViewController.view];
@@ -98,9 +100,12 @@ static NSString * const ROOT_VIEW_CONTROLLER_TITLE = @"root_view_controller_titl
 
 - (void)findAndAddObserverToButton:(UIView *)view {
     if ([view isKindOfClass:UIButton.class]) {
-        SF_DEBUG(@"Add button to observation: %@", view);
         UIButton *button = (UIButton *)view;
-        [button addTarget:self action:@selector(buttonClicked:) forControlEvents:UIControlEventTouchUpInside];
+        if (![_buttons containsObject:button]) {
+            SF_DEBUG(@"Add button to observation: %@", button);
+            [button addTarget:self action:@selector(buttonClicked:) forControlEvents:UIControlEventTouchUpInside];
+            [_buttons addObject:button];
+        }
     }
     for (UIView *subview in view.subviews) {
         [self findAndAddObserverToButton:subview];

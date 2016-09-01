@@ -28,6 +28,7 @@
 #import "Sift.h"
 
 #import "SFDevicePropertiesReporter.h"
+#import "SFDevicePropertiesReporter+Notifications.h"
 
 /**
  * Device properties are sent to their own queue, which is configured to
@@ -82,6 +83,8 @@ static const int64_t SF_LEEWAY = 5 * NSEC_PER_SEC;
         SFDevicePropertiesReporter * __weak weakSelf = self;
         dispatch_source_set_event_handler(_source, ^{[weakSelf report];});
         dispatch_resume(_source);
+
+        [self registerObservers];
     }
     return self;
 }

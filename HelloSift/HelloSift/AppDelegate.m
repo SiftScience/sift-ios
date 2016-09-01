@@ -26,4 +26,34 @@
     return YES;
 }
 
+- (void)applicationDidBecomeActive:(UIApplication *)application {
+    UIDevice *device = [UIDevice currentDevice];
+
+    device.batteryMonitoringEnabled = YES;
+    if (!device.batteryMonitoringEnabled) {
+        NSLog(@"Cannot monitor battery");
+    }
+
+    if (device.generatesDeviceOrientationNotifications) {
+        [device beginGeneratingDeviceOrientationNotifications];
+    }
+
+    device.proximityMonitoringEnabled = YES;
+    if (!device.proximityMonitoringEnabled) {
+        NSLog(@"Cannot monitor proximity");
+    }
+}
+
+- (void)applicationDidEnterBackground:(UIApplication *)application {
+    UIDevice *device = [UIDevice currentDevice];
+
+    device.batteryMonitoringEnabled = NO;
+
+    if (device.generatesDeviceOrientationNotifications) {
+        [device endGeneratingDeviceOrientationNotifications];
+    }
+
+    device.proximityMonitoringEnabled = NO;
+}
+
 @end

@@ -89,7 +89,7 @@
         }
     }
 
-    [[Sift sharedInstance] appendEvent:[SFEvent eventWithType:mobileEventType path:path fields:fields] withLocation:YES];
+    [[Sift sharedInstance] appendEvent:[SFEvent eventWithType:mobileEventType path:path fields:fields]];
 }
 
 - (IBAction)handleRequestUploadButtonClick:(id)sender {

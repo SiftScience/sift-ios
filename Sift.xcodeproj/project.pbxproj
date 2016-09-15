@@ -10,6 +10,9 @@
 		713D859A1D627E9F0011D5FE /* SFIosDeviceProperties.m in Sources */ = {isa = PBXBuildFile; fileRef = 713D85991D627E9F0011D5FE /* SFIosDeviceProperties.m */; };
 		713D859B1D627EA60011D5FE /* SFIosDeviceProperties.h in Headers */ = {isa = PBXBuildFile; fileRef = 713D85981D627E860011D5FE /* SFIosDeviceProperties.h */; };
 		713D859D1D6CF69E0011D5FE /* SFIosDevicePropertiesTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 713D859C1D6CF69E0011D5FE /* SFIosDevicePropertiesTests.m */; };
+		713D85BD1D8744040011D5FE /* SFHtDictionary.h in Headers */ = {isa = PBXBuildFile; fileRef = 713D85BC1D8744040011D5FE /* SFHtDictionary.h */; };
+		713D85BF1D87441A0011D5FE /* SFHtDictionary.m in Sources */ = {isa = PBXBuildFile; fileRef = 713D85BE1D87441A0011D5FE /* SFHtDictionary.m */; };
+		713D85C11D874ED40011D5FE /* SFHtDictionaryTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 713D85C01D874ED40011D5FE /* SFHtDictionaryTests.m */; };
 		7168EE051C7B977500A88245 /* Sift.h in Headers */ = {isa = PBXBuildFile; fileRef = 7168EE041C7B977500A88245 /* Sift.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		7168EE0C1C7B977500A88245 /* Sift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7168EE011C7B977500A88245 /* Sift.framework */; };
 		7168EE111C7B977500A88245 /* SiftTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 7168EE101C7B977500A88245 /* SiftTests.m */; };
@@ -48,6 +51,9 @@
 		713D85981D627E860011D5FE /* SFIosDeviceProperties.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SFIosDeviceProperties.h; sourceTree = "<group>"; };
 		713D85991D627E9F0011D5FE /* SFIosDeviceProperties.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SFIosDeviceProperties.m; sourceTree = "<group>"; };
 		713D859C1D6CF69E0011D5FE /* SFIosDevicePropertiesTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SFIosDevicePropertiesTests.m; sourceTree = "<group>"; };
+		713D85BC1D8744040011D5FE /* SFHtDictionary.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SFHtDictionary.h; sourceTree = "<group>"; };
+		713D85BE1D87441A0011D5FE /* SFHtDictionary.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SFHtDictionary.m; sourceTree = "<group>"; };
+		713D85C01D874ED40011D5FE /* SFHtDictionaryTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SFHtDictionaryTests.m; sourceTree = "<group>"; };
 		7168EE011C7B977500A88245 /* Sift.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Sift.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		7168EE041C7B977500A88245 /* Sift.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Sift.h; sourceTree = "<group>"; };
 		7168EE061C7B977500A88245 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -123,6 +129,10 @@
 				716BEB881C7D336B009C3706 /* SFEvent.h */,
 				716BEB8C1C7D3695009C3706 /* SFEvent.m */,
 				7168EE2B1C86250100A88245 /* SFEvent+Private.h */,
+				713D85BC1D8744040011D5FE /* SFHtDictionary.h */,
+				713D85BE1D87441A0011D5FE /* SFHtDictionary.m */,
+				713D85981D627E860011D5FE /* SFIosDeviceProperties.h */,
+				713D85991D627E9F0011D5FE /* SFIosDeviceProperties.m */,
 				7168EE1D1C7E7A6800A88245 /* SFQueue.h */,
 				7168EE1F1C7E7B6700A88245 /* SFQueue.m */,
 				716BEB891C7D336B009C3706 /* SFQueueConfig.h */,
@@ -133,8 +143,6 @@
 				7168EE041C7B977500A88245 /* Sift.h */,
 				716BEB8F1C7D3695009C3706 /* Sift.m */,
 				7168EE211C7F978D00A88245 /* Sift+Private.h */,
-				713D85981D627E860011D5FE /* SFIosDeviceProperties.h */,
-				713D85991D627E9F0011D5FE /* SFIosDeviceProperties.m */,
 			);
 			path = Sift;
 			sourceTree = "<group>";
@@ -144,12 +152,13 @@
 			children = (
 				7168EE121C7B977500A88245 /* Info.plist */,
 				7168EE1B1C7E61E900A88245 /* SFEventTests.m */,
+				713D85C01D874ED40011D5FE /* SFHtDictionaryTests.m */,
+				713D859C1D6CF69E0011D5FE /* SFIosDevicePropertiesTests.m */,
 				7168EE231C7F99AF00A88245 /* SFQueueTests.m */,
 				7168EE3E1C88C91900A88245 /* SFStubHttpProtocol.h */,
 				7168EE3F1C88C91900A88245 /* SFStubHttpProtocol.m */,
 				7168EE401C88C91900A88245 /* SFUploaderTests.m */,
 				7168EE101C7B977500A88245 /* SiftTests.m */,
-				713D859C1D6CF69E0011D5FE /* SFIosDevicePropertiesTests.m */,
 			);
 			path = SiftTests;
 			sourceTree = "<group>";
@@ -170,6 +179,7 @@
 				7168EE051C7B977500A88245 /* Sift.h in Headers */,
 				713D859B1D627EA60011D5FE /* SFIosDeviceProperties.h in Headers */,
 				716BEB871C7D304D009C3706 /* SFDebug.h in Headers */,
+				713D85BD1D8744040011D5FE /* SFHtDictionary.h in Headers */,
 				7168EE271C7FB80C00A88245 /* SFUploader.h in Headers */,
 				7168EE341C864A4100A88245 /* SFDevicePropertiesReporter.h in Headers */,
 			);
@@ -277,6 +287,7 @@
 				7168EE351C864A4100A88245 /* SFDevicePropertiesReporter.m in Sources */,
 				716BEB921C7D3695009C3706 /* SFUtils.m in Sources */,
 				7168EE201C7E7B6700A88245 /* SFQueue.m in Sources */,
+				713D85BF1D87441A0011D5FE /* SFHtDictionary.m in Sources */,
 				716BEB901C7D3695009C3706 /* SFEvent.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -290,6 +301,7 @@
 				7168EE1C1C7E61E900A88245 /* SFEventTests.m in Sources */,
 				713D859D1D6CF69E0011D5FE /* SFIosDevicePropertiesTests.m in Sources */,
 				7168EE241C7F99AF00A88245 /* SFQueueTests.m in Sources */,
+				713D85C11D874ED40011D5FE /* SFHtDictionaryTests.m in Sources */,
 				7168EE421C88C91900A88245 /* SFUploaderTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

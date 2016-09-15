@@ -2,6 +2,8 @@
 
 @import XCTest;
 
+#import "SFDebug.h"
+
 #import "SFIosDeviceProperties.h"
 
 @interface SFIosDevicePropertiesTests : XCTestCase
@@ -10,50 +12,53 @@
 
 @implementation SFIosDevicePropertiesTests
 
+- (void)testCollect {
+    SFHtDictionary *actual = SFCollectIosDeviceProperties();
+    SF_DEBUG(@"Collect device properties: %@", actual.entries);
+    XCTAssertNotNil(actual);
+}
+
 - (void)testCoder {
-    SFIosDeviceProperties *expect, *actual;
+    SFHtDictionary *expect, *actual;
     NSData *data;
 
     // Test empty object.
-    expect = [SFIosDeviceProperties new];
-    XCTAssertEqual(0, expect.properties.count);
+    expect = SFMakeEmptyIosDeviceProperties();
+    XCTAssertEqual(0, expect.entries.count);
 
     data = [NSKeyedArchiver archivedDataWithRootObject:expect];
     actual = [NSKeyedUnarchiver unarchiveObjectWithData:data];
 
-    XCTAssertEqual(0, actual.properties.count);
+    XCTAssertEqual(0, actual.entries.count);
     XCTAssertEqualObjects(expect, actual);
 
     // Test object with a handful of properties.
-    expect = [SFIosDeviceProperties new];
-    [expect setProperty:@"app_name" value:@"test-string"];
-    [expect setProperty:@"app_version" value:@""];
-    [expect setProperty:@"cpu_has_fp" value:[NSNumber numberWithBool:YES]];
-    [expect setProperty:@"cache_line_size" value:[NSNumber numberWithLong:64]];
-    [expect setProperty:@"evidence_files_present" value:@[@"a", @"b", @"c"]];
-    [expect setProperty:@"evidence_directories_writable" value:@[]];
-    XCTAssertEqual(6, expect.properties.count);
+    expect = SFMakeEmptyIosDeviceProperties();
+    [expect setEntry:@"app_name" value:@"test-string"];
+    [expect setEntry:@"app_version" value:@""];
+    [expect setEntry:@"cpu_has_fp" value:[NSNumber numberWithBool:YES]];
+    [expect setEntry:@"cache_line_size" value:[NSNumber numberWithLong:64]];
+    [expect setEntry:@"evidence_files_present" value:@[@"a", @"b", @"c"]];
+    [expect setEntry:@"evidence_directories_writable" value:@[]];
+    XCTAssertEqual(6, expect.entries.count);
 
     data = [NSKeyedArchiver archivedDataWithRootObject:expect];
     actual = [NSKeyedUnarchiver unarchiveObjectWithData:data];
 
-    XCTAssertEqual(6, actual.properties.count);
+    XCTAssertEqual(6, actual.entries.count);
     XCTAssertEqualObjects(expect, actual);
-
-    // TODO(clchiou): Figure out a way to test calling setProperty with
-    // invalid name and/or property value; need to mock out NSAssert?
 }
 
 - (void)testWithRandomData {
-    SFIosDeviceProperties *z = [SFIosDeviceProperties new];  // Empty object.
-    SFIosDeviceProperties *p = [self generateRandomProperties];  // Random object 1.
-    SFIosDeviceProperties *q = [self generateRandomProperties];  // Random object 2.
+    SFHtDictionary *z = SFMakeEmptyIosDeviceProperties();  // Empty object.
+    SFHtDictionary *p = [self generateRandomProperties];  // Random object 1.
+    SFHtDictionary *q = [self generateRandomProperties];  // Random object 2.
 
     XCTAssertNotEqualObjects(z, p);
     XCTAssertNotEqualObjects(z, q);
     XCTAssertNotEqualObjects(p, q);
 
-    SFIosDeviceProperties *actual;
+    SFHtDictionary *actual;
     NSData *data;
 
     data = [NSKeyedArchiver archivedDataWithRootObject:p];
@@ -65,38 +70,26 @@
     XCTAssertEqualObjects(q, actual);
 }
 
-- (SFIosDeviceProperties *)generateRandomProperties {
-    SFIosDeviceProperties *properties = [SFIosDeviceProperties new];
-    for (NSString *name in SFIosDevicePropertySpec.specs) {
-        SFIosDevicePropertySpec *spec = [SFIosDevicePropertySpec.specs objectForKey:name];
+- (SFHtDictionary *)generateRandomProperties {
+    SFHtDictionary *properties = SFMakeEmptyIosDeviceProperties();
+    for (NSString *name in properties.entryTypes) {
+        Class entryType = [properties.entryTypes objectForKey:name];
         id value = nil;
-        switch (spec.type) {
-            case SFIosDevicePropertyTypeBool:
-                value = [NSNumber numberWithBool:arc4random_uniform(1)];
-                break;
-            case SFIosDevicePropertyTypeInteger:
-                value = [NSNumber numberWithLong:arc4random_uniform(1 << 20)];
-                break;
-            case SFIosDevicePropertyTypeDouble:
-                value = [NSNumber numberWithDouble:drand48()];
-                break;
-            case SFIosDevicePropertyTypeString:
-                value = [self generateRandomString];
-                break;
-            case SFIosDevicePropertyTypeStringArray:
-                {
-                    NSMutableArray *strings = [NSMutableArray new];
-                    int n = arc4random_uniform(128);
-                    while (n-- > 0) {
-                        [strings addObject:[self generateRandomString]];
-                    }
-                    value = strings;
-                    break;
-                }
-            default:
-                XCTFail(@"Unknown type");
+        if (entryType == NSNumber.class) {
+            value = [NSNumber numberWithLong:arc4random_uniform(1 << 20)];
+        } else if (entryType == NSString.class) {
+            value = [self generateRandomString];
+        } else if (entryType == NSArray.class) {
+            NSMutableArray *strings = [NSMutableArray new];
+            int n = arc4random_uniform(128);
+            while (n-- > 0) {
+                [strings addObject:[self generateRandomString]];
+            }
+            value = strings;
+        } else {
+            XCTFail(@"Unsupported type");
         }
-        [properties setProperty:name value:value];
+        [properties setEntry:name value:value];
     }
     return properties;
 }

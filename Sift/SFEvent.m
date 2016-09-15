@@ -33,6 +33,7 @@
         _userId = nil;
         _fields = nil;
         _deviceProperties = nil;
+        _iosAppState = nil;
         _iosDeviceProperties = nil;
         _metrics = nil;
     }
@@ -46,6 +47,7 @@
            ((!_userId && !event.userId) || [_userId isEqualToString:event.userId]) &&
            ((!_fields && !event.fields) || [_fields isEqualToDictionary:event.fields]) &&
            ((!_deviceProperties && !event.deviceProperties) || [_deviceProperties isEqualToDictionary:event.deviceProperties]) &&
+           ((!_iosAppState && !event.iosAppState) || [_iosAppState isEqual:event.iosAppState]) &&
            ((!_iosDeviceProperties && !event.iosDeviceProperties) || [_iosDeviceProperties isEqual:event.iosDeviceProperties]) &&
            ((!_metrics && !event.metrics) || [_metrics isEqualToDictionary:event.metrics]);
 }
@@ -66,6 +68,7 @@ static NSString * const SF_PATH = @"path";
 static NSString * const SF_USER_ID = @"userId";
 static NSString * const SF_FIELDS = @"fields";
 static NSString * const SF_DEVICE_PROPERTIES = @"deviceProperties";
+static NSString * const SF_IOS_APP_STATE = @"iosAppState";
 static NSString * const SF_IOS_DEVICE_PROPERTIES = @"iosDeviceProperties";
 static NSString * const SF_METRICS = @"metrics";
 
@@ -78,6 +81,7 @@ static NSString * const SF_METRICS = @"metrics";
         _userId = [decoder decodeObjectForKey:SF_USER_ID];
         _fields = [decoder decodeObjectForKey:SF_FIELDS];
         _deviceProperties = [decoder decodeObjectForKey:SF_DEVICE_PROPERTIES];
+        _iosAppState = [decoder decodeObjectForKey:SF_IOS_APP_STATE];
         _iosDeviceProperties = [decoder decodeObjectForKey:SF_IOS_DEVICE_PROPERTIES];
         _metrics = [decoder decodeObjectForKey:SF_METRICS];
     }
@@ -91,6 +95,7 @@ static NSString * const SF_METRICS = @"metrics";
     [encoder encodeObject:_userId forKey:SF_USER_ID];
     [encoder encodeObject:_fields forKey:SF_FIELDS];
     [encoder encodeObject:_deviceProperties forKey:SF_DEVICE_PROPERTIES];
+    [encoder encodeObject:_iosAppState forKey:SF_IOS_APP_STATE];
     [encoder encodeObject:_iosDeviceProperties forKey:SF_IOS_DEVICE_PROPERTIES];
     [encoder encodeObject:_metrics forKey:SF_METRICS];
 }
@@ -110,6 +115,9 @@ static NSString * const SF_METRICS = @"metrics";
             !SFAddToRequest(eventRequest, @"metrics", event.metrics)) {
             SF_DEBUG(@"Some fields of event are incorrect: %@", event);
             continue;
+        }
+        if (event.iosAppState) {
+            [eventRequest setObject:event.iosAppState.entries forKey:@"ios_app_state"];
         }
         if (event.iosDeviceProperties) {
             [eventRequest setObject:event.iosDeviceProperties.entries forKey:@"ios_device_properties"];

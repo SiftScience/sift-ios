@@ -8,7 +8,6 @@
 #import "SFDevicePropertiesReporter.h"
 #import "SFEvent.h"
 #import "SFEvent+Private.h"
-#import "SFLocation.h"
 #import "SFQueue.h"
 #import "SFQueueConfig.h"
 #import "SFUploader.h"
@@ -40,9 +39,6 @@ static const SFQueueConfig SFDefaultEventQueueConfig = {
     NSMutableDictionary *_eventQueues;
     SFUploader *_uploader;
 
-    // Augment event contents.
-    SFLocation *_location;
-
     // Extra collection mechanisms.
     SFAppEventsReporter *_appEventsReporter;
     SFDevicePropertiesReporter *_devicePropertiesReporter;
@@ -72,12 +68,6 @@ static const SFQueueConfig SFDefaultEventQueueConfig = {
 
         _uploader = [[SFUploader alloc] initWithArchivePath:self.archivePathForUploader sift:self];
         if (!_uploader) {
-            self = nil;
-            return nil;
-        }
-
-        _location = [SFLocation new];
-        if (!_location) {
             self = nil;
             return nil;
         }
@@ -143,14 +133,10 @@ static const SFQueueConfig SFDefaultEventQueueConfig = {
 }
 
 - (BOOL)appendEvent:(SFEvent *)event {
-    return [self appendEvent:event withLocation:NO];
+    return [self appendEvent:event toQueue:_defaultQueueIdentifier];
 }
 
-- (BOOL)appendEvent:(SFEvent *)event withLocation:(BOOL)withLocation {
-    return [self appendEvent:event withLocation:withLocation toQueue:_defaultQueueIdentifier];
-}
-
-- (BOOL)appendEvent:(SFEvent *)event withLocation:(BOOL)withLocation toQueue:(NSString *)identifier {
+- (BOOL)appendEvent:(SFEvent *)event toQueue:(NSString *)identifier {
     @synchronized(_eventQueues) {
         SFQueue *queue = [_eventQueues objectForKey:identifier];
         if (!queue) {
@@ -167,18 +153,7 @@ static const SFQueueConfig SFDefaultEventQueueConfig = {
             return NO;
         }
         SF_IMPORTANT(@"Append an event of type \"%@\" to queue \"%@\"", event.type, identifier);
-        if (withLocation) {
-            // Use a weak reference to the queue so that if the queue is
-            // removed before the block is called, we won't append event
-            // to the removed queue.
-            SFQueue * __weak weakQueue = queue;
-            [_location augment:event onCompletion:^(SFEvent *event) {
-                SF_DEBUG(@"Append location-augmenting event: %@", event.fields);
-                [weakQueue append:event];
-            }];
-        } else {
-            [queue append:event];
-        }
+        [queue append:event];
         return YES;
     }
 }

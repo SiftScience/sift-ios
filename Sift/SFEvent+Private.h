@@ -7,9 +7,6 @@
 
 @interface SFEvent ()
 
-/** An unique ID. */
-@property NSString *installationId;
-
 /** Device properties.  Default to nil. */
 @property NSDictionary<NSString *, NSString *> *deviceProperties;
 

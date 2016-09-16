@@ -3,7 +3,6 @@
 @import Foundation;
 @import UIKit;
 
-#import "SFAppEventsReporter.h"
 #import "SFDebug.h"
 #import "SFDevicePropertiesReporter.h"
 #import "SFEvent.h"
@@ -40,7 +39,6 @@ static const SFQueueConfig SFDefaultEventQueueConfig = {
     SFUploader *_uploader;
 
     // Extra collection mechanisms.
-    SFAppEventsReporter *_appEventsReporter;
     SFDevicePropertiesReporter *_devicePropertiesReporter;
 }
 
@@ -84,10 +82,6 @@ static const SFQueueConfig SFDefaultEventQueueConfig = {
 
         // Create autonomous data collection.
         dispatch_async(dispatch_get_global_queue(QOS_CLASS_BACKGROUND, 0), ^{
-            _appEventsReporter = [SFAppEventsReporter new];
-            if (!_appEventsReporter) {
-                SF_DEBUG(@"Could not create _appEventsReporter");
-            }
             _devicePropertiesReporter = [SFDevicePropertiesReporter new];
             if (!_devicePropertiesReporter) {
                 SF_DEBUG(@"Could not create _devicePropertiesReporter");

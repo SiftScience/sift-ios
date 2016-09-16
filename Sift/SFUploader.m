@@ -41,7 +41,7 @@ static const int64_t SF_CHECK_UPLOAD_LEEWAY = 5 * NSEC_PER_SEC;
 - (instancetype)initWithArchivePath:(NSString *)archivePath sift:(Sift *)sift config:(NSURLSessionConfiguration *)config backoffBase:(int64_t)backoffBase {
     self = [super init];
     if (self) {
-        _serial = dispatch_queue_create("com.sift.SFUploader", NULL);
+        _serial = dispatch_queue_create("com.sift.SFUploader", DISPATCH_QUEUE_SERIAL);
         _archivePath = archivePath;
         _session = [NSURLSession sessionWithConfiguration:config delegate:self delegateQueue:nil];
         _uploadTask = nil;

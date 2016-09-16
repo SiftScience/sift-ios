@@ -93,7 +93,7 @@
 
 // Keys for archive.
 static NSString * const SF_QUEUE = @"queue";
-static NSString * const SF_LAST_EVENT = @"last_event";
+static NSString * const SF_LAST_EVENT = @"lastEvent";
 static NSString * const SF_LAST_EVENT_TIMESTAMP = @"lastEventTimestamp";
 
 - (void)archive {

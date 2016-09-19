@@ -367,61 +367,7 @@ SFHtDictionary *SFCollectIosDeviceProperties() {
     [iosDeviceProperties setEntry:@"evidence_directories_symlinked" value:dirsSymlinked];
     [iosDeviceProperties setEntry:@"evidence_directories_writable" value:dirsWritable];
 
-    // 2. Sytem-call detection.
-
-    NSMutableArray<NSString *> *syscallsSucceeded = [NSMutableArray new];
-
-    // This is not fork-safe; disable it until we figure out how to do
-    // it safely.
-#if 0
-    pid_t pid = fork();
-    if (!pid) {
-        exit(0);
-    } else if (pid > 0) {
-        SF_DEBUG(@"fork() does not return error");
-        waitpid(pid, NULL, 0);
-        [syscallsSucceeded addObject:@"fork"];
-    }
-#endif
-
-    // system(NULL) will trigger SIGABRT?
-
-    [iosDeviceProperties setEntry:@"evidence_syscalls_succeeded" value:syscallsSucceeded];
-
-    // 3. Cydia URL scheme detection.
-    // Because when we poke iOS about this, it reports an error, and
-    // that sometimes confuses SDK users, we will only poke once per
-    // process.
-
-    NSMutableArray<NSString *> *urlSchemesOpenable = [NSMutableArray new];
-
-    // iOS 9 requires white-listing URL schemes; until we figure how to
-    // detect this unobtrusively, disable this detection for now.
-#if 0
-    static BOOL hasTestedCscheme = NO;
-    static BOOL cschemeTestResult = NO;
-
-    char cscheme[] = "plqvn";
-    rot13(cscheme);
-    char curlpath[] = "://cnpxntr/pbz.rknzcyr.cnpxntr";
-    rot13(curlpath);
-
-    NSString *scheme = [NSString stringWithCString:cscheme encoding:NSASCIIStringEncoding];
-    NSString *urlpath = [NSString stringWithCString:curlpath encoding:NSASCIIStringEncoding];
-    NSString *url = [scheme stringByAppendingString:urlpath];
-    if (!hasTestedCscheme) {
-        cschemeTestResult = [[UIApplication sharedApplication] canOpenURL:[NSURL URLWithString:url]];
-        hasTestedCscheme = YES;
-    }
-    if (cschemeTestResult) {
-        SF_DEBUG(@"Can open URL: %@", url);
-        [urlSchemesOpenable addObject:scheme];
-    }
-#endif
-
-    [iosDeviceProperties setEntry:@"evidence_url_schemes_openable" value:urlSchemesOpenable];
-
-    // 4. dyld detection.
+    // 2. dyld detection.
 
     NSMutableArray<NSString *> *dyldsPresent = [NSMutableArray new];
 

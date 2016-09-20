@@ -11,7 +11,7 @@
 @property NSDictionary<NSString *, NSString *> *deviceProperties;
 
 /** Structured iOS device properties.  Default to nil. */
-@property SFIosDeviceProperties *iosDeviceProperties;
+@property SFHtDictionary *iosDeviceProperties;
 
 /** Internal metrics.  Default to nil. */
 @property NSDictionary<NSString *, NSString *> *metrics;

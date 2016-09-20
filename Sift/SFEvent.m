@@ -112,7 +112,7 @@ static NSString * const SF_METRICS = @"metrics";
             continue;
         }
         if (event.iosDeviceProperties) {
-            [eventRequest setObject:event.iosDeviceProperties.properties forKey:@"ios_device_properties"];
+            [eventRequest setObject:event.iosDeviceProperties.entries forKey:@"ios_device_properties"];
         }
         [data addObject:eventRequest];
     }

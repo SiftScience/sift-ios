@@ -83,11 +83,14 @@ static const SFQueueConfig SFDefaultEventQueueConfig = {
         [notificationCenter addObserver:self selector:@selector(applicationDidEnterBackground:) name:UIApplicationDidEnterBackgroundNotification object:nil];
 
         // Create autonomous data collection.
+        _iosAppStateCollector = [[SFIosAppStateCollector alloc] initWithArchivePath:self.archivePathForIosAppStateCollector];
+        if (!_iosAppStateCollector) {
+            SF_DEBUG(@"Could not create _iosAppStateCollector");
+            self = nil;
+            return nil;
+        }
         dispatch_async(dispatch_get_global_queue(QOS_CLASS_BACKGROUND, 0), ^{
-            _iosAppStateCollector = [[SFIosAppStateCollector alloc] initWithArchivePath:self.archivePathForIosAppStateCollector];
-            if (!_iosAppStateCollector) {
-                SF_DEBUG(@"Could not create _iosAppStateCollector");
-            }
+            // Device properties reporter uses Sift object in the constructor and so we need to create asynchronously.
             _devicePropertiesReporter = [SFDevicePropertiesReporter new];
             if (!_devicePropertiesReporter) {
                 SF_DEBUG(@"Could not create _devicePropertiesReporter");
@@ -213,6 +216,31 @@ static const SFQueueConfig SFDefaultEventQueueConfig = {
 - (void)setUserId:(NSString *)userId {
     _userId = userId;
     [self archiveKeys];
+}
+
+- (BOOL)allowUsingMotionSensors {
+    return _iosAppStateCollector.allowUsingMotionSensors;
+}
+
+- (void)setAllowUsingMotionSensors:(BOOL)allowUsingMotionSensors {
+    _iosAppStateCollector.allowUsingMotionSensors = allowUsingMotionSensors;
+}
+
+
+- (void)updateDeviceMotion:(CMDeviceMotion *)data {
+    [_iosAppStateCollector updateDeviceMotion:data];
+}
+
+- (void)updateAccelerometerData:(CMAccelerometerData *)data {
+    [_iosAppStateCollector updateAccelerometerData:data];
+}
+
+- (void)updateGyroData:(CMGyroData *)data {
+    [_iosAppStateCollector updateGyroData:data];
+}
+
+- (void)updateMagnetometerData:(CMMagnetometerData *)data {
+    [_iosAppStateCollector updateMagnetometerData:data];
 }
 
 #pragma mark - NSKeyedArchiver/NSKeyedUnarchiver

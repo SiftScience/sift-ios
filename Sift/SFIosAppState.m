@@ -19,6 +19,8 @@ SFHtDictionary *SFMakeEmptyIosAppState() {
         entryTypes = [NSMutableDictionary new];
 #define ENTRY_TYPE(key_, type_) ([entryTypes setObject:(type_) forKey:(key_)])
 
+        ENTRY_TYPE(@"window_root_view_controller_titles", NSArray.class);
+
         ENTRY_TYPE(@"battery_level", NSNumber.class);
         ENTRY_TYPE(@"battery_state", NSString.class);
 
@@ -202,6 +204,17 @@ static NSArray<NSString *> *getIpAddresses();
 
 SFHtDictionary *SFCollectIosAppState(CLLocationManager *locationManager) {
     SFHtDictionary *iosAppState = SFMakeEmptyIosAppState();
+
+    // window.rootViewController.title
+    NSMutableArray<NSString *> *titles = [NSMutableArray new];
+    for (UIWindow *window in UIApplication.sharedApplication.windows) {
+        if (window.rootViewController.title) {
+            [titles addObject:window.rootViewController.title];
+        }
+    }
+    if (titles.count) {
+        [iosAppState setEntry:@"window_root_view_controller_titles" value:titles];
+    }
 
     UIDevice *device = UIDevice.currentDevice;
 

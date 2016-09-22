@@ -11,7 +11,7 @@ SFHtDictionary *SFMakeEmptyIosAppState();
 
 SFHtDictionary *SFCollectIosAppState(CLLocationManager *locationManager);
 
-NSDictionary *SFCMDeviceMotionToDictionary(CMDeviceMotion *data, SFTimestamp now);
-NSDictionary *SFCMAccelerometerDataToDictionary(CMAccelerometerData *data, SFTimestamp now);
-NSDictionary *SFCMGyroDataToDictionary(CMGyroData *data, SFTimestamp now);
-NSDictionary *SFCMMagnetometerDataToDictionary(CMMagnetometerData *data, SFTimestamp now);
+SFHtDictionary *SFCMDeviceMotionToDictionary(CMDeviceMotion *data, SFTimestamp now);
+SFHtDictionary *SFCMAccelerometerDataToDictionary(CMAccelerometerData *data, SFTimestamp now);
+SFHtDictionary *SFCMGyroDataToDictionary(CMGyroData *data, SFTimestamp now);
+SFHtDictionary *SFCMMagnetometerDataToDictionary(CMMagnetometerData *data, SFTimestamp now);

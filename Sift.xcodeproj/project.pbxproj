@@ -43,6 +43,9 @@
 		71E15CFB1D95D14700A0305C /* SFTokenBucket.h in Headers */ = {isa = PBXBuildFile; fileRef = 71E15CFA1D95D14700A0305C /* SFTokenBucket.h */; };
 		71E15CFD1D95D15900A0305C /* SFTokenBucket.m in Sources */ = {isa = PBXBuildFile; fileRef = 71E15CFC1D95D15900A0305C /* SFTokenBucket.m */; };
 		71E15CFF1D95DEC300A0305C /* SFTokenBucketTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 71E15CFE1D95DEC300A0305C /* SFTokenBucketTests.m */; };
+		71E15CF51D95C8FA00A0305C /* SFCircularBuffer.h in Headers */ = {isa = PBXBuildFile; fileRef = 71E15CF31D95C8FA00A0305C /* SFCircularBuffer.h */; };
+		71E15CF81D95C90000A0305C /* SFCircularBufferTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 71E15CF71D95C90000A0305C /* SFCircularBufferTests.m */; };
+		71E15CF91D95C92300A0305C /* SFCircularBuffer.m in Sources */ = {isa = PBXBuildFile; fileRef = 71E15CF41D95C8FA00A0305C /* SFCircularBuffer.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -96,6 +99,9 @@
 		71E15CFA1D95D14700A0305C /* SFTokenBucket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SFTokenBucket.h; sourceTree = "<group>"; };
 		71E15CFC1D95D15900A0305C /* SFTokenBucket.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SFTokenBucket.m; sourceTree = "<group>"; };
 		71E15CFE1D95DEC300A0305C /* SFTokenBucketTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SFTokenBucketTests.m; sourceTree = "<group>"; };
+		71E15CF31D95C8FA00A0305C /* SFCircularBuffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SFCircularBuffer.h; sourceTree = "<group>"; };
+		71E15CF41D95C8FA00A0305C /* SFCircularBuffer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SFCircularBuffer.m; sourceTree = "<group>"; };
+		71E15CF71D95C90000A0305C /* SFCircularBufferTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SFCircularBufferTests.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -139,6 +145,8 @@
 			isa = PBXGroup;
 			children = (
 				7168EE061C7B977500A88245 /* Info.plist */,
+				71E15CF31D95C8FA00A0305C /* SFCircularBuffer.h */,
+				71E15CF41D95C8FA00A0305C /* SFCircularBuffer.m */,
 				716BEB861C7D304D009C3706 /* SFDebug.h */,
 				7168EE321C864A4100A88245 /* SFDevicePropertiesReporter.h */,
 				7168EE331C864A4100A88245 /* SFDevicePropertiesReporter.m */,
@@ -173,6 +181,7 @@
 			isa = PBXGroup;
 			children = (
 				7168EE121C7B977500A88245 /* Info.plist */,
+				71E15CF71D95C90000A0305C /* SFCircularBufferTests.m */,
 				7168EE1B1C7E61E900A88245 /* SFEventTests.m */,
 				713D85C01D874ED40011D5FE /* SFHtDictionaryTests.m */,
 				71B1B5901D8B31ED00EA9B17 /* SFIosAppStateTests.m */,
@@ -196,6 +205,7 @@
 			files = (
 				7168EE2C1C86250100A88245 /* SFEvent+Private.h in Headers */,
 				716BEB911C7D3695009C3706 /* SFUtils.h in Headers */,
+				71E15CF51D95C8FA00A0305C /* SFCircularBuffer.h in Headers */,
 				716BEB8A1C7D336B009C3706 /* SFEvent.h in Headers */,
 				7168EE221C7F978D00A88245 /* Sift+Private.h in Headers */,
 				71B1B5971D8C700C00EA9B17 /* SFIosAppStateCollector.h in Headers */,
@@ -309,6 +319,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				716BEB931C7D3695009C3706 /* Sift.m in Sources */,
+				71E15CF91D95C92300A0305C /* SFCircularBuffer.m in Sources */,
 				7168EE281C7FB80C00A88245 /* SFUploader.m in Sources */,
 				71E15CFD1D95D15900A0305C /* SFTokenBucket.m in Sources */,
 				713D859A1D627E9F0011D5FE /* SFIosDeviceProperties.m in Sources */,
@@ -326,6 +337,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				71E15CF81D95C90000A0305C /* SFCircularBufferTests.m in Sources */,
 				7168EE411C88C91900A88245 /* SFStubHttpProtocol.m in Sources */,
 				71E15CFF1D95DEC300A0305C /* SFTokenBucketTests.m in Sources */,
 				7168EE111C7B977500A88245 /* SiftTests.m in Sources */,

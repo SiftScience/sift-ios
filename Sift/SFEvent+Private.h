@@ -3,12 +3,16 @@
 @import Foundation;
 
 #import "SFEvent.h"
+#import "SFIosAppState.h"
 #import "SFIosDeviceProperties.h"
 
 @interface SFEvent ()
 
 /** Device properties.  Default to nil. */
 @property NSDictionary<NSString *, NSString *> *deviceProperties;
+
+/** Structured iOS app state.  Default to nil. */
+@property SFHtDictionary *iosAppState;
 
 /** Structured iOS device properties.  Default to nil. */
 @property SFHtDictionary *iosDeviceProperties;

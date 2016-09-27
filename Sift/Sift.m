@@ -7,6 +7,7 @@
 #import "SFDevicePropertiesReporter.h"
 #import "SFEvent.h"
 #import "SFEvent+Private.h"
+#import "SFIosAppStateCollector.h"
 #import "SFQueue.h"
 #import "SFQueueConfig.h"
 #import "SFUploader.h"
@@ -39,6 +40,7 @@ static const SFQueueConfig SFDefaultEventQueueConfig = {
     SFUploader *_uploader;
 
     // Extra collection mechanisms.
+    SFIosAppStateCollector *_iosAppStateCollector;
     SFDevicePropertiesReporter *_devicePropertiesReporter;
 }
 
@@ -82,6 +84,10 @@ static const SFQueueConfig SFDefaultEventQueueConfig = {
 
         // Create autonomous data collection.
         dispatch_async(dispatch_get_global_queue(QOS_CLASS_BACKGROUND, 0), ^{
+            _iosAppStateCollector = [[SFIosAppStateCollector alloc] initWithArchivePath:self.archivePathForIosAppStateCollector];
+            if (!_iosAppStateCollector) {
+                SF_DEBUG(@"Could not create _iosAppStateCollector");
+            }
             _devicePropertiesReporter = [SFDevicePropertiesReporter new];
             if (!_devicePropertiesReporter) {
                 SF_DEBUG(@"Could not create _devicePropertiesReporter");
@@ -217,6 +223,7 @@ static NSString * const SF_SIFT_BEACON_KEY = @"beaconKey";
 static NSString * const SF_SIFT_USER_ID = @"userId";
 
 static NSString * const SF_QUEUE_DIR = @"queues";
+static NSString * const SF_IOS_APP_STATE_COLLECTOR = @"ios_app_state_collector";
 static NSString * const SF_UPLOADER = @"uploader";
 
 - (NSString *)archivePathForKeys {
@@ -225,6 +232,10 @@ static NSString * const SF_UPLOADER = @"uploader";
 
 - (NSString *)archivePathForQueue:(NSString *)identifier {
     return [[_rootDirPath stringByAppendingPathComponent:SF_QUEUE_DIR] stringByAppendingPathComponent:identifier];
+}
+
+- (NSString *)archivePathForIosAppStateCollector {
+    return [_rootDirPath stringByAppendingPathComponent:SF_IOS_APP_STATE_COLLECTOR];
 }
 
 - (NSString *)archivePathForUploader {
@@ -239,6 +250,7 @@ static NSString * const SF_UPLOADER = @"uploader";
         }
     }
     [_uploader archive];
+    [_iosAppStateCollector archive];
 }
 
 - (void)archiveKeys {

@@ -38,6 +38,11 @@
 		71B1B58D1D8B281900EA9B17 /* SFIosAppState.h in Headers */ = {isa = PBXBuildFile; fileRef = 71B1B58C1D8B281900EA9B17 /* SFIosAppState.h */; };
 		71B1B58F1D8B282C00EA9B17 /* SFIosAppState.m in Sources */ = {isa = PBXBuildFile; fileRef = 71B1B58E1D8B282C00EA9B17 /* SFIosAppState.m */; };
 		71B1B5911D8B31ED00EA9B17 /* SFIosAppStateTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 71B1B5901D8B31ED00EA9B17 /* SFIosAppStateTests.m */; };
+		71B1B5971D8C700C00EA9B17 /* SFIosAppStateCollector.h in Headers */ = {isa = PBXBuildFile; fileRef = 71B1B5961D8C700C00EA9B17 /* SFIosAppStateCollector.h */; };
+		71B1B5991D8C701E00EA9B17 /* SFIosAppStateCollector.m in Sources */ = {isa = PBXBuildFile; fileRef = 71B1B5981D8C701E00EA9B17 /* SFIosAppStateCollector.m */; };
+		71E15CFB1D95D14700A0305C /* SFTokenBucket.h in Headers */ = {isa = PBXBuildFile; fileRef = 71E15CFA1D95D14700A0305C /* SFTokenBucket.h */; };
+		71E15CFD1D95D15900A0305C /* SFTokenBucket.m in Sources */ = {isa = PBXBuildFile; fileRef = 71E15CFC1D95D15900A0305C /* SFTokenBucket.m */; };
+		71E15CFF1D95DEC300A0305C /* SFTokenBucketTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 71E15CFE1D95DEC300A0305C /* SFTokenBucketTests.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -86,6 +91,11 @@
 		71B1B58C1D8B281900EA9B17 /* SFIosAppState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SFIosAppState.h; sourceTree = "<group>"; };
 		71B1B58E1D8B282C00EA9B17 /* SFIosAppState.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SFIosAppState.m; sourceTree = "<group>"; };
 		71B1B5901D8B31ED00EA9B17 /* SFIosAppStateTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SFIosAppStateTests.m; sourceTree = "<group>"; };
+		71B1B5961D8C700C00EA9B17 /* SFIosAppStateCollector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SFIosAppStateCollector.h; sourceTree = "<group>"; };
+		71B1B5981D8C701E00EA9B17 /* SFIosAppStateCollector.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SFIosAppStateCollector.m; sourceTree = "<group>"; };
+		71E15CFA1D95D14700A0305C /* SFTokenBucket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SFTokenBucket.h; sourceTree = "<group>"; };
+		71E15CFC1D95D15900A0305C /* SFTokenBucket.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SFTokenBucket.m; sourceTree = "<group>"; };
+		71E15CFE1D95DEC300A0305C /* SFTokenBucketTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SFTokenBucketTests.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -139,11 +149,15 @@
 				713D85BE1D87441A0011D5FE /* SFHtDictionary.m */,
 				71B1B58C1D8B281900EA9B17 /* SFIosAppState.h */,
 				71B1B58E1D8B282C00EA9B17 /* SFIosAppState.m */,
+				71B1B5961D8C700C00EA9B17 /* SFIosAppStateCollector.h */,
+				71B1B5981D8C701E00EA9B17 /* SFIosAppStateCollector.m */,
 				713D85981D627E860011D5FE /* SFIosDeviceProperties.h */,
 				713D85991D627E9F0011D5FE /* SFIosDeviceProperties.m */,
 				7168EE1D1C7E7A6800A88245 /* SFQueue.h */,
 				7168EE1F1C7E7B6700A88245 /* SFQueue.m */,
 				716BEB891C7D336B009C3706 /* SFQueueConfig.h */,
+				71E15CFA1D95D14700A0305C /* SFTokenBucket.h */,
+				71E15CFC1D95D15900A0305C /* SFTokenBucket.m */,
 				7168EE251C7FB80C00A88245 /* SFUploader.h */,
 				7168EE261C7FB80C00A88245 /* SFUploader.m */,
 				716BEB8D1C7D3695009C3706 /* SFUtils.h */,
@@ -166,6 +180,7 @@
 				7168EE231C7F99AF00A88245 /* SFQueueTests.m */,
 				7168EE3E1C88C91900A88245 /* SFStubHttpProtocol.h */,
 				7168EE3F1C88C91900A88245 /* SFStubHttpProtocol.m */,
+				71E15CFE1D95DEC300A0305C /* SFTokenBucketTests.m */,
 				7168EE401C88C91900A88245 /* SFUploaderTests.m */,
 				7168EE101C7B977500A88245 /* SiftTests.m */,
 			);
@@ -183,6 +198,7 @@
 				716BEB911C7D3695009C3706 /* SFUtils.h in Headers */,
 				716BEB8A1C7D336B009C3706 /* SFEvent.h in Headers */,
 				7168EE221C7F978D00A88245 /* Sift+Private.h in Headers */,
+				71B1B5971D8C700C00EA9B17 /* SFIosAppStateCollector.h in Headers */,
 				716BEB8B1C7D336B009C3706 /* SFQueueConfig.h in Headers */,
 				7168EE1E1C7E7A6800A88245 /* SFQueue.h in Headers */,
 				7168EE051C7B977500A88245 /* Sift.h in Headers */,
@@ -190,6 +206,7 @@
 				71B1B58D1D8B281900EA9B17 /* SFIosAppState.h in Headers */,
 				716BEB871C7D304D009C3706 /* SFDebug.h in Headers */,
 				713D85BD1D8744040011D5FE /* SFHtDictionary.h in Headers */,
+				71E15CFB1D95D14700A0305C /* SFTokenBucket.h in Headers */,
 				7168EE271C7FB80C00A88245 /* SFUploader.h in Headers */,
 				7168EE341C864A4100A88245 /* SFDevicePropertiesReporter.h in Headers */,
 			);
@@ -293,10 +310,12 @@
 			files = (
 				716BEB931C7D3695009C3706 /* Sift.m in Sources */,
 				7168EE281C7FB80C00A88245 /* SFUploader.m in Sources */,
+				71E15CFD1D95D15900A0305C /* SFTokenBucket.m in Sources */,
 				713D859A1D627E9F0011D5FE /* SFIosDeviceProperties.m in Sources */,
 				71B1B58F1D8B282C00EA9B17 /* SFIosAppState.m in Sources */,
 				7168EE351C864A4100A88245 /* SFDevicePropertiesReporter.m in Sources */,
 				716BEB921C7D3695009C3706 /* SFUtils.m in Sources */,
+				71B1B5991D8C701E00EA9B17 /* SFIosAppStateCollector.m in Sources */,
 				7168EE201C7E7B6700A88245 /* SFQueue.m in Sources */,
 				713D85BF1D87441A0011D5FE /* SFHtDictionary.m in Sources */,
 				716BEB901C7D3695009C3706 /* SFEvent.m in Sources */,
@@ -308,6 +327,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				7168EE411C88C91900A88245 /* SFStubHttpProtocol.m in Sources */,
+				71E15CFF1D95DEC300A0305C /* SFTokenBucketTests.m in Sources */,
 				7168EE111C7B977500A88245 /* SiftTests.m in Sources */,
 				7168EE1C1C7E61E900A88245 /* SFEventTests.m in Sources */,
 				713D859D1D6CF69E0011D5FE /* SFIosDevicePropertiesTests.m in Sources */,

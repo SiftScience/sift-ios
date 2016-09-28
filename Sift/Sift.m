@@ -4,10 +4,10 @@
 @import UIKit;
 
 #import "SFDebug.h"
-#import "SFDevicePropertiesReporter.h"
 #import "SFEvent.h"
 #import "SFEvent+Private.h"
 #import "SFIosAppStateCollector.h"
+#import "SFIosDevicePropertiesCollector.h"
 #import "SFQueue.h"
 #import "SFQueueConfig.h"
 #import "SFUploader.h"
@@ -41,7 +41,7 @@ static const SFQueueConfig SFDefaultEventQueueConfig = {
 
     // Extra collection mechanisms.
     SFIosAppStateCollector *_iosAppStateCollector;
-    SFDevicePropertiesReporter *_devicePropertiesReporter;
+    SFIosDevicePropertiesCollector *_iosDevicePropertiesCollector;
 }
 
 + (instancetype)sharedInstance {
@@ -89,13 +89,12 @@ static const SFQueueConfig SFDefaultEventQueueConfig = {
             self = nil;
             return nil;
         }
-        dispatch_async(dispatch_get_global_queue(QOS_CLASS_BACKGROUND, 0), ^{
-            // Device properties reporter uses Sift object in the constructor and so we need to create asynchronously.
-            _devicePropertiesReporter = [SFDevicePropertiesReporter new];
-            if (!_devicePropertiesReporter) {
-                SF_DEBUG(@"Could not create _devicePropertiesReporter");
-            }
-        });
+        _iosDevicePropertiesCollector = [SFIosDevicePropertiesCollector new];
+        if (!_iosDevicePropertiesCollector) {
+            SF_DEBUG(@"Could not create _iosDevicePropertiesCollector");
+            self = nil;
+            return nil;
+        }
     }
     return self;
 }
@@ -105,6 +104,12 @@ static const SFQueueConfig SFDefaultEventQueueConfig = {
     dispatch_async(dispatch_get_global_queue(QOS_CLASS_BACKGROUND, 0), ^{
         [self archive];
     });
+}
+
+- (BOOL)hasEventQueue:(NSString *)identifier {
+    @synchronized (_eventQueues) {
+        return [_eventQueues objectForKey:identifier] ? YES : NO;
+    }
 }
 
 - (BOOL)addEventQueue:(NSString *)identifier config:(SFQueueConfig)config {

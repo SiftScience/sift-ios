@@ -32,6 +32,9 @@
 
 @property (readonly) NSString *sdkVersion;
 
+/** @return YES if the queue exists. */
+- (BOOL)hasEventQueue:(NSString *)identifier;
+
 /**
  * Add an event queue that did not exist prior to the call.
  *

@@ -24,8 +24,8 @@
 		7168EE271C7FB80C00A88245 /* SFUploader.h in Headers */ = {isa = PBXBuildFile; fileRef = 7168EE251C7FB80C00A88245 /* SFUploader.h */; };
 		7168EE281C7FB80C00A88245 /* SFUploader.m in Sources */ = {isa = PBXBuildFile; fileRef = 7168EE261C7FB80C00A88245 /* SFUploader.m */; };
 		7168EE2C1C86250100A88245 /* SFEvent+Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 7168EE2B1C86250100A88245 /* SFEvent+Private.h */; };
-		7168EE341C864A4100A88245 /* SFDevicePropertiesReporter.h in Headers */ = {isa = PBXBuildFile; fileRef = 7168EE321C864A4100A88245 /* SFDevicePropertiesReporter.h */; };
-		7168EE351C864A4100A88245 /* SFDevicePropertiesReporter.m in Sources */ = {isa = PBXBuildFile; fileRef = 7168EE331C864A4100A88245 /* SFDevicePropertiesReporter.m */; };
+		7168EE341C864A4100A88245 /* SFIosDevicePropertiesCollector.h in Headers */ = {isa = PBXBuildFile; fileRef = 7168EE321C864A4100A88245 /* SFIosDevicePropertiesCollector.h */; };
+		7168EE351C864A4100A88245 /* SFIosDevicePropertiesCollector.m in Sources */ = {isa = PBXBuildFile; fileRef = 7168EE331C864A4100A88245 /* SFIosDevicePropertiesCollector.m */; };
 		7168EE411C88C91900A88245 /* SFStubHttpProtocol.m in Sources */ = {isa = PBXBuildFile; fileRef = 7168EE3F1C88C91900A88245 /* SFStubHttpProtocol.m */; };
 		7168EE421C88C91900A88245 /* SFUploaderTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 7168EE401C88C91900A88245 /* SFUploaderTests.m */; };
 		716BEB871C7D304D009C3706 /* SFDebug.h in Headers */ = {isa = PBXBuildFile; fileRef = 716BEB861C7D304D009C3706 /* SFDebug.h */; };
@@ -79,8 +79,8 @@
 		7168EE251C7FB80C00A88245 /* SFUploader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SFUploader.h; sourceTree = "<group>"; };
 		7168EE261C7FB80C00A88245 /* SFUploader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SFUploader.m; sourceTree = "<group>"; };
 		7168EE2B1C86250100A88245 /* SFEvent+Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "SFEvent+Private.h"; sourceTree = "<group>"; };
-		7168EE321C864A4100A88245 /* SFDevicePropertiesReporter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SFDevicePropertiesReporter.h; sourceTree = "<group>"; };
-		7168EE331C864A4100A88245 /* SFDevicePropertiesReporter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SFDevicePropertiesReporter.m; sourceTree = "<group>"; };
+		7168EE321C864A4100A88245 /* SFIosDevicePropertiesCollector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SFIosDevicePropertiesCollector.h; sourceTree = "<group>"; };
+		7168EE331C864A4100A88245 /* SFIosDevicePropertiesCollector.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SFIosDevicePropertiesCollector.m; sourceTree = "<group>"; };
 		7168EE3E1C88C91900A88245 /* SFStubHttpProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SFStubHttpProtocol.h; sourceTree = "<group>"; };
 		7168EE3F1C88C91900A88245 /* SFStubHttpProtocol.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SFStubHttpProtocol.m; sourceTree = "<group>"; };
 		7168EE401C88C91900A88245 /* SFUploaderTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SFUploaderTests.m; sourceTree = "<group>"; };
@@ -148,8 +148,6 @@
 				71E15CF31D95C8FA00A0305C /* SFCircularBuffer.h */,
 				71E15CF41D95C8FA00A0305C /* SFCircularBuffer.m */,
 				716BEB861C7D304D009C3706 /* SFDebug.h */,
-				7168EE321C864A4100A88245 /* SFDevicePropertiesReporter.h */,
-				7168EE331C864A4100A88245 /* SFDevicePropertiesReporter.m */,
 				716BEB881C7D336B009C3706 /* SFEvent.h */,
 				716BEB8C1C7D3695009C3706 /* SFEvent.m */,
 				7168EE2B1C86250100A88245 /* SFEvent+Private.h */,
@@ -161,6 +159,8 @@
 				71B1B5981D8C701E00EA9B17 /* SFIosAppStateCollector.m */,
 				713D85981D627E860011D5FE /* SFIosDeviceProperties.h */,
 				713D85991D627E9F0011D5FE /* SFIosDeviceProperties.m */,
+				7168EE321C864A4100A88245 /* SFIosDevicePropertiesCollector.h */,
+				7168EE331C864A4100A88245 /* SFIosDevicePropertiesCollector.m */,
 				7168EE1D1C7E7A6800A88245 /* SFQueue.h */,
 				7168EE1F1C7E7B6700A88245 /* SFQueue.m */,
 				716BEB891C7D336B009C3706 /* SFQueueConfig.h */,
@@ -218,7 +218,7 @@
 				713D85BD1D8744040011D5FE /* SFHtDictionary.h in Headers */,
 				71E15CFB1D95D14700A0305C /* SFTokenBucket.h in Headers */,
 				7168EE271C7FB80C00A88245 /* SFUploader.h in Headers */,
-				7168EE341C864A4100A88245 /* SFDevicePropertiesReporter.h in Headers */,
+				7168EE341C864A4100A88245 /* SFIosDevicePropertiesCollector.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -324,7 +324,7 @@
 				71E15CFD1D95D15900A0305C /* SFTokenBucket.m in Sources */,
 				713D859A1D627E9F0011D5FE /* SFIosDeviceProperties.m in Sources */,
 				71B1B58F1D8B282C00EA9B17 /* SFIosAppState.m in Sources */,
-				7168EE351C864A4100A88245 /* SFDevicePropertiesReporter.m in Sources */,
+				7168EE351C864A4100A88245 /* SFIosDevicePropertiesCollector.m in Sources */,
 				716BEB921C7D3695009C3706 /* SFUtils.m in Sources */,
 				71B1B5991D8C701E00EA9B17 /* SFIosAppStateCollector.m in Sources */,
 				7168EE201C7E7B6700A88245 /* SFQueue.m in Sources */,

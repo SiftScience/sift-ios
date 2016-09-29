@@ -13,6 +13,7 @@
 		713D85BD1D8744040011D5FE /* SFHtDictionary.h in Headers */ = {isa = PBXBuildFile; fileRef = 713D85BC1D8744040011D5FE /* SFHtDictionary.h */; };
 		713D85BF1D87441A0011D5FE /* SFHtDictionary.m in Sources */ = {isa = PBXBuildFile; fileRef = 713D85BE1D87441A0011D5FE /* SFHtDictionary.m */; };
 		713D85C11D874ED40011D5FE /* SFHtDictionaryTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 713D85C01D874ED40011D5FE /* SFHtDictionaryTests.m */; };
+		715AB3EB1D9DBBFB00771402 /* SFCompatibility.h in Headers */ = {isa = PBXBuildFile; fileRef = 715AB3EA1D9DBBFB00771402 /* SFCompatibility.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		7168EE051C7B977500A88245 /* Sift.h in Headers */ = {isa = PBXBuildFile; fileRef = 7168EE041C7B977500A88245 /* Sift.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		7168EE0C1C7B977500A88245 /* Sift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7168EE011C7B977500A88245 /* Sift.framework */; };
 		7168EE111C7B977500A88245 /* SiftTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 7168EE101C7B977500A88245 /* SiftTests.m */; };
@@ -65,6 +66,7 @@
 		713D85BC1D8744040011D5FE /* SFHtDictionary.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SFHtDictionary.h; sourceTree = "<group>"; };
 		713D85BE1D87441A0011D5FE /* SFHtDictionary.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SFHtDictionary.m; sourceTree = "<group>"; };
 		713D85C01D874ED40011D5FE /* SFHtDictionaryTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SFHtDictionaryTests.m; sourceTree = "<group>"; };
+		715AB3EA1D9DBBFB00771402 /* SFCompatibility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SFCompatibility.h; sourceTree = "<group>"; };
 		7168EE011C7B977500A88245 /* Sift.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Sift.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		7168EE041C7B977500A88245 /* Sift.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Sift.h; sourceTree = "<group>"; };
 		7168EE061C7B977500A88245 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -147,6 +149,7 @@
 				7168EE061C7B977500A88245 /* Info.plist */,
 				71E15CF31D95C8FA00A0305C /* SFCircularBuffer.h */,
 				71E15CF41D95C8FA00A0305C /* SFCircularBuffer.m */,
+				715AB3EA1D9DBBFB00771402 /* SFCompatibility.h */,
 				716BEB861C7D304D009C3706 /* SFDebug.h */,
 				716BEB881C7D336B009C3706 /* SFEvent.h */,
 				716BEB8C1C7D3695009C3706 /* SFEvent.m */,
@@ -214,6 +217,7 @@
 				7168EE051C7B977500A88245 /* Sift.h in Headers */,
 				713D859B1D627EA60011D5FE /* SFIosDeviceProperties.h in Headers */,
 				71B1B58D1D8B281900EA9B17 /* SFIosAppState.h in Headers */,
+				715AB3EB1D9DBBFB00771402 /* SFCompatibility.h in Headers */,
 				716BEB871C7D304D009C3706 /* SFDebug.h in Headers */,
 				713D85BD1D8744040011D5FE /* SFHtDictionary.h in Headers */,
 				71E15CFB1D95D14700A0305C /* SFTokenBucket.h in Headers */,

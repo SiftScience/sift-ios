@@ -1,12 +1,13 @@
 // Copyright (c) 2016 Sift Science. All rights reserved.
 
+#import "SFCompatibility.h"
 #import "SFDebug.h"
 
 #import "SFHtDictionary.h"
 
 @implementation SFHtDictionary
 
-- (instancetype)initWithEntryTypes:(NSDictionary<NSString *, Class> *)entryTypes {
+- (instancetype)initWithEntryTypes:(SF_GENERICS(NSDictionary, NSString *, Class) *)entryTypes {
     self = [super init];
     if (self) {
         _entryTypes = entryTypes;

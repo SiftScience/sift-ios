@@ -4,6 +4,8 @@
 
 @import Foundation;
 
+#import "SFCompatibility.h"
+
 /**
  * An event has: time, (mobile event) type, path, user ID, and a
  * dictionary of custom fields.
@@ -36,6 +38,6 @@
  * Custom event fields; both key and value must be string typed.
  * Default to nil.
  */
-@property NSDictionary<NSString *, NSString *> *fields;
+@property SF_GENERICS(NSDictionary, NSString *, NSString *) *fields;
 
 @end

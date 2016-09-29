@@ -2,6 +2,8 @@
 
 @import XCTest;
 
+#import "SFCompatibility.h"
+
 #import "SFHTDictionary.h"
 
 @interface SFHtDictionaryTests : XCTestCase
@@ -11,7 +13,7 @@
 @implementation SFHtDictionaryTests
 
 - (void)testDictEquality {
-    NSDictionary<NSString *, Class> *entryTypes = @{
+    SF_GENERICS(NSDictionary, NSString *, Class) *entryTypes = @{
         @"number": NSNumber.class,
         @"string": NSString.class,
         @"array": NSArray.class,
@@ -25,7 +27,7 @@
     XCTAssertNotEqualObjects(d1, d2);
 
     XCTAssertTrue([d2 setEntry:@"number" value:@NO]);
-    NSArray<NSString *> *data = @[@"a", @"b"];
+    SF_GENERICS(NSArray, NSString *) *data = @[@"a", @"b"];
     XCTAssertTrue([d1 setEntry:@"array" value:data]);
     XCTAssertTrue([d2 setEntry:@"array" value:data]);
     XCTAssertEqualObjects(d1, d2);
@@ -36,7 +38,7 @@
 }
 
 - (void)testSetEntry {
-    NSDictionary<NSString *, Class> *entryTypes = @{
+    SF_GENERICS(NSDictionary, NSString *, Class) *entryTypes = @{
         @"number": NSNumber.class,
     };
     SFHtDictionary *d = [[SFHtDictionary alloc] initWithEntryTypes:entryTypes];

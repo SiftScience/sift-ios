@@ -2,6 +2,8 @@
 
 @import Foundation;
 
+#import "SFCompatibility.h"
+
 /**
  * Heterogeneous-typed dictionary.
  *
@@ -10,11 +12,11 @@
  */
 @interface SFHtDictionary : NSObject <NSCoding>
 
-- (instancetype)initWithEntryTypes:(NSDictionary<NSString *, Class> *)entryTypes;
+- (instancetype)initWithEntryTypes:(SF_GENERICS(NSDictionary, NSString *, Class) *)entryTypes;
 
 - (BOOL)setEntry:(NSString *)key value:(id)value;
 
-@property NSDictionary<NSString *, Class> *entryTypes;
+@property SF_GENERICS(NSDictionary, NSString *, Class) *entryTypes;
 @property NSMutableDictionary *entries;
 
 @end

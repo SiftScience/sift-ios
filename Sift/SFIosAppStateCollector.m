@@ -130,8 +130,12 @@ static const NSTimeInterval SF_MOTION_SENSOR_INTERVAL = 0.5;  // Unit: second.
 
 - (void)didEnterBackground {
     [self requestCollection];
-    // Suspend after requestCollection's block is executed.
+    // Suspend serial queue and stop motion sensors (if we have started
+    // them) after requestCollection's block is executed.  And we will
+    // not re-start motion sensors when we are back to the foreground,
+    // by the way.
     dispatch_async(_serial, ^{
+        [self stopMotionSensors];
         dispatch_suspend(_serial);
     });
 }
@@ -176,19 +180,16 @@ static const NSTimeInterval SF_MOTION_SENSOR_INTERVAL = 0.5;  // Unit: second.
     event.time = now;
     event.iosAppState = SFCollectIosAppState(_locationManager);
 
-    if (_allowUsingMotionSensors) {
+    BOOL foreground = UIApplication.sharedApplication.applicationState == UIApplicationStateActive;
+
+    // Don't start motion sensors when you are in the background.
+    if (_allowUsingMotionSensors && foreground) {
         SF_DEBUG(@"Collect motion data...");
-        if (_numMotionStarted == 0) {
-            [self startMotionSensors];
-        }
-        _numMotionStarted++;
+        [self startMotionSensors];
 
         // Wait for a full cycle of readings plus 0.1 second margin to collect motion sensor readings.
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (SF_MOTION_SENSOR_INTERVAL * SF_MOTION_SENSOR_NUM_READINGS + 0.1) * NSEC_PER_SEC), _serial, ^{
-            _numMotionStarted--;
-            if (_numMotionStarted == 0) {
-                [self stopMotionSensors];
-            }
+            [self stopMotionSensors];
             [self addReadingsToIosAppState:event.iosAppState];
             [Sift.sharedInstance appendEvent:event];
         });
@@ -199,11 +200,14 @@ static const NSTimeInterval SF_MOTION_SENSOR_INTERVAL = 0.5;  // Unit: second.
 
     _lastCollectedAt = now;
 
-    // We don't care whether the remaining requests are executed if we are gone.
-    SFIosAppStateCollector * __weak weakSelf = self;
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, SF_MAX_COLLECTION_PERIOD * NSEC_PER_MSEC), _serial, ^{
-        [weakSelf checkAndCollectWhenNoneRecently:SFCurrentTime()];
-    });
+    // Don't schedule a check in the future if you are in the background.
+    if (foreground) {
+        // We don't care whether the remaining requests are executed if we are gone.
+        SFIosAppStateCollector * __weak weakSelf = self;
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, SF_MAX_COLLECTION_PERIOD * NSEC_PER_MSEC), _serial, ^{
+            [weakSelf checkAndCollectWhenNoneRecently:SFCurrentTime()];
+        });
+    }
 }
 
 #pragma mark - NSKeyedArchiver/NSKeyedUnarchiver
@@ -270,6 +274,10 @@ static NSString * const SF_LAST_COLLECTED_AT = @"lastCollectedAt";
 }
 
 - (void)startMotionSensors {
+    if (_numMotionStarted++ > 0) {
+        return;
+    }
+
     // Prefer device motion over raw sensor data
     if (_motionManager.isDeviceMotionAvailable) {
         CMAttitudeReferenceFrame frame;
@@ -328,6 +336,15 @@ static NSString * const SF_LAST_COLLECTED_AT = @"lastCollectedAt";
 }
 
 - (void)stopMotionSensors {
+    if (--_numMotionStarted > 0) {
+        return;
+    }
+    // Excessive calls to `stopMotionSensors` are no-ops.
+    if (_numMotionStarted < 0) {
+        _numMotionStarted = 0;
+        return;
+    }
+
     // Prefer device motion over raw sensor data
     if (_motionManager.isDeviceMotionAvailable) {
         SF_DEBUG(@"Stop device motion sensors");

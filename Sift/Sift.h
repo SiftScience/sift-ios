@@ -2,6 +2,7 @@
 
 // This is a public header.
 
+#import <CoreMotion/CoreMotion.h>
 #import <Foundation/Foundation.h>
 
 #import "SFEvent.h"
@@ -92,6 +93,30 @@
  * NOTE: This is persisted to device's storage.
  */
 @property NSString *userId;
+
+/**
+ * @name Motion sensors.
+ */
+
+/**
+ * Because CMMotionManager is "almost" a global singleton object, we
+ * have to coordinate that there is only one CMMotionManager instance
+ * that is starting/stopping motion sensors.  If you don't intend to use
+ * motion sensors _at all_, you may set this flag to YES, which allows
+ * the SDK to use motion sensors.  If you intend to use motion sensors
+ * occasionally, please call the following callbacks to send us motion
+ * data.
+ */
+@property (nonatomic) BOOL allowUsingMotionSensors;
+
+/**
+ * If you do intend to use motion sensors, please call these methods to
+ * send us motion data you've got.
+ */
+- (void)updateDeviceMotion:(CMDeviceMotion *)data;
+- (void)updateAccelerometerData:(CMAccelerometerData *)data;
+- (void)updateGyroData:(CMGyroData *)data;
+- (void)updateMagnetometerData:(CMMagnetometerData *)data;
 
 /**
  * @name Integration helpers.

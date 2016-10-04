@@ -10,6 +10,7 @@
 
 #import "SFCompatibility.h"
 #import "SFDebug.h"
+#import "SFUtils.h"
 
 #import "SFIosAppState.h"
 
@@ -156,7 +157,7 @@ SFHtDictionary *SFCMDeviceMotionToDictionary(CMDeviceMotion *data, SFTimestamp n
         [dict setEntry:@"magnetic_field_z" value:[NSNumber numberWithDouble:data.magneticField.field.z]];
         NSString *value = nil;
         switch (data.magneticField.accuracy) {
-#define CASE(enum_value) case enum_value: value = @#enum_value; break;
+#define CASE(enum_value) case enum_value: value = SFCamelCaseToSnakeCase(@#enum_value); break;
             CASE(CMMagneticFieldCalibrationAccuracyUncalibrated);
             CASE(CMMagneticFieldCalibrationAccuracyLow);
             CASE(CMMagneticFieldCalibrationAccuracyMedium);
@@ -227,7 +228,7 @@ SFHtDictionary *SFCollectIosAppState(CLLocationManager *locationManager) {
         }
         NSString *batteryState = nil;
         switch (device.batteryState) {
-#define CASE(enum_value) case enum_value: batteryState = @#enum_value; break;
+#define CASE(enum_value) case enum_value: batteryState = SFCamelCaseToSnakeCase(@#enum_value); break;
             CASE(UIDeviceBatteryStateUnknown);
             CASE(UIDeviceBatteryStateUnplugged);
             CASE(UIDeviceBatteryStateCharging);
@@ -243,7 +244,7 @@ SFHtDictionary *SFCollectIosAppState(CLLocationManager *locationManager) {
     if (device.isGeneratingDeviceOrientationNotifications) {
         NSString *deviceOrientation = nil;
         switch (device.orientation) {
-#define CASE(enum_value) case enum_value: deviceOrientation = @#enum_value; break;
+#define CASE(enum_value) case enum_value: deviceOrientation = SFCamelCaseToSnakeCase(@#enum_value); break;
             CASE(UIDeviceOrientationUnknown);
             CASE(UIDeviceOrientationPortrait);
             CASE(UIDeviceOrientationPortraitUpsideDown);

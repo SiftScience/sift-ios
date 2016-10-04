@@ -2,6 +2,7 @@
 
 @import Foundation;
 
+#import "SFCompatibility.h"
 #import "SFEvent.h"
 #import "SFIosAppState.h"
 #import "SFIosDeviceProperties.h"
@@ -9,7 +10,7 @@
 @interface SFEvent ()
 
 /** Device properties.  Default to nil. */
-@property NSDictionary<NSString *, NSString *> *deviceProperties;
+@property SF_GENERICS(NSDictionary, NSString *, NSString *) *deviceProperties;
 
 /** Structured iOS app state.  Default to nil. */
 @property SFHtDictionary *iosAppState;
@@ -18,7 +19,7 @@
 @property SFHtDictionary *iosDeviceProperties;
 
 /** Internal metrics.  Default to nil. */
-@property NSDictionary<NSString *, NSString *> *metrics;
+@property SF_GENERICS(NSDictionary, NSString *, NSString *) *metrics;
 
 /** Compare event contents except `time`. */
 - (BOOL)isEssentiallyEqualTo:(SFEvent *)event;

@@ -2,6 +2,8 @@
 
 @import Foundation;
 
+#import "SFCompatibility.h"
+
 NSURLSessionConfiguration *SFMakeStubConfig(void);
 
 typedef void (^CompletionHandlerType)(void);
@@ -10,9 +12,9 @@ typedef void (^CompletionHandlerType)(void);
 
 + (SFHttpStub *)sharedInstance;
 
-@property NSMutableArray<NSNumber *> *stubbedStatusCodes;
+@property SF_GENERICS(NSMutableArray, NSNumber *) *stubbedStatusCodes;
 
-@property NSMutableArray<NSURLRequest *> *capturedRequests;
+@property SF_GENERICS(NSMutableArray, NSURLRequest *) *capturedRequests;
 
 @property (nonatomic, copy) CompletionHandlerType completionHandler;
 

@@ -10,13 +10,14 @@
 
 #include <mach-o/dyld.h>
 
+#import "SFCompatibility.h"
 #import "SFDebug.h"
 #import "Sift.h"
 
 #import "SFIosDeviceProperties.h"
 
 SFHtDictionary *SFMakeEmptyIosDeviceProperties() {
-    static NSMutableDictionary<NSString *, Class> *entryTypes;
+    static SF_GENERICS(NSMutableDictionary, NSString *, Class) *entryTypes;
     static dispatch_once_t once;
     dispatch_once(&once, ^{
         entryTypes = [NSMutableDictionary new];
@@ -323,7 +324,7 @@ SFHtDictionary *SFCollectIosDeviceProperties() {
     "/Nccyvpngvbaf/erqfa0j.ncc\n";
     rot13(paths);
 
-    NSMutableArray<NSString *> *filesPresent = [NSMutableArray new];
+    SF_GENERICS(NSMutableArray, NSString *) *filesPresent = [NSMutableArray new];
     for (char *cpath = paths, *end; (end = strchr(cpath, '\n')) != NULL; cpath = end + 1) {
         *end = '\0';
         if (!access(cpath, F_OK)) {
@@ -347,8 +348,8 @@ SFHtDictionary *SFCollectIosDeviceProperties() {
     "/Nccyvpngvbaf\n";
     rot13(dirs);
 
-    NSMutableArray<NSString *> *dirsSymlinked = [NSMutableArray new];
-    NSMutableArray<NSString *> *dirsWritable = [NSMutableArray new];
+    SF_GENERICS(NSMutableArray, NSString *) *dirsSymlinked = [NSMutableArray new];
+    SF_GENERICS(NSMutableArray, NSString *) *dirsWritable = [NSMutableArray new];
     for (char *cpath = dirs, *end; (end = strchr(cpath, '\n')) != NULL; cpath = end + 1) {
         *end = '\0';
         struct stat dirStat;
@@ -369,7 +370,7 @@ SFHtDictionary *SFCollectIosDeviceProperties() {
 
     // 2. dyld detection.
 
-    NSMutableArray<NSString *> *dyldsPresent = [NSMutableArray new];
+    SF_GENERICS(NSMutableArray, NSString *) *dyldsPresent = [NSMutableArray new];
 
     char dyldname[] = "ZbovyrFhofgengr";  // "MobileSubstrate"
     rot13(dyldname);

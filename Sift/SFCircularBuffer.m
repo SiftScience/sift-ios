@@ -2,6 +2,7 @@
 
 @import Foundation;
 
+#import "SFCompatibility.h"
 #import "SFDebug.h"
 
 #import "SFCircularBuffer.h"
@@ -9,7 +10,7 @@
 @implementation SFCircularBuffer {
     NSUInteger _size;
     NSUInteger _head;
-    NSMutableArray<id> *_items;
+    SF_GENERICS(NSMutableArray, id) *_items;
 }
 
 - (instancetype)initWithSize:(NSUInteger)size {

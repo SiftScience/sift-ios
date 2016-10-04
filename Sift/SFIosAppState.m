@@ -8,12 +8,13 @@
 #include <ifaddrs.h>
 #include <net/if.h>
 
+#import "SFCompatibility.h"
 #import "SFDebug.h"
 
 #import "SFIosAppState.h"
 
 SFHtDictionary *SFMakeEmptyIosAppState() {
-    static NSMutableDictionary<NSString *, Class> *entryTypes;
+    static SF_GENERICS(NSMutableDictionary, NSString *, Class) *entryTypes;
     static dispatch_once_t once;
     dispatch_once(&once, ^{
         entryTypes = [NSMutableDictionary new];
@@ -44,7 +45,7 @@ SFHtDictionary *SFMakeEmptyIosAppState() {
 }
 
 static SFHtDictionary *SFMakeIosDeviceMotion() {
-    static NSMutableDictionary<NSString *, Class> *entryTypes;
+    static SF_GENERICS(NSMutableDictionary, NSString *, Class) *entryTypes;
     static dispatch_once_t once;
     dispatch_once(&once, ^{
         entryTypes = [NSMutableDictionary new];
@@ -79,7 +80,7 @@ static SFHtDictionary *SFMakeIosDeviceMotion() {
 }
 
 static SFHtDictionary *SFMakeIosDeviceAccelerometerData() {
-    static NSMutableDictionary<NSString *, Class> *entryTypes;
+    static SF_GENERICS(NSMutableDictionary, NSString *, Class) *entryTypes;
     static dispatch_once_t once;
     dispatch_once(&once, ^{
         entryTypes = [NSMutableDictionary new];
@@ -97,7 +98,7 @@ static SFHtDictionary *SFMakeIosDeviceAccelerometerData() {
 }
 
 static SFHtDictionary *SFMakeIosDeviceGyroData() {
-    static NSMutableDictionary<NSString *, Class> *entryTypes;
+    static SF_GENERICS(NSMutableDictionary, NSString *, Class) *entryTypes;
     static dispatch_once_t once;
     dispatch_once(&once, ^{
         entryTypes = [NSMutableDictionary new];
@@ -115,7 +116,7 @@ static SFHtDictionary *SFMakeIosDeviceGyroData() {
 }
 
 static SFHtDictionary *SFMakeIosDeviceMagnetometerData() {
-    static NSMutableDictionary<NSString *, Class> *entryTypes;
+    static SF_GENERICS(NSMutableDictionary, NSString *, Class) *entryTypes;
     static dispatch_once_t once;
     dispatch_once(&once, ^{
         entryTypes = [NSMutableDictionary new];
@@ -200,13 +201,13 @@ SFHtDictionary *SFCMMagnetometerDataToDictionary(CMMagnetometerData *data, SFTim
 
 static NSDictionary *locationToDictionary(CLLocation *location);
 static NSDictionary *headingToDictionary(CLHeading *heading);
-static NSArray<NSString *> *getIpAddresses();
+static SF_GENERICS(NSArray, NSString *) *getIpAddresses();
 
 SFHtDictionary *SFCollectIosAppState(CLLocationManager *locationManager) {
     SFHtDictionary *iosAppState = SFMakeEmptyIosAppState();
 
     // window.rootViewController.title
-    NSMutableArray<NSString *> *titles = [NSMutableArray new];
+    SF_GENERICS(NSMutableArray, NSString *) *titles = [NSMutableArray new];
     for (UIWindow *window in UIApplication.sharedApplication.windows) {
         if (window.rootViewController.title) {
             [titles addObject:window.rootViewController.title];
@@ -325,14 +326,14 @@ static NSDictionary *headingToDictionary(CLHeading *heading) {
     return dict;
 }
 
-static NSArray<NSString *> *getIpAddresses() {
+static SF_GENERICS(NSArray, NSString *) *getIpAddresses() {
     struct ifaddrs *interfaces;
     if (getifaddrs(&interfaces)) {
         SF_DEBUG(@"Cannot get network interface: %s", strerror(errno));
         return nil;
     }
 
-    NSMutableArray<NSString *> *addresses = [NSMutableArray new];
+    SF_GENERICS(NSMutableArray, NSString *) *addresses = [NSMutableArray new];
     for (struct ifaddrs *interface = interfaces; interface; interface = interface->ifa_next) {
         if (!(interface->ifa_flags & IFF_UP)) {
             continue;  // Skip interfaces that are down.

@@ -56,7 +56,7 @@ NSURLSessionConfiguration *SFMakeStubConfig(void) {
 
     int statusCode = 500;
     if (stub.stubbedStatusCodes.count) {
-        statusCode = [stub.stubbedStatusCodes objectAtIndex:0].intValue;
+        statusCode = ((NSNumber *)[stub.stubbedStatusCodes objectAtIndex:0]).intValue;
         [stub.stubbedStatusCodes removeObjectAtIndex:0];
     }
 

@@ -6,6 +6,7 @@
 @import UIKit;
 
 #import "SFCircularBuffer.h"
+#import "SFCompatibility.h"
 #import "SFDebug.h"
 #import "SFEvent.h"
 #import "SFEvent+Private.h"
@@ -118,7 +119,7 @@ static const NSTimeInterval SF_MOTION_SENSOR_INTERVAL = 0.5;  // Unit: second.
     return self;
 }
 
-- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSString *, id> *)change context:(void *)context {
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(SF_GENERICS(NSDictionary, NSString *, id) *)change context:(void *)context {
     SF_DEBUG(@"Notified with KVO change: %@.%@", ((NSObject *)object).class, keyPath);
     [self requestCollection];
 }

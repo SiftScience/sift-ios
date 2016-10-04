@@ -2,6 +2,8 @@
 
 @import XCTest;
 
+#import "SFCompatibility.h"
+
 #import "SFCircularBuffer.h"
 
 @interface SFCircularBufferTests : XCTestCase
@@ -11,8 +13,8 @@
 @implementation SFCircularBufferTests
 
 - (void)testCircularBuffer {
-    SFCircularBuffer<NSNumber *> *buffer;
-    NSArray<NSNumber *> *data;
+    SF_GENERICS(SFCircularBuffer, NSNumber *) *buffer;
+    SF_GENERICS(NSArray, NSNumber *) *data;
 
     buffer = [[SFCircularBuffer alloc] initWithSize:1];
     XCTAssertEqual(1, buffer.size);

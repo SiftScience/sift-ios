@@ -17,6 +17,8 @@
     //[Sift sharedInstance].accountId = ...;
     //[Sift sharedInstance].beaconKey = ...;
 
+    [Sift sharedInstance].allowUsingMotionSensors = YES;
+
     // In addition, if you have any queues, you should set up them here.
     //[[Sift sharedInstance] addEventQueue:... config:...];
 

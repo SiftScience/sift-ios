@@ -63,10 +63,10 @@ static const NSTimeInterval SF_MOTION_SENSOR_INTERVAL = 0.5;  // Unit: second.
     CMMotionManager *_motionManager;
     int _numMotionStarted;
     NSOperationQueue *_operationQueue;
-    SFCircularBuffer<CMDeviceMotion *> *_deviceMotionReadings;
-    SFCircularBuffer<CMAccelerometerData *> *_accelerometerReadings;
-    SFCircularBuffer<CMGyroData *> *_gyroReadings;
-    SFCircularBuffer<CMMagnetometerData *> *_magnetometerReadings;
+    SF_GENERICS(SFCircularBuffer, CMDeviceMotion *) *_deviceMotionReadings;
+    SF_GENERICS(SFCircularBuffer, CMAccelerometerData *) *_accelerometerReadings;
+    SF_GENERICS(SFCircularBuffer, CMGyroData *) *_gyroReadings;
+    SF_GENERICS(SFCircularBuffer, CMMagnetometerData *) *_magnetometerReadings;
 
     //// Archived states.
 
@@ -359,26 +359,26 @@ static NSString * const SF_LAST_COLLECTED_AT = @"lastCollectedAt";
 }
 
 - (void)addReadingsToIosAppState:(SFHtDictionary *)iosAppState {
-    NSArray<NSDictionary *> *motion = [self convertReadings:_deviceMotionReadings converter:SFCMDeviceMotionToDictionary];
+    SF_GENERICS(NSArray, NSDictionary *) *motion = [self convertReadings:_deviceMotionReadings converter:SFCMDeviceMotionToDictionary];
     if (motion.count) {
         [iosAppState setEntry:@"motion" value:motion];
     }
-    NSArray<NSDictionary *> *rawAccelerometer = [self convertReadings:_accelerometerReadings converter:SFCMAccelerometerDataToDictionary];
+    SF_GENERICS(NSArray, NSDictionary *) *rawAccelerometer = [self convertReadings:_accelerometerReadings converter:SFCMAccelerometerDataToDictionary];
     if (rawAccelerometer.count) {
         [iosAppState setEntry:@"raw_accelerometer" value:rawAccelerometer];
     }
-    NSArray<NSDictionary *> *rawGyro = [self convertReadings:_gyroReadings converter:SFCMGyroDataToDictionary];
+    SF_GENERICS(NSArray, NSDictionary *) *rawGyro = [self convertReadings:_gyroReadings converter:SFCMGyroDataToDictionary];
     if (rawGyro.count) {
         [iosAppState setEntry:@"raw_gyro" value:rawGyro];
     }
-    NSArray<NSDictionary *> *rawMagnetometer = [self convertReadings:_magnetometerReadings converter:SFCMMagnetometerDataToDictionary];
+    SF_GENERICS(NSArray, NSDictionary *) *rawMagnetometer = [self convertReadings:_magnetometerReadings converter:SFCMMagnetometerDataToDictionary];
     if (rawMagnetometer.count) {
         [iosAppState setEntry:@"raw_magnetometer" value:rawMagnetometer];
     }
 }
 
-- (NSArray<NSDictionary *> *)convertReadings:(SFCircularBuffer *)buffer converter:(void *)converter {
-    NSMutableArray<NSDictionary *> *readings = [NSMutableArray new];
+- (SF_GENERICS(NSArray, NSDictionary *) *)convertReadings:(SFCircularBuffer *)buffer converter:(void *)converter {
+    SF_GENERICS(NSMutableArray, NSDictionary *) *readings = [NSMutableArray new];
     NSDate *uptime = [NSDate dateWithTimeIntervalSinceNow:-NSProcessInfo.processInfo.systemUptime];
     @synchronized (buffer) {
         for (CMLogItem *reading in [buffer shallowCopy]) {

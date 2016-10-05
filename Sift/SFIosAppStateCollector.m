@@ -160,8 +160,8 @@ static const NSTimeInterval SF_MOTION_SENSOR_INTERVAL = 0.5;  // Unit: second.
 }
 
 - (void)checkAndCollectWhenNoneRecently:(SFTimestamp)now {
-    if (UIApplication.sharedApplication.applicationState != UIApplicationStateActive) {
-        SF_DEBUG(@"Ignore collection request since the app is not active");
+    if (UIApplication.sharedApplication.applicationState == UIApplicationStateBackground) {
+        SF_DEBUG(@"Ignore collection request since the app is in the background");
         return;
     }
 
@@ -181,7 +181,7 @@ static const NSTimeInterval SF_MOTION_SENSOR_INTERVAL = 0.5;  // Unit: second.
     event.time = now;
     event.iosAppState = SFCollectIosAppState(_locationManager);
 
-    BOOL foreground = UIApplication.sharedApplication.applicationState == UIApplicationStateActive;
+    BOOL foreground = UIApplication.sharedApplication.applicationState != UIApplicationStateBackground;
 
     // Don't start motion sensors when you are in the background.
     if (_allowUsingMotionSensors && foreground) {
@@ -192,10 +192,12 @@ static const NSTimeInterval SF_MOTION_SENSOR_INTERVAL = 0.5;  // Unit: second.
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (SF_MOTION_SENSOR_INTERVAL * SF_MOTION_SENSOR_NUM_READINGS + 0.1) * NSEC_PER_SEC), _serial, ^{
             [self stopMotionSensors];
             [self addReadingsToIosAppState:event.iosAppState];
+            SF_DEBUG(@"iosAppState: %@", event.iosAppState.entries);
             [Sift.sharedInstance appendEvent:event];
         });
     } else {
         [self addReadingsToIosAppState:event.iosAppState];
+        SF_DEBUG(@"iosAppState: %@", event.iosAppState.entries);
         [Sift.sharedInstance appendEvent:event];
     }
 
@@ -384,7 +386,7 @@ static NSString * const SF_LAST_COLLECTED_AT = @"lastCollectedAt";
         for (CMLogItem *reading in [buffer shallowCopy]) {
             // CMLogItem records timestamp since device boot.
             SFTimestamp timestamp = [[uptime dateByAddingTimeInterval:reading.timestamp] timeIntervalSince1970] * 1000;
-            [readings addObject:((NSDictionary *(*)(CMLogItem *, SFTimestamp))converter)(reading, timestamp)];
+            [readings addObject:((SFHtDictionary *(*)(CMLogItem *, SFTimestamp))converter)(reading, timestamp).entries];
         }
         [buffer removeAllObjects];
     }

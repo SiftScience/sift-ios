@@ -123,6 +123,8 @@ static BOOL SFSysctlReadInt64(const char *name, int64_t *output);
 
 static void rot13(char *p);
 
+static BOOL SFIsUrlSchemeWhitelisted(NSString *targetScheme);
+
 SFHtDictionary *SFCollectIosDeviceProperties() {
     SFHtDictionary *iosDeviceProperties = SFMakeEmptyIosDeviceProperties();
 
@@ -387,6 +389,42 @@ SFHtDictionary *SFCollectIosDeviceProperties() {
 
     [iosDeviceProperties setEntry:@"evidence_dylds_present" value:dyldsPresent];
 
+
+    // 4. Cydia URL scheme detection.
+
+    // Because when we poke iOS about this, it reports an error, and
+    // that sometimes confuses SDK users, we will only poke once per
+    // process.
+    static SF_GENERICS(NSMutableArray, NSString *) *urlSchemesOpenable = nil;
+    static dispatch_once_t once;
+    dispatch_once(&once, ^{
+        char cscheme[] = "plqvn";  // "cydia"
+        rot13(cscheme);
+        NSString *scheme = [NSString stringWithCString:cscheme encoding:NSASCIIStringEncoding];
+
+        if (!SFIsUrlSchemeWhitelisted(scheme)) {
+            SF_DEBUG(@"URL scheme not whitelisted: %@", scheme);
+            return;
+        }
+
+        urlSchemesOpenable = [NSMutableArray new];
+
+        char curlpath[] = "://cnpxntr/pbz.rknzcyr.cnpxntr";  // "://package/com.example.package"
+        rot13(curlpath);
+        NSString *urlpath = [NSString stringWithCString:curlpath encoding:NSASCIIStringEncoding];
+        NSString *url = [scheme stringByAppendingString:urlpath];
+
+        SF_DEBUG(@"Check URL scheme %@", scheme);
+        if ([[UIApplication sharedApplication] canOpenURL:[NSURL URLWithString:url]]) {
+            SF_DEBUG(@"Can open URL: %@", url);
+            [urlSchemesOpenable addObject:scheme];
+        }
+    });
+
+    if (urlSchemesOpenable) {
+        [iosDeviceProperties setEntry:@"evidence_url_schemes_openable" value:urlSchemesOpenable];
+    }
+
     return iosDeviceProperties;
 }
 
@@ -446,4 +484,27 @@ static void rot13(char *p) {
         }
         p++;
     }
+}
+
+static BOOL SFIsUrlSchemeWhitelisted(NSString *targetScheme) {
+    // NOTE: To test this whitelist check, you have to switch deployment
+    // target to iOS 9+.
+#if __IPHONE_OS_VERSION_MIN_REQUIRED >= __IPHONE_9_0
+    // iOS 9 requires white-listing URL schemes.
+    NSDictionary *infos = [[NSBundle mainBundle] infoDictionary];
+    NSArray *schemes = [infos objectForKey:@"LSApplicationQueriesSchemes"];
+    if (!schemes) {
+        SF_DEBUG(@"Did not find LSApplicationQueriesSchemes");
+        return NO;
+    }
+    for (NSString *scheme in schemes) {
+        SF_DEBUG(@"Whitelist scheme: %@", scheme);
+        if ([scheme isEqualToString:targetScheme]) {
+            return YES;
+        }
+    }
+    return NO;
+#else
+    return YES;
+#endif
 }

@@ -2,6 +2,8 @@
 
 @import XCTest;
 
+@import UIKit;
+
 #import "SFEvent.h"
 #import "SFEvent+Private.h"
 
@@ -51,8 +53,9 @@
                         [SFEvent eventWithType:nil path:nil fields:@{@"key": @"value"}],
                         [SFEvent eventWithType:nil path:nil fields:@{@1: @"value"}],  // Key is not string typed.
                         [SFEvent eventWithType:nil path:nil fields:@{@"key": @1}]]);  // Value is not string typed.
-    expect = @{@"data": @[@{@"time": @0, @"mobile_event_type": @"some-type", @"path": @"some-path", @"user_id": @"some-id"},
-                          @{@"time": @0, @"user_id": @"some-id", @"fields": @{@"key": @"value"}}]};
+    NSString *ifv = UIDevice.currentDevice.identifierForVendor.UUIDString;
+    expect = @{@"data": @[@{@"time": @0, @"mobile_event_type": @"some-type", @"path": @"some-path", @"user_id": @"some-id", @"installation_id": ifv},
+                          @{@"time": @0, @"user_id": @"some-id", @"installation_id": ifv, @"fields": @{@"key": @"value"}}]};
     actual = [NSJSONSerialization JSONObjectWithData:[SFEvent listRequest:events] options:0 error:nil];
     XCTAssertEqualObjects(expect, actual);
 }

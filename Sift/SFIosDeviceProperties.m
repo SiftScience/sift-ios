@@ -489,7 +489,9 @@ static void rot13(char *p) {
 static BOOL SFIsUrlSchemeWhitelisted(NSString *targetScheme) {
     // NOTE: To test this whitelist check, you have to switch deployment
     // target to iOS 9+.
-#if __IPHONE_OS_VERSION_MIN_REQUIRED >= __IPHONE_9_0
+    // NOTE: Use `90000` instead of `__IPHONE_9_0` since older SDK
+    // bundled with Xcode 6 does not have `__IPHONE_9_0`.
+#if __IPHONE_OS_VERSION_MIN_REQUIRED >= 90000
     // iOS 9 requires white-listing URL schemes.
     NSDictionary *infos = [[NSBundle mainBundle] infoDictionary];
     NSArray *schemes = [infos objectForKey:@"LSApplicationQueriesSchemes"];

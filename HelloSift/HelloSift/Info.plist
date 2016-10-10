@@ -51,5 +51,9 @@
 	<dict>
 		<key>NSAllowsArbitraryLoads</key><true/>
 	</dict>
+	<key>LSApplicationQueriesSchemes</key>
+	<array>
+		<string>cydia</string>
+	</array>
 </dict>
 </plist>

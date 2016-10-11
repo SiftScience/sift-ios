@@ -17,7 +17,7 @@
     self = [super init];
     if (self) {
         if (size <= 0) {
-            SF_DEBUG(@"non-positive size: %lu", size);
+            SF_DEBUG(@"non-positive size: %lu", (unsigned long)size);
             self = nil;
             return nil;
         }

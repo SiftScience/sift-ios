@@ -21,6 +21,8 @@ SFHtDictionary *SFMakeEmptyIosAppState() {
         entryTypes = [NSMutableDictionary new];
 #define ENTRY_TYPE(key_, type_) ([entryTypes setObject:(type_) forKey:(key_)])
 
+        ENTRY_TYPE(@"application_state", NSString.class);
+
         ENTRY_TYPE(@"window_root_view_controller_titles", NSArray.class);
 
         ENTRY_TYPE(@"battery_level", NSNumber.class);
@@ -206,6 +208,18 @@ static SF_GENERICS(NSArray, NSString *) *getIpAddresses();
 
 SFHtDictionary *SFCollectIosAppState(CLLocationManager *locationManager) {
     SFHtDictionary *iosAppState = SFMakeEmptyIosAppState();
+
+    NSString *applicationState = nil;
+    switch (UIApplication.sharedApplication.applicationState) {
+#define CASE(enum_value) case enum_value: applicationState = SFCamelCaseToSnakeCase(@#enum_value); break;
+        CASE(UIApplicationStateActive);
+        CASE(UIApplicationStateInactive);
+        CASE(UIApplicationStateBackground);
+#undef CASE
+    }
+    if (applicationState) {
+        [iosAppState setEntry:@"application_state" value:applicationState];
+    }
 
     // window.rootViewController.title
     SF_GENERICS(NSMutableArray, NSString *) *titles = [NSMutableArray new];

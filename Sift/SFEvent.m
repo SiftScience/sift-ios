@@ -1,6 +1,7 @@
 // Copyright (c) 2016 Sift Science. All rights reserved.
 
 @import Foundation;
+@import UIKit;
 
 #import "SFDebug.h"
 #import "SFUtils.h"
@@ -31,6 +32,7 @@
         _type = nil;
         _path = nil;
         _userId = nil;
+        _installationId = UIDevice.currentDevice.identifierForVendor.UUIDString;  // In rare cases, this could be `nil`.
         _fields = nil;
         _deviceProperties = nil;
         _iosAppState = nil;
@@ -45,6 +47,7 @@
            ((!_type && !event.type) || [_type isEqualToString:event.type]) &&
            ((!_path && !event.path) || [_path isEqualToString:event.path]) &&
            ((!_userId && !event.userId) || [_userId isEqualToString:event.userId]) &&
+           ((!_installationId && !event.installationId) || [_installationId isEqualToString:event.installationId]) &&
            ((!_fields && !event.fields) || [_fields isEqualToDictionary:event.fields]) &&
            ((!_deviceProperties && !event.deviceProperties) || [_deviceProperties isEqualToDictionary:event.deviceProperties]) &&
            ((!_iosAppState && !event.iosAppState) || [_iosAppState isEqual:event.iosAppState]) &&
@@ -66,6 +69,7 @@ static NSString * const SF_TIME = @"time";
 static NSString * const SF_TYPE = @"type";
 static NSString * const SF_PATH = @"path";
 static NSString * const SF_USER_ID = @"userId";
+static NSString * const SF_INSTALLATION_ID = @"installationId";
 static NSString * const SF_FIELDS = @"fields";
 static NSString * const SF_DEVICE_PROPERTIES = @"deviceProperties";
 static NSString * const SF_IOS_APP_STATE = @"iosAppState";
@@ -79,6 +83,7 @@ static NSString * const SF_METRICS = @"metrics";
         _type = [decoder decodeObjectForKey:SF_TYPE];
         _path = [decoder decodeObjectForKey:SF_PATH];
         _userId = [decoder decodeObjectForKey:SF_USER_ID];
+        _installationId = [decoder decodeObjectForKey:SF_INSTALLATION_ID];
         _fields = [decoder decodeObjectForKey:SF_FIELDS];
         _deviceProperties = [decoder decodeObjectForKey:SF_DEVICE_PROPERTIES];
         _iosAppState = [decoder decodeObjectForKey:SF_IOS_APP_STATE];
@@ -93,6 +98,7 @@ static NSString * const SF_METRICS = @"metrics";
     [encoder encodeObject:_type forKey:SF_TYPE];
     [encoder encodeObject:_path forKey:SF_PATH];
     [encoder encodeObject:_userId forKey:SF_USER_ID];
+    [encoder encodeObject:_installationId forKey:SF_INSTALLATION_ID];
     [encoder encodeObject:_fields forKey:SF_FIELDS];
     [encoder encodeObject:_deviceProperties forKey:SF_DEVICE_PROPERTIES];
     [encoder encodeObject:_iosAppState forKey:SF_IOS_APP_STATE];
@@ -110,6 +116,7 @@ static NSString * const SF_METRICS = @"metrics";
         if (!SFAddToRequest(eventRequest, @"mobile_event_type", event.type) ||
             !SFAddToRequest(eventRequest, @"path", event.path) ||
             !SFAddToRequest(eventRequest, @"user_id", event.userId) ||
+            !SFAddToRequest(eventRequest, @"installation_id", event.installationId) ||
             !SFAddToRequest(eventRequest, @"fields", event.fields) ||
             !SFAddToRequest(eventRequest, @"device_properties", event.deviceProperties) ||
             !SFAddToRequest(eventRequest, @"metrics", event.metrics)) {

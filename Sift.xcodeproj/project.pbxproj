@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		713AF4241DA456740061B688 /* SFUtilsTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 713AF4231DA456740061B688 /* SFUtilsTests.m */; };
 		713D859A1D627E9F0011D5FE /* SFIosDeviceProperties.m in Sources */ = {isa = PBXBuildFile; fileRef = 713D85991D627E9F0011D5FE /* SFIosDeviceProperties.m */; };
 		713D859B1D627EA60011D5FE /* SFIosDeviceProperties.h in Headers */ = {isa = PBXBuildFile; fileRef = 713D85981D627E860011D5FE /* SFIosDeviceProperties.h */; };
 		713D859D1D6CF69E0011D5FE /* SFIosDevicePropertiesTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 713D859C1D6CF69E0011D5FE /* SFIosDevicePropertiesTests.m */; };
@@ -41,12 +42,12 @@
 		71B1B5911D8B31ED00EA9B17 /* SFIosAppStateTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 71B1B5901D8B31ED00EA9B17 /* SFIosAppStateTests.m */; };
 		71B1B5971D8C700C00EA9B17 /* SFIosAppStateCollector.h in Headers */ = {isa = PBXBuildFile; fileRef = 71B1B5961D8C700C00EA9B17 /* SFIosAppStateCollector.h */; };
 		71B1B5991D8C701E00EA9B17 /* SFIosAppStateCollector.m in Sources */ = {isa = PBXBuildFile; fileRef = 71B1B5981D8C701E00EA9B17 /* SFIosAppStateCollector.m */; };
-		71E15CFB1D95D14700A0305C /* SFTokenBucket.h in Headers */ = {isa = PBXBuildFile; fileRef = 71E15CFA1D95D14700A0305C /* SFTokenBucket.h */; };
-		71E15CFD1D95D15900A0305C /* SFTokenBucket.m in Sources */ = {isa = PBXBuildFile; fileRef = 71E15CFC1D95D15900A0305C /* SFTokenBucket.m */; };
-		71E15CFF1D95DEC300A0305C /* SFTokenBucketTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 71E15CFE1D95DEC300A0305C /* SFTokenBucketTests.m */; };
 		71E15CF51D95C8FA00A0305C /* SFCircularBuffer.h in Headers */ = {isa = PBXBuildFile; fileRef = 71E15CF31D95C8FA00A0305C /* SFCircularBuffer.h */; };
 		71E15CF81D95C90000A0305C /* SFCircularBufferTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 71E15CF71D95C90000A0305C /* SFCircularBufferTests.m */; };
 		71E15CF91D95C92300A0305C /* SFCircularBuffer.m in Sources */ = {isa = PBXBuildFile; fileRef = 71E15CF41D95C8FA00A0305C /* SFCircularBuffer.m */; };
+		71E15CFB1D95D14700A0305C /* SFTokenBucket.h in Headers */ = {isa = PBXBuildFile; fileRef = 71E15CFA1D95D14700A0305C /* SFTokenBucket.h */; };
+		71E15CFD1D95D15900A0305C /* SFTokenBucket.m in Sources */ = {isa = PBXBuildFile; fileRef = 71E15CFC1D95D15900A0305C /* SFTokenBucket.m */; };
+		71E15CFF1D95DEC300A0305C /* SFTokenBucketTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 71E15CFE1D95DEC300A0305C /* SFTokenBucketTests.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -60,6 +61,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		713AF4231DA456740061B688 /* SFUtilsTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SFUtilsTests.m; sourceTree = "<group>"; };
 		713D85981D627E860011D5FE /* SFIosDeviceProperties.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SFIosDeviceProperties.h; sourceTree = "<group>"; };
 		713D85991D627E9F0011D5FE /* SFIosDeviceProperties.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SFIosDeviceProperties.m; sourceTree = "<group>"; };
 		713D859C1D6CF69E0011D5FE /* SFIosDevicePropertiesTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SFIosDevicePropertiesTests.m; sourceTree = "<group>"; };
@@ -98,12 +100,12 @@
 		71B1B5901D8B31ED00EA9B17 /* SFIosAppStateTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SFIosAppStateTests.m; sourceTree = "<group>"; };
 		71B1B5961D8C700C00EA9B17 /* SFIosAppStateCollector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SFIosAppStateCollector.h; sourceTree = "<group>"; };
 		71B1B5981D8C701E00EA9B17 /* SFIosAppStateCollector.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SFIosAppStateCollector.m; sourceTree = "<group>"; };
-		71E15CFA1D95D14700A0305C /* SFTokenBucket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SFTokenBucket.h; sourceTree = "<group>"; };
-		71E15CFC1D95D15900A0305C /* SFTokenBucket.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SFTokenBucket.m; sourceTree = "<group>"; };
-		71E15CFE1D95DEC300A0305C /* SFTokenBucketTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SFTokenBucketTests.m; sourceTree = "<group>"; };
 		71E15CF31D95C8FA00A0305C /* SFCircularBuffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SFCircularBuffer.h; sourceTree = "<group>"; };
 		71E15CF41D95C8FA00A0305C /* SFCircularBuffer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SFCircularBuffer.m; sourceTree = "<group>"; };
 		71E15CF71D95C90000A0305C /* SFCircularBufferTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SFCircularBufferTests.m; sourceTree = "<group>"; };
+		71E15CFA1D95D14700A0305C /* SFTokenBucket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SFTokenBucket.h; sourceTree = "<group>"; };
+		71E15CFC1D95D15900A0305C /* SFTokenBucket.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SFTokenBucket.m; sourceTree = "<group>"; };
+		71E15CFE1D95DEC300A0305C /* SFTokenBucketTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SFTokenBucketTests.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -194,6 +196,7 @@
 				7168EE3F1C88C91900A88245 /* SFStubHttpProtocol.m */,
 				71E15CFE1D95DEC300A0305C /* SFTokenBucketTests.m */,
 				7168EE401C88C91900A88245 /* SFUploaderTests.m */,
+				713AF4231DA456740061B688 /* SFUtilsTests.m */,
 				7168EE101C7B977500A88245 /* SiftTests.m */,
 			);
 			path = SiftTests;
@@ -343,6 +346,7 @@
 			files = (
 				71E15CF81D95C90000A0305C /* SFCircularBufferTests.m in Sources */,
 				7168EE411C88C91900A88245 /* SFStubHttpProtocol.m in Sources */,
+				713AF4241DA456740061B688 /* SFUtilsTests.m in Sources */,
 				71E15CFF1D95DEC300A0305C /* SFTokenBucketTests.m in Sources */,
 				7168EE111C7B977500A88245 /* SiftTests.m in Sources */,
 				7168EE1C1C7E61E900A88245 /* SFEventTests.m in Sources */,

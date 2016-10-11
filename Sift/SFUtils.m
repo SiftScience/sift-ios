@@ -23,8 +23,18 @@ NSString *SFCamelCaseToSnakeCase(NSString *camelCase) {
     int i = 0;
     BOOL first = YES;
     while (*camel) {
+        // Determinte whether we should insert an '_' character.
         if (isupper(*camel) && !first) {
-            snake[i++] = '_';
+            // Handle "isCAMEL" -> "is_camel" case.
+            // We may look back one character because !first is true.
+            if (islower(camel[-1])) {
+                snake[i++] = '_';
+            }
+            // Handle "SFCamel" -> "sf_camel" case.
+            // We may look ahead one character because *camel is not '\0'.
+            else if (islower(camel[1])) {
+                snake[i++] = '_';
+            }
         }
         snake[i++] = tolower(*camel);
 

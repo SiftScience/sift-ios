@@ -137,6 +137,7 @@ static const NSTimeInterval SF_MOTION_SENSOR_INTERVAL = 0.5;  // Unit: second.
     // by the way.
     dispatch_async(_serial, ^{
         [self stopMotionSensors];
+        [_locationManager stopUpdatingHeading];
         dispatch_suspend(_serial);
     });
 }
@@ -183,20 +184,46 @@ static const NSTimeInterval SF_MOTION_SENSOR_INTERVAL = 0.5;  // Unit: second.
 
     BOOL foreground = UIApplication.sharedApplication.applicationState != UIApplicationStateBackground;
 
-    // Don't start motion sensors when you are in the background.
-    if (_allowUsingMotionSensors && foreground) {
-        SF_DEBUG(@"Collect motion data...");
-        [self startMotionSensors];
+    // Don't start compass and motion sensors when you are in the background.
+    int64_t delay = 0;
+    if (foreground) {
+        if (_allowUsingMotionSensors) {
+            SF_DEBUG(@"Collect motion data...");
+            [self startMotionSensors];
+            // Wait for a full cycle of readings plus 0.1 second margin to collect motion sensor readings.
+            delay = MAX(delay, (SF_MOTION_SENSOR_INTERVAL * SF_MOTION_SENSOR_NUM_READINGS + 0.1) * NSEC_PER_SEC);
+        }
 
-        // Wait for a full cycle of readings plus 0.1 second margin to collect motion sensor readings.
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (SF_MOTION_SENSOR_INTERVAL * SF_MOTION_SENSOR_NUM_READINGS + 0.1) * NSEC_PER_SEC), _serial, ^{
+        [_locationManager startUpdatingHeading];
+        // Wait 1 second for heading update.
+        delay = MAX(delay, (1 * NSEC_PER_SEC));
+    }
+
+    if (delay > 0) {
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, delay), _serial, ^{
             [self stopMotionSensors];
+
+            // Read heading before we stop location manager (it nullifies heading when stopped).
+            CLHeading *heading = _locationManager.heading;
+            [_locationManager stopUpdatingHeading];
+
+            if (heading) {
+                [event.iosAppState setEntry:@"heading" value:SFCLHeadingToDictionary(heading).entries];
+            }
+
             [self addReadingsToIosAppState:event.iosAppState];
+
             SF_DEBUG(@"iosAppState: %@", event.iosAppState.entries);
             [Sift.sharedInstance appendEvent:event];
         });
     } else {
+        CLHeading *heading = _locationManager.heading;
+        if (heading) {
+            [event.iosAppState setEntry:@"heading" value:SFCLHeadingToDictionary(heading).entries];
+        }
+
         [self addReadingsToIosAppState:event.iosAppState];
+
         SF_DEBUG(@"iosAppState: %@", event.iosAppState.entries);
         [Sift.sharedInstance appendEvent:event];
     }

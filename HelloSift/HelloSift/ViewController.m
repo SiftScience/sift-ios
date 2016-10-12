@@ -1,6 +1,7 @@
 // Copyright (c) 2016 Sift Science. All rights reserved.
 
 @import CoreLocation;
+@import UIKit;
 
 #import "Sift/SFEvent.h"
 #import "Sift/Sift.h"
@@ -24,9 +25,17 @@
     if ([Sift sharedInstance].beaconKey) {
         self.beaconKeyTextField.text = [Sift sharedInstance].beaconKey;
     }
+    if ([Sift sharedInstance].userId) {
+        self.userIdTextField.text = [Sift sharedInstance].userId;
+    }
     if ([Sift sharedInstance].serverUrlFormat) {
         self.serverUrlFormatTextField.text = [Sift sharedInstance].serverUrlFormat;
     }
+
+    UIDevice *device = UIDevice.currentDevice;
+    device.batteryMonitoringEnabled = YES;
+    [device beginGeneratingDeviceOrientationNotifications];
+    device.proximityMonitoringEnabled = YES;
 
     CLAuthorizationStatus status = [CLLocationManager authorizationStatus];
     NSLog(@"Ask for permission of location service: status=%d", status);
@@ -34,6 +43,8 @@
         _manager = [CLLocationManager new];
         [_manager requestAlwaysAuthorization];
     }
+    [_manager startUpdatingLocation];
+    [_manager startUpdatingHeading];
 }
 
 - (IBAction)handleUserIdChanged:(id)sender {

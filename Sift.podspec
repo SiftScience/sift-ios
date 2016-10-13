@@ -21,6 +21,7 @@ Pod::Spec.new do |spec|
   spec.ios.frameworks = [
     'AdSupport',
     'CoreLocation',
+    'CoreMotion',
     'CoreTelephony',
     'Foundation',
     'UIKit',
@@ -29,6 +30,7 @@ Pod::Spec.new do |spec|
   # File patterns
   spec.source_files = 'Sift/*.{h,m}'
   spec.public_header_files = [
+    'Sift/SFCompatibility.h',
     'Sift/SFEvent.h',
     'Sift/SFQueueConfig.h',
     'Sift/Sift.h',

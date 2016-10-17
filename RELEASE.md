@@ -7,13 +7,17 @@ and Carthage.  Here are the basic steps for releasing SDK:
 
 * Update `spec.version` of `Sift.podspec`.
 
-* Update `CHANGELOG.md`.
+* Update `CHANGELOG.md` (it's time for you to review changes since last
+  release and write up a summary).
 
 * (Optional) Update `spec.public_header_files` or `spec.ios.frameworks`
   of `Sift.podspec` (if you have new public headers or depend on new
   frameworks).
 
 * Create a git tag for the release.
+
+* If you make the release in a private git repository, go to `sift-ios`
+  and pull the changes from your private repository.
 
 
 ### Things to do after release

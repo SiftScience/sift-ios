@@ -45,14 +45,15 @@ The SDK works in the background and so you have to initialize it when
 your app starts.  It usually makes most sense to initialize the SDK in
 `application:didFinishLaunchingWithOptions:`.
 
-Here is what you would do:
+Here is what you would do within `AppDelegate.m`:
 
 * Add `#import "Sift/Sift.h"`.
 
-* Add this to `application:didFinishLaunchingWithOptions:`:
+* Add the `application:didFinishLaunchingWithOptions:` instance method
+  if it doesn't exist, and insert this code snippet:
 
   ```
-  Sift *sift = Sift.sharedInstance;
+  Sift *sift = [Sift sharedInstance];
   sift.accountId = @"YOUR_ACCOUNT_ID";
   sift.beaconKey = @"YOUR_JAVASCRIPT_SNIPPET_KEY";
   ```

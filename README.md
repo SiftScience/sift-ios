@@ -55,8 +55,8 @@ Here is what you would do within `AppDelegate.m`:
 
   ```
   Sift *sift = [Sift sharedInstance];
-  sift.accountId = @"YOUR_ACCOUNT_ID";
-  sift.beaconKey = @"YOUR_JAVASCRIPT_SNIPPET_KEY";
+  [sift setAccountId:@"YOUR_ACCOUNT_ID"];
+  [sift setBeaconKey:@"YOUR_JAVASCRIPT_SNIPPET_KEY"];
   ```
 
 * (Recommended) If your app does not use motion sensors (accelerometer,
@@ -72,5 +72,5 @@ is available (for example, after user has logged in), please set the
 user ID:
 
 ```
-Sift.sharedInstance.userId = @"USER_ID";
+[[Sift sharedInstance] setUserId:@"USER_ID"];
 ```

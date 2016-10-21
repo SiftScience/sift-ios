@@ -50,7 +50,8 @@ Here is what you would do within `AppDelegate.m`:
 * Add `#import "Sift/Sift.h"`.
 
 * Add the `application:didFinishLaunchingWithOptions:` instance method
-  if it doesn't exist, and insert this code snippet:
+  if it doesn't exist, and insert this code snippet (replacing the placeholder
+  strings with your Sift account credentials):
 
   ```
   Sift *sift = [Sift sharedInstance];

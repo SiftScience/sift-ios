@@ -45,7 +45,7 @@ The SDK works in the background and so you have to initialize it when
 your app starts.  It usually makes most sense to initialize the SDK in
 `application:didFinishLaunchingWithOptions:`.
 
-Here is what you would usually do:
+Here is what you would do:
 
 * Add `#import "Sift/Sift.h"`.
 
@@ -60,14 +60,15 @@ Here is what you would usually do:
 * (Recommended) If your app does not use motion sensors (accelerometer,
   gyro, and magnetometer), and you don't mind Sift collecting motion
   data, add this line as well: `sift.allowUsingMotionSensors = YES;`
-  This would enable the SDK to occasionally collect motion data in the
+  This will enable the SDK to occasionally collect motion data in the
   background.
 
 #### Tracking users
 
-Sift needs user ID to track the user using this app.  When the user ID
-is available (for example, when user has just logged in), please set the
+Sift needs the user ID to track the user using this app. Once the user ID
+is available (for example, after user has logged in), please set the
 user ID:
+
 ```
 Sift.sharedInstance.userId = @"USER_ID";
 ```

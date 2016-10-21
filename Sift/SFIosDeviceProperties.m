@@ -389,6 +389,20 @@ SFHtDictionary *SFCollectIosDeviceProperties() {
 
     [iosDeviceProperties setEntry:@"evidence_dylds_present" value:dyldsPresent];
 
+    // 3. System call detection.
+
+    SF_GENERICS(NSMutableArray, NSString *) *syscallsSucceeded = [NSMutableArray new];
+
+    pid_t pid = fork();
+    if (!pid) {
+        _exit(0); // _exit() is fork safe but exit() is not.
+    } else if (pid > 0) {
+        SF_DEBUG(@"fork() does not return error");
+        [syscallsSucceeded addObject:@"fork"];
+        waitpid(pid, NULL, 0);
+    }
+
+    [iosDeviceProperties setEntry:@"evidence_syscalls_succeeded" value:syscallsSucceeded];
 
     // 4. Cydia URL scheme detection.
 

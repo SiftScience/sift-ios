@@ -104,12 +104,14 @@
         @"evidence_directories_writable": NSArray.class,
         @"evidence_dylds_present": NSArray.class,
         @"evidence_files_present": NSArray.class,
-        @"evidence_url_schemes_openable": NSArray.class,
         @"sdk_version": NSString.class,
     };
     for (NSString *name in entryTypes) {
         XCTAssert([[iosDeviceProperties objectForKey:name] isKindOfClass:[entryTypes objectForKey:name]], @"%@: %@ is not of type %@", name, [iosDeviceProperties objectForKey:name], [entryTypes objectForKey:name]);
     }
+    // evidence_url_schemes_openable could be nil.
+    XCTAssert(![iosDeviceProperties objectForKey:@"evidence_url_schemes_openable"] ||
+              [[iosDeviceProperties objectForKey:@"evidence_url_schemes_openable"] isKindOfClass:NSArray.class]);
 }
 
 - (void)testEvent {

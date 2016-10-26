@@ -24,6 +24,12 @@ static const NSTimeInterval SF_COLLECTION_RATE_LIMIT_PERIOD = 60; // Unit: secon
 // If there was no collection in the last 2 minutes, request a collection.
 static const SFTimestamp SF_MAX_COLLECTION_PERIOD = 120000;  // Unit: millisecond.
 
+// Compass (heading) parameter.
+// We will wait for 4 seconds for the first heading update.  (On an
+// iPhone 4S it takes 2 ~ 3 seconds to get the first heading update.
+// And we add 1 second as a margin; so that's 4 seconds.)
+static const unsigned long long SF_HEADING_INTERVAL = 4 * NSEC_PER_SEC;
+
 // Motion sensor parameters.
 static const NSUInteger     SF_MOTION_SENSOR_NUM_READINGS = 10;  // Keep at most 10 readings.
 static const NSTimeInterval SF_MOTION_SENSOR_INTERVAL = 0.5;  // Unit: second.
@@ -195,8 +201,7 @@ static const NSTimeInterval SF_MOTION_SENSOR_INTERVAL = 0.5;  // Unit: second.
         }
 
         [_locationManager startUpdatingHeading];
-        // Wait 1 second for heading update.
-        delay = MAX(delay, (1 * NSEC_PER_SEC));
+        delay = MAX(delay, SF_HEADING_INTERVAL);
     }
 
     if (delay > 0) {

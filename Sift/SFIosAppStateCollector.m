@@ -288,7 +288,8 @@ static NSString * const SF_LAST_COLLECTED_AT = @"lastCollectedAt";
     // Prefer device motion over raw sensor data
     if (_motionManager.isDeviceMotionAvailable) {
         CMAttitudeReferenceFrame frame;
-        CMAttitudeReferenceFrame available = [CMMotionManager availableAttitudeReferenceFrames];
+        // Need casting here to fix a compiler warning because in Base SDK 8 (shipped with Xcode 6), CMAttitudeReferenceFrame is not defined using NS_ENUM.
+        CMAttitudeReferenceFrame available = (CMAttitudeReferenceFrame)[CMMotionManager availableAttitudeReferenceFrames];
         if (available & CMAttitudeReferenceFrameXTrueNorthZVertical) {
             frame = CMAttitudeReferenceFrameXTrueNorthZVertical;
         } else if (available & CMAttitudeReferenceFrameXMagneticNorthZVertical) {

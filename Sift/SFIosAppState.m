@@ -47,6 +47,29 @@ SFHtDictionary *SFMakeEmptyIosAppState() {
     return [[SFHtDictionary alloc] initWithEntryTypes:entryTypes];
 }
 
+static SFHtDictionary *SFMakeHeading() {
+    static SF_GENERICS(NSMutableDictionary, NSString *, Class) *entryTypes;
+    static dispatch_once_t once;
+    dispatch_once(&once, ^{
+        entryTypes = [NSMutableDictionary new];
+#define ENTRY_TYPE(key_, type_) ([entryTypes setObject:(type_) forKey:(key_)])
+
+        ENTRY_TYPE(@"time", NSNumber.class);
+
+        ENTRY_TYPE(@"magnetic_heading", NSNumber.class);
+        ENTRY_TYPE(@"accuracy", NSNumber.class);
+
+        ENTRY_TYPE(@"true_heading", NSNumber.class);
+
+        ENTRY_TYPE(@"raw_magnetic_field_x", NSNumber.class);
+        ENTRY_TYPE(@"raw_magnetic_field_y", NSNumber.class);
+        ENTRY_TYPE(@"raw_magnetic_field_z", NSNumber.class);
+
+#undef ENTRY_TYPE
+    });
+    return [[SFHtDictionary alloc] initWithEntryTypes:entryTypes];
+}
+
 static SFHtDictionary *SFMakeIosDeviceMotion() {
     static SF_GENERICS(NSMutableDictionary, NSString *, Class) *entryTypes;
     static dispatch_once_t once;
@@ -203,7 +226,6 @@ SFHtDictionary *SFCMMagnetometerDataToDictionary(CMMagnetometerData *data, SFTim
 #pragma mark - App state collection.
 
 static NSDictionary *locationToDictionary(CLLocation *location);
-static NSDictionary *headingToDictionary(CLHeading *heading);
 static SF_GENERICS(NSArray, NSString *) *getIpAddresses();
 
 SFHtDictionary *SFCollectIosAppState(CLLocationManager *locationManager) {
@@ -286,11 +308,6 @@ SFHtDictionary *SFCollectIosAppState(CLLocationManager *locationManager) {
         }
     }
 
-    // Heading
-    if (locationManager.heading) {
-        [iosAppState setEntry:@"heading" value:headingToDictionary(locationManager.heading)];
-    }
-
     // Network
     [iosAppState setEntry:@"network_addresses" value:getIpAddresses()];
 
@@ -325,19 +342,19 @@ static NSDictionary *locationToDictionary(CLLocation *location) {
     return dict;
 }
 
-static NSDictionary *headingToDictionary(CLHeading *heading) {
-    NSMutableDictionary *dict = [NSMutableDictionary new];
-    dict[@"time"] = [NSNumber numberWithLongLong:(heading.timestamp.timeIntervalSince1970 * 1000)];
+SFHtDictionary *SFCLHeadingToDictionary(CLHeading *heading) {
+    SFHtDictionary *dict = SFMakeHeading();
+    [dict setEntry:@"time" value:[NSNumber numberWithLongLong:(heading.timestamp.timeIntervalSince1970 * 1000)]];
     if (heading.headingAccuracy >= 0) {
-        dict[@"magnetic_heading"] = [NSNumber numberWithDouble:heading.magneticHeading];
-        dict[@"accuracy"] = [NSNumber numberWithDouble:heading.headingAccuracy];
+        [dict setEntry:@"magnetic_heading" value:[NSNumber numberWithDouble:heading.magneticHeading]];
+        [dict setEntry:@"accuracy" value:[NSNumber numberWithDouble:heading.headingAccuracy]];
     }
     if (heading.trueHeading >= 0) {
-        dict[@"true_heading"] = [NSNumber numberWithDouble:heading.trueHeading];
+        [dict setEntry:@"true_heading" value:[NSNumber numberWithDouble:heading.trueHeading]];
     }
-    dict[@"raw_magnetic_field_x"] = [NSNumber numberWithDouble:heading.x];
-    dict[@"raw_magnetic_field_y"] = [NSNumber numberWithDouble:heading.y];
-    dict[@"raw_magnetic_field_z"] = [NSNumber numberWithDouble:heading.z];
+    [dict setEntry:@"raw_magnetic_field_x" value:[NSNumber numberWithDouble:heading.x]];
+    [dict setEntry:@"raw_magnetic_field_y" value:[NSNumber numberWithDouble:heading.y]];
+    [dict setEntry:@"raw_magnetic_field_z" value:[NSNumber numberWithDouble:heading.z]];
     return dict;
 }
 

@@ -24,6 +24,12 @@ static const NSTimeInterval SF_COLLECTION_RATE_LIMIT_PERIOD = 60; // Unit: secon
 // If there was no collection in the last 2 minutes, request a collection.
 static const SFTimestamp SF_MAX_COLLECTION_PERIOD = 120000;  // Unit: millisecond.
 
+// Compass (heading) parameter.
+// We will wait for 4 seconds for the first heading update.  (On an
+// iPhone 4S it takes 2 ~ 3 seconds to get the first heading update.
+// And we add 1 second as a margin; so that's 4 seconds.)
+static const unsigned long long SF_HEADING_INTERVAL = 4 * NSEC_PER_SEC;
+
 // Motion sensor parameters.
 static const NSUInteger     SF_MOTION_SENSOR_NUM_READINGS = 10;  // Keep at most 10 readings.
 static const NSTimeInterval SF_MOTION_SENSOR_INTERVAL = 0.5;  // Unit: second.
@@ -141,6 +147,7 @@ static const NSTimeInterval SF_MOTION_SENSOR_INTERVAL = 0.5;  // Unit: second.
     // by the way.
     dispatch_async(_serial, ^{
         [self stopMotionSensors];
+        [_locationManager stopUpdatingHeading];
         dispatch_suspend(_serial);
     });
 }
@@ -187,20 +194,45 @@ static const NSTimeInterval SF_MOTION_SENSOR_INTERVAL = 0.5;  // Unit: second.
 
     BOOL foreground = UIApplication.sharedApplication.applicationState != UIApplicationStateBackground;
 
-    // Don't start motion sensors when you are in the background.
-    if (_allowUsingMotionSensors && foreground) {
-        SF_DEBUG(@"Collect motion data...");
-        [self startMotionSensors];
+    // Don't start compass and motion sensors when you are in the background.
+    int64_t delay = 0;
+    if (foreground) {
+        if (_allowUsingMotionSensors) {
+            SF_DEBUG(@"Collect motion data...");
+            [self startMotionSensors];
+            // Wait for a full cycle of readings plus 0.1 second margin to collect motion sensor readings.
+            delay = MAX(delay, (SF_MOTION_SENSOR_INTERVAL * SF_MOTION_SENSOR_NUM_READINGS + 0.1) * NSEC_PER_SEC);
+        }
 
-        // Wait for a full cycle of readings plus 0.1 second margin to collect motion sensor readings.
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (SF_MOTION_SENSOR_INTERVAL * SF_MOTION_SENSOR_NUM_READINGS + 0.1) * NSEC_PER_SEC), _serial, ^{
+        [_locationManager startUpdatingHeading];
+        delay = MAX(delay, SF_HEADING_INTERVAL);
+    }
+
+    if (delay > 0) {
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, delay), _serial, ^{
             [self stopMotionSensors];
+
+            // Read heading before we stop location manager (it nullifies heading when stopped).
+            CLHeading *heading = _locationManager.heading;
+            [_locationManager stopUpdatingHeading];
+
+            if (heading) {
+                [event.iosAppState setEntry:@"heading" value:SFCLHeadingToDictionary(heading).entries];
+            }
+
             [self addReadingsToIosAppState:event.iosAppState];
+
             SF_DEBUG(@"iosAppState: %@", event.iosAppState.entries);
             [Sift.sharedInstance appendEvent:event];
         });
     } else {
+        CLHeading *heading = _locationManager.heading;
+        if (heading) {
+            [event.iosAppState setEntry:@"heading" value:SFCLHeadingToDictionary(heading).entries];
+        }
+
         [self addReadingsToIosAppState:event.iosAppState];
+
         SF_DEBUG(@"iosAppState: %@", event.iosAppState.entries);
         [Sift.sharedInstance appendEvent:event];
     }

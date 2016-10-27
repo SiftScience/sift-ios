@@ -11,6 +11,8 @@ SFHtDictionary *SFMakeEmptyIosAppState();
 
 SFHtDictionary *SFCollectIosAppState(CLLocationManager *locationManager);
 
+SFHtDictionary *SFCLHeadingToDictionary(CLHeading *heading);
+
 SFHtDictionary *SFCMDeviceMotionToDictionary(CMDeviceMotion *data, SFTimestamp now);
 SFHtDictionary *SFCMAccelerometerDataToDictionary(CMAccelerometerData *data, SFTimestamp now);
 SFHtDictionary *SFCMGyroDataToDictionary(CMGyroData *data, SFTimestamp now);

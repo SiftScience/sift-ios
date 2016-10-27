@@ -61,7 +61,7 @@ Here is what you would do within `AppDelegate.m`:
 
 * (Recommended) If your app does not use motion sensors (accelerometer,
   gyro, and magnetometer), and you don't mind Sift collecting motion
-  data, add this line as well: `sift.allowUsingMotionSensors = YES;`
+  data, add this line as well: `[sift setAllowUsingMotionSensors:YES];`
   This will enable the SDK to occasionally collect motion data in the
   background.
 

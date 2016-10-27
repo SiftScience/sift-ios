@@ -25,7 +25,7 @@ static NSString * const SFDefaultEventQueueIdentifier = @"sift-default";
 // TODO(clchiou): Experiment a sensible config for the default event queue.
 static const SFQueueConfig SFDefaultEventQueueConfig = {
     .appendEventOnlyWhenDifferent = NO,
-    .uploadWhenMoreThan = 512,  // Unit: number of events.
+    .uploadWhenMoreThan = 32,  // Unit: number of events.
     .uploadWhenOlderThan = 60,  // 1 minute.
 };
 

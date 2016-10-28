@@ -19,7 +19,7 @@
  */
 static const SFQueueConfig SFIosDevicePropertiesCollectorQueueConfig = {
     .appendEventOnlyWhenDifferent = YES,  // Only track difference.
-    .acceptSameEventAfter = 600,  // 10 minutes
+    .acceptSameEventAfter = 3600,  // 1 hour
     .uploadWhenMoreThan = 8,  // More than 8 events
     .uploadWhenOlderThan = 60,  // 1 minute
 };

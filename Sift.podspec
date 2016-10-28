@@ -8,7 +8,7 @@ Pod::Spec.new do |spec|
   }
   spec.homepage = 'https://github.com/SiftScience/sift-ios'
   spec.source = {
-    :git => 'https://github.com/SiftScience/sift-ios',
+    :git => 'https://github.com/SiftScience/sift-ios.git',
     :tag => "v#{spec.version.to_s}",
   }
   spec.summary = 'Machine learning fraud detection and prevention'

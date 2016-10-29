@@ -12,18 +12,17 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Configure Sift object here.
+    Sift *sift = [Sift sharedInstance];
 
     // At minimum, you should configure these two.
-    //[Sift sharedInstance].accountId = ...;
-    //[Sift sharedInstance].beaconKey = ...;
+    [sift setAccountId:@"YOUR_ACCOUNT_ID"];
+    [sift setBeaconKey:@"YOUR_JAVASCRIPT_SNIPPET_KEY"];
 
-    [Sift sharedInstance].allowUsingMotionSensors = YES;
+    [sift setAllowUsingMotionSensors:YES];
 
-    // In addition, if you have any queues, you should set up them here.
-    //[[Sift sharedInstance] addEventQueue:... config:...];
-
-    // During integration, you may set this URL to a RequestBin or a private server to validate that your integration works.
-    //[Sift sharedInstance].serverUrlFormat = @"http://localhost:8080";
+    // During integration, you may set this URL to a RequestBin or a private server
+    // to validate that your integration works.
+    // [sift setServerUrlFormat:@"http://localhost:8080"];
 
     return YES;
 }

@@ -10,12 +10,6 @@
 
 @property (weak, nonatomic) IBOutlet UITextField *serverUrlFormatTextField;
 
-@property (weak, nonatomic) IBOutlet UITextField *pathTextField;
-
-@property (weak, nonatomic) IBOutlet UITextField *typeTextField;
-
 @property (weak, nonatomic) IBOutlet UITextField *userIdTextField;
-
-@property (weak, nonatomic) IBOutlet UITextField *fieldsTextField;
 
 @end

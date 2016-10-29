@@ -74,35 +74,6 @@
     setterFunc([Sift sharedInstance], setter, newValue);
 }
 
-- (IBAction)handleEnqueueEventButtonClick:(id)sender {
-    NSLog(@"Button \"Enqueue Event\" was clicked");
-
-    NSLog(@"path: \"%@\"", self.pathTextField.text);
-    NSString *path = self.pathTextField.text;
-    if ([@"" isEqualToString:path]) {
-        path = nil;
-    }
-
-    NSLog(@"mobileEventType: \"%@\"", self.typeTextField.text);
-    NSString *mobileEventType = self.typeTextField.text;
-    if ([@"" isEqualToString:mobileEventType]) {
-        mobileEventType = nil;
-    }
-
-    NSLog(@"fields: \"%@\"", self.fieldsTextField.text);
-    NSDictionary *fields = nil;
-    if (![@"" isEqualToString:self.fieldsTextField.text]) {
-        NSData *data = [self.fieldsTextField.text dataUsingEncoding:NSASCIIStringEncoding];
-        NSError *error;
-        fields = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
-        if (!fields) {
-            NSLog(@"Could not decode JSON string due to %@", [error localizedDescription]);
-        }
-    }
-
-    [[Sift sharedInstance] appendEvent:[SFEvent eventWithType:mobileEventType path:path fields:fields]];
-}
-
 - (IBAction)handleRequestUploadButtonClick:(id)sender {
     NSLog(@"Button \"Request Upload\" was clicked");
     [[Sift sharedInstance] upload:YES];

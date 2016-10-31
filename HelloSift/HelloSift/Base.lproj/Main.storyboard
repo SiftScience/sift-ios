@@ -30,16 +30,16 @@
                             </label>
                             <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="String (default: nil)" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="23U-hP-DEo" userLabel="Round Style Text Field User ID">
                                 <rect key="frame" x="131" y="314" width="229" height="30"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxY="YES"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
                                 <connections>
-                                    <action selector="handleUserIdChanged:" destination="BYZ-38-t0r" eventType="editingDidEnd" id="aqK-FL-COj"/>
+                                    <action selector="handleUserIdChanged:" destination="BYZ-38-t0r" eventType="editingChanged" id="2pJ-Dj-qrd"/>
                                 </connections>
                             </textField>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="UGH-ab-39w" userLabel="Button Request Upload">
                                 <rect key="frame" x="16" y="407" width="343" height="30"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxY="YES"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                                 <state key="normal" title="Upload"/>
                                 <connections>
                                     <action selector="handleRequestUploadButtonClick:" destination="BYZ-38-t0r" eventType="touchUpInside" id="3u7-Za-Moj"/>
@@ -68,29 +68,29 @@
                             </label>
                             <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="String (required)" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="2sV-N8-rRk" userLabel="Round Style Text Field Account ID">
                                 <rect key="frame" x="130" y="191" width="229" height="30"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxY="YES"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
                                 <connections>
-                                    <action selector="handleAccountIdChanged:" destination="BYZ-38-t0r" eventType="editingDidEnd" id="eCI-qf-LRK"/>
+                                    <action selector="handleAccountIdChanged:" destination="BYZ-38-t0r" eventType="editingChanged" id="iX2-hX-rfz"/>
                                 </connections>
                             </textField>
                             <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="String (required)" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="rsn-Ze-KRJ" userLabel="Round Style Text Field Beacon Key">
                                 <rect key="frame" x="130" y="232" width="229" height="30"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxY="YES"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
                                 <connections>
-                                    <action selector="handleBeaconKeyChanged:" destination="BYZ-38-t0r" eventType="editingDidEnd" id="Bch-Gk-SH4"/>
+                                    <action selector="handleBeaconKeyChanged:" destination="BYZ-38-t0r" eventType="editingChanged" id="zQ6-zA-ZH8"/>
                                 </connections>
                             </textField>
                             <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="String (optional)" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="hfk-Ek-Art" userLabel="Round Style Text Field Server URL">
                                 <rect key="frame" x="131" y="273" width="229" height="30"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxY="YES"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
                                 <connections>
-                                    <action selector="handleServerUrlChanged:" destination="BYZ-38-t0r" eventType="editingDidEnd" id="jtB-bB-TEy"/>
+                                    <action selector="handleServerUrlChanged:" destination="BYZ-38-t0r" eventType="editingChanged" id="pwO-T2-q0i"/>
                                 </connections>
                             </textField>
                         </subviews>

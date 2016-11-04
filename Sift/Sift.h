@@ -122,6 +122,14 @@
 - (void)updateMagnetometerData:(CMMagnetometerData *)data;
 
 /**
+ * The default SDK behavior is to collect user location data only if
+ * the user has authorized location services through your application.
+ * If you do not want the SDK to collect user location data, you may
+ * set this flag to YES.
+ */
+@property (nonatomic) BOOL disallowCollectingLocationData;
+
+/**
  * @name Integration helpers.
  *
  * The methods and properties of this section are useful for validating

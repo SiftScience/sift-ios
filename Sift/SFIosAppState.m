@@ -47,6 +47,30 @@ SFHtDictionary *SFMakeEmptyIosAppState() {
     return [[SFHtDictionary alloc] initWithEntryTypes:entryTypes];
 }
 
+static SFHtDictionary *SFMakeLocation() {
+    static SF_GENERICS(NSMutableDictionary, NSString *, Class) *entryTypes;
+    static dispatch_once_t once;
+    dispatch_once(&once, ^{
+        entryTypes = [NSMutableDictionary new];
+#define ENTRY_TYPE(key_, type_) ([entryTypes setObject:(type_) forKey:(key_)])
+        
+        ENTRY_TYPE(@"time", NSNumber.class);
+        
+        ENTRY_TYPE(@"latitude", NSNumber.class);
+        ENTRY_TYPE(@"longitude", NSNumber.class);
+        ENTRY_TYPE(@"altitude", NSNumber.class);
+        ENTRY_TYPE(@"horizontal_accuracy", NSNumber.class);
+        ENTRY_TYPE(@"vertical_accuracy", NSNumber.class);
+        
+        ENTRY_TYPE(@"floor", NSNumber.class);
+        ENTRY_TYPE(@"speed", NSNumber.class);
+        ENTRY_TYPE(@"course", NSNumber.class);
+        
+#undef ENTRY_TYPE
+    });
+    return [[SFHtDictionary alloc] initWithEntryTypes:entryTypes];
+}
+
 static SFHtDictionary *SFMakeHeading() {
     static SF_GENERICS(NSMutableDictionary, NSString *, Class) *entryTypes;
     static dispatch_once_t once;
@@ -225,7 +249,6 @@ SFHtDictionary *SFCMMagnetometerDataToDictionary(CMMagnetometerData *data, SFTim
 
 #pragma mark - App state collection.
 
-static NSDictionary *locationToDictionary(CLLocation *location);
 static SF_GENERICS(NSArray, NSString *) *getIpAddresses();
 
 SFHtDictionary *SFCollectIosAppState(CLLocationManager *locationManager) {
@@ -300,44 +323,39 @@ SFHtDictionary *SFCollectIosAppState(CLLocationManager *locationManager) {
         [iosAppState setEntry:@"proximity_state" value:[NSNumber numberWithBool:device.proximityState]];
     }
 
-    // Location
-    if (CLLocationManager.authorizationStatus == kCLAuthorizationStatusAuthorizedAlways ||
-        CLLocationManager.authorizationStatus == kCLAuthorizationStatusAuthorizedWhenInUse) {
-        if (locationManager.location) {
-            [iosAppState setEntry:@"location" value:locationToDictionary(locationManager.location)];
-        }
-    }
-
     // Network
     [iosAppState setEntry:@"network_addresses" value:getIpAddresses()];
+    
+    // Location data will be collected in SFIosAppStateCollector
 
-    // Motion sensor data will be collected in other method.
+    // Motion sensor data will be collected in SFIosAppStateCollector
 
     return iosAppState;
 }
 
 #pragma mark - Helper functions.
 
-static NSDictionary *locationToDictionary(CLLocation *location) {
-    NSMutableDictionary *dict = [NSMutableDictionary new];
-    dict[@"time"] = [NSNumber numberWithLongLong:(location.timestamp.timeIntervalSince1970 * 1000)];
+SFHtDictionary *SFCLLocationToDictionary(CLLocation *location) {
+    SFHtDictionary *dict = SFMakeLocation();
+    [dict setEntry:@"time" value:[NSNumber numberWithLongLong:(location.timestamp.timeIntervalSince1970 * 1000)]];
+    
     if (location.horizontalAccuracy >= 0) {
-        dict[@"latitude"] = [NSNumber numberWithDouble:location.coordinate.latitude];
-        dict[@"longitude"] = [NSNumber numberWithDouble:location.coordinate.longitude];
-        dict[@"horizontal_accuracy"] = [NSNumber numberWithDouble:location.horizontalAccuracy];
+        [dict setEntry:@"latitude" value:[NSNumber numberWithDouble:location.coordinate.latitude]];
+        [dict setEntry:@"longitude" value:[NSNumber numberWithDouble:location.coordinate.longitude]];
+        [dict setEntry:@"horizontal_accuracy" value:[NSNumber numberWithDouble:location.horizontalAccuracy]];
     }
     if (location.verticalAccuracy >= 0) {
-        dict[@"altitude"] = [NSNumber numberWithDouble:location.altitude];
-        dict[@"vertical_accuracy"] = [NSNumber numberWithDouble:location.verticalAccuracy];
+        [dict setEntry:@"altitude" value:[NSNumber numberWithDouble:location.altitude]];
+        [dict setEntry:@"vertical_accuracy" value:[NSNumber numberWithDouble:location.verticalAccuracy]];
     }
     if (location.floor) {
-        dict[@"floor"] = [NSNumber numberWithInteger:location.floor.level];
+        [dict setEntry:@"floor" value:[NSNumber numberWithInteger:location.floor.level]];
     }
     if (location.speed >= 0) {
-        dict[@"speed"] = [NSNumber numberWithDouble:location.speed];
+        [dict setEntry:@"speed" value:[NSNumber numberWithDouble:location.speed]];
     }
     if (location.course >= 0) {
-        dict[@"course"] = [NSNumber numberWithDouble:location.course];
+        [dict setEntry:@"course" value:[NSNumber numberWithDouble:location.course]];
     }
     return dict;
 }

@@ -61,9 +61,18 @@ Here is what you would do within `AppDelegate.m`:
 
 * (Recommended) If your app does not use motion sensors (accelerometer,
   gyro, and magnetometer), and you don't mind Sift collecting motion
-  data, add this line as well: `[sift setAllowUsingMotionSensors:YES];`
+  data, add this line:
+  ```
+  [sift setAllowUsingMotionSensors:YES];
+  ```
   This will enable the SDK to occasionally collect motion data in the
   background.
+  
+* If your app uses user location data but you do not want send it to
+  Sift, add this line:
+   ```
+   [sift setDisallowCollectingLocationData:YES];
+   ```
 
 #### Tracking users
 

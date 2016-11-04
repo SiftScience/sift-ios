@@ -30,4 +30,6 @@
 - (void)updateGyroData:(CMGyroData *)data;
 - (void)updateMagnetometerData:(CMMagnetometerData *)data;
 
+@property (nonatomic) BOOL disallowCollectingLocationData;
+
 @end

@@ -223,12 +223,13 @@ static const SFQueueConfig SFDefaultEventQueueConfig = {
     [self archiveKeys];
 }
 
+
 - (BOOL)allowUsingMotionSensors {
-    return _iosAppStateCollector.allowUsingMotionSensors;
+    return [_iosAppStateCollector allowUsingMotionSensors];
 }
 
 - (void)setAllowUsingMotionSensors:(BOOL)allowUsingMotionSensors {
-    _iosAppStateCollector.allowUsingMotionSensors = allowUsingMotionSensors;
+    [_iosAppStateCollector setAllowUsingMotionSensors:allowUsingMotionSensors];
 }
 
 
@@ -246,6 +247,15 @@ static const SFQueueConfig SFDefaultEventQueueConfig = {
 
 - (void)updateMagnetometerData:(CMMagnetometerData *)data {
     [_iosAppStateCollector updateMagnetometerData:data];
+}
+
+
+- (BOOL)disallowCollectingLocationData {
+    return _iosAppStateCollector.disallowCollectingLocationData;
+}
+
+- (void)setDisallowCollectingLocationData:(BOOL)disallowCollectingLocationData {
+    [_iosAppStateCollector setDisallowCollectingLocationData:disallowCollectingLocationData];
 }
 
 #pragma mark - NSKeyedArchiver/NSKeyedUnarchiver

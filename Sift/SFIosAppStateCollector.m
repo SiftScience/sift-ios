@@ -66,6 +66,7 @@ static const NSTimeInterval SF_MOTION_SENSOR_INTERVAL = 0.5;  // Unit: second.
     //// Motion sensors.
 
     BOOL _allowUsingMotionSensors;
+    BOOL _disallowCollectingLocationData;
     CMMotionManager *_motionManager;
     int _numMotionStarted;
     NSOperationQueue *_operationQueue;
@@ -108,6 +109,8 @@ static const NSTimeInterval SF_MOTION_SENSOR_INTERVAL = 0.5;  // Unit: second.
             [weakSelf checkAndCollectWhenNoneRecently:SFCurrentTime()];
         });
         dispatch_resume(_source);
+        
+        _disallowCollectingLocationData = NO;
 
         //// Motion sensors.
 
@@ -212,6 +215,10 @@ static const NSTimeInterval SF_MOTION_SENSOR_INTERVAL = 0.5;  // Unit: second.
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, delay), _serial, ^{
             [self stopMotionSensors];
 
+            if ([self canCollectLocationData] && _locationManager.location) {
+                [event.iosAppState setEntry:@"location" value:SFCMLocationToDictionary(_locationManager.location).entries];
+            }
+            
             // Read heading before we stop location manager (it nullifies heading when stopped).
             CLHeading *heading = _locationManager.heading;
             [_locationManager stopUpdatingHeading];
@@ -219,13 +226,17 @@ static const NSTimeInterval SF_MOTION_SENSOR_INTERVAL = 0.5;  // Unit: second.
             if (heading) {
                 [event.iosAppState setEntry:@"heading" value:SFCLHeadingToDictionary(heading).entries];
             }
-
+            
             [self addReadingsToIosAppState:event.iosAppState];
 
             SF_DEBUG(@"iosAppState: %@", event.iosAppState.entries);
             [Sift.sharedInstance appendEvent:event];
         });
     } else {
+        if ([self canCollectLocationData] && _locationManager.location) {
+            [event.iosAppState setEntry:@"location" value:SFCMLocationToDictionary(_locationManager.location).entries];
+        }
+        
         CLHeading *heading = _locationManager.heading;
         if (heading) {
             [event.iosAppState setEntry:@"heading" value:SFCLHeadingToDictionary(heading).entries];
@@ -272,6 +283,22 @@ static NSString * const SF_LAST_COLLECTED_AT = @"lastCollectedAt";
             _lastCollectedAt = 0;
         }
     });
+}
+
+#pragma mark – Location collection
+
+- (BOOL)disallowCollectingLocationData {
+    return _disallowCollectingLocationData;
+}
+
+- (void)setDisallowCollectingLocationData:(BOOL)disallowCollectingLocationData {
+    _disallowCollectingLocationData = disallowCollectingLocationData;
+}
+
+- (BOOL)canCollectLocationData {
+    return (CLLocationManager.authorizationStatus == kCLAuthorizationStatusAuthorizedAlways ||
+             CLLocationManager.authorizationStatus == kCLAuthorizationStatusAuthorizedWhenInUse) &&
+            !_disallowCollectingLocationData;
 }
 
 #pragma mark - Motion sensors

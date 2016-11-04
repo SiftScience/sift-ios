@@ -15,8 +15,8 @@
     Sift *sift = [Sift sharedInstance];
 
     // At minimum, you should configure these two
-    [sift setAccountId:@"4e1a50e172beb95cf1e4ae54"];
-    [sift setBeaconKey:@"f92ed5bf7b"];
+    [sift setAccountId:@"YOUR_ACCOUNT_ID"];
+    [sift setBeaconKey:@"YOUR_JAVASCRIPT_SNIPPET_KEY"];
 
     // These can also be configured to customize the data that the SDK will collect
     // [sift setAllowUsingMotionSensors:YES];

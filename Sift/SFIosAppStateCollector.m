@@ -216,7 +216,7 @@ static const NSTimeInterval SF_MOTION_SENSOR_INTERVAL = 0.5;  // Unit: second.
             [self stopMotionSensors];
 
             if ([self canCollectLocationData] && _locationManager.location) {
-                [event.iosAppState setEntry:@"location" value:SFCMLocationToDictionary(_locationManager.location).entries];
+                [event.iosAppState setEntry:@"location" value:SFCLLocationToDictionary(_locationManager.location).entries];
             }
             
             // Read heading before we stop location manager (it nullifies heading when stopped).
@@ -234,7 +234,7 @@ static const NSTimeInterval SF_MOTION_SENSOR_INTERVAL = 0.5;  // Unit: second.
         });
     } else {
         if ([self canCollectLocationData] && _locationManager.location) {
-            [event.iosAppState setEntry:@"location" value:SFCMLocationToDictionary(_locationManager.location).entries];
+            [event.iosAppState setEntry:@"location" value:SFCLLocationToDictionary(_locationManager.location).entries];
         }
         
         CLHeading *heading = _locationManager.heading;

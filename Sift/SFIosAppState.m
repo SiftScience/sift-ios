@@ -335,7 +335,7 @@ SFHtDictionary *SFCollectIosAppState(CLLocationManager *locationManager) {
 
 #pragma mark - Helper functions.
 
-SFHtDictionary *SFCMLocationToDictionary(CLLocation *location) {
+SFHtDictionary *SFCLLocationToDictionary(CLLocation *location) {
     SFHtDictionary *dict = SFMakeLocation();
     [dict setEntry:@"time" value:[NSNumber numberWithLongLong:(location.timestamp.timeIntervalSince1970 * 1000)]];
     

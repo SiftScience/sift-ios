@@ -251,7 +251,7 @@ static const SFQueueConfig SFDefaultEventQueueConfig = {
 
 
 - (BOOL)disallowCollectingLocationData {
-    return _iosAppStateCollector.disallowCollectingLocationData;
+    return [_iosAppStateCollector disallowCollectingLocationData];
 }
 
 - (void)setDisallowCollectingLocationData:(BOOL)disallowCollectingLocationData {

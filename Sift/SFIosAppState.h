@@ -13,7 +13,7 @@ SFHtDictionary *SFCollectIosAppState(CLLocationManager *locationManager);
 
 SFHtDictionary *SFCLHeadingToDictionary(CLHeading *heading);
 
-SFHtDictionary *SFCMLocationToDictionary(CLLocation *data);
+SFHtDictionary *SFCLLocationToDictionary(CLLocation *data);
 
 SFHtDictionary *SFCMDeviceMotionToDictionary(CMDeviceMotion *data, SFTimestamp now);
 SFHtDictionary *SFCMAccelerometerDataToDictionary(CMAccelerometerData *data, SFTimestamp now);

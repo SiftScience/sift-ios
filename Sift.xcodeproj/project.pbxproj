@@ -48,6 +48,8 @@
 		71E15CFB1D95D14700A0305C /* SFTokenBucket.h in Headers */ = {isa = PBXBuildFile; fileRef = 71E15CFA1D95D14700A0305C /* SFTokenBucket.h */; };
 		71E15CFD1D95D15900A0305C /* SFTokenBucket.m in Sources */ = {isa = PBXBuildFile; fileRef = 71E15CFC1D95D15900A0305C /* SFTokenBucket.m */; };
 		71E15CFF1D95DEC300A0305C /* SFTokenBucketTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 71E15CFE1D95DEC300A0305C /* SFTokenBucketTests.m */; };
+		F712CDD41DD15D5400C069BD /* NSData+GZIP.h in Headers */ = {isa = PBXBuildFile; fileRef = F712CDD21DD15D5400C069BD /* NSData+GZIP.h */; };
+		F712CDD51DD15D5400C069BD /* NSData+GZIP.m in Sources */ = {isa = PBXBuildFile; fileRef = F712CDD31DD15D5400C069BD /* NSData+GZIP.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -106,6 +108,8 @@
 		71E15CFA1D95D14700A0305C /* SFTokenBucket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SFTokenBucket.h; sourceTree = "<group>"; };
 		71E15CFC1D95D15900A0305C /* SFTokenBucket.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SFTokenBucket.m; sourceTree = "<group>"; };
 		71E15CFE1D95DEC300A0305C /* SFTokenBucketTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SFTokenBucketTests.m; sourceTree = "<group>"; };
+		F712CDD21DD15D5400C069BD /* NSData+GZIP.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+GZIP.h"; sourceTree = "<group>"; };
+		F712CDD31DD15D5400C069BD /* NSData+GZIP.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSData+GZIP.m"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -148,6 +152,7 @@
 		7168EE031C7B977500A88245 /* Sift */ = {
 			isa = PBXGroup;
 			children = (
+				F712CDD61DD15D5A00C069BD /* Vendor */,
 				7168EE061C7B977500A88245 /* Info.plist */,
 				71E15CF31D95C8FA00A0305C /* SFCircularBuffer.h */,
 				71E15CF41D95C8FA00A0305C /* SFCircularBuffer.m */,
@@ -202,6 +207,15 @@
 			path = SiftTests;
 			sourceTree = "<group>";
 		};
+		F712CDD61DD15D5A00C069BD /* Vendor */ = {
+			isa = PBXGroup;
+			children = (
+				F712CDD21DD15D5400C069BD /* NSData+GZIP.h */,
+				F712CDD31DD15D5400C069BD /* NSData+GZIP.m */,
+			);
+			path = Vendor;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -210,6 +224,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				7168EE2C1C86250100A88245 /* SFEvent+Private.h in Headers */,
+				F712CDD41DD15D5400C069BD /* NSData+GZIP.h in Headers */,
 				716BEB911C7D3695009C3706 /* SFUtils.h in Headers */,
 				71E15CF51D95C8FA00A0305C /* SFCircularBuffer.h in Headers */,
 				716BEB8A1C7D336B009C3706 /* SFEvent.h in Headers */,
@@ -325,6 +340,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F712CDD51DD15D5400C069BD /* NSData+GZIP.m in Sources */,
 				716BEB931C7D3695009C3706 /* Sift.m in Sources */,
 				71E15CF91D95C92300A0305C /* SFCircularBuffer.m in Sources */,
 				7168EE281C7FB80C00A88245 /* SFUploader.m in Sources */,

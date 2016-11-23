@@ -28,7 +28,7 @@ Pod::Spec.new do |spec|
   ]
 
   # File patterns
-  spec.source_files = 'Sift/*.{h,m}'
+  spec.source_files = 'Sift/*.{h,m}', 'Sift/Vendor/*.{h,m}'
   spec.public_header_files = [
     'Sift/SFCompatibility.h',
     'Sift/SFEvent.h',

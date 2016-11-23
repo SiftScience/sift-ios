@@ -1,5 +1,10 @@
 # Change Log
 
+## [0.9.1] - 2016-11-23
+### Added
+- Adds gzip compression to event body
+- Adds location configuration to Sift.h
+
 ## [0.9.0] - 2016-11-01
 ### Added
 - Collect app states, motion sensor data, location, and more

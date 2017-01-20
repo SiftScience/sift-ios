@@ -1,5 +1,8 @@
 # Change Log
 
+## [0.9.2] - 2017-01-20
+- Reduces backup aggressiveness to eliminate potential race in background thread
+
 ## [0.9.1] - 2016-11-23
 ### Added
 - Adds gzip compression to event body

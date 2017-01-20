@@ -31,15 +31,6 @@
         _sift = sift;
 
         [self unarchive];
-
-        // In case we just wake up from a long sleep...
-        dispatch_async(dispatch_get_global_queue(QOS_CLASS_BACKGROUND, 0), ^{
-            if (self.readyForUpload) {
-                [self requestUpload];
-            } else {
-                [self checkUploadReadinessLater];
-            }
-        });
     }
     return self;
 }
@@ -75,8 +66,6 @@
 
         if (self.readyForUpload) {
             [self requestUpload];
-        } else {
-            [self checkUploadReadinessLater];
         }
     }
 }
@@ -152,15 +141,6 @@ static NSString * const SF_LAST_EVENT_TIMESTAMP = @"lastEventTimestamp";
     } else {
         SF_DEBUG(@"Reference to Sift object was lost");
     }
-}
-
-- (void)checkUploadReadinessLater {
-    const SFTimestamp ERROR_MARGIN = 1;
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (_config.uploadWhenOlderThan + ERROR_MARGIN) * NSEC_PER_SEC), dispatch_get_global_queue(QOS_CLASS_BACKGROUND, 0), ^{
-        if (self.readyForUpload) {
-            [self requestUpload];
-        }
-    });
 }
 
 @end

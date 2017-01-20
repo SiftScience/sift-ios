@@ -143,11 +143,8 @@ static const NSTimeInterval SF_MOTION_SENSOR_INTERVAL = 0.5;  // Unit: second.
 }
 
 - (void)didEnterBackground {
-    [self requestCollection];
-    // Suspend serial queue and stop motion sensors (if we have started
-    // them) after requestCollection's block is executed.  And we will
-    // not re-start motion sensors when we are back to the foreground,
-    // by the way.
+    // Suspend serial queue and stop motion sensors (if we have started them).
+    // We will not re-start motion sensors when we are back to the foreground.
     dispatch_async(_serial, ^{
         [self stopMotionSensors];
         [_locationManager stopUpdatingHeading];

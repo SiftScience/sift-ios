@@ -1,6 +1,6 @@
 Pod::Spec.new do |spec|
   spec.name = 'Sift'
-  spec.version = '0.9.1'
+  spec.version = '0.9.2'
   spec.authors = 'Sift Science'
   spec.license = {
     :type => 'MIT',

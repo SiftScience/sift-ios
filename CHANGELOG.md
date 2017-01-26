@@ -1,5 +1,8 @@
 # Change Log
 
+## [0.9.3] - 2017-01-26
+- Don't include AdSupport headers for IFA
+
 ## [0.9.2] - 2017-01-20
 - Reduces backup aggressiveness to eliminate potential race in background thread
 

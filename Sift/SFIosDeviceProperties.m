@@ -1,6 +1,5 @@
 // Copyright (c) 2016 Sift Science. All rights reserved.
 
-@import AdSupport;
 @import CoreTelephony;
 @import Foundation;
 @import UIKit;
@@ -141,13 +140,24 @@ SFHtDictionary *SFCollectIosDeviceProperties() {
     [iosDeviceProperties setEntry:@"device_system_name" value:device.systemName];
     [iosDeviceProperties setEntry:@"device_system_version" value:device.systemVersion];
 
-    ASIdentifierManager *asIdentifierManager = [ASIdentifierManager sharedManager];
-    if (asIdentifierManager.advertisingTrackingEnabled) {
-        NSUUID *ifa = asIdentifierManager.advertisingIdentifier;
-        if (ifa) {  // IFA could be nil.
-            [iosDeviceProperties setEntry:@"device_ifa" value:ifa.UUIDString];
+    
+    NSUUID *ifa = nil;
+    Class ASIdentifierManagerClass = NSClassFromString(@"ASIdentifierManager");
+    if (ASIdentifierManagerClass) {
+        SEL sharedManagerSelector = NSSelectorFromString(@"sharedManager");
+        id sharedManager = ((id (*)(id, SEL))[ASIdentifierManagerClass methodForSelector:sharedManagerSelector])(ASIdentifierManagerClass, sharedManagerSelector);
+        SEL advertisingTrackingEnabledSelector = NSSelectorFromString(@"isAdvertisingTrackingEnabled");
+        BOOL isTrackingEnabled = ((BOOL (*)(id, SEL))[sharedManager methodForSelector:advertisingTrackingEnabledSelector])(sharedManager, advertisingTrackingEnabledSelector);
+        if (isTrackingEnabled) {
+            SEL advertisingIdentifierSelector = NSSelectorFromString(@"advertisingIdentifier");
+            ifa = ((NSUUID* (*)(id, SEL))[sharedManager methodForSelector:advertisingIdentifierSelector])(sharedManager, advertisingIdentifierSelector);
         }
     }
+    
+    if (ifa) {  // IFA could be nil.
+        [iosDeviceProperties setEntry:@"device_ifa" value:ifa.UUIDString];
+    }
+    
     NSUUID *ifv = device.identifierForVendor;
     if (ifv) {  // IFV could be nil.
         [iosDeviceProperties setEntry:@"device_ifv" value:ifv.UUIDString];

@@ -19,7 +19,6 @@ Pod::Spec.new do |spec|
 
   # Build settings
   spec.ios.frameworks = [
-    'AdSupport',
     'CoreLocation',
     'CoreMotion',
     'CoreTelephony',

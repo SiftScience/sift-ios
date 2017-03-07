@@ -19,9 +19,7 @@
  */
 static const SFQueueConfig SFIosDevicePropertiesCollectorQueueConfig = {
     .appendEventOnlyWhenDifferent = YES,  // Only track difference.
-    .acceptSameEventAfter = 3600,  // 1 hour
-    .uploadWhenMoreThan = 8,  // More than 8 events
-    .uploadWhenOlderThan = 60,  // 1 minute
+    .acceptSameEventAfter = 3600  // 1 hour
 };
 
 static NSString * const SFIosDevicePropertiesCollectorQueueIdentifier = @"sift-devprops";

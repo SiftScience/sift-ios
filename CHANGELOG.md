@@ -1,5 +1,8 @@
 # Change Log
 
+## [0.9.4] - 2017-03-07
+- Decreases TTL and batch size for device properties collection
+
 ## [0.9.3] - 2017-01-26
 - Don't include AdSupport headers for IFA
 

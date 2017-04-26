@@ -3,7 +3,7 @@
 @import Foundation;
 @import UIKit;
 
-#import "NSData+GZIP.h"
+#import "Vendor/NSData+GZIP.h"
 #import "SFDebug.h"
 #import "SFEvent.h"
 #import "SFEvent+Private.h"

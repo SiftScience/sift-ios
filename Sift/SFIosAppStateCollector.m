@@ -44,7 +44,7 @@ static const NSTimeInterval SF_MOTION_SENSOR_INTERVAL = 0.5;  // Unit: second.
  *
  * The request might be ignored due to rate limiting.
  */
-- (void)requestCollection;
+- (void)requestCollectionWithTitle:(NSString *)title;
 
 /**
  * Collect app state if there was no collection in the last SF_MAX_COLLECTION_PERIOD of time and app is active.
@@ -52,7 +52,7 @@ static const NSTimeInterval SF_MOTION_SENSOR_INTERVAL = 0.5;  // Unit: second.
 - (void)checkAndCollectWhenNoneRecently:(SFTimestamp)now;
 
 /** Collect app state. */
-- (void)collect:(SFTimestamp)now;
+- (void)collectWithTitle:(NSString *)title andTimestamp:(SFTimestamp)now;
 
 @end
 
@@ -94,12 +94,8 @@ static const NSTimeInterval SF_MOTION_SENSOR_INTERVAL = 0.5;  // Unit: second.
         [notificationCenter addObserver:self selector:@selector(willEnterForeground) name:UIApplicationWillEnterForegroundNotification object:nil];
         [notificationCenter addObserver:self selector:@selector(didBecomeActive) name:UIApplicationDidBecomeActiveNotification object:nil];
         [notificationCenter addObserver:self selector:@selector(didEnterBackground) name:UIApplicationDidEnterBackgroundNotification object:nil];
-
-        // Observe root view controller's title changes.
-        NSString *rootViewControllerKeyPath = NSStringFromSelector(@selector(rootViewController));
-        for (UIWindow *window in UIApplication.sharedApplication.windows) {
-            [window addObserver:self forKeyPath:rootViewControllerKeyPath options:0 context:nil];
-        }
+        [notificationCenter addObserver:self selector:@selector(viewControllerDidChange:) name:
+            @"UINavigationControllerDidShowViewControllerNotification" object:nil];
 
         // Also check periodically.
         _source = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0, _serial);
@@ -129,17 +125,12 @@ static const NSTimeInterval SF_MOTION_SENSOR_INTERVAL = 0.5;  // Unit: second.
     return self;
 }
 
-- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(SF_GENERICS(NSDictionary, NSString *, id) *)change context:(void *)context {
-    SF_DEBUG(@"Notified with KVO change: %@.%@", ((NSObject *)object).class, keyPath);
-    [self requestCollection];
-}
-
 - (void)willEnterForeground {
     dispatch_resume(_serial);
 }
 
 - (void)didBecomeActive {
-    [self requestCollection];
+    [self requestCollectionWithTitle:nil];
 }
 
 - (void)didEnterBackground {
@@ -152,7 +143,14 @@ static const NSTimeInterval SF_MOTION_SENSOR_INTERVAL = 0.5;  // Unit: second.
     });
 }
 
-- (void)requestCollection {
+- (void)viewControllerDidChange:(NSNotification *)notification {
+    UIViewController *dest = [[notification userInfo]
+                               objectForKey:@"UINavigationControllerNextVisibleViewController"];
+    [self requestCollectionWithTitle:NSStringFromClass([dest class])];
+    
+}
+
+- (void)requestCollectionWithTitle:(NSString *)title {
     // We don't care whether the remaining requests are executed if we are gone.
     SFIosAppStateCollector * __weak weakSelf = self;
     dispatch_async(_serial, ^{
@@ -166,7 +164,7 @@ static const NSTimeInterval SF_MOTION_SENSOR_INTERVAL = 0.5;  // Unit: second.
             return;
         }
 
-        [strongSelf collect:SFCurrentTime()];
+        [strongSelf collectWithTitle:title andTimestamp:SFCurrentTime()];
     });
 }
 
@@ -183,14 +181,14 @@ static const NSTimeInterval SF_MOTION_SENSOR_INTERVAL = 0.5;  // Unit: second.
         }
     }
 
-    [self collect:now];
+    [self collectWithTitle:nil andTimestamp:now];
 }
 
-- (void)collect:(SFTimestamp)now {
+- (void)collectWithTitle:(NSString *)title andTimestamp:(SFTimestamp)now {
     SF_DEBUG(@"Collect app state...");
     SFEvent *event = [SFEvent new];
     event.time = now;
-    event.iosAppState = SFCollectIosAppState(_locationManager);
+    event.iosAppState = SFCollectIosAppState(_locationManager, title);
 
     BOOL foreground = UIApplication.sharedApplication.applicationState != UIApplicationStateBackground;
 

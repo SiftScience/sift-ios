@@ -21,7 +21,7 @@
     CLLocationManager *locationManager = [CLLocationManager new];
 
     SFEvent *event = [SFEvent new];
-    event.iosAppState = SFCollectIosAppState(locationManager);
+    event.iosAppState = SFCollectIosAppState(locationManager, @"SiftViewController");
     event.iosDeviceProperties = SFCollectIosDeviceProperties();
 
     NSData *listRequest = [SFEvent listRequest:@[event]];
@@ -49,7 +49,10 @@
     XCTAssertNotNil(iosAppState);
     XCTAssertEqualObjects(@"ui_application_state_active", [iosAppState objectForKey:@"application_state"]);
     XCTAssertGreaterThan(((NSArray *)[iosAppState objectForKey:@"network_addresses"]).count, 0);
-
+    
+    NSArray *titles = [iosAppState objectForKey:@"window_root_view_controller_titles"];
+    XCTAssertEqualObjects(@"SiftViewController", [titles objectAtIndex:0]);
+    
     NSDictionary *iosDeviceProperties = [actual objectForKey:@"ios_device_properties"];
     XCTAssertNotNil(iosDeviceProperties);
     NSDictionary *entryTypes = @{
@@ -106,8 +109,9 @@
         @"evidence_files_present": NSArray.class,
         @"sdk_version": NSString.class,
     };
+    
     for (NSString *name in entryTypes) {
-        XCTAssert([[iosDeviceProperties objectForKey:name] isKindOfClass:[entryTypes objectForKey:name]], @"%@: %@ is not of type %@", name, [iosDeviceProperties objectForKey:name], [entryTypes objectForKey:name]);
+        XCTAssert(![iosDeviceProperties objectForKey:name] || [[iosDeviceProperties objectForKey:name] isKindOfClass:[entryTypes objectForKey:name]], @"%@: %@ is not of type %@", name, [iosDeviceProperties objectForKey:name], [entryTypes objectForKey:name]);
     }
     // evidence_url_schemes_openable could be nil.
     XCTAssert(![iosDeviceProperties objectForKey:@"evidence_url_schemes_openable"] ||

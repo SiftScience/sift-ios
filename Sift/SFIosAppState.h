@@ -9,7 +9,7 @@
 
 SFHtDictionary *SFMakeEmptyIosAppState();
 
-SFHtDictionary *SFCollectIosAppState(CLLocationManager *locationManager);
+SFHtDictionary *SFCollectIosAppState(CLLocationManager *locationManager, NSString *title);
 
 SFHtDictionary *SFCLHeadingToDictionary(CLHeading *heading);
 

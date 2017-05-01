@@ -251,7 +251,7 @@ SFHtDictionary *SFCMMagnetometerDataToDictionary(CMMagnetometerData *data, SFTim
 
 static SF_GENERICS(NSArray, NSString *) *getIpAddresses();
 
-SFHtDictionary *SFCollectIosAppState(CLLocationManager *locationManager) {
+SFHtDictionary *SFCollectIosAppState(CLLocationManager *locationManager, NSString *title) {
     SFHtDictionary *iosAppState = SFMakeEmptyIosAppState();
 
     NSString *applicationState = nil;
@@ -266,15 +266,10 @@ SFHtDictionary *SFCollectIosAppState(CLLocationManager *locationManager) {
         [iosAppState setEntry:@"application_state" value:applicationState];
     }
 
-    // window.rootViewController.title
-    SF_GENERICS(NSMutableArray, NSString *) *titles = [NSMutableArray new];
-    for (UIWindow *window in UIApplication.sharedApplication.windows) {
-        if (window.rootViewController.title) {
-            [titles addObject:window.rootViewController.title];
-        }
-    }
-    if (titles.count) {
-        [iosAppState setEntry:@"window_root_view_controller_titles" value:titles];
+    if (title) {
+        [iosAppState setEntry:@"window_root_view_controller_titles"
+                        value:[[NSArray alloc] initWithObjects:title, nil]];
+        NSLog(title);
     }
 
     UIDevice *device = UIDevice.currentDevice;

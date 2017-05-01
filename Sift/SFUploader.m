@@ -168,10 +168,13 @@ static const int64_t SF_CHECK_UPLOAD_LEEWAY = 5 * NSEC_PER_SEC;
     SF_DEBUG(@"request: %@", request);
     
     _responseBody = [NSMutableData new];
-    NSData *body = [[SFEvent listRequest:[_batches objectAtIndex:0]] gzippedData];
-    _uploadTask = [_session uploadTaskWithRequest:request fromData:body];
-    [_uploadTask resume];
-    SF_IMPORTANT(@"Upload a batch of %ld events to server", (unsigned long)[[_batches objectAtIndex:0] count]);
+
+    if (_batches && _batches.count && [_batches objectAtIndex:0]) {
+        NSData *body = [[SFEvent listRequest:[_batches objectAtIndex:0]] gzippedData];
+        _uploadTask = [_session uploadTaskWithRequest:request fromData:body];
+        [_uploadTask resume];
+        SF_IMPORTANT(@"Upload a batch of %ld events to server", (unsigned long)[[_batches objectAtIndex:0] count]);
+    }
 }
 
 #pragma mark - NSKeyedArchiver/NSKeyedUnarchiver

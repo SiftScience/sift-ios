@@ -1,5 +1,8 @@
 # Change Log
 
+## [0.9.5] – 2017-05-02
+- Various stability improvements (KVO and uploader)
+
 ## [0.9.4] - 2017-03-07
 - Decreases TTL and batch size for device properties collection
 

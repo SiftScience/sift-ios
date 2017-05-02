@@ -15,7 +15,7 @@
 @implementation SFIosAppStateTests
 
 - (void)testCollect {
-    SFHtDictionary *actual = SFCollectIosAppState([CLLocationManager new]);
+    SFHtDictionary *actual = SFCollectIosAppState([CLLocationManager new], nil);
     SF_DEBUG(@"Collect app state: %@", actual.entries);
     XCTAssertNotNil(actual);
 }

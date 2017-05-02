@@ -269,7 +269,6 @@ SFHtDictionary *SFCollectIosAppState(CLLocationManager *locationManager, NSStrin
     if (title) {
         [iosAppState setEntry:@"window_root_view_controller_titles"
                         value:[[NSArray alloc] initWithObjects:title, nil]];
-        NSLog(title);
     }
 
     UIDevice *device = UIDevice.currentDevice;

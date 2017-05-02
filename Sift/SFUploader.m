@@ -166,7 +166,7 @@ static const int64_t SF_CHECK_UPLOAD_LEEWAY = 5 * NSEC_PER_SEC;
     [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
     [request setValue:@"gzip" forHTTPHeaderField:@"Content-Encoding"];
     SF_DEBUG(@"request: %@", request);
-    
+
     _responseBody = [NSMutableData new];
 
     if (_batches && _batches.count && [_batches objectAtIndex:0]) {

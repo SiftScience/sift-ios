@@ -62,9 +62,9 @@ static const NSTimeInterval SF_MOTION_SENSOR_INTERVAL = 0.5;  // Unit: second.
     dispatch_source_t _source;
     NSString *_archivePath;
     CLLocationManager *_locationManager;
+    int _serialSuspendCounter;
 
     //// Motion sensors.
-
     BOOL _allowUsingMotionSensors;
     BOOL _disallowCollectingLocationData;
     CMMotionManager *_motionManager;
@@ -76,7 +76,6 @@ static const NSTimeInterval SF_MOTION_SENSOR_INTERVAL = 0.5;  // Unit: second.
     SF_GENERICS(SFCircularBuffer, CMMagnetometerData *) *_magnetometerReadings;
 
     //// Archived states.
-
     SFTokenBucket *_bucket;  // Control the rate of requestCollection.
     SFTimestamp _lastCollectedAt;  // Control the rate of checkAndCollectWhenNoneRecently.
 }
@@ -87,6 +86,7 @@ static const NSTimeInterval SF_MOTION_SENSOR_INTERVAL = 0.5;  // Unit: second.
         _serial = dispatch_queue_create("com.sift.SFIosAppStateCollector", DISPATCH_QUEUE_SERIAL);
         _archivePath = archivePath;
         _locationManager = [CLLocationManager new];
+        _serialSuspendCounter = 0;
 
         [self unarchive];
 
@@ -126,7 +126,13 @@ static const NSTimeInterval SF_MOTION_SENSOR_INTERVAL = 0.5;  // Unit: second.
 }
 
 - (void)willEnterForeground {
+    if (_serialSuspendCounter <= 0) {
+        SF_DEBUG(@"Suspend counter has reached zero – do not resume");
+        return;
+    }
+    
     dispatch_resume(_serial);
+    _serialSuspendCounter--;
 }
 
 - (void)didBecomeActive {
@@ -140,6 +146,7 @@ static const NSTimeInterval SF_MOTION_SENSOR_INTERVAL = 0.5;  // Unit: second.
         [self stopMotionSensors];
         [_locationManager stopUpdatingHeading];
         dispatch_suspend(_serial);
+        _serialSuspendCounter++;
     });
 }
 

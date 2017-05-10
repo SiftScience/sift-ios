@@ -1,5 +1,8 @@
 # Change Log
 
+## [0.9.6] – 2017-05-09
+– Adds suspend / resume counter for stability
+
 ## [0.9.5] – 2017-05-02
 - Various stability improvements (KVO and uploader)
 

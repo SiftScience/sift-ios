@@ -27,7 +27,6 @@
 
 - (void)testAppend {
     SFQueueConfig config = {
-        .appendEventOnlyWhenDifferent = NO,
         .uploadWhenMoreThan = 65536,
         .uploadWhenOlderThan = 3600,
     };
@@ -46,7 +45,6 @@
 
 - (void)testArchive {
     SFQueueConfig config = {
-        .appendEventOnlyWhenDifferent = NO,
         .uploadWhenMoreThan = 65536,
         .uploadWhenOlderThan = 3600,
     };
@@ -71,63 +69,78 @@
 
 - (void)testReadyForUploadMoreThan {
     SFQueueConfig config = {
-        .appendEventOnlyWhenDifferent = NO,
         .uploadWhenMoreThan = 1,
         .uploadWhenOlderThan = 3600,
     };
     SFQueue *queue = [self makeQueue:config];
     XCTAssertFalse(queue.readyForUpload);
 
+    // We expect the first event to be uploaded immediately
+    [queue append:[SFEvent eventWithType:nil path:@"path-0" fields:nil]];
+    // We have to manually transfer because we don't have a Sift instance
+    [queue transfer];
+
+    // After the queue is flushed, it should not be ready after 1 event
     [queue append:[SFEvent eventWithType:nil path:@"path-0" fields:nil]];
     XCTAssertFalse(queue.readyForUpload);
-
+    
+    // Now that it's exceeded 1, we expect it to be ready
     [queue append:[SFEvent eventWithType:nil path:@"path-0" fields:nil]];
     XCTAssertTrue(queue.readyForUpload);
+}
+
+- (void)testReadyForUploadAfterWait {
+    SFQueueConfig config = {
+        .uploadWhenMoreThan = 5,
+        .uploadWhenOlderThan = 1,
+    };
+    SFQueue *queue = [self makeQueue:config];
+    XCTAssertFalse(queue.readyForUpload);
+    
+    // We expect the first event to be uploaded immediately
+    [queue append:[SFEvent eventWithType:nil path:@"path-0" fields:nil]];
+    // Don't manually transfer so that the queue holds one item
+    
+    // Sleep for 1.1 seconds (in excess of TTL)
+    [NSThread sleepForTimeInterval:1.1];
+    
+    // Now the queue should be ready for upload
+    XCTAssertTrue(queue.readyForUpload);
+}
+
+- (void)testReadyForUploadNoWait {
+    SFQueueConfig config = {
+        .uploadWhenMoreThan = 5,
+        .uploadWhenOlderThan = 1,
+    };
+    SFQueue *queue = [self makeQueue:config];
+    XCTAssertFalse(queue.readyForUpload);
+    
+    // We expect the first event to be uploaded immediately
+    [queue append:[SFEvent eventWithType:nil path:@"path-0" fields:nil]];
+    [queue transfer];
+    
+    // Should not have uploaded the second event (not stale enough)
+    [queue append:[SFEvent eventWithType:nil path:@"path-0" fields:nil]];
+    XCTAssertFalse(queue.readyForUpload);
 }
 
 - (void)testReadyForUploadOlderThan {
     SFQueueConfig config = {
-        .appendEventOnlyWhenDifferent = NO,
         .uploadWhenMoreThan = 65536,
-        .uploadWhenOlderThan = 0,
+        .uploadWhenOlderThan = 1,
     };
     SFQueue *queue = [self makeQueue:config];
     XCTAssertFalse(queue.readyForUpload);
 
     [queue append:[SFEvent eventWithType:nil path:@"path-0" fields:nil]];
-    [NSThread sleepForTimeInterval:0.01];
+    XCTAssertFalse(queue.readyForUpload);
+    [NSThread sleepForTimeInterval:1.1];
     XCTAssertTrue(queue.readyForUpload);
 }
 
-- (void)testappendEventOnlyWhenDifferent {
+- (void)testAppendSameEventImmediately {
     SFQueueConfig config = {
-        .appendEventOnlyWhenDifferent = YES,
-        .acceptSameEventAfter = 3600,
-        .uploadWhenMoreThan = 65536,
-        .uploadWhenOlderThan = 3600,
-    };
-    SFQueue *queue = [self makeQueue:config];
-
-    [queue append:[SFEvent eventWithType:nil path:@"path" fields:nil]];
-    [queue append:[SFEvent eventWithType:nil path:@"path" fields:nil]];
-    [queue append:[SFEvent eventWithType:nil path:@"path" fields:nil]];
-
-    NSArray *events = [queue transfer];
-    XCTAssertEqual(events.count, 1);
-    XCTAssertEqualObjects([(SFEvent *)[events objectAtIndex:0] path], @"path");
-
-    [queue append:[SFEvent eventWithType:nil path:@"path" fields:nil]];
-    [queue append:[SFEvent eventWithType:nil path:@"path" fields:nil]];
-    [queue append:[SFEvent eventWithType:nil path:@"path" fields:nil]];
-
-    events = [queue transfer];
-    XCTAssertEqual(events.count, 0);
-}
-
-- (void)testappendSameEventImmediately {
-    SFQueueConfig config = {
-        .appendEventOnlyWhenDifferent = YES,
-        .acceptSameEventAfter = -1,  // Trick to accept another immediately.
         .uploadWhenMoreThan = 65536,
         .uploadWhenOlderThan = 3600,
     };
@@ -155,7 +168,8 @@
 }
 
 - (SFQueue *)makeQueue:(SFQueueConfig)config {
-    return [[SFQueue alloc] initWithIdentifier:@"id" config:config archivePath:_archivePath sift:nil];
+    return [[SFQueue alloc] initWithIdentifier:@"id" config:config archivePath:_archivePath
+                                          sift:nil];
 }
 
 @end

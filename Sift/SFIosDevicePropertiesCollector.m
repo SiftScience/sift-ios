@@ -18,7 +18,7 @@
  * changed).
  */
 static const SFQueueConfig SFIosDevicePropertiesCollectorQueueConfig = {
-    .appendEventOnlyWhenDifferent = YES,  // Only track difference.
+    .uploadWhenMoreThan = 0,
     .acceptSameEventAfter = 3600  // 1 hour
 };
 
@@ -36,13 +36,16 @@ static NSString * const SFIosDevicePropertiesCollectorQueueIdentifier = @"sift-d
 - (instancetype)init {
     self = [super init];
     if (self) {
-        // Depending on when developer initializing the Sift object, we
+        // Observe didBecomeActive to capture the initial application start-up
+        NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
+        [notificationCenter addObserver:self selector:@selector(collect) name:UIApplicationDidBecomeActiveNotification object:nil];
+        
+        // Depending on when the developer initializes the Sift object, we
         // could miss the "enter foreground" notification.  To be
         // foolproof, we add observer to both "enter foreground" and
         // "enter background" notifications.  Since device properties
         // queue is configured to record only differences, this would
         // not cause excess events.
-        NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
         [notificationCenter addObserver:self selector:@selector(collect) name:UIApplicationWillEnterForegroundNotification object:nil];
         [notificationCenter addObserver:self selector:@selector(collect) name:UIApplicationDidEnterBackgroundNotification object:nil];
     }

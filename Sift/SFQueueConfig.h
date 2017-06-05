@@ -7,23 +7,8 @@
 /** Control the behavior of an `SFQueue`. */
 typedef struct {
     /**
-     * Instruct an `SFQueue` to append an event only when that event is
-     * different from the last event of the queue.  This is uesful if
-     * you expect events rarely changed.
-     *
-     * Note that to guarantee the event receiving order on the server,
-     * we will be conservative on batching events of queues with this
-     * option enabled, and thus event-upload-timeliness would be worse
-     * than queues without this option enabled.  So you should not set
-     * this option unless you fully understand the trade-offs.
-     */
-    BOOL appendEventOnlyWhenDifferent;
-
-    /**
-     * When `appendEventOnlyWhenDifferent` is `YES`, the queue will
-     * accept the same event again after this amount of time.
-     *
-     * Setting this to 0 is treated as infinite.
+     * When `acceptSameEventAfter` is set to a nonzero value, the queue will
+     * accept the same event again after this number of seconds
      */
     NSTimeInterval acceptSameEventAfter;
 
@@ -35,6 +20,6 @@ typedef struct {
     /** Upload events if there are more events than this. */
     NSInteger uploadWhenMoreThan;
 
-    /** Upload events when the last event is older than this. */
+    /** Upload events when the last upload time is older than this number of seconds. */
     NSTimeInterval uploadWhenOlderThan;
 } SFQueueConfig;

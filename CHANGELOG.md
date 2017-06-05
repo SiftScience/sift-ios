@@ -1,5 +1,8 @@
 # Change Log
 
+## [0.9.7] – 2017-06-05
+– Updates event-batching logic
+
 ## [0.9.6] – 2017-05-09
 – Adds suspend / resume counter for stability
 

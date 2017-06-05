@@ -16,7 +16,7 @@
     NSMutableArray *_queue;
     SFQueueConfig _config;
     SFEvent *_lastEvent;
-    SFTimestamp _lastEventTimestamp;
+    SFTimestamp _lastUploadTimestamp;
     NSString *_archivePath;
     // Weak reference back to the parent.
     Sift * __weak _sift;
@@ -42,18 +42,18 @@
         }
 
         SFTimestamp now = SFCurrentTime();
-        if (_config.appendEventOnlyWhenDifferent &&
+        if (_config.acceptSameEventAfter > 0 &&
             _lastEvent &&
-            [_lastEvent isEssentiallyEqualTo:event] &&
-            (!_config.acceptSameEventAfter || now - _lastEventTimestamp < _config.acceptSameEventAfter * 1000)) {
+            (now < _lastEvent.time + _config.acceptSameEventAfter * 1000) &&
+            [_lastEvent isEssentiallyEqualTo:event]) {
             SF_DEBUG(@"Drop the same event");
             return;  // Drop the same event as configured.
         }
 
+        SF_DEBUG(@"Appending event");
         [_queue addObject:event];
         _lastEvent = event;
-        _lastEventTimestamp = now;
-
+        
         // Unfortunately iOS does not guarantee to always call you
         // before terminating your app and thus we have to persist data
         // aggressively when the app is in background.  Hopefully there
@@ -66,6 +66,7 @@
 
         if (self.readyForUpload) {
             [self requestUpload];
+            _lastUploadTimestamp = SFCurrentTime();
         }
     }
 }
@@ -83,7 +84,7 @@
 // Keys for archive.
 static NSString * const SF_QUEUE = @"queue";
 static NSString * const SF_LAST_EVENT = @"lastEvent";
-static NSString * const SF_LAST_EVENT_TIMESTAMP = @"lastEventTimestamp";
+static NSString * const SF_LAST_UPLOAD_TIMESTAMP = @"lastUploadTimestamp";
 
 - (void)archive {
     @synchronized(self) {
@@ -92,7 +93,7 @@ static NSString * const SF_LAST_EVENT_TIMESTAMP = @"lastEventTimestamp";
         if (_lastEvent) {
             [archive setObject:_lastEvent forKey:SF_LAST_EVENT];
         }
-        [archive setObject:@(_lastEventTimestamp) forKey:SF_LAST_EVENT_TIMESTAMP];
+        [archive setObject:@(_lastUploadTimestamp) forKey:SF_LAST_UPLOAD_TIMESTAMP];
         [NSKeyedArchiver archiveRootObject:archive toFile:_archivePath];
     }
 }
@@ -103,28 +104,31 @@ static NSString * const SF_LAST_EVENT_TIMESTAMP = @"lastEventTimestamp";
         if (archive) {
             _queue = [NSMutableArray arrayWithArray:[archive objectForKey:SF_QUEUE]];
             _lastEvent = [archive objectForKey:SF_LAST_EVENT];
-            NSNumber *last = [archive objectForKey:SF_LAST_EVENT_TIMESTAMP];
-            _lastEventTimestamp = last.unsignedLongLongValue;
+            _lastUploadTimestamp = [[archive objectForKey:SF_LAST_UPLOAD_TIMESTAMP] unsignedLongLongValue];
         } else {
             _queue = [NSMutableArray new];
             _lastEvent = nil;
-            _lastEventTimestamp = 0;
+            _lastUploadTimestamp = 0;
         }
-        SF_DEBUG(@"Unarchive: _lastEventTimestamp=%llu", _lastEventTimestamp);
+        SF_DEBUG(@"Unarchive: _lastUploadTimestamp=%llu", _lastUploadTimestamp);
     }
 }
 
 #pragma mark - Upload
 
 - (BOOL)readyForUpload {
-    if (_queue.count > _config.uploadWhenMoreThan) {
-        SF_DEBUG(@"Too many events");
+    if (_config.uploadWhenMoreThan >= 0 &&
+        _queue.count > _config.uploadWhenMoreThan) {
+        SF_DEBUG(@"Queue is full");
         return YES;
     }
-
-    SFTimestamp age = SFCurrentTime() - _lastEventTimestamp;
-    if (age > _config.uploadWhenOlderThan * 1000 && _queue.count > 0) {
-        SF_DEBUG(@"Events get old");
+    
+    SFTimestamp now = SFCurrentTime();
+    
+    if (_config.uploadWhenOlderThan > 0 &&
+        _queue.count > 0 &&
+        now > _lastUploadTimestamp + _config.uploadWhenOlderThan * 1000) {
+        SF_DEBUG(@"Queue is old");
         return YES;
     }
 
@@ -137,6 +141,8 @@ static NSString * const SF_LAST_EVENT_TIMESTAMP = @"lastEventTimestamp";
     if (sift) {
         if (![sift upload]) {
             SF_DEBUG(@"Upload request was rejected");
+        } else {
+            SF_DEBUG(@"Upload successful");
         }
     } else {
         SF_DEBUG(@"Reference to Sift object was lost");

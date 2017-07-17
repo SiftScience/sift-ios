@@ -131,7 +131,7 @@ SFHtDictionary *SFCollectIosDeviceProperties() {
     [iosDeviceProperties setEntry:@"app_name" value:[infoDictionary objectForKey:(NSString *)kCFBundleNameKey]];
     [iosDeviceProperties setEntry:@"app_version" value:[infoDictionary objectForKey:(NSString *)kCFBundleVersionKey]];
     [iosDeviceProperties setEntry:@"app_version_short" value:[infoDictionary objectForKey:@"CFBundleShortVersionString"]];
-    [iosDeviceProperties setEntry:@"sdk_version" value:Sift.sharedInstance.sdkVersion];
+    [iosDeviceProperties setEntry:@"sdk_version" value:[Sift sharedInstance].sdkVersion];
 
     UIDevice *device = [UIDevice currentDevice];
     [iosDeviceProperties setEntry:@"device_name" value:device.name];

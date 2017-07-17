@@ -12,6 +12,7 @@
 #import "SFDebug.h"
 #import "SFUtils.h"
 
+#import "Sift.h"
 #import "SFIosAppState.h"
 
 SFHtDictionary *SFMakeEmptyIosAppState() {
@@ -22,6 +23,7 @@ SFHtDictionary *SFMakeEmptyIosAppState() {
 #define ENTRY_TYPE(key_, type_) ([entryTypes setObject:(type_) forKey:(key_)])
 
         ENTRY_TYPE(@"application_state", NSString.class);
+        ENTRY_TYPE(@"sdk_version",       NSString.class);
 
         ENTRY_TYPE(@"window_root_view_controller_titles", NSArray.class);
 
@@ -253,6 +255,8 @@ static SF_GENERICS(NSArray, NSString *) *getIpAddresses();
 
 SFHtDictionary *SFCollectIosAppState(CLLocationManager *locationManager, NSString *title) {
     SFHtDictionary *iosAppState = SFMakeEmptyIosAppState();
+    
+    [iosAppState setEntry:@"sdk_version" value:[Sift sharedInstance].sdkVersion];
 
     NSString *applicationState = nil;
     switch (UIApplication.sharedApplication.applicationState) {

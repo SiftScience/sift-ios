@@ -1,5 +1,9 @@
 # Change Log
 
+## [0.9.8] – 2017-07-17
+– Adds sdk_version to app state events
+- Query UIApplication on UI thread
+
 ## [0.9.7] – 2017-06-05
 – Updates event-batching logic
 

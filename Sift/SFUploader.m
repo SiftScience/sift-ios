@@ -125,56 +125,61 @@ static const int64_t SF_CHECK_UPLOAD_LEEWAY = 5 * NSEC_PER_SEC;
     });
 }
 
-// NOTE: Unprotected access - call this from within the serial dispatch queue.
 - (void)doUpload {
-    if (UIApplication.sharedApplication.applicationState == UIApplicationStateBackground) {
-        SF_DEBUG(@"App is in background");
-        return;
-    }
-    if (_uploadTask) {
-        SF_DEBUG(@"An upload is in progress");
-        return;
-    }
-    if (!_batches.count) {
-        SF_DEBUG(@"No batches to upload");
-        return;
-    }
-
-    Sift *sift = _sift;
-    if (!sift) {
-        SF_DEBUG(@"Reference to Sift object was lost");
-        return;
-    }
-
-    if (!sift.accountId.length || !sift.beaconKey.length || !sift.serverUrlFormat.length) {
-        SF_DEBUG(@"Lack accountId (%@), beaconKey (%@), and/or serverUrlFormat (%@)", sift.accountId, sift.beaconKey, sift.serverUrlFormat);
-        return;
-    }
-
-    NSURL *serverUrl = [NSURL URLWithString:[NSString stringWithFormat:sift.serverUrlFormat, sift.accountId]];
-    SF_DEBUG(@"serverUrl: %@", serverUrl);
-    if(!serverUrl) {
-        SF_DEBUG(@"Could not construct server URL: serverUrlFormat=%@, accountId=%@", sift.serverUrlFormat, sift.accountId);
-        return;
-    }
-
-    NSString *encodedBeaconKey = [[sift.beaconKey dataUsingEncoding:NSASCIIStringEncoding] base64EncodedStringWithOptions:0];
-
-    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:serverUrl];
-    [request setHTTPMethod:@"PUT"];
-    [request setValue:[@"Basic " stringByAppendingString:encodedBeaconKey] forHTTPHeaderField:@"Authorization"];
-    [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
-    [request setValue:@"gzip" forHTTPHeaderField:@"Content-Encoding"];
-    SF_DEBUG(@"request: %@", request);
-
-    _responseBody = [NSMutableData new];
-
-    if (_batches && _batches.count && [_batches objectAtIndex:0]) {
-        NSData *body = [[SFEvent listRequest:[_batches objectAtIndex:0]] gzippedData];
-        _uploadTask = [_session uploadTaskWithRequest:request fromData:body];
-        [_uploadTask resume];
-        SF_IMPORTANT(@"Upload a batch of %ld events to server", (unsigned long)[[_batches objectAtIndex:0] count]);
-    }
+    // Query the applicationState on the main thread, then proceed on the serial dispatch queue
+    dispatch_async(dispatch_get_main_queue(), ^{
+        if (UIApplication.sharedApplication.applicationState == UIApplicationStateBackground) {
+            SF_DEBUG(@"App is in background");
+            return;
+        }
+        
+        dispatch_async(_serial, ^{
+            if (_uploadTask) {
+                SF_DEBUG(@"An upload is in progress");
+                return;
+            }
+            if (!_batches.count) {
+                SF_DEBUG(@"No batches to upload");
+                return;
+            }
+            
+            Sift *sift = _sift;
+            if (!sift) {
+                SF_DEBUG(@"Reference to Sift object was lost");
+                return;
+            }
+            
+            if (!sift.accountId.length || !sift.beaconKey.length || !sift.serverUrlFormat.length) {
+                SF_DEBUG(@"Lack accountId (%@), beaconKey (%@), and/or serverUrlFormat (%@)", sift.accountId, sift.beaconKey, sift.serverUrlFormat);
+                return;
+            }
+            
+            NSURL *serverUrl = [NSURL URLWithString:[NSString stringWithFormat:sift.serverUrlFormat, sift.accountId]];
+            SF_DEBUG(@"serverUrl: %@", serverUrl);
+            if(!serverUrl) {
+                SF_DEBUG(@"Could not construct server URL: serverUrlFormat=%@, accountId=%@", sift.serverUrlFormat, sift.accountId);
+                return;
+            }
+            
+            NSString *encodedBeaconKey = [[sift.beaconKey dataUsingEncoding:NSASCIIStringEncoding] base64EncodedStringWithOptions:0];
+            
+            NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:serverUrl];
+            [request setHTTPMethod:@"PUT"];
+            [request setValue:[@"Basic " stringByAppendingString:encodedBeaconKey] forHTTPHeaderField:@"Authorization"];
+            [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+            [request setValue:@"gzip" forHTTPHeaderField:@"Content-Encoding"];
+            SF_DEBUG(@"request: %@", request);
+            
+            _responseBody = [NSMutableData new];
+            
+            if (_batches && _batches.count && [_batches objectAtIndex:0]) {
+                NSData *body = [[SFEvent listRequest:[_batches objectAtIndex:0]] gzippedData];
+                _uploadTask = [_session uploadTaskWithRequest:request fromData:body];
+                [_uploadTask resume];
+                SF_IMPORTANT(@"Upload a batch of %ld events to server", (unsigned long)[[_batches objectAtIndex:0] count]);
+            }
+        });
+    });
 }
 
 #pragma mark - NSKeyedArchiver/NSKeyedUnarchiver

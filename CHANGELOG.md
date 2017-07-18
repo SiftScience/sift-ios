@@ -1,14 +1,14 @@
 # Change Log
 
 ## [0.9.8] – 2017-07-17
-– Adds sdk_version to app state events
+- Adds sdk_version to app state events
 - Query UIApplication on UI thread
 
 ## [0.9.7] – 2017-06-05
-– Updates event-batching logic
+- Updates event-batching logic
 
 ## [0.9.6] – 2017-05-09
-– Adds suspend / resume counter for stability
+- Adds suspend / resume counter for stability
 
 ## [0.9.5] – 2017-05-02
 - Various stability improvements (KVO and uploader)

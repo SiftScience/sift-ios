@@ -1,5 +1,8 @@
 # Change Log
 
+## [0.9.9] - 2017-08-17
+- Excludes NaN and Infinity values from JSON body
+
 ## [0.9.8] – 2017-07-17
 - Adds sdk_version to app state events
 - Query UIApplication on UI thread

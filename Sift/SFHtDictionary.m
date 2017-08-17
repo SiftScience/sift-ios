@@ -41,6 +41,16 @@
         SF_DEBUG(@"Entry %@ not %@-typed: %@", key, entryType, value);
         return NO;
     }
+    if (entryType == [NSNumber class]) {
+        if (isnan([value doubleValue])) {
+            SF_DEBUG(@"Encountered NaN for key %@", key);
+            return NO;
+        }
+        if (isinf([value doubleValue])) {
+            SF_DEBUG(@"Encountered Infinity for key %@", key);
+            return NO;
+        }
+    }
     [_entries setObject:value forKey:key];
     return YES;
 }

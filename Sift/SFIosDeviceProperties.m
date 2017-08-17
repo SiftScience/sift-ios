@@ -98,6 +98,8 @@ SFHtDictionary *SFMakeEmptyIosDeviceProperties() {
         ENTRY_TYPE(@"bus_frequency_min", NSNumber.class);
         ENTRY_TYPE(@"bus_frequency_max", NSNumber.class);
 
+        ENTRY_TYPE(@"is_simulator", NSNumber.class);
+
         ENTRY_TYPE(@"evidence_files_present", NSArray.class);
 
         ENTRY_TYPE(@"evidence_directories_writable",  NSArray.class);
@@ -175,6 +177,13 @@ SFHtDictionary *SFCollectIosDeviceProperties() {
         [iosDeviceProperties setEntry:@"mobile_country_code" value:carrier.mobileCountryCode];
         [iosDeviceProperties setEntry:@"mobile_network_code" value:carrier.mobileNetworkCode];
     }
+
+    // Simulator detection
+#if TARGET_OS_SIMULATOR
+    [iosDeviceProperties setEntry:@"is_simulator" value:[NSNumber numberWithBool:YES]];
+#else
+    [iosDeviceProperties setEntry:@"is_simulator" value:[NSNumber numberWithBool:NO]];
+#endif
 
     enum SysctlType {
         SYSCTL_INT32,

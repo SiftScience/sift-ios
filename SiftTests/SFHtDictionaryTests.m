@@ -43,6 +43,8 @@
     };
     SFHtDictionary *d = [[SFHtDictionary alloc] initWithEntryTypes:entryTypes];
     XCTAssertFalse([d setEntry:@"number" value:nil]);
+    XCTAssertFalse([d setEntry:@"number" value:[NSNumber numberWithDouble:NAN]]);
+    XCTAssertFalse([d setEntry:@"number" value:[NSNumber numberWithDouble:INFINITY]]);
     XCTAssertFalse([d setEntry:@"noSuchKey" value:@YES]);
     XCTAssertFalse([d setEntry:@"number" value:@"string"]);
 }

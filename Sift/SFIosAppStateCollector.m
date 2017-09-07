@@ -176,90 +176,99 @@ static const NSTimeInterval SF_MOTION_SENSOR_INTERVAL = 0.5;  // Unit: second.
 }
 
 - (void)checkAndCollectWhenNoneRecently:(SFTimestamp)now {
-    if (UIApplication.sharedApplication.applicationState == UIApplicationStateBackground) {
-        SF_DEBUG(@"Ignore collection request since the app is in the background");
-        return;
-    }
-
-    if (_lastCollectedAt > 0) {
-        if (_lastCollectedAt + SF_MAX_COLLECTION_PERIOD >= now) {
-            SF_DEBUG(@"Ignore collection request since it is not long enough since last collection");
+    dispatch_async(dispatch_get_main_queue(), ^{
+        if (UIApplication.sharedApplication.applicationState == UIApplicationStateBackground) {
+            SF_DEBUG(@"Ignore collection request since the app is in the background");
             return;
         }
-    }
-
-    [self collectWithTitle:nil andTimestamp:now];
+        
+        dispatch_async(_serial, ^{
+            if (_lastCollectedAt > 0) {
+                if (_lastCollectedAt + SF_MAX_COLLECTION_PERIOD >= now) {
+                    SF_DEBUG(@"Ignore collection request since it is not long enough since last collection");
+                    return;
+                }
+            }
+            
+            [self collectWithTitle:nil andTimestamp:now];
+        });
+    });
 }
 
 - (void)collectWithTitle:(NSString *)title andTimestamp:(SFTimestamp)now {
-    SF_DEBUG(@"Collect app state...");
-    SFEvent *event = [SFEvent new];
-    event.time = now;
-    event.iosAppState = SFCollectIosAppState(_locationManager, title);
+    dispatch_async(dispatch_get_main_queue(), ^{
+        SF_DEBUG(@"Collect app state...");
+        SFEvent *event = [SFEvent new];
+        event.time = now;
+        event.iosAppState = SFCollectIosAppState(_locationManager, title);
 
-    BOOL foreground = UIApplication.sharedApplication.applicationState != UIApplicationStateBackground;
-
-    // Don't start compass and motion sensors when you are in the background.
-    int64_t delay = 0;
-    if (foreground) {
-        if (_allowUsingMotionSensors) {
-            SF_DEBUG(@"Collect motion data...");
-            [self startMotionSensors];
-            // Wait for a full cycle of readings plus 0.1 second margin to collect motion sensor readings.
-            delay = MAX(delay, (SF_MOTION_SENSOR_INTERVAL * SF_MOTION_SENSOR_NUM_READINGS + 0.1) * NSEC_PER_SEC);
-        }
-
-        [_locationManager startUpdatingHeading];
-        delay = MAX(delay, SF_HEADING_INTERVAL);
-    }
-
-    if (delay > 0) {
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, delay), _serial, ^{
-            [self stopMotionSensors];
-
-            if ([self canCollectLocationData] && _locationManager.location) {
-                [event.iosAppState setEntry:@"location" value:SFCLLocationToDictionary(_locationManager.location).entries];
-            }
-            
-            // Read heading before we stop location manager (it nullifies heading when stopped).
-            CLHeading *heading = _locationManager.heading;
-            [_locationManager stopUpdatingHeading];
-
-            if (heading) {
-                [event.iosAppState setEntry:@"heading" value:SFCLHeadingToDictionary(heading).entries];
-            }
-            
-            [self addReadingsToIosAppState:event.iosAppState];
-
-            SF_DEBUG(@"iosAppState: %@", event.iosAppState.entries);
-            [Sift.sharedInstance appendEvent:event];
-        });
-    } else {
-        if ([self canCollectLocationData] && _locationManager.location) {
-            [event.iosAppState setEntry:@"location" value:SFCLLocationToDictionary(_locationManager.location).entries];
-        }
+        BOOL foreground = UIApplication.sharedApplication.applicationState != UIApplicationStateBackground;
         
-        CLHeading *heading = _locationManager.heading;
-        if (heading) {
-            [event.iosAppState setEntry:@"heading" value:SFCLHeadingToDictionary(heading).entries];
-        }
+        dispatch_async(_serial, ^{
+            // Don't start compass and motion sensors when you are in the background.
+            int64_t delay = 0;
+            if (foreground) {
+                if (_allowUsingMotionSensors) {
+                    SF_DEBUG(@"Collect motion data...");
+                    [self startMotionSensors];
+                    // Wait for a full cycle of readings plus 0.1 second margin to collect motion sensor readings.
+                    delay = MAX(delay, (SF_MOTION_SENSOR_INTERVAL * SF_MOTION_SENSOR_NUM_READINGS + 0.1) * NSEC_PER_SEC);
+                }
+                
+                [_locationManager startUpdatingHeading];
+                delay = MAX(delay, SF_HEADING_INTERVAL);
+            }
+            
+            if (delay > 0) {
+                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, delay), _serial, ^{
+                    [self stopMotionSensors];
+                    
+                    if ([self canCollectLocationData] && _locationManager.location) {
+                        [event.iosAppState setEntry:@"location" value:SFCLLocationToDictionary(_locationManager.location).entries];
+                    }
+                    
+                    // Read heading before we stop location manager (it nullifies heading when stopped).
+                    CLHeading *heading = _locationManager.heading;
+                    [_locationManager stopUpdatingHeading];
+                    
+                    if (heading) {
+                        [event.iosAppState setEntry:@"heading" value:SFCLHeadingToDictionary(heading).entries];
+                    }
+                    
+                    [self addReadingsToIosAppState:event.iosAppState];
+                    
+                    SF_DEBUG(@"iosAppState: %@", event.iosAppState.entries);
+                    [Sift.sharedInstance appendEvent:event];
+                });
+            } else {
+                if ([self canCollectLocationData] && _locationManager.location) {
+                    [event.iosAppState setEntry:@"location" value:SFCLLocationToDictionary(_locationManager.location).entries];
+                }
+                
+                CLHeading *heading = _locationManager.heading;
+                if (heading) {
+                    [event.iosAppState setEntry:@"heading" value:SFCLHeadingToDictionary(heading).entries];
+                }
+                
+                [self addReadingsToIosAppState:event.iosAppState];
+                
+                SF_DEBUG(@"iosAppState: %@", event.iosAppState.entries);
+                [Sift.sharedInstance appendEvent:event];
+            }
+            
+            _lastCollectedAt = now;
+            
+            // Don't schedule a check in the future if you are in the background.
+            if (foreground) {
+                // We don't care whether the remaining requests are executed if we are gone.
+                SFIosAppStateCollector * __weak weakSelf = self;
+                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, SF_MAX_COLLECTION_PERIOD * NSEC_PER_MSEC), _serial, ^{
+                    [weakSelf checkAndCollectWhenNoneRecently:SFCurrentTime()];
+                });
+            }
 
-        [self addReadingsToIosAppState:event.iosAppState];
-
-        SF_DEBUG(@"iosAppState: %@", event.iosAppState.entries);
-        [Sift.sharedInstance appendEvent:event];
-    }
-
-    _lastCollectedAt = now;
-
-    // Don't schedule a check in the future if you are in the background.
-    if (foreground) {
-        // We don't care whether the remaining requests are executed if we are gone.
-        SFIosAppStateCollector * __weak weakSelf = self;
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, SF_MAX_COLLECTION_PERIOD * NSEC_PER_MSEC), _serial, ^{
-            [weakSelf checkAndCollectWhenNoneRecently:SFCurrentTime()];
         });
-    }
+    });
 }
 
 #pragma mark - NSKeyedArchiver/NSKeyedUnarchiver

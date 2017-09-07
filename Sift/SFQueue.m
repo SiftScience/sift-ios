@@ -58,12 +58,14 @@
         // before terminating your app and thus we have to persist data
         // aggressively when the app is in background.  Hopefully there
         // won't be too many events when app is in the background.
-        if (UIApplication.sharedApplication.applicationState == UIApplicationStateBackground) {
-            dispatch_async(dispatch_get_global_queue(QOS_CLASS_BACKGROUND, 0), ^{
-                [self archive];
-            });
-        }
-
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if (UIApplication.sharedApplication.applicationState == UIApplicationStateBackground) {
+                dispatch_async(dispatch_get_global_queue(QOS_CLASS_BACKGROUND, 0), ^{
+                    [self archive];
+                });
+            }
+        });
+        
         if (self.readyForUpload) {
             [self requestUpload];
             _lastUploadTimestamp = SFCurrentTime();

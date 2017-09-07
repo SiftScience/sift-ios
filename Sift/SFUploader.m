@@ -65,11 +65,18 @@ static const int64_t SF_CHECK_UPLOAD_LEEWAY = 5 * NSEC_PER_SEC;
     dispatch_async(_serial, ^{
         SF_DEBUG(@"Batch size: %lu", (unsigned long)events.count);
         [_batches addObject:events];
-        if (UIApplication.sharedApplication.applicationState == UIApplicationStateBackground) {
-            // Back up aggressively if we are in the background.
-            [self archive];
-        }
-        [self doUpload];
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if (UIApplication.sharedApplication.applicationState == UIApplicationStateBackground) {
+                // Back up aggressively if we are in the background.
+                dispatch_async(_serial, ^{
+                    [self archive];
+                });
+            }
+            dispatch_async(_serial, ^{
+                [self doUpload];
+            });
+        });
     });
 }
 

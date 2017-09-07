@@ -55,7 +55,7 @@ static const SFQueueConfig SFDefaultEventQueueConfig = {
 - (instancetype)initWithRootDirPath:(NSString *)rootDirPath {
     self = [super init];
     if (self) {
-        _sdkVersion = @"v0.9.9";
+        _sdkVersion = @"v0.9.10";
 
         _rootDirPath = rootDirPath;
 

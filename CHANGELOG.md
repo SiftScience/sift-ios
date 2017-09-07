@@ -1,5 +1,8 @@
 # Change Log
 
+## [0.9.10] - 2017-09-07
+- Fixes iOS 11 crasher
+
 ## [0.9.9] - 2017-08-17
 - Excludes NaN and Infinity values from JSON body
 

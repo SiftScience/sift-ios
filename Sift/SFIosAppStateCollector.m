@@ -177,10 +177,13 @@ static const NSTimeInterval SF_MOTION_SENSOR_INTERVAL = 0.5;  // Unit: second.
 
 - (void)checkAndCollectWhenNoneRecently:(SFTimestamp)now {
     dispatch_async(dispatch_get_main_queue(), ^{
-        if (UIApplication.sharedApplication.applicationState == UIApplicationStateBackground) {
-            SF_DEBUG(@"Ignore collection request since the app is in the background");
-            return;
-        }
+
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if (UIApplication.sharedApplication.applicationState == UIApplicationStateBackground) {
+                SF_DEBUG(@"Ignore collection request since the app is in the background");
+                return;
+            }
+        });
         
         dispatch_async(_serial, ^{
             if (_lastCollectedAt > 0) {

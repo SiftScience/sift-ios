@@ -29,7 +29,7 @@
 // Drop a batch if our backend has rejected it `SF_REJECT_LIMIT` times.
 static const int SF_REJECT_LIMIT = 3;
 
-static const int64_t SF_BACKOFF = NSEC_PER_SEC;  // Starting from 1 second.
+static const int64_t SF_BACKOFF = NSEC_PER_SEC * 5;  // Starting from 5 seconds.
 
 // Periodically check if we have unfinished batches.
 static const int64_t SF_CHECK_UPLOAD_PERIOD = 60 * NSEC_PER_SEC;
@@ -99,7 +99,8 @@ static const int64_t SF_CHECK_UPLOAD_LEEWAY = 5 * NSEC_PER_SEC;
             NSInteger statusCode = [(NSHTTPURLResponse *)task.response statusCode];
             SF_DEBUG(@"PUT %@ status %ld", task.response.URL, (long)statusCode);
             if (statusCode != 200) {
-                SF_IMPORTANT(@"Server returns error while upload events to \"%@\" (HTTP status code %ld)", task.response.URL, (long)statusCode);
+                SF_IMPORTANT(@"Error uploading events to \"%@\" (HTTP status code %ld)",
+                             task.response.URL, (long)statusCode);
                 if (responseBody) {
                     id response = [NSJSONSerialization JSONObjectWithData:responseBody options:0 error:nil];
                     if (response) {
@@ -112,13 +113,17 @@ static const int64_t SF_CHECK_UPLOAD_LEEWAY = 5 * NSEC_PER_SEC;
                 _numRejects = 0;
                 success = YES;
             } else if (statusCode == 400) {
+                _numRejects = SF_REJECT_LIMIT;
+            } else {
                 _numRejects++;
-                if (_numRejects >= SF_REJECT_LIMIT) {
-                    SF_IMPORTANT(@"Drop a batch due to reject limit reached");
-                    [_batches removeObjectAtIndex:0];
-                    _numRejects = 0;
-                }
             }
+        }
+        
+        if (_numRejects >= SF_REJECT_LIMIT) {
+            NSLog(@"Drop a batch due to reject limit reached");
+            [_batches removeObjectAtIndex:0];
+            _numRejects = 0;
+            _backoff = _backoffBase;
         }
 
         // Keep working on unfinished upload jobs.

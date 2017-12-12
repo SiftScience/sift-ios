@@ -68,9 +68,9 @@
     };
 
     // SFUploader takes three rejects.
-    [stub.stubbedStatusCodes addObject:@400];
-    [stub.stubbedStatusCodes addObject:@400];
-    [stub.stubbedStatusCodes addObject:@400];
+    [stub.stubbedStatusCodes addObject:@500];
+    [stub.stubbedStatusCodes addObject:@500];
+    [stub.stubbedStatusCodes addObject:@500];
 
     NSArray *events = @[[SFEvent eventWithType:nil path:@"path" fields:nil]];
     [_uploader upload:events];
@@ -89,22 +89,14 @@
         [expectation fulfill];
     };
 
-    // Non-400 are not considered rejects.
-    [stub.stubbedStatusCodes addObject:@404];
-    [stub.stubbedStatusCodes addObject:@500];
-    [stub.stubbedStatusCodes addObject:@404];
-    [stub.stubbedStatusCodes addObject:@500];
-    [stub.stubbedStatusCodes addObject:@404];
-    [stub.stubbedStatusCodes addObject:@500];
-    [stub.stubbedStatusCodes addObject:@200];
+    [stub.stubbedStatusCodes addObject:@400];
 
     NSArray *events = @[[SFEvent eventWithType:nil path:@"path" fields:nil]];
     [_uploader upload:events];
 
     [self waitForExpectationsWithTimeout:5.0 handler:nil];
 
-    XCTAssertEqual(stub.stubbedStatusCodes.count, 0);
-    XCTAssertEqual(stub.capturedRequests.count, 7);
+    XCTAssertEqual(stub.capturedRequests.count, 1);
 }
 
 @end

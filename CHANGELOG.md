@@ -1,11 +1,13 @@
 # Change Log
 
+## [0.9.11] - 2017-12-11
+- Better retry mechanics for errors
+
 ## [0.9.10] - 2017-09-07
 - Fixes iOS 11 crasher
 
 ## [0.9.9] - 2017-08-17
 - Excludes NaN and Infinity values from JSON body
-- Adds collector for is_simulator
 
 ## [0.9.8] – 2017-07-17
 - Adds sdk_version to app state events

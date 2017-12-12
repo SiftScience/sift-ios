@@ -1,5 +1,8 @@
 # Change Log
 
+## [0.9.11] - 2017-12-11
+- Better retry mechanics for errors
+
 ## [0.9.10] - 2017-09-07
 - Fixes iOS 11 crasher
 

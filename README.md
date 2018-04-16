@@ -59,8 +59,8 @@ Here is what you would do within `AppDelegate.m`:
   [sift setBeaconKey:@"YOUR_JAVASCRIPT_SNIPPET_KEY"];
   ```
 
-* (Recommended) If your app does not use motion sensors (accelerometer,
-  gyro, and magnetometer), and you don't mind Sift collecting motion
+* (Recommended) If your app does use motion sensors (accelerometer,
+  gyro, and magnetometer), and you'd like Sift to collect motion
   data, add this line:
   ```
   [sift setAllowUsingMotionSensors:YES];
@@ -83,6 +83,8 @@ user ID:
 ```
 [[Sift sharedInstance] setUserId:@"USER_ID"];
 ```
+
+When a user has logged out, set the user ID to an empty string so that events are no longer tracked with the previous identifier.
 
 ### License
 

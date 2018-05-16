@@ -151,7 +151,7 @@ static const SFQueueConfig SFDefaultEventQueueConfig = {
             return NO;
         }
         // Record user ID when receiving the event, not when uploading the event.
-        if (!event.userId.length && _userId.length) {
+        if (!event.userId && _userId) {
             SF_DEBUG(@"The event's userId is empty; use Sift object's userId: \"%@\"", _userId);
             event.userId = _userId;
         }
@@ -219,6 +219,11 @@ static const SFQueueConfig SFDefaultEventQueueConfig = {
 
 - (void)setUserId:(NSString *)userId {
     _userId = userId;
+    [self archiveKeys];
+}
+
+- (void)unsetUserId {
+    _userId = nil;
     [self archiveKeys];
 }
 

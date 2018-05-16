@@ -29,10 +29,10 @@
 }
 
 - (void)testAppendEvent {
-    _sift.userId = nil;
+    [_sift unsetUserId];
     XCTAssertTrue([_sift appendEvent:[SFEvent eventWithType:nil path:nil fields:nil]]);
 
-    _sift.userId = @"1234";
+    [_sift setUserId:@"1234"];
     XCTAssertTrue([_sift appendEvent:[SFEvent eventWithType:nil path:nil fields:nil]]);
 }
 

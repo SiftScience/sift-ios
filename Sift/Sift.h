@@ -64,6 +64,11 @@
 - (BOOL)appendEvent:(SFEvent *)event;
 
 /**
+ * Unset the user id attached to the Sift object.
+ */
+- (void)unsetUserId;
+
+/**
  * @name Configurations.
  *
  * You should configure `accountId`, `beaconKey`, and `userId`.

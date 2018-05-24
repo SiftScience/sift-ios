@@ -60,7 +60,7 @@ Here is what you would do within `AppDelegate.m`:
   ```
 
 * (Recommended) If your app uses motion sensors (accelerometer, gyro, or
-  magnetometer), and you want to send it to Sift, add this line:
+  magnetometer), and you want to send motion data to Sift, add this line:
   ```
   [sift setAllowUsingMotionSensors:YES];
   ```

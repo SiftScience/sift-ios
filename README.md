@@ -59,9 +59,8 @@ Here is what you would do within `AppDelegate.m`:
   [sift setBeaconKey:@"YOUR_JAVASCRIPT_SNIPPET_KEY"];
   ```
 
-* (Recommended) If your app does not use motion sensors (accelerometer,
-  gyro, and magnetometer), and you don't mind Sift collecting motion
-  data, add this line:
+* (Recommended) If your app uses motion sensors (accelerometer, gyro, or
+  magnetometer), and you want to send it to Sift, add this line:
   ```
   [sift setAllowUsingMotionSensors:YES];
   ```
@@ -70,9 +69,9 @@ Here is what you would do within `AppDelegate.m`:
   
 * If your app uses user location data but you do not want send it to
   Sift, add this line:
-   ```
-   [sift setDisallowCollectingLocationData:YES];
-   ```
+  ```
+  [sift setDisallowCollectingLocationData:YES];
+  ```
 
 #### Tracking users
 
@@ -82,6 +81,12 @@ user ID:
 
 ```
 [[Sift sharedInstance] setUserId:@"USER_ID"];
+```
+
+If a user logs out, unset the user ID by invoking:
+
+```
+[[Sift sharedInstance] unsetUserId];
 ```
 
 ### License

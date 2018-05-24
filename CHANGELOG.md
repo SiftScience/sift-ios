@@ -1,5 +1,8 @@
 # Change Log
 
+## [1.0.0] - 2018-05-24
+- Adds unsetUserId
+
 ## [0.9.11] - 2017-12-11
 - Better retry mechanics for errors
 

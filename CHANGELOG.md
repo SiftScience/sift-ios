@@ -1,5 +1,8 @@
 # Change Log
 
+## [1.0.1] - 2018-07-17
+- Removes fork() check
+
 ## [1.0.0] - 2018-05-24
 - Adds unsetUserId
 

@@ -1,4 +1,4 @@
-## Sift Science iOS SDK
+## Sift iOS SDK
 
 ### Integration guide
 
@@ -91,6 +91,6 @@ If a user logs out, unset the user ID by invoking:
 
 ### License
 
-The Sift Science iOS SDK is distributed under the MIT license. See the file LICENSE for details.
+The Sift iOS SDK is distributed under the MIT license. See the file LICENSE for details.
 
-The Sift Science iOS SDK  includes Charcoal Design's GZIP library, distributed under the permissive zlib license.  See the files Sift/Vendor/NSData+GZIP.h and Sift/Vendor/NSData+GZIP.m for details.
+The Sift iOS SDK  includes Charcoal Design's GZIP library, distributed under the permissive zlib license.  See the files Sift/Vendor/NSData+GZIP.h and Sift/Vendor/NSData+GZIP.m for details.

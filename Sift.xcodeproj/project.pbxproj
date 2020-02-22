@@ -22,7 +22,7 @@
 		7168EE1E1C7E7A6800A88245 /* SiftQueue.h in Headers */ = {isa = PBXBuildFile; fileRef = 7168EE1D1C7E7A6800A88245 /* SiftQueue.h */; };
 		7168EE201C7E7B6700A88245 /* SiftQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = 7168EE1F1C7E7B6700A88245 /* SiftQueue.m */; };
 		7168EE221C7F978D00A88245 /* Sift+Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 7168EE211C7F978D00A88245 /* Sift+Private.h */; };
-		7168EE241C7F99AF00A88245 /* SFQueueTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 7168EE231C7F99AF00A88245 /* SFQueueTests.m */; };
+		7168EE241C7F99AF00A88245 /* SiftQueueTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 7168EE231C7F99AF00A88245 /* SiftQueueTests.m */; };
 		7168EE271C7FB80C00A88245 /* SiftUploader.h in Headers */ = {isa = PBXBuildFile; fileRef = 7168EE251C7FB80C00A88245 /* SiftUploader.h */; };
 		7168EE281C7FB80C00A88245 /* SiftUploader.m in Sources */ = {isa = PBXBuildFile; fileRef = 7168EE261C7FB80C00A88245 /* SiftUploader.m */; };
 		7168EE2C1C86250100A88245 /* SiftEvent+Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 7168EE2B1C86250100A88245 /* SiftEvent+Private.h */; };
@@ -81,7 +81,7 @@
 		7168EE1D1C7E7A6800A88245 /* SiftQueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SiftQueue.h; sourceTree = "<group>"; };
 		7168EE1F1C7E7B6700A88245 /* SiftQueue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SiftQueue.m; sourceTree = "<group>"; };
 		7168EE211C7F978D00A88245 /* Sift+Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Sift+Private.h"; sourceTree = "<group>"; };
-		7168EE231C7F99AF00A88245 /* SFQueueTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SFQueueTests.m; sourceTree = "<group>"; };
+		7168EE231C7F99AF00A88245 /* SiftQueueTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SiftQueueTests.m; sourceTree = "<group>"; };
 		7168EE251C7FB80C00A88245 /* SiftUploader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SiftUploader.h; sourceTree = "<group>"; };
 		7168EE261C7FB80C00A88245 /* SiftUploader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SiftUploader.m; sourceTree = "<group>"; };
 		7168EE2B1C86250100A88245 /* SiftEvent+Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "SiftEvent+Private.h"; sourceTree = "<group>"; };
@@ -196,7 +196,7 @@
 				713D85C01D874ED40011D5FE /* SiftHtDictionaryTests.m */,
 				71B1B5901D8B31ED00EA9B17 /* SiftIosAppStateTests.m */,
 				713D859C1D6CF69E0011D5FE /* SiftIosDevicePropertiesTests.m */,
-				7168EE231C7F99AF00A88245 /* SFQueueTests.m */,
+				7168EE231C7F99AF00A88245 /* SiftQueueTests.m */,
 				7168EE3E1C88C91900A88245 /* SiftStubHttpProtocol.h */,
 				7168EE3F1C88C91900A88245 /* SiftStubHttpProtocol.m */,
 				71E15CFE1D95DEC300A0305C /* SiftTokenBucketTests.m */,
@@ -368,7 +368,7 @@
 				7168EE111C7B977500A88245 /* SiftTests.m in Sources */,
 				7168EE1C1C7E61E900A88245 /* SiftEventTests.m in Sources */,
 				713D859D1D6CF69E0011D5FE /* SiftIosDevicePropertiesTests.m in Sources */,
-				7168EE241C7F99AF00A88245 /* SFQueueTests.m in Sources */,
+				7168EE241C7F99AF00A88245 /* SiftQueueTests.m in Sources */,
 				713D85C11D874ED40011D5FE /* SiftHtDictionaryTests.m in Sources */,
 				7168EE421C88C91900A88245 /* SiftUploaderTests.m in Sources */,
 				71B1B5911D8B31ED00EA9B17 /* SiftIosAppStateTests.m in Sources */,

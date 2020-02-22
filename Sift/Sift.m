@@ -3,15 +3,15 @@
 @import Foundation;
 @import UIKit;
 
-#import "SFDebug.h"
-#import "SFEvent.h"
-#import "SFEvent+Private.h"
-#import "SFIosAppStateCollector.h"
-#import "SFIosDevicePropertiesCollector.h"
-#import "SFQueue.h"
-#import "SFQueueConfig.h"
-#import "SFUploader.h"
-#import "SFUtils.h"
+#import "SiftDebug.h"
+#import "SiftEvent.h"
+#import "SiftEvent+Private.h"
+#import "SiftIosAppStateCollector.h"
+#import "SiftIosDevicePropertiesCollector.h"
+#import "SiftQueue.h"
+#import "SiftQueueConfig.h"
+#import "SiftUploader.h"
+#import "SiftUtils.h"
 
 #import "Sift.h"
 #import "Sift+Private.h"
@@ -23,7 +23,7 @@ static NSString * const SFRootDirName = @"sift-v0_0_1";
 static NSString * const SFDefaultEventQueueIdentifier = @"sift-default";
 
 // TODO(clchiou): Experiment a sensible config for the default event queue.
-static const SFQueueConfig SFDefaultEventQueueConfig = {
+static const SiftQueueConfig SFDefaultEventQueueConfig = {
     .uploadWhenMoreThan = 32,  // Unit: number of events.
     .uploadWhenOlderThan = 60,  // 1 minute.
 };
@@ -36,11 +36,11 @@ static const SFQueueConfig SFDefaultEventQueueConfig = {
     NSString *_userId;
 
     NSMutableDictionary *_eventQueues;
-    SFUploader *_uploader;
+    SiftUploader *_uploader;
 
     // Extra collection mechanisms.
-    SFIosAppStateCollector *_iosAppStateCollector;
-    SFIosDevicePropertiesCollector *_iosDevicePropertiesCollector;
+    SiftIosAppStateCollector *_iosAppStateCollector;
+    SiftIosDevicePropertiesCollector *_iosDevicePropertiesCollector;
 }
 
 + (instancetype)sharedInstance {
@@ -65,7 +65,7 @@ static const SFQueueConfig SFDefaultEventQueueConfig = {
 
         _eventQueues = [NSMutableDictionary new];
 
-        _uploader = [[SFUploader alloc] initWithArchivePath:self.archivePathForUploader sift:self];
+        _uploader = [[SiftUploader alloc] initWithArchivePath:self.archivePathForUploader sift:self];
         if (!_uploader) {
             self = nil;
             return nil;
@@ -82,13 +82,13 @@ static const SFQueueConfig SFDefaultEventQueueConfig = {
         [notificationCenter addObserver:self selector:@selector(applicationDidEnterBackground:) name:UIApplicationDidEnterBackgroundNotification object:nil];
 
         // Create autonomous data collection.
-        _iosAppStateCollector = [[SFIosAppStateCollector alloc] initWithArchivePath:self.archivePathForIosAppStateCollector];
+        _iosAppStateCollector = [[SiftIosAppStateCollector alloc] initWithArchivePath:self.archivePathForIosAppStateCollector];
         if (!_iosAppStateCollector) {
             SF_DEBUG(@"Could not create _iosAppStateCollector");
             self = nil;
             return nil;
         }
-        _iosDevicePropertiesCollector = [SFIosDevicePropertiesCollector new];
+        _iosDevicePropertiesCollector = [SiftIosDevicePropertiesCollector new];
         if (!_iosDevicePropertiesCollector) {
             SF_DEBUG(@"Could not create _iosDevicePropertiesCollector");
             self = nil;
@@ -111,14 +111,14 @@ static const SFQueueConfig SFDefaultEventQueueConfig = {
     }
 }
 
-- (BOOL)addEventQueue:(NSString *)identifier config:(SFQueueConfig)config {
+- (BOOL)addEventQueue:(NSString *)identifier config:(SiftQueueConfig)config {
     @synchronized(_eventQueues) {
         if ([_eventQueues objectForKey:identifier]) {
             SF_DEBUG(@"Could not overwrite event queue for identifier \"%@\"", identifier);
             return NO;
         }
         NSString *archivePath = [self archivePathForQueue:identifier];
-        SFQueue *queue = [[SFQueue alloc] initWithIdentifier:identifier config:config archivePath:archivePath sift:self];
+        SiftQueue *queue = [[SiftQueue alloc] initWithIdentifier:identifier config:config archivePath:archivePath sift:self];
         if (!queue) {
             SF_DEBUG(@"Could not create SFEventQueue for identifier \"%@\"", identifier);
             return NO;
@@ -139,13 +139,13 @@ static const SFQueueConfig SFDefaultEventQueueConfig = {
     }
 }
 
-- (BOOL)appendEvent:(SFEvent *)event {
+- (BOOL)appendEvent:(SiftEvent *)event {
     return [self appendEvent:event toQueue:_defaultQueueIdentifier];
 }
 
-- (BOOL)appendEvent:(SFEvent *)event toQueue:(NSString *)identifier {
+- (BOOL)appendEvent:(SiftEvent *)event toQueue:(NSString *)identifier {
     @synchronized(_eventQueues) {
-        SFQueue *queue = [_eventQueues objectForKey:identifier];
+        SiftQueue *queue = [_eventQueues objectForKey:identifier];
         if (!queue) {
             SF_DEBUG(@"Could not find event queue for identifier \"%@\" and will drop event", identifier);
             return NO;
@@ -178,7 +178,7 @@ static const SFQueueConfig SFDefaultEventQueueConfig = {
     NSMutableArray *events = [NSMutableArray new];
     @synchronized(_eventQueues) {
         for (NSString *identifier in _eventQueues) {
-            SFQueue *queue = [_eventQueues objectForKey:identifier];
+            SiftQueue *queue = [_eventQueues objectForKey:identifier];
             if (force || queue.readyForUpload) {
                 [events addObjectsFromArray:[queue transfer]];
             }

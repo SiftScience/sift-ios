@@ -5,8 +5,8 @@
 #import <CoreMotion/CoreMotion.h>
 #import <Foundation/Foundation.h>
 
-#import "SFEvent.h"
-#import "SFQueueConfig.h"
+#import "SiftEvent.h"
+#import "SiftQueueConfig.h"
 
 /**
  * This is the main interface you interact with Sift.
@@ -40,7 +40,7 @@
  *
  * @return YES on success.
  */
-- (BOOL)addEventQueue:(NSString *)identifier config:(SFQueueConfig)config;
+- (BOOL)addEventQueue:(NSString *)identifier config:(SiftQueueConfig)config;
 
 /**
  * Remove an event queue.
@@ -55,13 +55,13 @@
  *
  * @return YES on success.
  */
-- (BOOL)appendEvent:(SFEvent *)event toQueue:(NSString *)identifier;
+- (BOOL)appendEvent:(SiftEvent *)event toQueue:(NSString *)identifier;
 
 /**
  * Same as above but use the default queue (most of the time you should
  * probably use this).
  */
-- (BOOL)appendEvent:(SFEvent *)event;
+- (BOOL)appendEvent:(SiftEvent *)event;
 
 /**
  * Unset the user id attached to the Sift object.

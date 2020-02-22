@@ -1,6 +1,6 @@
 Pod::Spec.new do |spec|
   spec.name = 'Sift'
-  spec.version = '1.0.1'
+  spec.version = '1.0.2'
   spec.authors = 'Sift Science'
   spec.license = {
     :type => 'MIT',
@@ -29,9 +29,9 @@ Pod::Spec.new do |spec|
   # File patterns
   spec.source_files = 'Sift/*.{h,m}', 'Sift/Vendor/*.{h,m}'
   spec.public_header_files = [
-    'Sift/SFCompatibility.h',
-    'Sift/SFEvent.h',
-    'Sift/SFQueueConfig.h',
+    'Sift/SiftCompatibility.h',
+    'Sift/SiftEvent.h',
+    'Sift/SiftQueueConfig.h',
     'Sift/Sift.h',
   ]
 end

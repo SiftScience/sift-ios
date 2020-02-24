@@ -7,47 +7,47 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		713AF4241DA456740061B688 /* SFUtilsTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 713AF4231DA456740061B688 /* SFUtilsTests.m */; };
-		713D859A1D627E9F0011D5FE /* SFIosDeviceProperties.m in Sources */ = {isa = PBXBuildFile; fileRef = 713D85991D627E9F0011D5FE /* SFIosDeviceProperties.m */; };
-		713D859B1D627EA60011D5FE /* SFIosDeviceProperties.h in Headers */ = {isa = PBXBuildFile; fileRef = 713D85981D627E860011D5FE /* SFIosDeviceProperties.h */; };
-		713D859D1D6CF69E0011D5FE /* SFIosDevicePropertiesTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 713D859C1D6CF69E0011D5FE /* SFIosDevicePropertiesTests.m */; };
-		713D85BD1D8744040011D5FE /* SFHtDictionary.h in Headers */ = {isa = PBXBuildFile; fileRef = 713D85BC1D8744040011D5FE /* SFHtDictionary.h */; };
-		713D85BF1D87441A0011D5FE /* SFHtDictionary.m in Sources */ = {isa = PBXBuildFile; fileRef = 713D85BE1D87441A0011D5FE /* SFHtDictionary.m */; };
-		713D85C11D874ED40011D5FE /* SFHtDictionaryTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 713D85C01D874ED40011D5FE /* SFHtDictionaryTests.m */; };
-		715AB3EB1D9DBBFB00771402 /* SFCompatibility.h in Headers */ = {isa = PBXBuildFile; fileRef = 715AB3EA1D9DBBFB00771402 /* SFCompatibility.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		713AF4241DA456740061B688 /* SiftUtilsTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 713AF4231DA456740061B688 /* SiftUtilsTests.m */; };
+		713D859A1D627E9F0011D5FE /* SiftIosDeviceProperties.m in Sources */ = {isa = PBXBuildFile; fileRef = 713D85991D627E9F0011D5FE /* SiftIosDeviceProperties.m */; };
+		713D859B1D627EA60011D5FE /* SiftIosDeviceProperties.h in Headers */ = {isa = PBXBuildFile; fileRef = 713D85981D627E860011D5FE /* SiftIosDeviceProperties.h */; };
+		713D859D1D6CF69E0011D5FE /* SiftIosDevicePropertiesTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 713D859C1D6CF69E0011D5FE /* SiftIosDevicePropertiesTests.m */; };
+		713D85BD1D8744040011D5FE /* SiftHtDictionary.h in Headers */ = {isa = PBXBuildFile; fileRef = 713D85BC1D8744040011D5FE /* SiftHtDictionary.h */; };
+		713D85BF1D87441A0011D5FE /* SiftHtDictionary.m in Sources */ = {isa = PBXBuildFile; fileRef = 713D85BE1D87441A0011D5FE /* SiftHtDictionary.m */; };
+		713D85C11D874ED40011D5FE /* SiftHtDictionaryTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 713D85C01D874ED40011D5FE /* SiftHtDictionaryTests.m */; };
+		715AB3EB1D9DBBFB00771402 /* SiftCompatibility.h in Headers */ = {isa = PBXBuildFile; fileRef = 715AB3EA1D9DBBFB00771402 /* SiftCompatibility.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		7168EE051C7B977500A88245 /* Sift.h in Headers */ = {isa = PBXBuildFile; fileRef = 7168EE041C7B977500A88245 /* Sift.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		7168EE0C1C7B977500A88245 /* Sift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7168EE011C7B977500A88245 /* Sift.framework */; };
 		7168EE111C7B977500A88245 /* SiftTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 7168EE101C7B977500A88245 /* SiftTests.m */; };
-		7168EE1C1C7E61E900A88245 /* SFEventTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 7168EE1B1C7E61E900A88245 /* SFEventTests.m */; };
-		7168EE1E1C7E7A6800A88245 /* SFQueue.h in Headers */ = {isa = PBXBuildFile; fileRef = 7168EE1D1C7E7A6800A88245 /* SFQueue.h */; };
-		7168EE201C7E7B6700A88245 /* SFQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = 7168EE1F1C7E7B6700A88245 /* SFQueue.m */; };
+		7168EE1C1C7E61E900A88245 /* SiftEventTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 7168EE1B1C7E61E900A88245 /* SiftEventTests.m */; };
+		7168EE1E1C7E7A6800A88245 /* SiftQueue.h in Headers */ = {isa = PBXBuildFile; fileRef = 7168EE1D1C7E7A6800A88245 /* SiftQueue.h */; };
+		7168EE201C7E7B6700A88245 /* SiftQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = 7168EE1F1C7E7B6700A88245 /* SiftQueue.m */; };
 		7168EE221C7F978D00A88245 /* Sift+Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 7168EE211C7F978D00A88245 /* Sift+Private.h */; };
-		7168EE241C7F99AF00A88245 /* SFQueueTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 7168EE231C7F99AF00A88245 /* SFQueueTests.m */; };
-		7168EE271C7FB80C00A88245 /* SFUploader.h in Headers */ = {isa = PBXBuildFile; fileRef = 7168EE251C7FB80C00A88245 /* SFUploader.h */; };
-		7168EE281C7FB80C00A88245 /* SFUploader.m in Sources */ = {isa = PBXBuildFile; fileRef = 7168EE261C7FB80C00A88245 /* SFUploader.m */; };
-		7168EE2C1C86250100A88245 /* SFEvent+Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 7168EE2B1C86250100A88245 /* SFEvent+Private.h */; };
-		7168EE341C864A4100A88245 /* SFIosDevicePropertiesCollector.h in Headers */ = {isa = PBXBuildFile; fileRef = 7168EE321C864A4100A88245 /* SFIosDevicePropertiesCollector.h */; };
-		7168EE351C864A4100A88245 /* SFIosDevicePropertiesCollector.m in Sources */ = {isa = PBXBuildFile; fileRef = 7168EE331C864A4100A88245 /* SFIosDevicePropertiesCollector.m */; };
-		7168EE411C88C91900A88245 /* SFStubHttpProtocol.m in Sources */ = {isa = PBXBuildFile; fileRef = 7168EE3F1C88C91900A88245 /* SFStubHttpProtocol.m */; };
-		7168EE421C88C91900A88245 /* SFUploaderTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 7168EE401C88C91900A88245 /* SFUploaderTests.m */; };
-		716BEB871C7D304D009C3706 /* SFDebug.h in Headers */ = {isa = PBXBuildFile; fileRef = 716BEB861C7D304D009C3706 /* SFDebug.h */; };
-		716BEB8A1C7D336B009C3706 /* SFEvent.h in Headers */ = {isa = PBXBuildFile; fileRef = 716BEB881C7D336B009C3706 /* SFEvent.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		716BEB8B1C7D336B009C3706 /* SFQueueConfig.h in Headers */ = {isa = PBXBuildFile; fileRef = 716BEB891C7D336B009C3706 /* SFQueueConfig.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		716BEB901C7D3695009C3706 /* SFEvent.m in Sources */ = {isa = PBXBuildFile; fileRef = 716BEB8C1C7D3695009C3706 /* SFEvent.m */; };
-		716BEB911C7D3695009C3706 /* SFUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = 716BEB8D1C7D3695009C3706 /* SFUtils.h */; };
-		716BEB921C7D3695009C3706 /* SFUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 716BEB8E1C7D3695009C3706 /* SFUtils.m */; };
+		7168EE241C7F99AF00A88245 /* SiftQueueTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 7168EE231C7F99AF00A88245 /* SiftQueueTests.m */; };
+		7168EE271C7FB80C00A88245 /* SiftUploader.h in Headers */ = {isa = PBXBuildFile; fileRef = 7168EE251C7FB80C00A88245 /* SiftUploader.h */; };
+		7168EE281C7FB80C00A88245 /* SiftUploader.m in Sources */ = {isa = PBXBuildFile; fileRef = 7168EE261C7FB80C00A88245 /* SiftUploader.m */; };
+		7168EE2C1C86250100A88245 /* SiftEvent+Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 7168EE2B1C86250100A88245 /* SiftEvent+Private.h */; };
+		7168EE341C864A4100A88245 /* SiftIosDevicePropertiesCollector.h in Headers */ = {isa = PBXBuildFile; fileRef = 7168EE321C864A4100A88245 /* SiftIosDevicePropertiesCollector.h */; };
+		7168EE351C864A4100A88245 /* SiftIosDevicePropertiesCollector.m in Sources */ = {isa = PBXBuildFile; fileRef = 7168EE331C864A4100A88245 /* SiftIosDevicePropertiesCollector.m */; };
+		7168EE411C88C91900A88245 /* SiftStubHttpProtocol.m in Sources */ = {isa = PBXBuildFile; fileRef = 7168EE3F1C88C91900A88245 /* SiftStubHttpProtocol.m */; };
+		7168EE421C88C91900A88245 /* SiftUploaderTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 7168EE401C88C91900A88245 /* SiftUploaderTests.m */; };
+		716BEB871C7D304D009C3706 /* SiftDebug.h in Headers */ = {isa = PBXBuildFile; fileRef = 716BEB861C7D304D009C3706 /* SiftDebug.h */; };
+		716BEB8A1C7D336B009C3706 /* SiftEvent.h in Headers */ = {isa = PBXBuildFile; fileRef = 716BEB881C7D336B009C3706 /* SiftEvent.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		716BEB8B1C7D336B009C3706 /* SiftQueueConfig.h in Headers */ = {isa = PBXBuildFile; fileRef = 716BEB891C7D336B009C3706 /* SiftQueueConfig.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		716BEB901C7D3695009C3706 /* SiftEvent.m in Sources */ = {isa = PBXBuildFile; fileRef = 716BEB8C1C7D3695009C3706 /* SiftEvent.m */; };
+		716BEB911C7D3695009C3706 /* SiftUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = 716BEB8D1C7D3695009C3706 /* SiftUtils.h */; };
+		716BEB921C7D3695009C3706 /* SiftUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 716BEB8E1C7D3695009C3706 /* SiftUtils.m */; };
 		716BEB931C7D3695009C3706 /* Sift.m in Sources */ = {isa = PBXBuildFile; fileRef = 716BEB8F1C7D3695009C3706 /* Sift.m */; };
-		71B1B58D1D8B281900EA9B17 /* SFIosAppState.h in Headers */ = {isa = PBXBuildFile; fileRef = 71B1B58C1D8B281900EA9B17 /* SFIosAppState.h */; };
-		71B1B58F1D8B282C00EA9B17 /* SFIosAppState.m in Sources */ = {isa = PBXBuildFile; fileRef = 71B1B58E1D8B282C00EA9B17 /* SFIosAppState.m */; };
-		71B1B5911D8B31ED00EA9B17 /* SFIosAppStateTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 71B1B5901D8B31ED00EA9B17 /* SFIosAppStateTests.m */; };
-		71B1B5971D8C700C00EA9B17 /* SFIosAppStateCollector.h in Headers */ = {isa = PBXBuildFile; fileRef = 71B1B5961D8C700C00EA9B17 /* SFIosAppStateCollector.h */; };
-		71B1B5991D8C701E00EA9B17 /* SFIosAppStateCollector.m in Sources */ = {isa = PBXBuildFile; fileRef = 71B1B5981D8C701E00EA9B17 /* SFIosAppStateCollector.m */; };
-		71E15CF51D95C8FA00A0305C /* SFCircularBuffer.h in Headers */ = {isa = PBXBuildFile; fileRef = 71E15CF31D95C8FA00A0305C /* SFCircularBuffer.h */; };
-		71E15CF81D95C90000A0305C /* SFCircularBufferTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 71E15CF71D95C90000A0305C /* SFCircularBufferTests.m */; };
-		71E15CF91D95C92300A0305C /* SFCircularBuffer.m in Sources */ = {isa = PBXBuildFile; fileRef = 71E15CF41D95C8FA00A0305C /* SFCircularBuffer.m */; };
-		71E15CFB1D95D14700A0305C /* SFTokenBucket.h in Headers */ = {isa = PBXBuildFile; fileRef = 71E15CFA1D95D14700A0305C /* SFTokenBucket.h */; };
-		71E15CFD1D95D15900A0305C /* SFTokenBucket.m in Sources */ = {isa = PBXBuildFile; fileRef = 71E15CFC1D95D15900A0305C /* SFTokenBucket.m */; };
-		71E15CFF1D95DEC300A0305C /* SFTokenBucketTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 71E15CFE1D95DEC300A0305C /* SFTokenBucketTests.m */; };
+		71B1B58D1D8B281900EA9B17 /* SiftIosAppState.h in Headers */ = {isa = PBXBuildFile; fileRef = 71B1B58C1D8B281900EA9B17 /* SiftIosAppState.h */; };
+		71B1B58F1D8B282C00EA9B17 /* SiftIosAppState.m in Sources */ = {isa = PBXBuildFile; fileRef = 71B1B58E1D8B282C00EA9B17 /* SiftIosAppState.m */; };
+		71B1B5911D8B31ED00EA9B17 /* SiftIosAppStateTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 71B1B5901D8B31ED00EA9B17 /* SiftIosAppStateTests.m */; };
+		71B1B5971D8C700C00EA9B17 /* SiftIosAppStateCollector.h in Headers */ = {isa = PBXBuildFile; fileRef = 71B1B5961D8C700C00EA9B17 /* SiftIosAppStateCollector.h */; };
+		71B1B5991D8C701E00EA9B17 /* SiftIosAppStateCollector.m in Sources */ = {isa = PBXBuildFile; fileRef = 71B1B5981D8C701E00EA9B17 /* SiftIosAppStateCollector.m */; };
+		71E15CF51D95C8FA00A0305C /* SiftCircularBuffer.h in Headers */ = {isa = PBXBuildFile; fileRef = 71E15CF31D95C8FA00A0305C /* SiftCircularBuffer.h */; };
+		71E15CF81D95C90000A0305C /* SiftCircularBufferTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 71E15CF71D95C90000A0305C /* SiftCircularBufferTests.m */; };
+		71E15CF91D95C92300A0305C /* SiftCircularBuffer.m in Sources */ = {isa = PBXBuildFile; fileRef = 71E15CF41D95C8FA00A0305C /* SiftCircularBuffer.m */; };
+		71E15CFB1D95D14700A0305C /* SiftTokenBucket.h in Headers */ = {isa = PBXBuildFile; fileRef = 71E15CFA1D95D14700A0305C /* SiftTokenBucket.h */; };
+		71E15CFD1D95D15900A0305C /* SiftTokenBucket.m in Sources */ = {isa = PBXBuildFile; fileRef = 71E15CFC1D95D15900A0305C /* SiftTokenBucket.m */; };
+		71E15CFF1D95DEC300A0305C /* SiftTokenBucketTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 71E15CFE1D95DEC300A0305C /* SiftTokenBucketTests.m */; };
 		F712CDD41DD15D5400C069BD /* NSData+GZIP.h in Headers */ = {isa = PBXBuildFile; fileRef = F712CDD21DD15D5400C069BD /* NSData+GZIP.h */; };
 		F712CDD51DD15D5400C069BD /* NSData+GZIP.m in Sources */ = {isa = PBXBuildFile; fileRef = F712CDD31DD15D5400C069BD /* NSData+GZIP.m */; };
 /* End PBXBuildFile section */
@@ -63,51 +63,51 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		713AF4231DA456740061B688 /* SFUtilsTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SFUtilsTests.m; sourceTree = "<group>"; };
-		713D85981D627E860011D5FE /* SFIosDeviceProperties.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SFIosDeviceProperties.h; sourceTree = "<group>"; };
-		713D85991D627E9F0011D5FE /* SFIosDeviceProperties.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SFIosDeviceProperties.m; sourceTree = "<group>"; };
-		713D859C1D6CF69E0011D5FE /* SFIosDevicePropertiesTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SFIosDevicePropertiesTests.m; sourceTree = "<group>"; };
-		713D85BC1D8744040011D5FE /* SFHtDictionary.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SFHtDictionary.h; sourceTree = "<group>"; };
-		713D85BE1D87441A0011D5FE /* SFHtDictionary.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SFHtDictionary.m; sourceTree = "<group>"; };
-		713D85C01D874ED40011D5FE /* SFHtDictionaryTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SFHtDictionaryTests.m; sourceTree = "<group>"; };
-		715AB3EA1D9DBBFB00771402 /* SFCompatibility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SFCompatibility.h; sourceTree = "<group>"; };
+		713AF4231DA456740061B688 /* SiftUtilsTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SiftUtilsTests.m; sourceTree = "<group>"; };
+		713D85981D627E860011D5FE /* SiftIosDeviceProperties.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SiftIosDeviceProperties.h; sourceTree = "<group>"; };
+		713D85991D627E9F0011D5FE /* SiftIosDeviceProperties.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SiftIosDeviceProperties.m; sourceTree = "<group>"; };
+		713D859C1D6CF69E0011D5FE /* SiftIosDevicePropertiesTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SiftIosDevicePropertiesTests.m; sourceTree = "<group>"; };
+		713D85BC1D8744040011D5FE /* SiftHtDictionary.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SiftHtDictionary.h; sourceTree = "<group>"; };
+		713D85BE1D87441A0011D5FE /* SiftHtDictionary.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SiftHtDictionary.m; sourceTree = "<group>"; };
+		713D85C01D874ED40011D5FE /* SiftHtDictionaryTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SiftHtDictionaryTests.m; sourceTree = "<group>"; };
+		715AB3EA1D9DBBFB00771402 /* SiftCompatibility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SiftCompatibility.h; sourceTree = "<group>"; };
 		7168EE011C7B977500A88245 /* Sift.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Sift.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		7168EE041C7B977500A88245 /* Sift.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Sift.h; sourceTree = "<group>"; };
 		7168EE061C7B977500A88245 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		7168EE0B1C7B977500A88245 /* SiftTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SiftTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		7168EE101C7B977500A88245 /* SiftTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SiftTests.m; sourceTree = "<group>"; };
 		7168EE121C7B977500A88245 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		7168EE1B1C7E61E900A88245 /* SFEventTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SFEventTests.m; sourceTree = "<group>"; };
-		7168EE1D1C7E7A6800A88245 /* SFQueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SFQueue.h; sourceTree = "<group>"; };
-		7168EE1F1C7E7B6700A88245 /* SFQueue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SFQueue.m; sourceTree = "<group>"; };
+		7168EE1B1C7E61E900A88245 /* SiftEventTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SiftEventTests.m; sourceTree = "<group>"; };
+		7168EE1D1C7E7A6800A88245 /* SiftQueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SiftQueue.h; sourceTree = "<group>"; };
+		7168EE1F1C7E7B6700A88245 /* SiftQueue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SiftQueue.m; sourceTree = "<group>"; };
 		7168EE211C7F978D00A88245 /* Sift+Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Sift+Private.h"; sourceTree = "<group>"; };
-		7168EE231C7F99AF00A88245 /* SFQueueTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SFQueueTests.m; sourceTree = "<group>"; };
-		7168EE251C7FB80C00A88245 /* SFUploader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SFUploader.h; sourceTree = "<group>"; };
-		7168EE261C7FB80C00A88245 /* SFUploader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SFUploader.m; sourceTree = "<group>"; };
-		7168EE2B1C86250100A88245 /* SFEvent+Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "SFEvent+Private.h"; sourceTree = "<group>"; };
-		7168EE321C864A4100A88245 /* SFIosDevicePropertiesCollector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SFIosDevicePropertiesCollector.h; sourceTree = "<group>"; };
-		7168EE331C864A4100A88245 /* SFIosDevicePropertiesCollector.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SFIosDevicePropertiesCollector.m; sourceTree = "<group>"; };
-		7168EE3E1C88C91900A88245 /* SFStubHttpProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SFStubHttpProtocol.h; sourceTree = "<group>"; };
-		7168EE3F1C88C91900A88245 /* SFStubHttpProtocol.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SFStubHttpProtocol.m; sourceTree = "<group>"; };
-		7168EE401C88C91900A88245 /* SFUploaderTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SFUploaderTests.m; sourceTree = "<group>"; };
-		716BEB861C7D304D009C3706 /* SFDebug.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SFDebug.h; sourceTree = "<group>"; };
-		716BEB881C7D336B009C3706 /* SFEvent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SFEvent.h; sourceTree = "<group>"; };
-		716BEB891C7D336B009C3706 /* SFQueueConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SFQueueConfig.h; sourceTree = "<group>"; };
-		716BEB8C1C7D3695009C3706 /* SFEvent.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SFEvent.m; sourceTree = "<group>"; };
-		716BEB8D1C7D3695009C3706 /* SFUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SFUtils.h; sourceTree = "<group>"; };
-		716BEB8E1C7D3695009C3706 /* SFUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SFUtils.m; sourceTree = "<group>"; };
+		7168EE231C7F99AF00A88245 /* SiftQueueTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SiftQueueTests.m; sourceTree = "<group>"; };
+		7168EE251C7FB80C00A88245 /* SiftUploader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SiftUploader.h; sourceTree = "<group>"; };
+		7168EE261C7FB80C00A88245 /* SiftUploader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SiftUploader.m; sourceTree = "<group>"; };
+		7168EE2B1C86250100A88245 /* SiftEvent+Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "SiftEvent+Private.h"; sourceTree = "<group>"; };
+		7168EE321C864A4100A88245 /* SiftIosDevicePropertiesCollector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SiftIosDevicePropertiesCollector.h; sourceTree = "<group>"; };
+		7168EE331C864A4100A88245 /* SiftIosDevicePropertiesCollector.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SiftIosDevicePropertiesCollector.m; sourceTree = "<group>"; };
+		7168EE3E1C88C91900A88245 /* SiftStubHttpProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SiftStubHttpProtocol.h; sourceTree = "<group>"; };
+		7168EE3F1C88C91900A88245 /* SiftStubHttpProtocol.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SiftStubHttpProtocol.m; sourceTree = "<group>"; };
+		7168EE401C88C91900A88245 /* SiftUploaderTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SiftUploaderTests.m; sourceTree = "<group>"; };
+		716BEB861C7D304D009C3706 /* SiftDebug.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SiftDebug.h; sourceTree = "<group>"; };
+		716BEB881C7D336B009C3706 /* SiftEvent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SiftEvent.h; sourceTree = "<group>"; };
+		716BEB891C7D336B009C3706 /* SiftQueueConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SiftQueueConfig.h; sourceTree = "<group>"; };
+		716BEB8C1C7D3695009C3706 /* SiftEvent.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SiftEvent.m; sourceTree = "<group>"; };
+		716BEB8D1C7D3695009C3706 /* SiftUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SiftUtils.h; sourceTree = "<group>"; };
+		716BEB8E1C7D3695009C3706 /* SiftUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SiftUtils.m; sourceTree = "<group>"; };
 		716BEB8F1C7D3695009C3706 /* Sift.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Sift.m; sourceTree = "<group>"; };
-		71B1B58C1D8B281900EA9B17 /* SFIosAppState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SFIosAppState.h; sourceTree = "<group>"; };
-		71B1B58E1D8B282C00EA9B17 /* SFIosAppState.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SFIosAppState.m; sourceTree = "<group>"; };
-		71B1B5901D8B31ED00EA9B17 /* SFIosAppStateTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SFIosAppStateTests.m; sourceTree = "<group>"; };
-		71B1B5961D8C700C00EA9B17 /* SFIosAppStateCollector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SFIosAppStateCollector.h; sourceTree = "<group>"; };
-		71B1B5981D8C701E00EA9B17 /* SFIosAppStateCollector.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SFIosAppStateCollector.m; sourceTree = "<group>"; };
-		71E15CF31D95C8FA00A0305C /* SFCircularBuffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SFCircularBuffer.h; sourceTree = "<group>"; };
-		71E15CF41D95C8FA00A0305C /* SFCircularBuffer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SFCircularBuffer.m; sourceTree = "<group>"; };
-		71E15CF71D95C90000A0305C /* SFCircularBufferTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SFCircularBufferTests.m; sourceTree = "<group>"; };
-		71E15CFA1D95D14700A0305C /* SFTokenBucket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SFTokenBucket.h; sourceTree = "<group>"; };
-		71E15CFC1D95D15900A0305C /* SFTokenBucket.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SFTokenBucket.m; sourceTree = "<group>"; };
-		71E15CFE1D95DEC300A0305C /* SFTokenBucketTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SFTokenBucketTests.m; sourceTree = "<group>"; };
+		71B1B58C1D8B281900EA9B17 /* SiftIosAppState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SiftIosAppState.h; sourceTree = "<group>"; };
+		71B1B58E1D8B282C00EA9B17 /* SiftIosAppState.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SiftIosAppState.m; sourceTree = "<group>"; };
+		71B1B5901D8B31ED00EA9B17 /* SiftIosAppStateTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SiftIosAppStateTests.m; sourceTree = "<group>"; };
+		71B1B5961D8C700C00EA9B17 /* SiftIosAppStateCollector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SiftIosAppStateCollector.h; sourceTree = "<group>"; };
+		71B1B5981D8C701E00EA9B17 /* SiftIosAppStateCollector.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SiftIosAppStateCollector.m; sourceTree = "<group>"; };
+		71E15CF31D95C8FA00A0305C /* SiftCircularBuffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SiftCircularBuffer.h; sourceTree = "<group>"; };
+		71E15CF41D95C8FA00A0305C /* SiftCircularBuffer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SiftCircularBuffer.m; sourceTree = "<group>"; };
+		71E15CF71D95C90000A0305C /* SiftCircularBufferTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SiftCircularBufferTests.m; sourceTree = "<group>"; };
+		71E15CFA1D95D14700A0305C /* SiftTokenBucket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SiftTokenBucket.h; sourceTree = "<group>"; };
+		71E15CFC1D95D15900A0305C /* SiftTokenBucket.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SiftTokenBucket.m; sourceTree = "<group>"; };
+		71E15CFE1D95DEC300A0305C /* SiftTokenBucketTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SiftTokenBucketTests.m; sourceTree = "<group>"; };
 		F712CDD21DD15D5400C069BD /* NSData+GZIP.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+GZIP.h"; sourceTree = "<group>"; };
 		F712CDD31DD15D5400C069BD /* NSData+GZIP.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSData+GZIP.m"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -154,32 +154,32 @@
 			children = (
 				F712CDD61DD15D5A00C069BD /* Vendor */,
 				7168EE061C7B977500A88245 /* Info.plist */,
-				71E15CF31D95C8FA00A0305C /* SFCircularBuffer.h */,
-				71E15CF41D95C8FA00A0305C /* SFCircularBuffer.m */,
-				715AB3EA1D9DBBFB00771402 /* SFCompatibility.h */,
-				716BEB861C7D304D009C3706 /* SFDebug.h */,
-				716BEB881C7D336B009C3706 /* SFEvent.h */,
-				716BEB8C1C7D3695009C3706 /* SFEvent.m */,
-				7168EE2B1C86250100A88245 /* SFEvent+Private.h */,
-				713D85BC1D8744040011D5FE /* SFHtDictionary.h */,
-				713D85BE1D87441A0011D5FE /* SFHtDictionary.m */,
-				71B1B58C1D8B281900EA9B17 /* SFIosAppState.h */,
-				71B1B58E1D8B282C00EA9B17 /* SFIosAppState.m */,
-				71B1B5961D8C700C00EA9B17 /* SFIosAppStateCollector.h */,
-				71B1B5981D8C701E00EA9B17 /* SFIosAppStateCollector.m */,
-				713D85981D627E860011D5FE /* SFIosDeviceProperties.h */,
-				713D85991D627E9F0011D5FE /* SFIosDeviceProperties.m */,
-				7168EE321C864A4100A88245 /* SFIosDevicePropertiesCollector.h */,
-				7168EE331C864A4100A88245 /* SFIosDevicePropertiesCollector.m */,
-				7168EE1D1C7E7A6800A88245 /* SFQueue.h */,
-				7168EE1F1C7E7B6700A88245 /* SFQueue.m */,
-				716BEB891C7D336B009C3706 /* SFQueueConfig.h */,
-				71E15CFA1D95D14700A0305C /* SFTokenBucket.h */,
-				71E15CFC1D95D15900A0305C /* SFTokenBucket.m */,
-				7168EE251C7FB80C00A88245 /* SFUploader.h */,
-				7168EE261C7FB80C00A88245 /* SFUploader.m */,
-				716BEB8D1C7D3695009C3706 /* SFUtils.h */,
-				716BEB8E1C7D3695009C3706 /* SFUtils.m */,
+				71E15CF31D95C8FA00A0305C /* SiftCircularBuffer.h */,
+				71E15CF41D95C8FA00A0305C /* SiftCircularBuffer.m */,
+				715AB3EA1D9DBBFB00771402 /* SiftCompatibility.h */,
+				716BEB861C7D304D009C3706 /* SiftDebug.h */,
+				716BEB881C7D336B009C3706 /* SiftEvent.h */,
+				716BEB8C1C7D3695009C3706 /* SiftEvent.m */,
+				7168EE2B1C86250100A88245 /* SiftEvent+Private.h */,
+				713D85BC1D8744040011D5FE /* SiftHtDictionary.h */,
+				713D85BE1D87441A0011D5FE /* SiftHtDictionary.m */,
+				71B1B58C1D8B281900EA9B17 /* SiftIosAppState.h */,
+				71B1B58E1D8B282C00EA9B17 /* SiftIosAppState.m */,
+				71B1B5961D8C700C00EA9B17 /* SiftIosAppStateCollector.h */,
+				71B1B5981D8C701E00EA9B17 /* SiftIosAppStateCollector.m */,
+				713D85981D627E860011D5FE /* SiftIosDeviceProperties.h */,
+				713D85991D627E9F0011D5FE /* SiftIosDeviceProperties.m */,
+				7168EE321C864A4100A88245 /* SiftIosDevicePropertiesCollector.h */,
+				7168EE331C864A4100A88245 /* SiftIosDevicePropertiesCollector.m */,
+				7168EE1D1C7E7A6800A88245 /* SiftQueue.h */,
+				7168EE1F1C7E7B6700A88245 /* SiftQueue.m */,
+				716BEB891C7D336B009C3706 /* SiftQueueConfig.h */,
+				71E15CFA1D95D14700A0305C /* SiftTokenBucket.h */,
+				71E15CFC1D95D15900A0305C /* SiftTokenBucket.m */,
+				7168EE251C7FB80C00A88245 /* SiftUploader.h */,
+				7168EE261C7FB80C00A88245 /* SiftUploader.m */,
+				716BEB8D1C7D3695009C3706 /* SiftUtils.h */,
+				716BEB8E1C7D3695009C3706 /* SiftUtils.m */,
 				7168EE041C7B977500A88245 /* Sift.h */,
 				716BEB8F1C7D3695009C3706 /* Sift.m */,
 				7168EE211C7F978D00A88245 /* Sift+Private.h */,
@@ -191,17 +191,17 @@
 			isa = PBXGroup;
 			children = (
 				7168EE121C7B977500A88245 /* Info.plist */,
-				71E15CF71D95C90000A0305C /* SFCircularBufferTests.m */,
-				7168EE1B1C7E61E900A88245 /* SFEventTests.m */,
-				713D85C01D874ED40011D5FE /* SFHtDictionaryTests.m */,
-				71B1B5901D8B31ED00EA9B17 /* SFIosAppStateTests.m */,
-				713D859C1D6CF69E0011D5FE /* SFIosDevicePropertiesTests.m */,
-				7168EE231C7F99AF00A88245 /* SFQueueTests.m */,
-				7168EE3E1C88C91900A88245 /* SFStubHttpProtocol.h */,
-				7168EE3F1C88C91900A88245 /* SFStubHttpProtocol.m */,
-				71E15CFE1D95DEC300A0305C /* SFTokenBucketTests.m */,
-				7168EE401C88C91900A88245 /* SFUploaderTests.m */,
-				713AF4231DA456740061B688 /* SFUtilsTests.m */,
+				71E15CF71D95C90000A0305C /* SiftCircularBufferTests.m */,
+				7168EE1B1C7E61E900A88245 /* SiftEventTests.m */,
+				713D85C01D874ED40011D5FE /* SiftHtDictionaryTests.m */,
+				71B1B5901D8B31ED00EA9B17 /* SiftIosAppStateTests.m */,
+				713D859C1D6CF69E0011D5FE /* SiftIosDevicePropertiesTests.m */,
+				7168EE231C7F99AF00A88245 /* SiftQueueTests.m */,
+				7168EE3E1C88C91900A88245 /* SiftStubHttpProtocol.h */,
+				7168EE3F1C88C91900A88245 /* SiftStubHttpProtocol.m */,
+				71E15CFE1D95DEC300A0305C /* SiftTokenBucketTests.m */,
+				7168EE401C88C91900A88245 /* SiftUploaderTests.m */,
+				713AF4231DA456740061B688 /* SiftUtilsTests.m */,
 				7168EE101C7B977500A88245 /* SiftTests.m */,
 			);
 			path = SiftTests;
@@ -223,24 +223,24 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7168EE2C1C86250100A88245 /* SFEvent+Private.h in Headers */,
+				7168EE2C1C86250100A88245 /* SiftEvent+Private.h in Headers */,
 				F712CDD41DD15D5400C069BD /* NSData+GZIP.h in Headers */,
-				716BEB911C7D3695009C3706 /* SFUtils.h in Headers */,
-				71E15CF51D95C8FA00A0305C /* SFCircularBuffer.h in Headers */,
-				716BEB8A1C7D336B009C3706 /* SFEvent.h in Headers */,
+				716BEB911C7D3695009C3706 /* SiftUtils.h in Headers */,
+				71E15CF51D95C8FA00A0305C /* SiftCircularBuffer.h in Headers */,
+				716BEB8A1C7D336B009C3706 /* SiftEvent.h in Headers */,
 				7168EE221C7F978D00A88245 /* Sift+Private.h in Headers */,
-				71B1B5971D8C700C00EA9B17 /* SFIosAppStateCollector.h in Headers */,
-				716BEB8B1C7D336B009C3706 /* SFQueueConfig.h in Headers */,
-				7168EE1E1C7E7A6800A88245 /* SFQueue.h in Headers */,
+				71B1B5971D8C700C00EA9B17 /* SiftIosAppStateCollector.h in Headers */,
+				716BEB8B1C7D336B009C3706 /* SiftQueueConfig.h in Headers */,
+				7168EE1E1C7E7A6800A88245 /* SiftQueue.h in Headers */,
 				7168EE051C7B977500A88245 /* Sift.h in Headers */,
-				713D859B1D627EA60011D5FE /* SFIosDeviceProperties.h in Headers */,
-				71B1B58D1D8B281900EA9B17 /* SFIosAppState.h in Headers */,
-				715AB3EB1D9DBBFB00771402 /* SFCompatibility.h in Headers */,
-				716BEB871C7D304D009C3706 /* SFDebug.h in Headers */,
-				713D85BD1D8744040011D5FE /* SFHtDictionary.h in Headers */,
-				71E15CFB1D95D14700A0305C /* SFTokenBucket.h in Headers */,
-				7168EE271C7FB80C00A88245 /* SFUploader.h in Headers */,
-				7168EE341C864A4100A88245 /* SFIosDevicePropertiesCollector.h in Headers */,
+				713D859B1D627EA60011D5FE /* SiftIosDeviceProperties.h in Headers */,
+				71B1B58D1D8B281900EA9B17 /* SiftIosAppState.h in Headers */,
+				715AB3EB1D9DBBFB00771402 /* SiftCompatibility.h in Headers */,
+				716BEB871C7D304D009C3706 /* SiftDebug.h in Headers */,
+				713D85BD1D8744040011D5FE /* SiftHtDictionary.h in Headers */,
+				71E15CFB1D95D14700A0305C /* SiftTokenBucket.h in Headers */,
+				7168EE271C7FB80C00A88245 /* SiftUploader.h in Headers */,
+				7168EE341C864A4100A88245 /* SiftIosDevicePropertiesCollector.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -305,6 +305,7 @@
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
+				English,
 				en,
 			);
 			mainGroup = 7168EDF71C7B977500A88245;
@@ -342,17 +343,17 @@
 			files = (
 				F712CDD51DD15D5400C069BD /* NSData+GZIP.m in Sources */,
 				716BEB931C7D3695009C3706 /* Sift.m in Sources */,
-				71E15CF91D95C92300A0305C /* SFCircularBuffer.m in Sources */,
-				7168EE281C7FB80C00A88245 /* SFUploader.m in Sources */,
-				71E15CFD1D95D15900A0305C /* SFTokenBucket.m in Sources */,
-				713D859A1D627E9F0011D5FE /* SFIosDeviceProperties.m in Sources */,
-				71B1B58F1D8B282C00EA9B17 /* SFIosAppState.m in Sources */,
-				7168EE351C864A4100A88245 /* SFIosDevicePropertiesCollector.m in Sources */,
-				716BEB921C7D3695009C3706 /* SFUtils.m in Sources */,
-				71B1B5991D8C701E00EA9B17 /* SFIosAppStateCollector.m in Sources */,
-				7168EE201C7E7B6700A88245 /* SFQueue.m in Sources */,
-				713D85BF1D87441A0011D5FE /* SFHtDictionary.m in Sources */,
-				716BEB901C7D3695009C3706 /* SFEvent.m in Sources */,
+				71E15CF91D95C92300A0305C /* SiftCircularBuffer.m in Sources */,
+				7168EE281C7FB80C00A88245 /* SiftUploader.m in Sources */,
+				71E15CFD1D95D15900A0305C /* SiftTokenBucket.m in Sources */,
+				713D859A1D627E9F0011D5FE /* SiftIosDeviceProperties.m in Sources */,
+				71B1B58F1D8B282C00EA9B17 /* SiftIosAppState.m in Sources */,
+				7168EE351C864A4100A88245 /* SiftIosDevicePropertiesCollector.m in Sources */,
+				716BEB921C7D3695009C3706 /* SiftUtils.m in Sources */,
+				71B1B5991D8C701E00EA9B17 /* SiftIosAppStateCollector.m in Sources */,
+				7168EE201C7E7B6700A88245 /* SiftQueue.m in Sources */,
+				713D85BF1D87441A0011D5FE /* SiftHtDictionary.m in Sources */,
+				716BEB901C7D3695009C3706 /* SiftEvent.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -360,17 +361,17 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				71E15CF81D95C90000A0305C /* SFCircularBufferTests.m in Sources */,
-				7168EE411C88C91900A88245 /* SFStubHttpProtocol.m in Sources */,
-				713AF4241DA456740061B688 /* SFUtilsTests.m in Sources */,
-				71E15CFF1D95DEC300A0305C /* SFTokenBucketTests.m in Sources */,
+				71E15CF81D95C90000A0305C /* SiftCircularBufferTests.m in Sources */,
+				7168EE411C88C91900A88245 /* SiftStubHttpProtocol.m in Sources */,
+				713AF4241DA456740061B688 /* SiftUtilsTests.m in Sources */,
+				71E15CFF1D95DEC300A0305C /* SiftTokenBucketTests.m in Sources */,
 				7168EE111C7B977500A88245 /* SiftTests.m in Sources */,
-				7168EE1C1C7E61E900A88245 /* SFEventTests.m in Sources */,
-				713D859D1D6CF69E0011D5FE /* SFIosDevicePropertiesTests.m in Sources */,
-				7168EE241C7F99AF00A88245 /* SFQueueTests.m in Sources */,
-				713D85C11D874ED40011D5FE /* SFHtDictionaryTests.m in Sources */,
-				7168EE421C88C91900A88245 /* SFUploaderTests.m in Sources */,
-				71B1B5911D8B31ED00EA9B17 /* SFIosAppStateTests.m in Sources */,
+				7168EE1C1C7E61E900A88245 /* SiftEventTests.m in Sources */,
+				713D859D1D6CF69E0011D5FE /* SiftIosDevicePropertiesTests.m in Sources */,
+				7168EE241C7F99AF00A88245 /* SiftQueueTests.m in Sources */,
+				713D85C11D874ED40011D5FE /* SiftHtDictionaryTests.m in Sources */,
+				7168EE421C88C91900A88245 /* SiftUploaderTests.m in Sources */,
+				71B1B5911D8B31ED00EA9B17 /* SiftIosAppStateTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

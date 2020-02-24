@@ -3,7 +3,7 @@
 @import CoreLocation;
 @import UIKit;
 
-#import "Sift/SFEvent.h"
+#import "Sift/SiftEvent.h"
 #import "Sift/Sift.h"
 
 #import "ViewController.h"

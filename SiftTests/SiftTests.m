@@ -2,7 +2,7 @@
 
 @import XCTest;
 
-#import "SFUtils.h"
+#import "SiftUtils.h"
 
 #import "Sift.h"
 #import "Sift+Private.h"
@@ -30,10 +30,10 @@
 
 - (void)testAppendEvent {
     [_sift unsetUserId];
-    XCTAssertTrue([_sift appendEvent:[SFEvent eventWithType:nil path:nil fields:nil]]);
+    XCTAssertTrue([_sift appendEvent:[SiftEvent eventWithType:nil path:nil fields:nil]]);
 
     [_sift setUserId:@"1234"];
-    XCTAssertTrue([_sift appendEvent:[SFEvent eventWithType:nil path:nil fields:nil]]);
+    XCTAssertTrue([_sift appendEvent:[SiftEvent eventWithType:nil path:nil fields:nil]]);
 }
 
 @end

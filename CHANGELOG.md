@@ -1,5 +1,8 @@
 # Change Log
 
+## [2.0.0] - 2019-02-25
+- Rename classes to remove SF reserve keyword from their names
+
 ## [1.0.1] - 2018-07-17
 - Removes fork() check
 

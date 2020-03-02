@@ -251,7 +251,7 @@ SiftHtDictionary *SFCMMagnetometerDataToDictionary(CMMagnetometerData *data, SFT
 
 #pragma mark - App state collection.
 
-static SF_GENERICS(NSArray, NSString *) *getIpAddresses();
+static SF_GENERICS(NSArray, NSString *) *getIpAddresses(void);
 
 SiftHtDictionary *SFCollectIosAppState(CLLocationManager *locationManager, NSString *title) {
     SiftHtDictionary *iosAppState = SFMakeEmptyIosAppState();

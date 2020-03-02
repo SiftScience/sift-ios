@@ -7,7 +7,7 @@
 #import "SiftHtDictionary.h"
 #import "SiftUtils.h"
 
-SiftHtDictionary *SFMakeEmptyIosAppState();
+SiftHtDictionary *SFMakeEmptyIosAppState(void);
 
 SiftHtDictionary *SFCollectIosAppState(CLLocationManager *locationManager, NSString *title);
 

@@ -64,16 +64,16 @@ static const int64_t SF_CHECK_UPLOAD_LEEWAY = 5 * NSEC_PER_SEC;
 - (void)upload:(NSArray *)events {
     dispatch_async(_serial, ^{
         SF_DEBUG(@"Batch size: %lu", (unsigned long)events.count);
-        [_batches addObject:events];
+        [self->_batches addObject:events];
         
         dispatch_async(dispatch_get_main_queue(), ^{
             if (UIApplication.sharedApplication.applicationState == UIApplicationStateBackground) {
                 // Back up aggressively if we are in the background.
-                dispatch_async(_serial, ^{
+                dispatch_async(self->_serial, ^{
                     [self archive];
                 });
             }
-            dispatch_async(_serial, ^{
+            dispatch_async(self->_serial, ^{
                 [self doUpload];
             });
         });
@@ -82,15 +82,15 @@ static const int64_t SF_CHECK_UPLOAD_LEEWAY = 5 * NSEC_PER_SEC;
 
 - (void)URLSession:(NSURLSession *)session dataTask:(NSURLSessionDataTask *)dataTask didReceiveData:(NSData *)data {
     dispatch_async(_serial, ^{
-        [_responseBody appendData:data];
+        [self->_responseBody appendData:data];
     });
 }
 
 - (void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task didCompleteWithError:(NSError *)error {
     dispatch_async(_serial, ^{
-        NSData *responseBody = _responseBody;
-        _uploadTask = nil;
-        _responseBody = nil;
+        NSData *responseBody = self->_responseBody;
+        self->_uploadTask = nil;
+        self->_responseBody = nil;
 
         BOOL success = NO;
         if (error) {
@@ -109,30 +109,30 @@ static const int64_t SF_CHECK_UPLOAD_LEEWAY = 5 * NSEC_PER_SEC;
                 }
             }
             if (statusCode == 200) {
-                [_batches removeObjectAtIndex:0];
-                _numRejects = 0;
+                [self->_batches removeObjectAtIndex:0];
+                self->_numRejects = 0;
                 success = YES;
             } else if (statusCode == 400) {
-                _numRejects = SF_REJECT_LIMIT;
+                self->_numRejects = SF_REJECT_LIMIT;
             } else {
-                _numRejects++;
+                self->_numRejects++;
             }
         }
         
-        if (_numRejects >= SF_REJECT_LIMIT) {
+        if (self->_numRejects >= SF_REJECT_LIMIT) {
             NSLog(@"Drop a batch due to reject limit reached");
-            [_batches removeObjectAtIndex:0];
-            _numRejects = 0;
-            _backoff = _backoffBase;
+            [self->_batches removeObjectAtIndex:0];
+            self->_numRejects = 0;
+            self->_backoff = self->_backoffBase;
         }
 
         // Keep working on unfinished upload jobs.
         if (success) {
-            _backoff = _backoffBase;
+            self->_backoff = self->_backoffBase;
             [self doUpload];
         } else {
-            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, _backoff), _serial, ^{[self doUpload];});
-            _backoff *= 2;
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, self->_backoff), self->_serial, ^{[self doUpload];});
+            self->_backoff *= 2;
         }
     });
 }
@@ -145,17 +145,17 @@ static const int64_t SF_CHECK_UPLOAD_LEEWAY = 5 * NSEC_PER_SEC;
             return;
         }
         
-        dispatch_async(_serial, ^{
-            if (_uploadTask) {
+        dispatch_async(self->_serial, ^{
+            if (self->_uploadTask) {
                 SF_DEBUG(@"An upload is in progress");
                 return;
             }
-            if (!_batches.count) {
+            if (!self->_batches.count) {
                 SF_DEBUG(@"No batches to upload");
                 return;
             }
             
-            Sift *sift = _sift;
+            Sift *sift = self->_sift;
             if (!sift) {
                 SF_DEBUG(@"Reference to Sift object was lost");
                 return;
@@ -182,12 +182,12 @@ static const int64_t SF_CHECK_UPLOAD_LEEWAY = 5 * NSEC_PER_SEC;
             [request setValue:@"gzip" forHTTPHeaderField:@"Content-Encoding"];
             SF_DEBUG(@"request: %@", request);
             
-            _responseBody = [NSMutableData new];
+            self->_responseBody = [NSMutableData new];
             
-            if (_batches && _batches.count && [_batches objectAtIndex:0]) {
-                NSData *body = [[SiftEvent listRequest:[_batches objectAtIndex:0]] gzippedData];
-                _uploadTask = [_session uploadTaskWithRequest:request fromData:body];
-                [_uploadTask resume];
+            if (self->_batches && self->_batches.count && [self->_batches objectAtIndex:0]) {
+                NSData *body = [[SiftEvent listRequest:[self->_batches objectAtIndex:0]] gzippedData];
+                self->_uploadTask = [self->_session uploadTaskWithRequest:request fromData:body];
+                [self->_uploadTask resume];
                 SF_IMPORTANT(@"Upload a batch of %ld events to server", (unsigned long)[[_batches objectAtIndex:0] count]);
             }
         });
@@ -201,8 +201,8 @@ static NSString * const SF_NUM_REJECTS = @"numRejects";
 
 - (void)archive {
     dispatch_async(_serial, ^{
-        NSDictionary *archive = @{SF_BATCHES: _batches, SF_NUM_REJECTS: @(_numRejects)};
-        [NSKeyedArchiver archiveRootObject:archive toFile:_archivePath];
+        NSDictionary *archive = @{SF_BATCHES: self->_batches, SF_NUM_REJECTS: @(self->_numRejects)};
+        [NSKeyedArchiver archiveRootObject:archive toFile:self->_archivePath];
     });
 }
 

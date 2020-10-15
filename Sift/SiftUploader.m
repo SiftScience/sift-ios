@@ -202,13 +202,24 @@ static NSString * const SF_NUM_REJECTS = @"numRejects";
 - (void)archive {
     dispatch_async(_serial, ^{
         NSDictionary *archive = @{SF_BATCHES: self->_batches, SF_NUM_REJECTS: @(self->_numRejects)};
-        [NSKeyedArchiver archiveRootObject:archive toFile:self->_archivePath];
+        if (@available(iOS 11.0, *)) {
+            NSData* data = [NSKeyedArchiver archivedDataWithRootObject: archive requiringSecureCoding:NO error:nil];
+            [data writeToFile:self->_archivePath options:NSDataWritingAtomic error:nil];
+        } else {
+            [NSKeyedArchiver archiveRootObject:archive toFile:self->_archivePath];
+        }
     });
 }
 
 // NOTE: Unprotected access - call this from within the serial dispatch queue.
 - (void)unarchive {
-    NSDictionary *archive = [NSKeyedUnarchiver unarchiveObjectWithFile:_archivePath];
+    NSDictionary *archive;
+    if (@available(iOS 11.0, *)) {
+        NSData *newData = [NSData dataWithContentsOfFile:_archivePath];
+        archive = [NSKeyedUnarchiver unarchivedObjectOfClass:[NSDictionary class] fromData:newData error:nil];
+    } else {
+        archive = [NSKeyedUnarchiver unarchiveObjectWithFile:_archivePath];
+    }
     if (archive) {
         _batches = [NSMutableArray arrayWithArray:[archive objectForKey:SF_BATCHES]];
         _numRejects = ((NSNumber *)[archive objectForKey:SF_NUM_REJECTS]).intValue;

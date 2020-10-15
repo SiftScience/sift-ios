@@ -311,11 +311,23 @@ static NSString * const SF_UPLOADER = @"uploader";
     if (_userId) {
         [archive setObject:_userId forKey:SF_SIFT_USER_ID];
     }
-    [NSKeyedArchiver archiveRootObject:archive toFile:[self archivePathForKeys]];
+    if (@available(iOS 11.0, *)) {
+        NSData* data = [NSKeyedArchiver archivedDataWithRootObject: archive requiringSecureCoding:NO error:nil];
+        [data writeToFile:[self archivePathForKeys] options:NSDataWritingAtomic error:nil];
+    } else {
+        [NSKeyedArchiver archiveRootObject:archive toFile:[self archivePathForKeys]];
+    }
 }
 
 - (void)unarchiveKeys {
-    NSDictionary *archive = [NSKeyedUnarchiver unarchiveObjectWithFile:[self archivePathForKeys]];
+    NSDictionary *archive;
+    if (@available(iOS 11.0, *)) {
+        NSData *newData = [NSData dataWithContentsOfFile:[self archivePathForKeys]];
+        archive = [NSKeyedUnarchiver unarchivedObjectOfClass:[NSDictionary class] fromData:newData error:nil];
+    } else {
+        archive = [NSKeyedUnarchiver unarchiveObjectWithFile:[self archivePathForKeys]];
+    }
+
     if (archive) {
         _accountId = [archive objectForKey:SF_SIFT_ACCOUNT_ID];
         _beaconKey = [archive objectForKey:SF_SIFT_BEACON_KEY];

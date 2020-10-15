@@ -202,24 +202,33 @@ static NSString * const SF_NUM_REJECTS = @"numRejects";
 - (void)archive {
     dispatch_async(_serial, ^{
         NSDictionary *archive = @{SF_BATCHES: self->_batches, SF_NUM_REJECTS: @(self->_numRejects)};
+    #if TARGET_OS_MACCATALYST
+        NSData* data = [NSKeyedArchiver archivedDataWithRootObject: archive requiringSecureCoding:NO error:nil];
+        [data writeToFile:self->_archivePath options:NSDataWritingAtomic error:nil];
+    #else
         if (@available(iOS 11.0, *)) {
             NSData* data = [NSKeyedArchiver archivedDataWithRootObject: archive requiringSecureCoding:NO error:nil];
             [data writeToFile:self->_archivePath options:NSDataWritingAtomic error:nil];
         } else {
             [NSKeyedArchiver archiveRootObject:archive toFile:self->_archivePath];
         }
+    #endif
     });
 }
 
 // NOTE: Unprotected access - call this from within the serial dispatch queue.
 - (void)unarchive {
     NSDictionary *archive;
-    if (@available(iOS 11.0, *)) {
-        NSData *newData = [NSData dataWithContentsOfFile:_archivePath];
+    NSData *newData = [NSData dataWithContentsOfFile:_archivePath];
+    #if TARGET_OS_MACCATALYST
         archive = [NSKeyedUnarchiver unarchivedObjectOfClass:[NSDictionary class] fromData:newData error:nil];
-    } else {
-        archive = [NSKeyedUnarchiver unarchiveObjectWithFile:_archivePath];
-    }
+    #else
+        if (@available(iOS 11.0, *)) {
+            archive = [NSKeyedUnarchiver unarchivedObjectOfClass:[NSDictionary class] fromData:newData error:nil];
+        } else {
+            archive = [NSKeyedUnarchiver unarchiveObjectWithFile:_archivePath];
+        }
+    #endif
     if (archive) {
         _batches = [NSMutableArray arrayWithArray:[archive objectForKey:SF_BATCHES]];
         _numRejects = ((NSNumber *)[archive objectForKey:SF_NUM_REJECTS]).intValue;

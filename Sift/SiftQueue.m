@@ -96,24 +96,33 @@ static NSString * const SF_LAST_UPLOAD_TIMESTAMP = @"lastUploadTimestamp";
             [archive setObject:_lastEvent forKey:SF_LAST_EVENT];
         }
         [archive setObject:@(_lastUploadTimestamp) forKey:SF_LAST_UPLOAD_TIMESTAMP];
-        if (@available(iOS 11.0, *)) {
+        #if TARGET_OS_MACCATALYST
             NSData* data = [NSKeyedArchiver archivedDataWithRootObject: archive requiringSecureCoding:NO error:nil];
             [data writeToFile:self->_archivePath options:NSDataWritingAtomic error:nil];
-        } else {
-            [NSKeyedArchiver archiveRootObject:archive toFile:self->_archivePath];
-        }
+        #else
+            if (@available(iOS 11.0, *)) {
+                NSData* data = [NSKeyedArchiver archivedDataWithRootObject: archive requiringSecureCoding:NO error:nil];
+                [data writeToFile:self->_archivePath options:NSDataWritingAtomic error:nil];
+            } else {
+                [NSKeyedArchiver archiveRootObject:archive toFile:self->_archivePath];
+            }
+        #endif
     }
 }
 
 - (void)unarchive {
     @synchronized(self) {
         NSDictionary *archive;
-        if (@available(iOS 11.0, *)) {
-            NSData *newData = [NSData dataWithContentsOfFile:_archivePath];
+        NSData *newData = [NSData dataWithContentsOfFile:_archivePath];
+        #if TARGET_OS_MACCATALYST
             archive = [NSKeyedUnarchiver unarchivedObjectOfClass:[NSDictionary class] fromData:newData error:nil];
-        } else {
-            archive = [NSKeyedUnarchiver unarchiveObjectWithFile:_archivePath];
-        }
+        #else
+            if (@available(iOS 11.0, *)) {
+                archive = [NSKeyedUnarchiver unarchivedObjectOfClass:[NSDictionary class] fromData:newData error:nil];
+            } else {
+                archive = [NSKeyedUnarchiver unarchiveObjectWithFile:_archivePath];
+            }
+        #endif
         if (archive) {
             _queue = [NSMutableArray arrayWithArray:[archive objectForKey:SF_QUEUE]];
             _lastEvent = [archive objectForKey:SF_LAST_EVENT];

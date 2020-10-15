@@ -311,22 +311,31 @@ static NSString * const SF_UPLOADER = @"uploader";
     if (_userId) {
         [archive setObject:_userId forKey:SF_SIFT_USER_ID];
     }
-    if (@available(iOS 11.0, *)) {
+    #if TARGET_OS_MACCATALYST
         NSData* data = [NSKeyedArchiver archivedDataWithRootObject: archive requiringSecureCoding:NO error:nil];
         [data writeToFile:[self archivePathForKeys] options:NSDataWritingAtomic error:nil];
-    } else {
-        [NSKeyedArchiver archiveRootObject:archive toFile:[self archivePathForKeys]];
-    }
+    #else
+        if (@available(iOS 11.0, *)) {
+            NSData* data = [NSKeyedArchiver archivedDataWithRootObject: archive requiringSecureCoding:NO error:nil];
+            [data writeToFile:[self archivePathForKeys] options:NSDataWritingAtomic error:nil];
+        } else {
+            [NSKeyedArchiver archiveRootObject:archive toFile:[self archivePathForKeys]];
+        }
+    #endif
 }
 
 - (void)unarchiveKeys {
     NSDictionary *archive;
-    if (@available(iOS 11.0, *)) {
-        NSData *newData = [NSData dataWithContentsOfFile:[self archivePathForKeys]];
+    NSData *newData = [NSData dataWithContentsOfFile:[self archivePathForKeys]];
+    #if TARGET_OS_MACCATALYST
         archive = [NSKeyedUnarchiver unarchivedObjectOfClass:[NSDictionary class] fromData:newData error:nil];
-    } else {
-        archive = [NSKeyedUnarchiver unarchiveObjectWithFile:[self archivePathForKeys]];
-    }
+    #else
+        if (@available(iOS 11.0, *)) {
+            archive = [NSKeyedUnarchiver unarchivedObjectOfClass:[NSDictionary class] fromData:newData error:nil];
+        } else {
+            archive = [NSKeyedUnarchiver unarchiveObjectWithFile:[self archivePathForKeys]];
+        }
+    #endif
 
     if (archive) {
         _accountId = [archive objectForKey:SF_SIFT_ACCOUNT_ID];

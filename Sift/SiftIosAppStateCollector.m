@@ -279,24 +279,33 @@ static NSString * const SF_LAST_COLLECTED_AT = @"lastCollectedAt";
 - (void)archive {
     dispatch_sync(_serial, ^{
         NSDictionary *archive = @{SF_BUCKET: _bucket, SF_LAST_COLLECTED_AT: @(_lastCollectedAt)};
-        if (@available(iOS 11.0, *)) {
+        #if TARGET_OS_MACCATALYST
             NSData* data = [NSKeyedArchiver archivedDataWithRootObject: archive requiringSecureCoding:NO error:nil];
             [data writeToFile:self->_archivePath options:NSDataWritingAtomic error:nil];
-        } else {
-            [NSKeyedArchiver archiveRootObject:archive toFile:self->_archivePath];
-        }
+        #else
+            if (@available(iOS 11.0, *)) {
+                NSData* data = [NSKeyedArchiver archivedDataWithRootObject: archive requiringSecureCoding:NO error:nil];
+                [data writeToFile:self->_archivePath options:NSDataWritingAtomic error:nil];
+            } else {
+                [NSKeyedArchiver archiveRootObject:archive toFile:self->_archivePath];
+            }
+        #endif
     });
 }
 
 - (void)unarchive {
     dispatch_sync(_serial, ^{
         NSDictionary *archive;
-        if (@available(iOS 11.0, *)) {
-            NSData *newData = [NSData dataWithContentsOfFile:_archivePath];
+        NSData *newData = [NSData dataWithContentsOfFile:_archivePath];
+        #if TARGET_OS_MACCATALYST
             archive = [NSKeyedUnarchiver unarchivedObjectOfClass:[NSDictionary class] fromData:newData error:nil];
-        } else {
-            archive = [NSKeyedUnarchiver unarchiveObjectWithFile:_archivePath];
-        }
+        #else
+            if (@available(iOS 11.0, *)) {
+                archive = [NSKeyedUnarchiver unarchivedObjectOfClass:[NSDictionary class] fromData:newData error:nil];
+            } else {
+                archive = [NSKeyedUnarchiver unarchiveObjectWithFile:_archivePath];
+            }
+        #endif
         if (archive) {
             _bucket = archive[SF_BUCKET];
             _lastCollectedAt = ((NSNumber *)archive[SF_LAST_COLLECTED_AT]).unsignedLongLongValue;

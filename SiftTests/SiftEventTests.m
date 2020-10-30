@@ -138,9 +138,17 @@
     SiftEvent *expect = [SiftEvent eventWithType:@"type" path:@"path" fields:@{@"key": @"value"}];
     XCTAssertNotNil(expect);
 
-    NSData *data = [NSKeyedArchiver archivedDataWithRootObject:expect];
-    SiftEvent *actual = [NSKeyedUnarchiver unarchiveObjectWithData:data];
-
+    NSData *data;
+    SiftEvent *actual;
+    if (@available(iOS 11.0, macCatalyst 13.0, macOS 10.13, tvOS 11, *)) {
+        data = [NSKeyedArchiver archivedDataWithRootObject:expect requiringSecureCoding:NO error:nil];
+        NSKeyedUnarchiver* unarchiver = [[NSKeyedUnarchiver alloc] initForReadingFromData:data error:nil];
+        unarchiver.requiresSecureCoding = NO;
+        actual = [unarchiver decodeTopLevelObjectForKey:NSKeyedArchiveRootObjectKey error:nil];
+    } else {
+        data = [NSKeyedArchiver archivedDataWithRootObject:expect];
+        actual = [NSKeyedUnarchiver unarchiveObjectWithData:data];
+    }
     XCTAssertTrue([expect isEssentiallyEqualTo:actual]);
     XCTAssertEqual(actual.time, expect.time);
 }

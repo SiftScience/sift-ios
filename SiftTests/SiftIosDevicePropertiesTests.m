@@ -26,8 +26,15 @@
     expect = SFMakeEmptyIosDeviceProperties();
     XCTAssertEqual(0, expect.entries.count);
 
-    data = [NSKeyedArchiver archivedDataWithRootObject:expect];
-    actual = [NSKeyedUnarchiver unarchiveObjectWithData:data];
+    if (@available(iOS 11.0, macCatalyst 13.0, macOS 10.13, tvOS 11, *)) {
+        data = [NSKeyedArchiver archivedDataWithRootObject:expect requiringSecureCoding:NO error:nil];
+        NSKeyedUnarchiver* unarchiver = [[NSKeyedUnarchiver alloc] initForReadingFromData:data error:nil];
+        unarchiver.requiresSecureCoding = NO;
+        actual = [unarchiver decodeTopLevelObjectForKey:NSKeyedArchiveRootObjectKey error:nil];
+    } else {
+        data = [NSKeyedArchiver archivedDataWithRootObject:expect];
+        actual = [NSKeyedUnarchiver unarchiveObjectWithData:data];
+    }
 
     XCTAssertEqual(0, actual.entries.count);
     XCTAssertEqualObjects(expect, actual);
@@ -42,8 +49,15 @@
     [expect setEntry:@"evidence_directories_writable" value:@[]];
     XCTAssertEqual(6, expect.entries.count);
 
-    data = [NSKeyedArchiver archivedDataWithRootObject:expect];
-    actual = [NSKeyedUnarchiver unarchiveObjectWithData:data];
+    if (@available(iOS 11.0, macCatalyst 13.0, macOS 10.13, tvOS 11, *)) {
+        data = [NSKeyedArchiver archivedDataWithRootObject:expect requiringSecureCoding:NO error:nil];
+        NSKeyedUnarchiver* unarchiver = [[NSKeyedUnarchiver alloc] initForReadingFromData:data error:nil];
+        unarchiver.requiresSecureCoding = NO;
+        actual = [unarchiver decodeTopLevelObjectForKey:NSKeyedArchiveRootObjectKey error:nil];
+    } else {
+        data = [NSKeyedArchiver archivedDataWithRootObject:expect];
+        actual = [NSKeyedUnarchiver unarchiveObjectWithData:data];
+    }
 
     XCTAssertEqual(6, actual.entries.count);
     XCTAssertEqualObjects(expect, actual);
@@ -61,12 +75,26 @@
     SiftHtDictionary *actual;
     NSData *data;
 
-    data = [NSKeyedArchiver archivedDataWithRootObject:p];
-    actual = [NSKeyedUnarchiver unarchiveObjectWithData:data];
+    if (@available(iOS 11.0, macCatalyst 13.0, macOS 10.13, tvOS 11, *)) {
+        data = [NSKeyedArchiver archivedDataWithRootObject:p requiringSecureCoding:NO error:nil];
+        NSKeyedUnarchiver* unarchiver = [[NSKeyedUnarchiver alloc] initForReadingFromData:data error:nil];
+        unarchiver.requiresSecureCoding = NO;
+        actual = [unarchiver decodeTopLevelObjectForKey:NSKeyedArchiveRootObjectKey error:nil];
+    } else {
+        data = [NSKeyedArchiver archivedDataWithRootObject:p];
+        actual = [NSKeyedUnarchiver unarchiveObjectWithData:data];
+    }
     XCTAssertEqualObjects(p, actual);
 
-    data = [NSKeyedArchiver archivedDataWithRootObject:q];
-    actual = [NSKeyedUnarchiver unarchiveObjectWithData:data];
+    if (@available(iOS 11.0, macCatalyst 13.0, macOS 10.13, tvOS 11, *)) {
+        data = [NSKeyedArchiver archivedDataWithRootObject:q requiringSecureCoding:NO error:nil];
+        NSKeyedUnarchiver* unarchiver = [[NSKeyedUnarchiver alloc] initForReadingFromData:data error:nil];
+        unarchiver.requiresSecureCoding = NO;
+        actual = [unarchiver decodeTopLevelObjectForKey:NSKeyedArchiveRootObjectKey error:nil];
+    } else {
+        data = [NSKeyedArchiver archivedDataWithRootObject:q];
+        actual = [NSKeyedUnarchiver unarchiveObjectWithData:data];
+    }
     XCTAssertEqualObjects(q, actual);
 }
 

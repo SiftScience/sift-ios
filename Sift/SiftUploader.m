@@ -220,11 +220,18 @@ static NSString * const SF_NUM_REJECTS = @"numRejects";
 - (void)unarchive {
     NSDictionary *archive;
     NSData *newData = [NSData dataWithContentsOfFile:_archivePath];
+    NSError *error;
     #if TARGET_OS_MACCATALYST
-        archive = [NSKeyedUnarchiver unarchivedObjectOfClass:[NSDictionary class] fromData:newData error:nil];
+        NSKeyedUnarchiver* unarchiver = [[NSKeyedUnarchiver alloc] initForReadingFromData:newData error:&error];
+        unarchiver.requiresSecureCoding = NO;
+        archive = [unarchiver decodeTopLevelObjectForKey:NSKeyedArchiveRootObjectKey error:&error];
+        SF_DEBUG(@"error unarchiving data: %@", error.localizedDescription);
     #else
         if (@available(iOS 11.0, *)) {
-            archive = [NSKeyedUnarchiver unarchivedObjectOfClass:[NSDictionary class] fromData:newData error:nil];
+            NSKeyedUnarchiver* unarchiver = [[NSKeyedUnarchiver alloc] initForReadingFromData:newData error:&error];
+            unarchiver.requiresSecureCoding = NO;
+            archive = [unarchiver decodeTopLevelObjectForKey:NSKeyedArchiveRootObjectKey error:&error];
+            SF_DEBUG(@"error unarchiving data: %@", error.localizedDescription);
         } else {
             archive = [NSKeyedUnarchiver unarchiveObjectWithFile:_archivePath];
         }

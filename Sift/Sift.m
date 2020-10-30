@@ -311,13 +311,20 @@ static NSString * const SF_UPLOADER = @"uploader";
     if (_userId) {
         [archive setObject:_userId forKey:SF_SIFT_USER_ID];
     }
+    NSError *error;
     #if TARGET_OS_MACCATALYST
-        NSData* data = [NSKeyedArchiver archivedDataWithRootObject: archive requiringSecureCoding:NO error:nil];
-        [data writeToFile:[self archivePathForKeys] options:NSDataWritingAtomic error:nil];
+        if ([self archivePathForKeys] != nil) {
+            NSData* data = [NSKeyedArchiver archivedDataWithRootObject: archive requiringSecureCoding:NO error:&error];
+            [data writeToFile:[self archivePathForKeys] options:NSDataWritingAtomic error:&error];
+            SF_DEBUG(@"Write returned error: %@", [error localizedDescription]);
+        }
     #else
         if (@available(iOS 11.0, *)) {
-            NSData* data = [NSKeyedArchiver archivedDataWithRootObject: archive requiringSecureCoding:NO error:nil];
-            [data writeToFile:[self archivePathForKeys] options:NSDataWritingAtomic error:nil];
+            if ([self archivePathForKeys] != nil) {
+                NSData* data = [NSKeyedArchiver archivedDataWithRootObject: archive requiringSecureCoding:NO error:&error];
+                [data writeToFile:[self archivePathForKeys] options:NSDataWritingAtomic error:&error];
+                SF_DEBUG(@"Write returned error: %@", [error localizedDescription]);
+            }
         } else {
             [NSKeyedArchiver archiveRootObject:archive toFile:[self archivePathForKeys]];
         }

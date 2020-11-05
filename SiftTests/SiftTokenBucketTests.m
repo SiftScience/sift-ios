@@ -36,4 +36,18 @@
     XCTAssertFalse([bucket tryAcquire:1 at:1004]);
 }
 
+- (void)testTryAcquire {
+    SiftTokenBucket *bucket;
+    
+    bucket = [[SiftTokenBucket alloc] initWithNumTokens:1 interval:5];
+    XCTAssertTrue([bucket tryAcquire]);
+    XCTAssertFalse([bucket tryAcquire]);
+    XCTAssertFalse([bucket tryAcquire]);
+    
+    bucket = [[SiftTokenBucket alloc] initWithNumTokens:2 interval:5];
+    XCTAssertTrue([bucket tryAcquire]);
+    XCTAssertTrue([bucket tryAcquire]);
+    XCTAssertFalse([bucket tryAcquire]);
+}
+
 @end

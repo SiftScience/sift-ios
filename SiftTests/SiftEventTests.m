@@ -7,6 +7,7 @@
 
 #import "SiftIosAppState.h"
 #import "SiftIosDeviceProperties.h"
+#import "NSData+GZIP.h"
 
 #import "SiftEvent.h"
 #import "SiftEvent+Private.h"
@@ -179,6 +180,38 @@ static NSArray *SFBeNice(NSArray *events) {
         event.time = 0;
     }
     return events;
+}
+
+- (void)testSanityCheck {
+    SiftEvent *event1 = [SiftEvent eventWithType:@"type" path:@"path" fields:@{@"key": @"value"}];
+    XCTAssertNotNil(event1);
+    XCTAssertTrue([event1 sanityCheck]);
+    
+    SiftEvent *event2 = [SiftEvent eventWithType:@"type" path:@"path" fields:@{@"key": @5436}];
+    XCTAssertNotNil(event2);
+    XCTAssertFalse([event2 sanityCheck]);
+}
+
+- (void)testGZippedData {
+    NSArray *events = @[];
+    events = SFBeNice(@[[SiftEvent eventWithType:@"some-type" path:@"some-path" fields:nil],
+                        [SiftEvent eventWithType:nil path:nil fields:@{@"key": @"value"}]]);
+    NSData *body = [[SiftEvent listRequest:events] gzippedData];
+    XCTAssertTrue(body.isGzippedData);
+}
+
+- (void)testUnGZippedData {
+    NSArray *events = @[];
+    events = SFBeNice(@[[SiftEvent eventWithType:@"some-type" path:@"some-path" fields:nil],
+                        [SiftEvent eventWithType:nil path:nil fields:@{@"key": @"value"}]]);
+    
+    NSData *unzipBody1 = [[SiftEvent listRequest:events]  gunzippedData];
+    XCTAssertFalse(unzipBody1.isGzippedData);
+
+    NSData *body = [[SiftEvent listRequest:events] gzippedData];
+    XCTAssertTrue(body.isGzippedData);
+    NSData *unzipBody2 = [body gunzippedData];
+    XCTAssertFalse(unzipBody2.isGzippedData);
 }
 
 @end

@@ -98,6 +98,19 @@
     XCTAssertEqualObjects(q, actual);
 }
 
+- (void)testMacCatalyst {
+    SiftHtDictionary *actual = SFCollectIosDeviceProperties();
+    SF_DEBUG(@"Collect device properties: %@", actual.entries);
+    XCTAssertNotNil(actual);
+    
+    NSString *deviceName = actual.entries[@"device_system_name"];
+    #if !TARGET_OS_MACCATALYST
+        XCTAssertFalse([deviceName containsString:@"Mac"]);
+    #else
+        XCTAssertTrue([deviceName containsString:@"Mac"]);
+    #endif
+}
+
 - (SiftHtDictionary *)generateRandomProperties {
     SiftHtDictionary *properties = SFMakeEmptyIosDeviceProperties();
     for (NSString *name in properties.entryTypes) {

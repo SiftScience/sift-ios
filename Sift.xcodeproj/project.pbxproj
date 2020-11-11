@@ -298,6 +298,7 @@
 				TargetAttributes = {
 					7168EE001C7B977500A88245 = {
 						CreatedOnToolsVersion = 7.2.1;
+						LastSwiftMigration = 1200;
 					};
 					7168EE0A1C7B977500A88245 = {
 						CreatedOnToolsVersion = 7.2.1;
@@ -501,6 +502,7 @@
 		7168EE161C7B977500A88245 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
@@ -513,12 +515,15 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.sift.Sift;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
 			};
 			name = Debug;
 		};
 		7168EE171C7B977500A88245 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
@@ -530,6 +535,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.sift.Sift;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.0;
 			};
 			name = Release;
 		};

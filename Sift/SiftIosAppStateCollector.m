@@ -16,6 +16,7 @@
 #import "Sift.h"
 
 #import "SiftIosAppStateCollector.h"
+#import "SiftIosAppStateCollector+Private.h"
 
 // We rate limit to no more than 30 collections in 1 minute.
 static const double         SF_COLLECTION_RATE_LIMIT_NUM_COLLECTIONS = 30;
@@ -34,35 +35,12 @@ static const unsigned long long SF_HEADING_INTERVAL = 4 * NSEC_PER_SEC;
 static const NSUInteger     SF_MOTION_SENSOR_NUM_READINGS = 10;  // Keep at most 10 readings.
 static const NSTimeInterval SF_MOTION_SENSOR_INTERVAL = 0.5;  // Unit: second.
 
-@interface SiftIosAppStateCollector ()
-
-/** Load archived data. */
-- (void)unarchive;
-
-/**
- * Request to collect app state.
- *
- * The request might be ignored due to rate limiting.
- */
-- (void)requestCollectionWithTitle:(NSString *)title;
-
-/**
- * Collect app state if there was no collection in the last SF_MAX_COLLECTION_PERIOD of time and app is active.
- */
-- (void)checkAndCollectWhenNoneRecently:(SFTimestamp)now;
-
-/** Collect app state. */
-- (void)collectWithTitle:(NSString *)title andTimestamp:(SFTimestamp)now;
-
-@end
-
 @implementation SiftIosAppStateCollector {
     // Use serial queue as an alternative to locking.
     dispatch_queue_t _serial;
     dispatch_source_t _source;
     NSString *_archivePath;
     CLLocationManager *_locationManager;
-    int _serialSuspendCounter;
 
     //// Motion sensors.
     BOOL _allowUsingMotionSensors;
@@ -266,7 +244,6 @@ static const NSTimeInterval SF_MOTION_SENSOR_INTERVAL = 0.5;  // Unit: second.
                     [weakSelf checkAndCollectWhenNoneRecently:SFCurrentTime()];
                 });
             }
-
         });
     });
 }
@@ -279,13 +256,40 @@ static NSString * const SF_LAST_COLLECTED_AT = @"lastCollectedAt";
 - (void)archive {
     dispatch_sync(_serial, ^{
         NSDictionary *archive = @{SF_BUCKET: _bucket, SF_LAST_COLLECTED_AT: @(_lastCollectedAt)};
-        [NSKeyedArchiver archiveRootObject:archive toFile:_archivePath];
+        #if TARGET_OS_MACCATALYST
+            NSData* data = [NSKeyedArchiver archivedDataWithRootObject: archive requiringSecureCoding:NO error:nil];
+            [data writeToFile:self->_archivePath options:NSDataWritingAtomic error:nil];
+        #else
+            if (@available(iOS 11.0, *)) {
+                NSData* data = [NSKeyedArchiver archivedDataWithRootObject: archive requiringSecureCoding:NO error:nil];
+                [data writeToFile:self->_archivePath options:NSDataWritingAtomic error:nil];
+            } else {
+                [NSKeyedArchiver archiveRootObject:archive toFile:self->_archivePath];
+            }
+        #endif
     });
 }
 
 - (void)unarchive {
     dispatch_sync(_serial, ^{
-        NSDictionary *archive = [NSKeyedUnarchiver unarchiveObjectWithFile:_archivePath];
+        NSDictionary *archive;
+        NSData *newData = [NSData dataWithContentsOfFile:_archivePath];
+        NSError *error;
+        #if TARGET_OS_MACCATALYST
+            NSKeyedUnarchiver* unarchiver = [[NSKeyedUnarchiver alloc] initForReadingFromData:newData error:&error];
+            unarchiver.requiresSecureCoding = NO;
+            archive = [unarchiver decodeTopLevelObjectForKey:NSKeyedArchiveRootObjectKey error:&error];
+            SF_DEBUG(@"error unarchiving data: %@", error.localizedDescription);
+        #else
+            if (@available(iOS 11.0, *)) {
+                NSKeyedUnarchiver* unarchiver = [[NSKeyedUnarchiver alloc] initForReadingFromData:newData error:&error];
+                unarchiver.requiresSecureCoding = NO;
+                archive = [unarchiver decodeTopLevelObjectForKey:NSKeyedArchiveRootObjectKey error:&error];
+                SF_DEBUG(@"error unarchiving data: %@", error.localizedDescription);
+            } else {
+                archive = [NSKeyedUnarchiver unarchiveObjectWithFile:_archivePath];
+            }
+        #endif
         if (archive) {
             _bucket = archive[SF_BUCKET];
             _lastCollectedAt = ((NSNumber *)archive[SF_LAST_COLLECTED_AT]).unsignedLongLongValue;

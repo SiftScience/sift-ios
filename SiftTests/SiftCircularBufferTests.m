@@ -75,4 +75,29 @@
     XCTAssertEqualObjects(data, [buffer shallowCopy]);
 }
 
+- (void)testRemoveCircularBufferAllObjects {
+    SF_GENERICS(SiftCircularBuffer, NSNumber *) *buffer;
+
+    buffer = [[SiftCircularBuffer alloc] initWithSize:1];
+    XCTAssertEqual(1, buffer.size);
+    XCTAssertEqual(0, buffer.count);
+    XCTAssertNil(buffer.firstObject);
+    XCTAssertNil(buffer.lastObject);
+    XCTAssertEqualObjects(@[], [buffer shallowCopy]);
+
+    XCTAssertNil([buffer append:nil]);
+    XCTAssertNil([buffer append:@100]);
+    XCTAssertEqual(1, buffer.size);
+    XCTAssertEqual(1, buffer.count);
+    XCTAssertEqualObjects(@100, buffer.firstObject);
+    XCTAssertEqualObjects(@100, buffer.lastObject);
+    XCTAssertEqualObjects(@[@100], [buffer shallowCopy]);
+    
+    [buffer removeAllObjects];
+    XCTAssertEqual(0, buffer.count);
+    XCTAssertNil(buffer.firstObject);
+    XCTAssertNil(buffer.lastObject);
+    XCTAssertEqualObjects(@[], [buffer shallowCopy]);
+}
+
 @end

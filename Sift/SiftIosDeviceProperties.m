@@ -1,6 +1,8 @@
 // Copyright (c) 2016 Sift Science. All rights reserved.
 
+#if !TARGET_OS_MACCATALYST
 @import CoreTelephony;
+#endif
 @import Foundation;
 @import UIKit;
 
@@ -169,6 +171,7 @@ SiftHtDictionary *SFCollectIosDeviceProperties() {
     [iosDeviceProperties setEntry:@"device_screen_width" value:[NSNumber numberWithInt:(screen.fixedCoordinateSpace.bounds.size.width * screen.scale)]];
     [iosDeviceProperties setEntry:@"device_screen_height" value:[NSNumber numberWithInt:(screen.fixedCoordinateSpace.bounds.size.height * screen.scale)]];
 
+#if !TARGET_OS_MACCATALYST
     CTTelephonyNetworkInfo *networkInfo = [CTTelephonyNetworkInfo new];
     CTCarrier *carrier = [networkInfo subscriberCellularProvider];
     if (carrier) {
@@ -177,6 +180,7 @@ SiftHtDictionary *SFCollectIosDeviceProperties() {
         [iosDeviceProperties setEntry:@"mobile_country_code" value:carrier.mobileCountryCode];
         [iosDeviceProperties setEntry:@"mobile_network_code" value:carrier.mobileNetworkCode];
     }
+#endif
 
     // Simulator detection
 #if TARGET_OS_SIMULATOR

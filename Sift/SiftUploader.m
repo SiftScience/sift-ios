@@ -202,13 +202,40 @@ static NSString * const SF_NUM_REJECTS = @"numRejects";
 - (void)archive {
     dispatch_async(_serial, ^{
         NSDictionary *archive = @{SF_BATCHES: self->_batches, SF_NUM_REJECTS: @(self->_numRejects)};
-        [NSKeyedArchiver archiveRootObject:archive toFile:self->_archivePath];
+    #if TARGET_OS_MACCATALYST
+        NSData* data = [NSKeyedArchiver archivedDataWithRootObject: archive requiringSecureCoding:NO error:nil];
+        [data writeToFile:self->_archivePath options:NSDataWritingAtomic error:nil];
+    #else
+        if (@available(iOS 11.0, *)) {
+            NSData* data = [NSKeyedArchiver archivedDataWithRootObject: archive requiringSecureCoding:NO error:nil];
+            [data writeToFile:self->_archivePath options:NSDataWritingAtomic error:nil];
+        } else {
+            [NSKeyedArchiver archiveRootObject:archive toFile:self->_archivePath];
+        }
+    #endif
     });
 }
 
 // NOTE: Unprotected access - call this from within the serial dispatch queue.
 - (void)unarchive {
-    NSDictionary *archive = [NSKeyedUnarchiver unarchiveObjectWithFile:_archivePath];
+    NSDictionary *archive;
+    NSData *newData = [NSData dataWithContentsOfFile:_archivePath];
+    NSError *error;
+    #if TARGET_OS_MACCATALYST
+        NSKeyedUnarchiver* unarchiver = [[NSKeyedUnarchiver alloc] initForReadingFromData:newData error:&error];
+        unarchiver.requiresSecureCoding = NO;
+        archive = [unarchiver decodeTopLevelObjectForKey:NSKeyedArchiveRootObjectKey error:&error];
+        SF_DEBUG(@"error unarchiving data: %@", error.localizedDescription);
+    #else
+        if (@available(iOS 11.0, *)) {
+            NSKeyedUnarchiver* unarchiver = [[NSKeyedUnarchiver alloc] initForReadingFromData:newData error:&error];
+            unarchiver.requiresSecureCoding = NO;
+            archive = [unarchiver decodeTopLevelObjectForKey:NSKeyedArchiveRootObjectKey error:&error];
+            SF_DEBUG(@"error unarchiving data: %@", error.localizedDescription);
+        } else {
+            archive = [NSKeyedUnarchiver unarchiveObjectWithFile:_archivePath];
+        }
+    #endif
     if (archive) {
         _batches = [NSMutableArray arrayWithArray:[archive objectForKey:SF_BATCHES]];
         _numRejects = ((NSNumber *)[archive objectForKey:SF_NUM_REJECTS]).intValue;

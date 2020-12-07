@@ -389,33 +389,53 @@ static SF_GENERICS(NSArray, NSString *) *getIpAddresses() {
         if (interface->ifa_flags & IFF_LOOPBACK) {
             continue;  // Skip loopback interface.
         }
-
-        const struct sockaddr_in *address = (const struct sockaddr_in*)interface->ifa_addr;
-        if (!address) {
-            continue;  // Skip interfaces that have no address.
+        
+        // Validate an IP address
+        int success = 0;
+        NSString *addressStr = @"error";
+        addressStr = [NSString stringWithUTF8String:inet_ntoa(((struct sockaddr_in *)interface->ifa_addr)->sin_addr)];
+        const char *utf8 = [addressStr UTF8String];
+        struct in_addr dst;
+        success = inet_pton(AF_INET, utf8, &dst);
+        if (success != 1) {
+            struct in6_addr dst6;
+            success = inet_pton(AF_INET6, utf8, &dst6);
         }
-
-        SF_DEBUG(@"Read address from interface: %s", interface->ifa_name);
-        char address_buffer[MAX(INET_ADDRSTRLEN, INET6_ADDRSTRLEN)];
-        if (address->sin_family == AF_INET) {
-            if (!inet_ntop(AF_INET, &address->sin_addr, address_buffer, INET_ADDRSTRLEN)) {
-                SF_DEBUG(@"Cannot convert INET address: %s", strerror(errno));
-                continue;
+        
+        if(success == 1) {
+            if (interface->ifa_addr->sa_family == (uint8_t)(AF_INET)) {
+                const struct sockaddr_in *address = (const struct sockaddr_in*)interface->ifa_addr;
+                if (!address) {
+                    continue;  // Skip interfaces that have no address.
+                }
+                SF_DEBUG(@"Read address from interface: %s", interface->ifa_name);
+                 
+                uint32_t ip = ntohl(address->sin_addr.s_addr);
+                in_addr_t addr = htonl(ip);
+                struct in_addr ip_addr;
+                ip_addr.s_addr = addr;
+                NSString *ipv4_address = [NSString stringWithUTF8String: inet_ntoa(ip_addr)];
+                [addresses addObject: ipv4_address];
+            } else if (interface->ifa_addr->sa_family == (uint8_t)(AF_INET6)) {
+                const struct sockaddr_in6 *address = (const struct sockaddr_in6*)interface->ifa_addr;
+                if (!address) {
+                    continue;  // Skip interfaces that have no address.
+                }
+                SF_DEBUG(@"Read address from interface: %s", interface->ifa_name);
+                char address_buffer[INET6_ADDRSTRLEN];
+                if (!inet_ntop(AF_INET6, &address->sin6_addr, address_buffer, INET6_ADDRSTRLEN)) {
+                    SF_DEBUG(@"Cannot convert INET6 address: %s", strerror(errno));
+                    continue;
+                }
+                [addresses addObject:[NSString stringWithUTF8String:address_buffer]];
+            } else {
+                continue;  // Skip non-IPv4 and non-IPv6 interface.
             }
-        } else if (address->sin_family == AF_INET6) {
-            const struct sockaddr_in6 *address_inet6 = (const struct sockaddr_in6*)interface->ifa_addr;
-            if (!inet_ntop(AF_INET6, &address_inet6->sin6_addr, address_buffer, INET6_ADDRSTRLEN)) {
-                SF_DEBUG(@"Cannot convert INET6 address: %s", strerror(errno));
-                continue;
-            }
-        } else {
-            continue;  // Skip non-IPv4 and non-IPv6 interface.
         }
-
-        [addresses addObject:[NSString stringWithUTF8String:address_buffer]];
     }
-
     free(interfaces);
 
     return addresses;
 }
+
+

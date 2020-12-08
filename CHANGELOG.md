@@ -1,5 +1,9 @@
 # Change Log
 
+## [2.0.2] - 2020-11-07
+- Corrected the ip addresses for ipv6.
+- Improved stability and coverage with tests.
+
 ## [2.0.1] - 2020-03-04
 - Remove all warnings which gets generated during build
 

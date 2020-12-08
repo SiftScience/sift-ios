@@ -1,5 +1,8 @@
 # Change Log
 
+## [2.0.2] - 2020-11-07
+- Fix Security Concern from converting Strings to Signed Integers for ipv6
+
 ## [2.0.1] - 2020-03-04
 - Remove all warnings which gets generated during build
 

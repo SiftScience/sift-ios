@@ -60,8 +60,8 @@ You can also use your xcconfig file: ​`swift package generate-xcodeproj --xcco
 
 Update for Xcode 11
 
-* In Xcode 11, open the File > Swift Packages > Add Package Dependency
-* Paste the repository's URL [https://github.com/SiftScience/sift-ios.git​](https://github.com/SiftScience/sift-ios.git​)  into the field
+* For Xcode 11 no need to do the above steps, you can directly open the File > Swift Packages > Add Package Dependency
+* Paste the repository's URL [https://github.com/SiftScience/sift-ios.git​](https://github.com/SiftScience/sift-ios)  into the field
 above then click "next".
 * Xcode will walk you through the rest of the steps. You can `import sift_ios`.
 

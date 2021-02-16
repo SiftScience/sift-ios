@@ -55,13 +55,15 @@ This will create initial files and folders including hidden​ `​.gitignore​
     )
   ```
 * Save `Package.swift` file, Xcode will build the package.swift or else ​`swift package generate-xcodeproj`
-Xcode project is generated and excluded from git by default. You can also use your xcconfig file: ​`swift package generate-xcodeproj --xcconfig-overrides Config.xcconfig`
+(Xcode project is generated and excluded from git by default). 
+You can also use your xcconfig file: ​`swift package generate-xcodeproj --xcconfig-overrides Config.xcconfig`
 
 Update for Xcode 11
-*  In Xcode 11, open the File > Swift Packages > Add Package Dependency
-*  Paste the repository's URL [https://github.com/SiftScience/sift-ios.git​](https://github.com/SiftScience/sift-ios.git​)  into the field
+
+* In Xcode 11, open the File > Swift Packages > Add Package Dependency
+* Paste the repository's URL [https://github.com/SiftScience/sift-ios.git​](https://github.com/SiftScience/sift-ios.git​)  into the field
 above then click "next".
-*  Xcode will walk you through the rest of the steps. You can `import sift_ios`.
+* Xcode will walk you through the rest of the steps. You can `import sift_ios`.
 
 Recommended steps:
 

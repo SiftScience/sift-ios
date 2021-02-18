@@ -1,3 +1,9 @@
+import Foundation
+import Sift
+
 struct sift_ios {
-    var text = "Hello, World!"
+    public init() {
+           
+    }
+//    let sift = Sift()
 }

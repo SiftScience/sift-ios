@@ -1,5 +1,5 @@
 import Foundation
-import Sift
+//import Sift
 
 //@_exported import Sift-Objc
 //import Sift.Swift.h
@@ -11,7 +11,7 @@ import Sift
 //
 //#endif
 
-public class Sift_ios {
+public class Sift {
 //    let sharedInstance = Sift()
     public static let sharedInstance: Sift = Sift()
     public init() {

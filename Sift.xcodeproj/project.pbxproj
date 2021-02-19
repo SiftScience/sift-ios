@@ -3,10 +3,12 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 46;
+	objectVersion = 52;
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1E361EBF25DFF7C4006551E2 /* Sift.h in Headers */ = {isa = PBXBuildFile; fileRef = 1E9F37ED25DECDDD00E971EA /* Sift.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		1E361EC225E0127A006551E2 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1E361EC125E0127A006551E2 /* UIKit.framework */; platformFilter = ios; };
 		1E9F380425DECDDD00E971EA /* SiftUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 1E9F37DF25DECDDD00E971EA /* SiftUtils.m */; };
 		1E9F380525DECDDD00E971EA /* SiftUploader.m in Sources */ = {isa = PBXBuildFile; fileRef = 1E9F37E025DECDDD00E971EA /* SiftUploader.m */; };
 		1E9F380625DECDDD00E971EA /* SiftIosAppStateCollector.m in Sources */ = {isa = PBXBuildFile; fileRef = 1E9F37E125DECDDD00E971EA /* SiftIosAppStateCollector.m */; };
@@ -19,18 +21,17 @@
 		1E9F380D25DECDDD00E971EA /* SiftIosDeviceProperties.h in Headers */ = {isa = PBXBuildFile; fileRef = 1E9F37E925DECDDD00E971EA /* SiftIosDeviceProperties.h */; };
 		1E9F380E25DECDDD00E971EA /* Sift+Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 1E9F37EA25DECDDD00E971EA /* Sift+Private.h */; };
 		1E9F380F25DECDDD00E971EA /* SiftQueue.h in Headers */ = {isa = PBXBuildFile; fileRef = 1E9F37EB25DECDDD00E971EA /* SiftQueue.h */; };
-		1E9F381025DECDDD00E971EA /* SiftQueueConfig.h in Headers */ = {isa = PBXBuildFile; fileRef = 1E9F37EC25DECDDD00E971EA /* SiftQueueConfig.h */; };
-		1E9F381125DECDDD00E971EA /* Sift.h in Headers */ = {isa = PBXBuildFile; fileRef = 1E9F37ED25DECDDD00E971EA /* Sift.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		1E9F381025DECDDD00E971EA /* SiftQueueConfig.h in Headers */ = {isa = PBXBuildFile; fileRef = 1E9F37EC25DECDDD00E971EA /* SiftQueueConfig.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1E9F381225DECDDD00E971EA /* SiftDebug.h in Headers */ = {isa = PBXBuildFile; fileRef = 1E9F37EE25DECDDD00E971EA /* SiftDebug.h */; };
 		1E9F381325DECDDD00E971EA /* SiftUploader.h in Headers */ = {isa = PBXBuildFile; fileRef = 1E9F37EF25DECDDD00E971EA /* SiftUploader.h */; };
 		1E9F381425DECDDD00E971EA /* SiftIosAppStateCollector+Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 1E9F37F025DECDDD00E971EA /* SiftIosAppStateCollector+Private.h */; };
 		1E9F381525DECDDD00E971EA /* SiftUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = 1E9F37F125DECDDD00E971EA /* SiftUtils.h */; };
 		1E9F381625DECDDD00E971EA /* SiftIosAppStateCollector.h in Headers */ = {isa = PBXBuildFile; fileRef = 1E9F37F225DECDDD00E971EA /* SiftIosAppStateCollector.h */; };
-		1E9F381725DECDDD00E971EA /* SiftEvent.h in Headers */ = {isa = PBXBuildFile; fileRef = 1E9F37F325DECDDD00E971EA /* SiftEvent.h */; };
+		1E9F381725DECDDD00E971EA /* SiftEvent.h in Headers */ = {isa = PBXBuildFile; fileRef = 1E9F37F325DECDDD00E971EA /* SiftEvent.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1E9F381825DECDDD00E971EA /* SiftIosDevicePropertiesCollector.h in Headers */ = {isa = PBXBuildFile; fileRef = 1E9F37F425DECDDD00E971EA /* SiftIosDevicePropertiesCollector.h */; };
 		1E9F381925DECDDD00E971EA /* SiftHtDictionary.h in Headers */ = {isa = PBXBuildFile; fileRef = 1E9F37F525DECDDD00E971EA /* SiftHtDictionary.h */; };
 		1E9F381A25DECDDD00E971EA /* SiftTokenBucket.h in Headers */ = {isa = PBXBuildFile; fileRef = 1E9F37F625DECDDD00E971EA /* SiftTokenBucket.h */; };
-		1E9F381B25DECDDD00E971EA /* SiftCompatibility.h in Headers */ = {isa = PBXBuildFile; fileRef = 1E9F37F725DECDDD00E971EA /* SiftCompatibility.h */; };
+		1E9F381B25DECDDD00E971EA /* SiftCompatibility.h in Headers */ = {isa = PBXBuildFile; fileRef = 1E9F37F725DECDDD00E971EA /* SiftCompatibility.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1E9F381C25DECDDD00E971EA /* SiftIosDevicePropertiesCollector.m in Sources */ = {isa = PBXBuildFile; fileRef = 1E9F37F825DECDDD00E971EA /* SiftIosDevicePropertiesCollector.m */; };
 		1E9F381D25DECDDD00E971EA /* SiftTokenBucket.m in Sources */ = {isa = PBXBuildFile; fileRef = 1E9F37F925DECDDD00E971EA /* SiftTokenBucket.m */; };
 		1E9F381E25DECDDD00E971EA /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 1E9F37FA25DECDDD00E971EA /* README.md */; };
@@ -66,6 +67,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		1E361EC125E0127A006551E2 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		1E9F37DF25DECDDD00E971EA /* SiftUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SiftUtils.m; sourceTree = "<group>"; };
 		1E9F37E025DECDDD00E971EA /* SiftUploader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SiftUploader.m; sourceTree = "<group>"; };
 		1E9F37E125DECDDD00E971EA /* SiftIosAppStateCollector.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SiftIosAppStateCollector.m; sourceTree = "<group>"; };
@@ -123,6 +125,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1E361EC225E0127A006551E2 /* UIKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -137,6 +140,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		1E361EC025E0127A006551E2 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				1E361EC125E0127A006551E2 /* UIKit.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		1E9F37DD25DECDDD00E971EA /* Sources */ = {
 			isa = PBXGroup;
 			children = (
@@ -217,6 +228,7 @@
 				1E9F37DD25DECDDD00E971EA /* Sources */,
 				7168EE0F1C7B977500A88245 /* SiftTests */,
 				7168EE021C7B977500A88245 /* Products */,
+				1E361EC025E0127A006551E2 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -256,7 +268,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1E9F381125DECDDD00E971EA /* Sift.h in Headers */,
+				1E361EBF25DFF7C4006551E2 /* Sift.h in Headers */,
 				1E9F381425DECDDD00E971EA /* SiftIosAppStateCollector+Private.h in Headers */,
 				1E9F380E25DECDDD00E971EA /* Sift+Private.h in Headers */,
 				1E9F381A25DECDDD00E971EA /* SiftTokenBucket.h in Headers */,
@@ -542,10 +554,15 @@
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				"GCC_PREPROCESSOR_DEFINITIONS[arch=*]" = "DEBUG=1";
-				INFOPLIST_FILE = Sift/Info.plist;
+				INFOPLIST_FILE = Sources/Sift/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.2;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+					"$(SRCROOT)",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.sift.Sift;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -563,10 +580,15 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				INFOPLIST_FILE = Sift/Info.plist;
+				INFOPLIST_FILE = Sources/Sift/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.2;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+					"$(SRCROOT)",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.sift.Sift;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -581,7 +603,11 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				INFOPLIST_FILE = SiftTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.2;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.sift.SiftTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
@@ -593,7 +619,11 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				INFOPLIST_FILE = SiftTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.2;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.sift.SiftTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};

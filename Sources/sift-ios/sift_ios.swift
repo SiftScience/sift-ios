@@ -1,16 +1,19 @@
 import Foundation
 import Sift
+
 //@_exported import Sift-Objc
 //import Sift.Swift.h
-#if canImport(UIKit)
+//@_exported import UIKit
 
-import UIKit
+//#if canImport(UIKit)
+//
+//import UIKit
+//
+//#endif
 
-#endif
-
-struct sift_ios {
-    let sharedInstance = Sift()
-    
+public class Sift_ios {
+//    let sharedInstance = Sift()
+    public static let sharedInstance: Sift = Sift()
     public init() {
            
     }

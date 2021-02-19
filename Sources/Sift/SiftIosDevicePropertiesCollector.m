@@ -3,14 +3,14 @@
 @import Foundation;
 @import UIKit;
 
-#import "SiftDebug.h"
-#import "SiftEvent.h"
-#import "SiftEvent+Private.h"
-#import "SiftIosDeviceProperties.h"
-#import "SiftQueueConfig.h"
-#import "Sift.h"
+#import "Sift/SiftDebug.h"
+#import "Sift/SiftEvent.h"
+#import "Sift/SiftEvent+Private.h"
+#import "Sift/SiftIosDeviceProperties.h"
+#import "Sift/SiftQueueConfig.h"
+#import "Sift/Sift.h"
 
-#import "SiftIosDevicePropertiesCollector.h"
+#import "Sift/SiftIosDevicePropertiesCollector.h"
 
 /**
  * Device properties are sent to their own queue, which is configured to

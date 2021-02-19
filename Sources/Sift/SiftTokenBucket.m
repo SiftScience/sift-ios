@@ -2,7 +2,7 @@
 
 @import Foundation;
 
-#import "SiftTokenBucket.h"
+#import "Sift/SiftTokenBucket.h"
 
 @implementation SiftTokenBucket {
     // Bucket parameters.

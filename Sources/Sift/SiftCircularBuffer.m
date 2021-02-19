@@ -2,10 +2,10 @@
 
 @import Foundation;
 
-#import "SiftCompatibility.h"
-#import "SiftDebug.h"
+#import "Sift/SiftCompatibility.h"
+#import "Sift/SiftDebug.h"
 
-#import "SiftCircularBuffer.h"
+#import "Sift/SiftCircularBuffer.h"
 
 @implementation SiftCircularBuffer {
     NSUInteger _size;

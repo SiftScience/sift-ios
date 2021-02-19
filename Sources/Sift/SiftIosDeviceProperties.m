@@ -11,11 +11,11 @@
 
 #include <mach-o/dyld.h>
 
-#import "SiftCompatibility.h"
-#import "SiftDebug.h"
-#import "Sift.h"
+#import "Sift/SiftCompatibility.h"
+#import "Sift/SiftDebug.h"
+#import "Sift/Sift.h"
 
-#import "SiftIosDeviceProperties.h"
+#import "Sift/SiftIosDeviceProperties.h"
 
 SiftHtDictionary *SFMakeEmptyIosDeviceProperties() {
     static SF_GENERICS(NSMutableDictionary, NSString *, Class) *entryTypes;

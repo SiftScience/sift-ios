@@ -3,11 +3,11 @@
 @import Foundation;
 @import UIKit;
 
-#import "SiftDebug.h"
-#import "SiftUtils.h"
+#import "Sift/SiftDebug.h"
+#import "Sift/SiftUtils.h"
 
-#import "SiftEvent.h"
-#import "SiftEvent+Private.h"
+#import "Sift/SiftEvent.h"
+#import "Sift/SiftEvent+Private.h"
 
 @implementation SiftEvent
 

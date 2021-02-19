@@ -3,12 +3,12 @@
 @import Foundation;
 @import UIKit;
 
-#import "Vendor/NSData+GZIP.h"
-#import "SiftDebug.h"
-#import "SiftEvent.h"
-#import "SiftEvent+Private.h"
+#import "Sift/NSData+GZIP.h"
+#import "Sift/SiftDebug.h"
+#import "Sift/SiftEvent.h"
+#import "Sift/SiftEvent+Private.h"
 
-#import "SiftUploader.h"
+#import "Sift/SiftUploader.h"
 
 @implementation SiftUploader {
     // Use serial queue as an alternative to locking.

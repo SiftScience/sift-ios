@@ -31,7 +31,7 @@
 //
 
 
-#import "NSData+GZIP.h"
+#import "Sift/NSData+GZIP.h"
 #import <zlib.h>
 #import <dlfcn.h>
 

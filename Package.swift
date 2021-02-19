@@ -12,7 +12,7 @@ let package = Package(
         // Products define the executables and libraries a package produces, and make them visible to other packages.-
         .library(
             name: "sift-ios",
-            targets: ["sift-ios"]),
+            targets: ["Sift", "sift-ios"]),
     ],
     dependencies: [
         // Dependencies declare other packages that this package depends on.
@@ -31,9 +31,28 @@ let package = Package(
         .target(
             name: "Sift",
             dependencies: [],
-            path: "Sift",
+           
+//            path: "sift-ios/Sift",
+            exclude: ["Info.plist", "README.md"],
 //            sources: ["Core", "Dependencies/OneDependency/OneDependency.m"]
-            publicHeadersPath: "."),
+            publicHeadersPath: "include"),
+//            cSettings: [
+//                       .headerSearchPath("Sift")
+//                   ]),
+//        .target(
+//           name: "ModuleX-ObjC", // 1
+//           dependencies: [], // 2
+//           path: "ModuleX/", // 3
+//           exclude: ["Info.plist"], // 4
+//           cSettings: [
+//              .headerSearchPath("Internal"), // 5
+//           ]
+//        ),
+//        .target(
+//           name: "ModuleX", // 6
+//           dependencies: ["ModuleX-ObjC"], // 7
+//           path: "SwiftSources" // 8
+//        ),
         .testTarget(
             name: "sift-iosTests",
             dependencies: ["sift-ios"]),

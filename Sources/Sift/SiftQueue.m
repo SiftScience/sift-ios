@@ -3,13 +3,13 @@
 @import Foundation;
 @import UIKit;
 
-#import "SiftDebug.h"
-#import "SiftEvent.h"
-#import "SiftEvent+Private.h"
-#import "SiftUtils.h"
-#import "Sift.h"
+#import "Sift/SiftDebug.h"
+#import "Sift/SiftEvent.h"
+#import "Sift/SiftEvent+Private.h"
+#import "Sift/SiftUtils.h"
+#import "Sift/Sift.h"
 
-#import "SiftQueue.h"
+#import "Sift/SiftQueue.h"
 
 @implementation SiftQueue {
     NSString *_identifier;

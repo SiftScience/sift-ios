@@ -5,8 +5,8 @@
 #import <CoreMotion/CoreMotion.h>
 #import <Foundation/Foundation.h>
 
-#import "SiftEvent.h"
-#import "SiftQueueConfig.h"
+#import "Sift/SiftEvent.h"
+#import "Sift/SiftQueueConfig.h"
 
 /**
  * This is the main interface you interact with Sift.

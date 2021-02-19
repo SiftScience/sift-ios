@@ -1,9 +1,9 @@
 // Copyright (c) 2016 Sift Science. All rights reserved.
 
-#import "SiftCompatibility.h"
-#import "SiftDebug.h"
+#import "Sift/SiftCompatibility.h"
+#import "Sift/SiftDebug.h"
 
-#import "SiftHtDictionary.h"
+#import "Sift/SiftHtDictionary.h"
 
 @implementation SiftHtDictionary
 

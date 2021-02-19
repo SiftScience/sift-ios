@@ -5,18 +5,18 @@
 @import Foundation;
 @import UIKit;
 
-#import "SiftCircularBuffer.h"
-#import "SiftCompatibility.h"
-#import "SiftDebug.h"
-#import "SiftEvent.h"
-#import "SiftEvent+Private.h"
-#import "SiftIosAppState.h"
-#import "SiftTokenBucket.h"
-#import "SiftUtils.h"
-#import "Sift.h"
+#import "Sift/SiftCircularBuffer.h"
+#import "Sift/SiftCompatibility.h"
+#import "Sift/SiftDebug.h"
+#import "Sift/SiftEvent.h"
+#import "Sift/SiftEvent+Private.h"
+#import "Sift/SiftIosAppState.h"
+#import "Sift/SiftTokenBucket.h"
+#import "Sift/SiftUtils.h"
+#import "Sift/Sift.h"
 
-#import "SiftIosAppStateCollector.h"
-#import "SiftIosAppStateCollector+Private.h"
+#import "Sift/SiftIosAppStateCollector.h"
+#import "Sift/SiftIosAppStateCollector+Private.h"
 
 // We rate limit to no more than 30 collections in 1 minute.
 static const double         SF_COLLECTION_RATE_LIMIT_NUM_COLLECTIONS = 30;

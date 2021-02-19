@@ -8,12 +8,12 @@
 #include <ifaddrs.h>
 #include <net/if.h>
 
-#import "SiftCompatibility.h"
-#import "SiftDebug.h"
-#import "SiftUtils.h"
+#import "Sift/SiftCompatibility.h"
+#import "Sift/SiftDebug.h"
+#import "Sift/SiftUtils.h"
 
-#import "Sift.h"
-#import "SiftIosAppState.h"
+#import "Sift/Sift.h"
+#import "Sift/SiftIosAppState.h"
 
 SiftHtDictionary *SFMakeEmptyIosAppState() {
     static SF_GENERICS(NSMutableDictionary, NSString *, Class) *entryTypes;

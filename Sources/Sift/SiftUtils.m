@@ -4,8 +4,8 @@
 
 #import "ctype.h"
 
-#import "SiftDebug.h"
-#import "SiftUtils.h"
+#import "Sift/SiftDebug.h"
+#import "Sift/SiftUtils.h"
 
 SFTimestamp SFCurrentTime(void) {
     return [[NSDate date] timeIntervalSince1970] * 1000.0;

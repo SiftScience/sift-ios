@@ -1,6 +1,6 @@
 # **Sift iOS SDK**
 
-### Propose Technicial Design Documentation
+### Propose Technical Design Documentation
 
 ##
 ### Table of Contents
@@ -58,8 +58,10 @@ After comparing with Sift android SDK, here the proposed data flow chart below :
 Current thread management are in a nested dispatch format. This means, even if the main thread (the UI thread) is busy updating the screen, the app can still be doing more computations in the background without the need for any context switch. Having multiple asynchronous tasks and wait until all are completed. The most simple one is utilising DispatchGroup or OperationQueue. You can submit the tasks to some sort of "executer" which controls how many tasks run concurrently (match like OperationQueue and async Operations).
 
 Following diagram is Task Manager's:
+
 **![](https://docs.google.com/drawings/u/0/d/sYtcqUd6vtuJ1CenpYQgTNQ/image?w=576&h=329&rev=1&ac=1&parent=1AslLsJQep2FgRO7_E3xe1jXwTkwIEWJ1_Ris7i3MTUI)**
 
 1. SUBMIT: Add the collected task to queue.
 2. SCHEDULE: Uploading process and also will be tracking on delay time.
 3. SHUTDOWN: Shutdown called on page dismiss. It will terminate all the ongoing tasks.
+

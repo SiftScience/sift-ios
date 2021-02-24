@@ -343,6 +343,7 @@ The SDK also has a number of classes that deal with event collecting, saving and
 This is a utility class of the sift client library which handles the application-level code for interacting with the framework for collecting, saving and uploading events. This class sets up and holds references to the event queues and event collectors, including AppStateCollector and DevicePropertiesCollector.
 
 Configuring of the Sift iOS SDK requires passing in your account id and beacon key.
+For Objective C:
 ```Objective C
 Sift *sift = [Sift sharedInstance];
 
@@ -350,7 +351,7 @@ Sift *sift = [Sift sharedInstance];
 [sift setAccountId:@"YOUR_ACCOUNT_ID"];
 [sift setBeaconKey:@"YOUR_JAVASCRIPT_SNIPPET_KEY"];
 ```
-
+For Swift:
 ```Swift
 let sift = Sift.sharedInstance
 sift().accountId = "YOUR_ACCOUNT_ID"
@@ -364,21 +365,19 @@ Sift class provide a builder class to initialize the configuration data and vari
   - **_rootDirPath_** : {type: string}
     - Set rootDirPath value and serverUrlFormat value that is the location of the API endpoint; defaults to @"https://api3.siftscience.com/v3/accounts/%@/mobile_events"
 - **accountId** : {type: string}
-- Your account ID; defaults to nil.
+  - Your account ID; defaults to nil.
 - **beaconKey** : {type: string}
-- Your beacon key; defaults to nil.
+  - Your beacon key; defaults to nil.
 - **userId** : {type: string}
-- Your User ID; defaults to nil.
+  - Your User ID; defaults to nil.
 - **disallowCollectingLocationData** : {type: boolean}
-- Whether to allow location collection; defaults to false.
+  - Whether to allow location collection; defaults to false.
 
 This class mainly handles the following task:
-
-- Archive/Save all of the sift instance states to the disk using shared preference, which includes Sift.Config, user Id, app state queue and device properties queue.
-- Unarchive/Restore all the sift instance states(Sift.Confi, user Id, and queues) from disk.
-- Appends the collected event to the App State queue and Device Properties queue.
-- Setting Sift.Config.
+- Setting Sift Configuration.
 - Setting user Id.
+- Appends the collected event to the App State queue and Device Properties queue.
+- Collect Location and Device Motion Data.
 
 Following are the static API to interact with SDK:
 - **setAccountId**(_accountId_)
@@ -395,31 +394,6 @@ Following are the static API to interact with SDK:
   - It will call the upload method with force param as NO.
 - **upload**(_force_)
   - It will upload the collects events to Sift Server. If force is YES, then won't wait for queue.readyForUpload to be true.
-
-
-  - Should call in the onCreate() callback of each Activity.
-  - It creates the Sift singleton instance and collectors if they do not exist, and passes along the current Activity context.
-  - For your application&#39;s main Activity, make sure to provide a Sift.Config object as the second parameter.
-  - If you are integrating per-Activity rather than at the Application level, you can specify the name that will be associated with each Activity event (defaults to the class name of the embedding Activity).
-  - There are overloaded methods below for your convenience.
-    - open(context, activityName)
-    - open(context, config)
-    - open(context)
-- **collect**()
-  - Should call Sift.collect() after the Sift.open() call in each Activity.
-  - Which executes a runnable task to collect SDK events for Device Properties and Application State.
-- **pause**()
-  - Should call Sift.pause() in the onPause() callback of each Activity.
-  - Which persists the instance state to disk and disconnects location services.
-- **resume**(_context, activityName_)
-  - Should call Sift.resume() in the onResume() callback of each Activity.
-  - It will try to reconnect the location services if configuration and permissions are enabled.
-  - If you provide a non-null activity name as a parameter then it will set the current activity class name as the name provided, otherwise it will set the simple name of the underlying class.
-  - There is an overloaded method for your convenience.
-    - resume(context)
-- **close**()
-  - Call Sift.close() in the onDestroy() callback of each Activity.
-  - It persists the instance state to disk and disconnects location services.
 
 - **archiveKeys**()
 

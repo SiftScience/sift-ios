@@ -11,8 +11,8 @@
 
 **[3 Data Models](#3-data-models)**
 * [3.1 SiftEvent](#31-siftEvent)
-* [3.2 DeviceProperties](#32-iosDeviceProperties)
-* [3.3 AppState](#33-iosAppState)
+* [3.2 DeviceProperties](#32-deviceProperties)
+* [3.3 AppState](#33-appState)
 * [3.4 Location](#34-location)
 * [3.5 Heading](#35-heading)
 * [3.6 DeviceMotion](#36-deviceMotion)
@@ -39,7 +39,8 @@ The [sift-ios](https://github.com/SiftScience/sift-ios)  Mobile SDKs collect and
 The specific features used are: CoreMotion, BatteryManager, Location, NetworkInterface and TelephonyManager. The SDK uses CoreMotion, BatteryManager, Location and NetworkInterface for collecting AppState details. The Device properties details are collected with the help of TelephonyManager and PackageManager along with Build details. In particular, event collecting, appending and uploading are handled on a separate thread with the help of Executors. The Mobile SDKs allow mobile applications to collect and send device properties and application lifecycle events to Sift. 
 
 A high-level block diagram is shown
-**![](https://docs.google.com/drawings/u/0/d/sqNOp2NE6OcWUAASs69Kfyw/image?w=585&h=247&rev=1&ac=1&parent=1AslLsJQep2FgRO7_E3xe1jXwTkwIEWJ1_Ris7i3MTUI)**
+
+![](Images/HighLevelBlock.png)
 
 1. IOS app loads the SDK with the Sift configurations.
 2. The sift SDK will collect and send events to the Sift server when there are events to upload.
@@ -49,13 +50,12 @@ This document describes the data models,classes for handling events, and specifi
 
 ## 2 High Level Class Diagram
 
-**![{"theme":"neutral","source":"classDiagram\n      SiftEvent <|-- AppStateCollector\n      SiftEvent <|-- DevicePropertiesCollector\n      \n\nclass SiftEvent {\n          +NSString time\n          +NSString type\n          +NSString path\n          +NSString userId\n          +NSString installationId\n          +NSString fields\n          +NSNumber deviceProperties\n          +AppStateCollector iosAppState          \n          +DevicePropertiesCollector iosDeviceProperties   \n          +NSString metrics\n      }\n\n      class AppStateCollector {\n          +NSString application_state\n          +NSString sdk_version\n          +NSArray window_root_view_controller_titles\n          +NSNumber battery_level\n          +NSString battery_state\n          +NSString device_orientation\n          +NSNumber proximity_state\n          +NSDictionary location          \n          +NSDictionary heading   \n          +NSArray motion\n          +NSArray raw_accelerometer\n          +NSArray raw_gyro\n          +NSArray raw_magnetometer\n      }\n\n      class DevicePropertiesCollector {\n          +NSString app_name\n          +NSString app_version\n          +NSString sdk_version\n          +NSString device_name\n          +NSString device_model\n          +NSString device_ifa\n          +NSString device_ifv\n          +NSNumber device_screen_width\n          +NSNumber device_screen_height\n          +NSString device_localized_model\n          +NSString device_system_name\n          +NSString device_system_version\n          +NSString mobile_carrier_name\n          +NSString mobile_iso_country_code\n          +NSString mobile_country_code\n          +NSString mobile_network_code\n          +NSNumber is_simulator\n      }"}](https://lh4.googleusercontent.com/fl_1hqrZei_tEIb5zZY6DKzfL8uoZyZjN1PVnQjQX-Dg4Ub4OCvLNYRAMA-tKn2YvsVe9ieSC7LW9ydnTnpHM8L-mTsYsxWvskBEbNH_ONmCSXlhP_wU7ynJ1N5B65hdm6UU_8Zi "mermaid-graph")**
+![](Images/HighLevelClass.png)
 
 
 Class Diagram for App State Collector shown below:
 
-**![{"theme":"neutral","source":"classDiagram\n      AppStateCollector <|-- Location\n      AppStateCollector <|-- Heading\n      AppStateCollector <|-- DeviceMotion\n      DeviceMotion <|-- DeviceAccelerometerData\n      DeviceMotion <|-- DeviceGyroData\n      DeviceMotion <|-- DeviceMagnetometerData\n      \n      class AppStateCollector {\n          +NSString application_state\n          +NSString sdk_version\n          +NSArray window_root_view_controller_titles\n          +NSNumber battery_level\n          +NSString battery_state\n          +NSString device_orientation\n          +NSNumber proximity_state\n          +Location location          \n          +Heading heading   \n          +NSArray motion\n          +NSArray raw_accelerometer\n          +NSArray raw_gyro\n          +NSArray raw_magnetometer\n  \n      }\n\n      class Location {\n          +NSNumber latitude\n          +NSNumber longitude\n          +NSNumber altitude\n          +NSNumber horizontal_accuracy\n          +NSNumber vertical_accuracy\n          +NSNumber floor\n          +NSNumber speed\n          +NSNumber course\n      }\n\n     class Heading {\n          +NSNumber time\n          +NSNumber magnetic_heading\n          +NSNumber accuracy\n          +NSNumber true_heading\n          +NSNumber raw_magnetic_field_x\n          +NSNumber raw_magnetic_field_y\n          +NSNumber raw_magnetic_field_z\n      }\n\n      class DeviceMotion {\n          +NSNumber time\n          +NSNumber attitude_roll\n          +NSNumber attitude_pitch\n          +NSNumber attitude_yaw\n          +NSNumber rotation_rate_x\n          +NSNumber rotation_rate_y\n          +NSNumber rotation_rate_z\n          +NSNumber gravity_x\n          +NSNumber gravity_y\n          +NSNumber gravity_z\n          +NSNumber user_acceleration_x\n          +NSNumber user_acceleration_y\n          +NSNumber user_acceleration_z\n          +NSNumber magnetic_field_x\n          +NSNumber magnetic_field_y\n          +NSNumber magnetic_field_z\n          +NSString magnetic_field_calibration_accuracy\n      }\n\n      class DeviceAccelerometerData {\n          +NSNumber time\n          +NSNumber acceleration_x\n          +NSNumber acceleration_y\n          +NSNumber acceleration_z\n      }\n\n      class DeviceGyroData {\n          +NSNumber time\n          +NSNumber rotation_rate_x\n          +NSNumber rotation_rate_y\n          +NSNumber rotation_rate_z\n      }\n\n      class DeviceMagnetometerData {\n          +NSNumber time\n          +NSNumber magnetic_field_x\n          +NSNumber magnetic_field_y\n          +NSNumber magnetic_field_z\n      }"}](https://lh6.googleusercontent.com/MJ_A59ZMCIMWFgeTYWdRN8TXXvTf88p_CwzZSUDVCYLkRKBZsiQUNsSZqu68JdhiECAHyn9yJT9pPBOjZbqOt3uR-km4tjX2st15xrF1yfWEqj1t_wT1gY--onICKu-muzaLNzN7 "mermaid-graph")**
-
+![](Images/AppStateCollectorClass.png)
 
 
 ## 3 Data Models
@@ -79,14 +79,15 @@ The SiftEvent mainly collects the following information:
 - **fields** : {type: string}
   - It indicates custom event fields; both key and value must be string typed. Default value is nil.
 - **iosDeviceProperties** : {type: DevicePropertiesCollector}
-  - The ios device property indicates the device related properties as mentioned in [section 3.2](#32-iosDeviceProperties)
+  - The ios device property indicates the device related properties as mentioned in [section 3.2](#32-deviceProperties)
 - **iosAppState** : {type: AppStateCollector}
-  - The ios app state indicates the application related datas as mentioned in [section 3.3](#33-iosAppState).
+  - The ios app state indicates the application related datas as mentioned in [section 3.3](#33-appState).
 - **metrics** : {type: string}
   - It indicates the internal metrics. Default value is nil.
 
 Class diagram of SiftEvent:
-**![{"theme":"neutral","source":"classDiagram\nclass SiftEvent {\n          +int64_t time\n          +NSString type\n          +NSString path\n          +NSString userId\n          +NSString installationId\n          +NSString fields\n          +NSNumber deviceProperties\n          +AppStateCollector iosAppState          \n          +DevicePropertiesCollector iosDeviceProperties   \n          +NSString metrics\n          +eventWithType(type, path, fields) SiftEvent\n          +isEssentiallyEqualTo(event) BOOL\n          +sanityCheck() BOOL\n          +listRequest(events) NSData\n      }"}](https://lh5.googleusercontent.com/zKeIKOoe3QM8mVAk3nOnDYYBksNo_e2PtpgRi8Mp8ElxKVBVpkTO0iJucRJb-GFvGMuGTVeAsNCDwHxzkKx2AAztmrgJ_NmtZ4d-g1ovgrBFHjiYRIX_jHiKhscDEE3UXHsWcj8C "mermaid-graph")**
+
+![](Images/SiftEventDataModel.png)
 
 ###
 
@@ -128,8 +129,8 @@ The iOSDeviceProperties collects the following information:
   - It indicates if device is simulator or not.
 
 Class diagram of iOSDeviceProperties:
-**![{"theme":"neutral","source":"classDiagram\n class DevicePropertiesCollector {\n          +NSString app_name\n          +NSString app_version\n          +NSString sdk_version\n          +NSString device_name\n          +NSString device_model\n          +NSString device_ifa\n          +NSString device_ifv\n          +NSNumber device_screen_width\n          +NSNumber device_screen_height\n          +NSString device_localized_model\n          +NSString device_system_name\n          +NSString device_system_version\n          +NSString mobile_carrier_name\n          +NSString mobile_iso_country_code\n          +NSString mobile_country_code\n          +NSString mobile_network_code\n          +NSNumber is_simulator\n          +collect()\n      }"}](https://lh3.googleusercontent.com/_chFEudlSQWlDQFTAglbQEf16Gl0CJQ3s5G5hpzpvFIXvxcEbSuCKHlMA97FneoFQmoSDs5iO1QiVdwrH3EPY7VKt09WyZGRL3eU_fT8ErZXAh1wKqjwfR1v9k2Il-y6UOUgPZWQ "mermaid-graph")**
 
+![](Images/DevicePropertiesDataModel.png)
 
 ###
 
@@ -181,7 +182,8 @@ The iOSAppState collects the following informations:
   - Measurements of the Earth's magnetic field relative to the device was collected as shown in the [section 3.9](#39-deviceMagnetometerData).
 
 Class diagram of iOSAppState:
-**![{"theme":"neutral","source":"classDiagram\nclass AppStateCollector {\n          +NSString application_state\n          +NSString sdk_version\n          +NSArray window_root_view_controller_titles\n          +NSNumber battery_level\n          +NSString battery_state\n          +NSString device_orientation\n          +NSNumber proximity_state\n          +NSDictionary location          \n          +NSDictionary heading  \n          +NSArray network_addresses \n          +NSArray motion\n          +NSArray raw_accelerometer\n          +NSArray raw_gyro\n          +NSArray raw_magnetometer\n      }"}](https://lh3.googleusercontent.com/HP-2njcgFl2GlZqJcRQGNlNsZR_BKyAusmMpUWxNnd53rv74fxHTqEhmKHJbL-jtNdiHRw50cp6WVp7MYSob5ysL2vAD_lDQTeycxicF_cVp60Bv2NWswVPzsGKw0m7oTa5fYFNu "mermaid-graph")**
+
+![](Images/AppStateDataModel.png)
 
 ###
 
@@ -209,7 +211,8 @@ The location consist of the following information:
   - Indicates the accuracy of the course value, measured in degrees.
 
 Class diagram for Location:
-**![{"theme":"neutral","source":"classDiagram\nclass Location {\n          +NSNumber latitude\n          +NSNumber longitude\n          +NSNumber altitude\n          +NSNumber horizontal_accuracy\n          +NSNumber vertical_accuracy\n          +NSNumber floor\n          +NSNumber speed\n          +NSNumber course\n          +disallowCollectingLocationData() BOOL\n          +setDisallowCollectingLocationData:(BOOL)\n          +canCollectLocationData() BOOL\n      }"}](https://lh4.googleusercontent.com/Tz-Vh5_oYbtLY_EkxUQcrtuRC1rrBuJV9pzbw4CR8n6eTcET6YUhxAq7ROfflDYLQdyh9_FqefTb3YzHEIxdmNx6TvYs9wDI7wdBV8ZeMOAEMJRRS6fEER837RVCEx9Pu-5KNP0I "mermaid-graph")**
+
+![](Images/LocationDataModel.png)
 
 ###
 
@@ -233,7 +236,8 @@ The azimuth (orientation) of the user’s device, relative to true or magnetic n
   - The geomagnetic data (measured in microteslas) for the z-axis
 
 Class diagram of Heading:
-**![{"theme":"neutral","source":"classDiagram\n class Heading {\n          +NSNumber time\n          +NSNumber magnetic_heading\n          +NSNumber accuracy\n          +NSNumber true_heading\n          +NSNumber raw_magnetic_field_x\n          +NSNumber raw_magnetic_field_y\n          +NSNumber raw_magnetic_field_z\n      }"}](https://lh4.googleusercontent.com/7LoVILiiKQosYCa3iigjFRiODKpcRr0AW-cyAQheFcf9irVs7wgR2Gvu8FupP0TtG3sHt-4YqOm6jWLG9VeB1qKw69XizOLfYUBxHTXlzkgH_UWPeprOHEd5ZqhgkcGtgqhI7VNd "mermaid-graph")**
+
+![](Images/HeadingDataModel.png)
 
 ###
 
@@ -277,7 +281,8 @@ The iosDeviceMotion mainly collects the following information:
   - It Indicates the calibration accuracy of a magnetic field estimate.
 
 Class diagram of DeviceMotion:
-**![{"theme":"neutral","source":"classDiagram\nclass DeviceMotion {\n          +NSNumber time\n          +NSNumber attitude_roll\n          +NSNumber attitude_pitch\n          +NSNumber attitude_yaw\n          +NSNumber rotation_rate_x\n          +NSNumber rotation_rate_y\n          +NSNumber rotation_rate_z\n          +NSNumber gravity_x\n          +NSNumber gravity_y\n          +NSNumber gravity_z\n          +NSNumber user_acceleration_x\n          +NSNumber user_acceleration_y\n          +NSNumber user_acceleration_z\n          +NSNumber magnetic_field_x\n          +NSNumber magnetic_field_y\n          +NSNumber magnetic_field_z\n          +NSString magnetic_field_calibration_accuracy\n          +allowUsingMotionSensors() BOOL\n          \n          +setAllowUsingMotionSensors:(allowUsingMotionSensors)\n          +updateDeviceMotion:(data)\n          +startMotionSensors()\n          +stopMotionSensors()\n      }"}](https://lh4.googleusercontent.com/tB9F_E845f2d3nQyCummYPRMzOgYuq2e5N1votD4iHCDAikK-yoleMG4ObB1huFRo4oiir6WdkETFXrD6Jw6K8IBUNJhK1rp0dLk-JL0B9tHkCf9yvAUBCrkNhqpBFJVsSEX16-z "mermaid-graph")**
+
+![](Images/DeviceMotionDataModel.png)
 
 ###
 
@@ -295,7 +300,8 @@ The accelerometer data mainly collects the following information:
   - The acceleration that the user is giving to the device for the z-axis.
 
 Class diagram of DeviceAccelerometerData:
-**![{"theme":"neutral","source":"classDiagram\nclass DeviceAccelerometerData {\n          +NSNumber time\n          +NSNumber acceleration_x\n          +NSNumber acceleration_y\n          +NSNumber acceleration_z\n          +updateAccelerometerData:(data)\n      }"}](https://lh6.googleusercontent.com/xPqBJAZ1Eeno4xpmRU8HO2zmv7jTZgjY-HIvGfwhPnnZLV13J-0mr1a8AOaIvZ8e5lzkIU11G9nmX3LLSTFqbvBazkYKNmwaJqC728JnT1ztr_JKlz4zGoQFm04sE4zyFpKenAcp "mermaid-graph")**
+
+![](Images/DeviceAccelerometerDataModel.png)
 
 ###
 
@@ -313,7 +319,8 @@ The gyro data mainly collects the following information:
   - The rotation rate of the device for the z-axis.
 
 Class diagram of DeviceGyroData:
-**![{"theme":"neutral","source":"classDiagram\nclass DeviceGyroData {\n          +NSNumber time\n          +NSNumber rotation_rate_x\n          +NSNumber rotation_rate_y\n          +NSNumber rotation_rate_z\n\t  +updateGyroData:(data)\n      }"}](https://lh4.googleusercontent.com/_jacwvk5ktMxpcFtN2uMyUVx2q4rinukv6ItB21DPx69J83Y67PrMzroN6vwQnfa00j2ZmJK1fYjF4ITOYoHOZlYO58O78WDgHGuty610M0SVtu2-I2HxTixzNO_TyjLEZyPKRo6 "mermaid-graph")**
+
+![](Images/DeviceGyroDataModel.png)
 
 ###
 
@@ -331,8 +338,8 @@ The magnetometer data mainly collects the following information:
   - Returns the magnetic field vector with respect to the device for the z-axis.
 
 Class diagram of DeviceMagnetometerData:
-**![{"theme":"neutral","source":"classDiagram\nclass DeviceMagnetometerData {\n          +NSNumber time\n          +NSNumber magnetic_field_x\n          +NSNumber magnetic_field_y\n          +NSNumber magnetic_field_z\n\t  +updateMagnetometerData:(data)\n      }"}](https://lh4.googleusercontent.com/HIVt3ws3XizhGi3RDtOOUeECc1hDVBKrwizye2Fcr5DjOsRYEiQnNUrbN-Q2wXTCyV8bkoLSffTLJTzrZ4NVOrjlqnqNlgFJpA3G8qKXZNHR_cmTItzXNH3iGH2yzjkrTQO2oZ6w "mermaid-graph")**
 
+![](Images/DeviceMagnetometerDataModel.png)
 
 ## 4 Modules
 
@@ -395,12 +402,7 @@ Following are the static API to interact with SDK:
 - **upload**(_force_)
   - It will upload the collects events to Sift Server. If force is YES, then won't wait for queue.readyForUpload to be true.
 
-- **archiveKeys**()
-
 ### 4.2 SiftEvent
-It provides the implementation of interfaces like _UserIdProvider_ and _UploadRequester_ in Queue and _ConfigProvider_ in Uploader.
-These tasks runon a separate executor, so that if any largeamounts of data does not affect the main thread.
-To execute those task it provide the following instance API:
 
 This class is the implementation of manage Sift Events that collected from app state collector and device properties collector. 
 SiftEvent mainly handles the following task:
@@ -503,5 +505,6 @@ This class have the following methods:
 
 ## 5 Flow Chart
 
-**![{"theme":"neutral","source":"graph TD\n\n    A[Sift] --> B(App State Collector)\n    A --> C(Device Property Collector)\n\n    C & B -->|Collected Events| D[Task Manager]\n    \n    D -->|Add Event| E[[Device Property Queue ]] & F[[App State Queue]]\n\n    E & F -->|Request upload| G([Uploader])\n    \n\n    G -.->|Upload Event| H((Sift Server fa:fa-server))"}](https://lh5.googleusercontent.com/tWoUAHHEIXY1Jggf3bAF0vLS9NOgeoatB2gHlDjWuxH2gSg8lEZ4je8ba6w_Fkf0geROMpIB75rzmkHwNrW7Wx1GQPUgvCEJjLIPoBjWlTKGc_gmwIKWgD-A5_YwpJDYbbWm7VRC "mermaid-graph")**
+![](Images/RevisedFlowChart.png)
+
 

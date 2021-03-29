@@ -1,49 +1,79 @@
 # Change Log
 
-## [2.0.2] - 2020-11-07
+## [2.0.2] - 2020-12-07
+### Added
+- Fixed warning and Error related to MacCatalyst
 - Fix Security Concern from converting Strings to Signed Integers for ipv6
+- Create Swift package manager
 
-## [2.0.1] - 2020-03-04
+### Changed
+- Upgrade SDK target deployment version
+- Improved stability and test coverage 
+
+### Removed
+- Remove all warnings which gets generated during build
+
+## [2.0.1] - 2020-03-10
+### Removed
 - Remove all warnings which gets generated during build
 
 ## [2.0.0] - 2020-02-25
+### Changed
+- Update README for sift rebrand 
 - Rename classes to remove SF reserve keyword from their names
 
 ## [1.0.1] - 2018-07-17
+### Removed
 - Removes fork() check
 
 ## [1.0.0] - 2018-05-24
-- Adds unsetUserId
+### Added
+- Adds unsetUserId and fix userId NPE
 
 ## [0.9.11] - 2017-12-11
+### Added
 - Better retry mechanics for errors
 
 ## [0.9.10] - 2017-09-07
+### Added
 - Fixes iOS 11 crasher
 
 ## [0.9.9] - 2017-08-17
+### Added
 - Excludes NaN and Infinity values from JSON body
 
 ## [0.9.8] – 2017-07-17
+### Added
 - Adds sdk_version to app state events
+
+### Changed
 - Query UIApplication on UI thread
 
 ## [0.9.7] – 2017-06-05
+### Changed
 - Updates event-batching logic
 
 ## [0.9.6] – 2017-05-09
+### Added
 - Adds suspend / resume counter for stability
 
 ## [0.9.5] – 2017-05-02
+### Changed
 - Various stability improvements (KVO and uploader)
 
 ## [0.9.4] - 2017-03-07
+### Added
+- Add more defensive checks before deferencing from batches
+
+### Changed
 - Decreases TTL and batch size for device properties collection
 
 ## [0.9.3] - 2017-01-26
-- Don't include AdSupport headers for IFA
+### Removed
+- Remove AdSupport headers for IFA
 
 ## [0.9.2] - 2017-01-20
+### Changed
 - Reduces backup aggressiveness to eliminate potential race in background thread
 
 ## [0.9.1] - 2016-11-23

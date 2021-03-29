@@ -1,4 +1,4 @@
-// swift-tools-version:5.3
+// swift-tools-version:5.1
 // The swift-tools-version declares the minimum version of Swift required to build this package.
 
 import PackageDescription
@@ -6,10 +6,10 @@ import PackageDescription
 let package = Package(
     name: "sift-ios",
     products: [
-        // Products define the executables and libraries a package produces, and make them visible to other packages.
+        // Products define the executables and libraries a package produces, and make them visible to other packages.-
         .library(
             name: "sift-ios",
-            targets: ["sift-ios"]),
+            targets: ["Sift", "sift-ios"]),
     ],
     dependencies: [
         // Dependencies declare other packages that this package depends on.
@@ -20,7 +20,13 @@ let package = Package(
         // Targets can depend on other targets in this package, and on products in packages this package depends on.
         .target(
             name: "sift-ios",
-            dependencies: []),
+            dependencies: ["Sift"]),
+        .target(
+            name: "Sift",
+            dependencies: [],
+            path: "Sift",
+            exclude: ["Info.plist", "README.md"],
+            publicHeadersPath: "."),
         .testTarget(
             name: "sift-iosTests",
             dependencies: ["sift-ios"]),

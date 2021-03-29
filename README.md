@@ -7,8 +7,7 @@ project (for Swift projects the steps are pretty similar).
 
 #### Installing the library
 
-You may get the SDK into your iOS project through either [CocoaPods](http://cocoapods.org/)
-or [Carthage](https://github.com/Carthage/Carthage).
+You may get the SDK into your iOS project through  [CocoaPods](http://cocoapods.org/), [Carthage](https://github.com/Carthage/Carthage) and [Swift Package Manager](https://github.com/apple/swift-package-manager)
 
 Through CocoaPods:
 
@@ -23,6 +22,48 @@ Through Carthage:
   uses the latest version).
 
 * Run `carthage update`.
+
+Through Swift Package Manager:
+
+* Inside the root project folder, ​create Swift package with type executable: `swift package init --type executable` .
+This will create initial files and folders including hidden​ `​.gitignore​` ​and `.build/​`.
+
+* Add dependencies in Package.swift: ​`open Package.swift`.
+  
+  ```
+    // swift-tools-version:5.1
+    // The swift-tools-version declares the minimum version of Swift required to build this package.
+    import​ ​PackageDescription
+    
+    let package = Package(
+        name: "exampleApp",
+        dependencies: [
+            // Dependencies declare other packages that this package depends on.
+            ​// .package(url: /* package url */, from: "1.0.0"),
+            .​package​(​url​: "https://github.com/SiftScience/sift-ios.git"​, ​from​: "2.0.2"​)
+        ],
+        ​targets​: [
+            ​// Targets are the basic building blocks of a package. A target can define a module or a test suite.
+            ​// Targets can depend on other targets in this package, and on products in packages which this package depends on.
+            ​.target(
+                name: "exampleApp",
+                dependencies: ["sift-ios"]), // Don’t forget to add sift-ios in target dependencies.
+            .testTarget(
+                name: "exampleAppTests",
+                dependencies: ["exampleApp"]),
+        ] 
+    )
+  ```
+* Save `Package.swift` file, Xcode will build the package.swift or else ​`swift package generate-xcodeproj`
+(Xcode project is generated and excluded from git by default). 
+You can also use your xcconfig file: ​`swift package generate-xcodeproj --xcconfig-overrides Config.xcconfig`
+
+Update for Xcode 11
+
+* For Xcode 11 no need to do the above steps, you can directly open the File > Swift Packages > Add Package Dependency
+* Paste the repository's URL [https://github.com/SiftScience/sift-ios.git​](https://github.com/SiftScience/sift-ios)  into the field
+above then click "next".
+* Xcode will walk you through the rest of the steps. You can `import sift_ios`.
 
 Recommended steps:
 

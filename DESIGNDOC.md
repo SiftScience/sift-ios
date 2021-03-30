@@ -25,7 +25,9 @@
 * [4.1 SIFT](#41-sift)
 * [4.2 SIFT EVENT](#42-siftEvent)
 * [4.3 SIFT QUEUE](#43-siftQueue) 
-* [4.4 SIFT UPLOADER ](#43-siftUploader) 
+* [4.4 SIFT UPLOADER ](#44-siftUploader) 
+* [4.5 SIFT DEVICE PROPERTIES ](#45-siftDeviceProperties) 
+* [4.6 SIFT APP STATE ](#46-siftAppState) 
 
 **[5 Flow Chart](#5-flow-chart)**
 
@@ -501,7 +503,55 @@ This class have the following methods:
   - This method will unarchive the content from the given path. And also assign values to batches and numRejects  from unarchived dictionary detail.
 - **upload**(_events_)
   - It will upload the collects events to Sift Server.
+  
+  ### 4.5 SiftDeviceProperties
 
+  This module collect the device proerties details and assign it to the sift event.
+
+  This class have the following methods:
+  - **collect**()
+    -  Collect device properties through its own queue.
+ 
+ The DeviceProperties queue is configured as:
+ - _acceptSameEventAfter: **3600**_ // 1 hour
+ - _uploadWhenMoreThan: **0**_
+
+ This class holds the device related properties with the following attributes as mentioned in [section 3.2](#32-deviceProperties).
+
+  ### 4.6 SiftAppState
+  This module collect the app state details and assign it to the sift event. App state collects the location, haeding, device motion, accelerometer data, gyro data amd magnetometer data details.
+
+   This class have the following methods:
+   - **archive**()
+     - This method write the queue content to specified path in NSMutableDictionary format. This dictionary will have bucket and lastCollectedAt details.
+   - **unarchive**()
+     - This method will unarchive the content from the given path. And also assign values to bucket and lastCollectedAt from unarchived dictionary detail.
+   - **updateDeviceMotion**(_data_)
+     -  This method will send the CMDeviceMotion data you have got.
+   - **updateAccelerometerData**(_data_)
+     -  This method will send the CMAccelerometerData data you have got.
+   - **updateGyroData**(_data_)
+     -  This method will send the CMGyroData data you have got.
+   - **updateMagnetometerData**(_data_)
+     -  This method will send the CMMagnetometerData data you have got.
+   - **requestCollectionWithTitle**(_title_)
+     -  Request to collect app state and this mrequest might be ignored due to rate limiting.
+   - **checkAndCollectWhenNoneRecently**(_now_)
+     -  This method will collect app state if there was no collection in the last SF_MAX_COLLECTION_PERIOD of time and app is active.
+   - **collectWithTitle**(_title_, _now_)
+     -  This method will collect app state with title. Here `title` is String and `now` is SFTimestamp.
+   - **canCollectLocationData**()
+     -  This method will return YES if can collect Location data.
+   - **disallowCollectingLocationData**()
+     -  This method will return disallowCollectingLocationData Bool value.
+   - **allowUsingMotionSensors**()
+     - If you intend to use motion sensors occasionally, please call the following methods to send us motion data.
+         
+  The AppState queue is configured as:
+  - _uploadWhenMoreThan: **32**_ // Unit: number of events.
+  - _uploadWhenOlderThan: **60**_  // 1 minute.
+
+This class holds the application related datas with the following attributes as mentioned in [section 3.3](#33-appState).
 
 ## 5 Flow Chart
 

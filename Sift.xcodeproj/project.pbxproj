@@ -13,7 +13,6 @@
 		713D859A1D627E9F0011D5FE /* SiftIosDeviceProperties.m in Sources */ = {isa = PBXBuildFile; fileRef = 713D85991D627E9F0011D5FE /* SiftIosDeviceProperties.m */; };
 		713D859B1D627EA60011D5FE /* SiftIosDeviceProperties.h in Headers */ = {isa = PBXBuildFile; fileRef = 713D85981D627E860011D5FE /* SiftIosDeviceProperties.h */; };
 		713D859D1D6CF69E0011D5FE /* SiftIosDevicePropertiesTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 713D859C1D6CF69E0011D5FE /* SiftIosDevicePropertiesTests.m */; };
-		713D85C11D874ED40011D5FE /* SiftHtDictionaryTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 713D85C01D874ED40011D5FE /* SiftHtDictionaryTests.m */; };
 		715AB3EB1D9DBBFB00771402 /* SiftCompatibility.h in Headers */ = {isa = PBXBuildFile; fileRef = 715AB3EA1D9DBBFB00771402 /* SiftCompatibility.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		7168EE051C7B977500A88245 /* Sift.h in Headers */ = {isa = PBXBuildFile; fileRef = 7168EE041C7B977500A88245 /* Sift.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		7168EE0C1C7B977500A88245 /* Sift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7168EE011C7B977500A88245 /* Sift.framework */; };
@@ -68,7 +67,6 @@
 		713D85981D627E860011D5FE /* SiftIosDeviceProperties.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SiftIosDeviceProperties.h; sourceTree = "<group>"; };
 		713D85991D627E9F0011D5FE /* SiftIosDeviceProperties.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SiftIosDeviceProperties.m; sourceTree = "<group>"; };
 		713D859C1D6CF69E0011D5FE /* SiftIosDevicePropertiesTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SiftIosDevicePropertiesTests.m; sourceTree = "<group>"; };
-		713D85C01D874ED40011D5FE /* SiftHtDictionaryTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SiftHtDictionaryTests.m; sourceTree = "<group>"; };
 		715AB3EA1D9DBBFB00771402 /* SiftCompatibility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SiftCompatibility.h; sourceTree = "<group>"; };
 		7168EE011C7B977500A88245 /* Sift.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Sift.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		7168EE041C7B977500A88245 /* Sift.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Sift.h; sourceTree = "<group>"; };
@@ -191,7 +189,6 @@
 				7168EE121C7B977500A88245 /* Info.plist */,
 				71E15CF71D95C90000A0305C /* SiftCircularBufferTests.m */,
 				7168EE1B1C7E61E900A88245 /* SiftEventTests.m */,
-				713D85C01D874ED40011D5FE /* SiftHtDictionaryTests.m */,
 				71B1B5901D8B31ED00EA9B17 /* SiftIosAppStateTests.m */,
 				713D859C1D6CF69E0011D5FE /* SiftIosDevicePropertiesTests.m */,
 				7168EE231C7F99AF00A88245 /* SiftQueueTests.m */,
@@ -358,7 +355,6 @@
 				7168EE1C1C7E61E900A88245 /* SiftEventTests.m in Sources */,
 				713D859D1D6CF69E0011D5FE /* SiftIosDevicePropertiesTests.m in Sources */,
 				7168EE241C7F99AF00A88245 /* SiftQueueTests.m in Sources */,
-				713D85C11D874ED40011D5FE /* SiftHtDictionaryTests.m in Sources */,
 				7168EE421C88C91900A88245 /* SiftUploaderTests.m in Sources */,
 				71B1B5911D8B31ED00EA9B17 /* SiftIosAppStateTests.m in Sources */,
 			);

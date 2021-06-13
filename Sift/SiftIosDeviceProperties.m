@@ -17,105 +17,8 @@
 
 #import "SiftIosDeviceProperties.h"
 
-SiftHtDictionary *SFMakeEmptyIosDeviceProperties() {
-    static SF_GENERICS(NSMutableDictionary, NSString *, Class) *entryTypes;
-    static dispatch_once_t once;
-    dispatch_once(&once, ^{
-        entryTypes = [NSMutableDictionary new];
-#define ENTRY_TYPE(key_, type_) ([entryTypes setObject:(type_) forKey:(key_)])
-
-        ENTRY_TYPE(@"app_name",          NSString.class);
-        ENTRY_TYPE(@"app_version",       NSString.class);
-        ENTRY_TYPE(@"app_version_short", NSString.class);
-        ENTRY_TYPE(@"sdk_version",       NSString.class);
-
-        ENTRY_TYPE(@"device_name", NSString.class);
-
-        ENTRY_TYPE(@"device_ifa", NSString.class);
-        ENTRY_TYPE(@"device_ifv", NSString.class);
-
-        ENTRY_TYPE(@"device_screen_width",  NSNumber.class);
-        ENTRY_TYPE(@"device_screen_height", NSNumber.class);
-
-        ENTRY_TYPE(@"device_model",           NSString.class);
-        ENTRY_TYPE(@"device_localized_model", NSString.class);
-
-        ENTRY_TYPE(@"device_system_name",     NSString.class);
-        ENTRY_TYPE(@"device_system_version",  NSString.class);
-
-        ENTRY_TYPE(@"device_hardware_machine", NSString.class);
-        ENTRY_TYPE(@"device_hardware_model", NSString.class);
-
-        ENTRY_TYPE(@"device_package_count", NSNumber.class);
-
-        ENTRY_TYPE(@"device_memory_size",  NSNumber.class);
-        ENTRY_TYPE(@"device_page_size",    NSNumber.class);
-        ENTRY_TYPE(@"device_tb_frequency", NSNumber.class);
-
-        ENTRY_TYPE(@"device_kernel_uuid",              NSString.class);
-        ENTRY_TYPE(@"device_kernel_version",           NSString.class);
-        ENTRY_TYPE(@"device_kernel_boot_session_uuid", NSString.class);
-        ENTRY_TYPE(@"device_kernel_boot_signature",    NSString.class);
-
-        ENTRY_TYPE(@"device_host_id",   NSNumber.class);
-        ENTRY_TYPE(@"device_host_name", NSString.class);
-
-        ENTRY_TYPE(@"device_os_type",        NSString.class);
-        ENTRY_TYPE(@"device_os_release",     NSString.class);
-        ENTRY_TYPE(@"device_os_revision",    NSNumber.class);
-        ENTRY_TYPE(@"device_posix1_version", NSString.class);
-        ENTRY_TYPE(@"device_posix2_version", NSString.class);
-
-        ENTRY_TYPE(@"mobile_carrier_name",     NSString.class);
-        ENTRY_TYPE(@"mobile_iso_country_code", NSString.class);
-        ENTRY_TYPE(@"mobile_country_code",     NSString.class);
-        ENTRY_TYPE(@"mobile_network_code",     NSString.class);
-
-        ENTRY_TYPE(@"cpu_family",     NSNumber.class);
-        ENTRY_TYPE(@"cpu_type",       NSNumber.class);
-        ENTRY_TYPE(@"cpu_subtype",    NSNumber.class);
-        ENTRY_TYPE(@"cpu_byte_order", NSString.class);
-
-        ENTRY_TYPE(@"cpu_64bit_capable", NSNumber.class);
-        ENTRY_TYPE(@"cpu_has_fp",        NSNumber.class);
-
-        ENTRY_TYPE(@"cpu_count",              NSNumber.class);
-        ENTRY_TYPE(@"cpu_physical_cpu_count", NSNumber.class);
-        ENTRY_TYPE(@"cpu_physical_cpu_max",   NSNumber.class);
-        ENTRY_TYPE(@"cpu_logical_cpu_count",  NSNumber.class);
-        ENTRY_TYPE(@"cpu_logical_cpu_max",    NSNumber.class);
-        ENTRY_TYPE(@"cpu_active_cpu_count",   NSNumber.class);
-
-        ENTRY_TYPE(@"cpu_frequency",     NSNumber.class);
-        ENTRY_TYPE(@"cpu_frequency_min",  NSNumber.class);
-        ENTRY_TYPE(@"cpu_frequency_max", NSNumber.class);
-
-        ENTRY_TYPE(@"cache_line_size",      NSNumber.class);
-        ENTRY_TYPE(@"cache_l1_dcache_size", NSNumber.class);
-        ENTRY_TYPE(@"cache_l1_icache_size", NSNumber.class);
-        ENTRY_TYPE(@"cache_l2_cache_size",  NSNumber.class);
-        ENTRY_TYPE(@"cache_l3_cache_size",  NSNumber.class);
-
-        ENTRY_TYPE(@"bus_frequency",     NSNumber.class);
-        ENTRY_TYPE(@"bus_frequency_min", NSNumber.class);
-        ENTRY_TYPE(@"bus_frequency_max", NSNumber.class);
-
-        ENTRY_TYPE(@"is_simulator", NSNumber.class);
-
-        ENTRY_TYPE(@"evidence_files_present", NSArray.class);
-
-        ENTRY_TYPE(@"evidence_directories_writable",  NSArray.class);
-        ENTRY_TYPE(@"evidence_directories_symlinked", NSArray.class);
-
-        ENTRY_TYPE(@"evidence_syscalls_succeeded", NSArray.class);
-
-        ENTRY_TYPE(@"evidence_url_schemes_openable", NSArray.class);
-
-        ENTRY_TYPE(@"evidence_dylds_present", NSArray.class);
-
-#undef ENTRY_TYPE
-    });
-    return [[SiftHtDictionary alloc] initWithEntryTypes:entryTypes];
+NSMutableDictionary *SFMakeEmptyIosDeviceProperties() {
+    return [NSMutableDictionary new];
 }
 
 #pragma mark - Device properties collection.
@@ -128,22 +31,21 @@ static void rot13(char *p);
 
 static BOOL SFIsUrlSchemeWhitelisted(NSString *targetScheme);
 
-SiftHtDictionary *SFCollectIosDeviceProperties() {
-    SiftHtDictionary *iosDeviceProperties = SFMakeEmptyIosDeviceProperties();
+NSMutableDictionary *SFCollectIosDeviceProperties() {
+    NSMutableDictionary *iosDeviceProperties = SFMakeEmptyIosDeviceProperties();
 
     NSDictionary *infoDictionary = [[NSBundle mainBundle] infoDictionary];
-    [iosDeviceProperties setEntry:@"app_name" value:[infoDictionary objectForKey:(NSString *)kCFBundleNameKey]];
-    [iosDeviceProperties setEntry:@"app_version" value:[infoDictionary objectForKey:(NSString *)kCFBundleVersionKey]];
-    [iosDeviceProperties setEntry:@"app_version_short" value:[infoDictionary objectForKey:@"CFBundleShortVersionString"]];
-    [iosDeviceProperties setEntry:@"sdk_version" value:[Sift sharedInstance].sdkVersion];
+    [iosDeviceProperties setValue:[infoDictionary objectForKey:(NSString *)kCFBundleNameKey] forKey:@"app_name"];
+    [iosDeviceProperties setValue:[infoDictionary objectForKey:(NSString *)kCFBundleVersionKey] forKey:@"app_version"];
+    [iosDeviceProperties setValue:[infoDictionary objectForKey:@"CFBundleShortVersionString"] forKey:@"app_version_short"];
+    [iosDeviceProperties setValue:[Sift sharedInstance].sdkVersion forKey:@"sdk_version"];
 
     UIDevice *device = [UIDevice currentDevice];
-    [iosDeviceProperties setEntry:@"device_name" value:device.name];
-    [iosDeviceProperties setEntry:@"device_model" value:device.model];
-    [iosDeviceProperties setEntry:@"device_localized_model" value:device.localizedModel];
-    [iosDeviceProperties setEntry:@"device_system_name" value:device.systemName];
-    [iosDeviceProperties setEntry:@"device_system_version" value:device.systemVersion];
-
+    [iosDeviceProperties setValue:device.name forKey:@"device_name"];
+    [iosDeviceProperties setValue:device.model forKey:@"device_model"];
+    [iosDeviceProperties setValue:device.localizedModel forKey:@"device_localized_model"];
+    [iosDeviceProperties setValue:device.systemName forKey:@"device_system_name"];
+    [iosDeviceProperties setValue:device.systemVersion forKey:@"device_system_version"];
     
     NSUUID *ifa = nil;
     Class ASIdentifierManagerClass = NSClassFromString(@"ASIdentifierManager");
@@ -159,34 +61,34 @@ SiftHtDictionary *SFCollectIosDeviceProperties() {
     }
     
     if (ifa) {  // IFA could be nil.
-        [iosDeviceProperties setEntry:@"device_ifa" value:ifa.UUIDString];
+        [iosDeviceProperties setValue:ifa.UUIDString forKey:@"device_ifa"];
     }
     
     NSUUID *ifv = device.identifierForVendor;
     if (ifv) {  // IFV could be nil.
-        [iosDeviceProperties setEntry:@"device_ifv" value:ifv.UUIDString];
+        [iosDeviceProperties setValue:ifv.UUIDString forKey:@"device_ifv"];
     }
 
     UIScreen *screen = [UIScreen mainScreen];
-    [iosDeviceProperties setEntry:@"device_screen_width" value:[NSNumber numberWithInt:(screen.fixedCoordinateSpace.bounds.size.width * screen.scale)]];
-    [iosDeviceProperties setEntry:@"device_screen_height" value:[NSNumber numberWithInt:(screen.fixedCoordinateSpace.bounds.size.height * screen.scale)]];
+    [iosDeviceProperties setValue:[NSNumber numberWithInt:(screen.fixedCoordinateSpace.bounds.size.width * screen.scale)] forKey:@"device_screen_width"];
+         [iosDeviceProperties setValue:[NSNumber numberWithInt:(screen.fixedCoordinateSpace.bounds.size.height * screen.scale)] forKey:@"device_screen_height"];
 
 #if !TARGET_OS_MACCATALYST
     CTTelephonyNetworkInfo *networkInfo = [CTTelephonyNetworkInfo new];
     CTCarrier *carrier = [networkInfo subscriberCellularProvider];
     if (carrier) {
-        [iosDeviceProperties setEntry:@"mobile_carrier_name" value:carrier.carrierName];
-        [iosDeviceProperties setEntry:@"mobile_iso_country_code" value:carrier.isoCountryCode];
-        [iosDeviceProperties setEntry:@"mobile_country_code" value:carrier.mobileCountryCode];
-        [iosDeviceProperties setEntry:@"mobile_network_code" value:carrier.mobileNetworkCode];
+        [iosDeviceProperties setValue:carrier.carrierName forKey:@"mobile_carrier_name"];
+        [iosDeviceProperties setValue:carrier.isoCountryCode forKey:@"mobile_iso_country_code"];
+        [iosDeviceProperties setValue:carrier.mobileCountryCode forKey:@"mobile_country_code"];
+        [iosDeviceProperties setValue:carrier.mobileNetworkCode forKey:@"mobile_network_code"];
     }
 #endif
 
     // Simulator detection
 #if TARGET_OS_SIMULATOR
-    [iosDeviceProperties setEntry:@"is_simulator" value:[NSNumber numberWithBool:YES]];
+    [iosDeviceProperties setValue:[NSNumber numberWithBool:YES] forKey:@"is_simulator"];
 #else
-    [iosDeviceProperties setEntry:@"is_simulator" value:[NSNumber numberWithBool:NO]];
+    [iosDeviceProperties setValue:[NSNumber numberWithBool:NO] forKey:@"is_simulator"];
 #endif
 
     enum SysctlType {
@@ -287,7 +189,7 @@ SiftHtDictionary *SFCollectIosDeviceProperties() {
                 SF_DEBUG(@"Unknown type: %d", spec->sysctl_type);
         }
         if (value) {
-            [iosDeviceProperties setEntry:[NSString stringWithUTF8String:spec->entry_key] value:value];
+            [iosDeviceProperties setValue:value forKey:[NSString stringWithUTF8String:spec->entry_key]];
         }
     }
 
@@ -358,7 +260,7 @@ SiftHtDictionary *SFCollectIosDeviceProperties() {
             [filesPresent addObject:path];
         }
     }
-    [iosDeviceProperties setEntry:@"evidence_files_present" value:filesPresent];
+    [iosDeviceProperties setValue:filesPresent forKey:@"evidence_files_present"];
 
     // Dirs that should not be writable nor symlinks. (ROT-13 encoded)
     char dirs[] = \
@@ -390,8 +292,8 @@ SiftHtDictionary *SFCollectIosDeviceProperties() {
             }
         }
     }
-    [iosDeviceProperties setEntry:@"evidence_directories_symlinked" value:dirsSymlinked];
-    [iosDeviceProperties setEntry:@"evidence_directories_writable" value:dirsWritable];
+    [iosDeviceProperties setValue:dirsSymlinked forKey:@"evidence_directories_symlinked"];
+    [iosDeviceProperties setValue:dirsWritable forKey:@"evidence_directories_writable"];
 
     // 2. dyld detection.
 
@@ -410,7 +312,7 @@ SiftHtDictionary *SFCollectIosDeviceProperties() {
         }
     }
 
-    [iosDeviceProperties setEntry:@"evidence_dylds_present" value:dyldsPresent];
+    [iosDeviceProperties setValue:dyldsPresent forKey:@"evidence_dylds_present"];
 
     // 3. Cydia URL scheme detection.
 
@@ -444,7 +346,7 @@ SiftHtDictionary *SFCollectIosDeviceProperties() {
     });
 
     if (urlSchemesOpenable) {
-        [iosDeviceProperties setEntry:@"evidence_url_schemes_openable" value:urlSchemesOpenable];
+        [iosDeviceProperties setValue:urlSchemesOpenable forKey:@"evidence_url_schemes_openable"];
     }
 
     return iosDeviceProperties;

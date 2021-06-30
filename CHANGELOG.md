@@ -1,5 +1,20 @@
 # Change Log
 
+## [2.0.3] - 2021-06-29
+### Added
+Create PROPOSETECHNICIALDESIGNDOC.md
+Add modules to DESIGNDOC.md
+Add images from /Images folder to Git
+Create DESIGNDOC.md
+Create PROPOSETECHNICIALDESIGNDOC.md
+
+### Changed
+Swift package manager usability
+Changes in DESIGNDOC.md
+Update package and sift_ios file
+
+### Removed
+
 ## [2.0.2] - 2020-12-07
 ### Added
 - Fixed warning and Error related to MacCatalyst

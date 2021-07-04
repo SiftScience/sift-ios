@@ -14,6 +14,7 @@
 #import "SiftTokenBucket.h"
 #import "SiftUtils.h"
 #import "Sift.h"
+#import "TaskManager.h"
 
 #import "SiftIosAppStateCollector.h"
 #import "SiftIosAppStateCollector+Private.h"
@@ -36,6 +37,7 @@ static const NSUInteger     SF_MOTION_SENSOR_NUM_READINGS = 10;  // Keep at most
 static const NSTimeInterval SF_MOTION_SENSOR_INTERVAL = 0.5;  // Unit: second.
 
 @implementation SiftIosAppStateCollector {
+    TaskManager *_taskManager;
     // Use serial queue as an alternative to locking.
     dispatch_queue_t _serial;
     dispatch_source_t _source;
@@ -61,6 +63,7 @@ static const NSTimeInterval SF_MOTION_SENSOR_INTERVAL = 0.5;  // Unit: second.
 - (instancetype)initWithArchivePath:(NSString *)archivePath {
     self = [super init];
     if (self) {
+        _taskManager = [[TaskManager alloc] init];
         _serial = dispatch_queue_create("com.sift.SFIosAppStateCollector", DISPATCH_QUEUE_SERIAL);
         _archivePath = archivePath;
         _locationManager = [CLLocationManager new];
@@ -120,12 +123,12 @@ static const NSTimeInterval SF_MOTION_SENSOR_INTERVAL = 0.5;  // Unit: second.
 - (void)didEnterBackground {
     // Suspend serial queue and stop motion sensors (if we have started them).
     // We will not re-start motion sensors when we are back to the foreground.
-    dispatch_async(_serial, ^{
+    [_taskManager submitWithTask:^{
         [self stopMotionSensors];
         [self->_locationManager stopUpdatingHeading];
         dispatch_suspend(self->_serial);
         self->_serialSuspendCounter++;
-    });
+    } queue:_serial];
 }
 
 - (void)viewControllerDidChange:(NSNotification *)notification {
@@ -138,7 +141,7 @@ static const NSTimeInterval SF_MOTION_SENSOR_INTERVAL = 0.5;  // Unit: second.
 - (void)requestCollectionWithTitle:(NSString *)title {
     // We don't care whether the remaining requests are executed if we are gone.
     SiftIosAppStateCollector * __weak weakSelf = self;
-    dispatch_async(_serial, ^{
+    [_taskManager submitWithTask:^{
         SiftIosAppStateCollector *strongSelf = weakSelf;
         if (!strongSelf) {
             return;
@@ -150,31 +153,29 @@ static const NSTimeInterval SF_MOTION_SENSOR_INTERVAL = 0.5;  // Unit: second.
         }
 
         [strongSelf collectWithTitle:title andTimestamp:SFCurrentTime()];
-    });
+    } queue:_serial];
 }
 
 - (void)checkAndCollectWhenNoneRecently:(SFTimestamp)now {
-    dispatch_async(dispatch_get_main_queue(), ^{
+    [_taskManager submitWithTask:^{
         if (UIApplication.sharedApplication.applicationState == UIApplicationStateBackground) {
             SF_DEBUG(@"Ignore collection request since the app is in the background");
             return;
         }
-        
-        dispatch_async(self->_serial, ^{
+        [self->_taskManager submitWithTask:^{
             if (self->_lastCollectedAt > 0) {
                 if (self->_lastCollectedAt + SF_MAX_COLLECTION_PERIOD >= now) {
                     SF_DEBUG(@"Ignore collection request since it is not long enough since last collection");
                     return;
                 }
             }
-            
             [self collectWithTitle:nil andTimestamp:now];
-        });
-    });
+        } queue:self->_serial];
+    } queue:dispatch_get_main_queue()];
 }
 
 - (void)collectWithTitle:(NSString *)title andTimestamp:(SFTimestamp)now {
-    dispatch_async(dispatch_get_main_queue(), ^{
+    [_taskManager submitWithTask:^{
         SF_DEBUG(@"Collect app state...");
         SiftEvent *event = [SiftEvent new];
         event.time = now;
@@ -182,7 +183,7 @@ static const NSTimeInterval SF_MOTION_SENSOR_INTERVAL = 0.5;  // Unit: second.
 
         BOOL foreground = UIApplication.sharedApplication.applicationState != UIApplicationStateBackground;
         
-        dispatch_async(self->_serial, ^{
+        [self->_taskManager submitWithTask:^{
             // Don't start compass and motion sensors when you are in the background.
             int64_t delay = 0;
             if (foreground) {
@@ -198,7 +199,7 @@ static const NSTimeInterval SF_MOTION_SENSOR_INTERVAL = 0.5;  // Unit: second.
             }
             
             if (delay > 0) {
-                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, delay), self->_serial, ^{
+                [self->_taskManager scheduleWithTask:^{
                     [self stopMotionSensors];
                     
                     if ([self canCollectLocationData] && self->_locationManager.location) {
@@ -217,7 +218,7 @@ static const NSTimeInterval SF_MOTION_SENSOR_INTERVAL = 0.5;  // Unit: second.
                     
                     SF_DEBUG(@"iosAppState: %@", event.iosAppState);
                     [Sift.sharedInstance appendEvent:event];
-                });
+                } queue:self->_serial delay:delay];
             } else {
                 if ([self canCollectLocationData] && self->_locationManager.location) {
                     [event.iosAppState setObject:SFCLLocationToDictionary(self->_locationManager.location) forKey:@"location"];
@@ -240,12 +241,12 @@ static const NSTimeInterval SF_MOTION_SENSOR_INTERVAL = 0.5;  // Unit: second.
             if (foreground) {
                 // We don't care whether the remaining requests are executed if we are gone.
                 SiftIosAppStateCollector * __weak weakSelf = self;
-                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, SF_MAX_COLLECTION_PERIOD * NSEC_PER_MSEC), self->_serial, ^{
+                [self->_taskManager scheduleWithTask:^{
                     [weakSelf checkAndCollectWhenNoneRecently:SFCurrentTime()];
-                });
+                } queue:self->_serial delay:SF_MAX_COLLECTION_PERIOD * NSEC_PER_MSEC];
             }
-        });
-    });
+        } queue:self->_serial];
+    } queue:dispatch_get_main_queue()];
 }
 
 #pragma mark - NSKeyedArchiver/NSKeyedUnarchiver

@@ -202,7 +202,7 @@ static const NSTimeInterval SF_MOTION_SENSOR_INTERVAL = 0.5;  // Unit: second.
                     [self stopMotionSensors];
                     
                     if ([self canCollectLocationData] && self->_locationManager.location) {
-                        [event.iosAppState setEntry:@"location" value:SFCLLocationToDictionary(self->_locationManager.location).entries];
+                        [event.iosAppState setObject:SFCLLocationToDictionary(self->_locationManager.location) forKey:@"location"];
                     }
                     
                     // Read heading before we stop location manager (it nullifies heading when stopped).
@@ -210,27 +210,27 @@ static const NSTimeInterval SF_MOTION_SENSOR_INTERVAL = 0.5;  // Unit: second.
                     [self->_locationManager stopUpdatingHeading];
                     
                     if (heading) {
-                        [event.iosAppState setEntry:@"heading" value:SFCLHeadingToDictionary(heading).entries];
+                        [event.iosAppState setObject:SFCLHeadingToDictionary(heading) forKey:@"heading"];
                     }
                     
                     [self addReadingsToIosAppState:event.iosAppState];
                     
-                    SF_DEBUG(@"iosAppState: %@", event.iosAppState.entries);
+                    SF_DEBUG(@"iosAppState: %@", event.iosAppState);
                     [Sift.sharedInstance appendEvent:event];
                 });
             } else {
                 if ([self canCollectLocationData] && self->_locationManager.location) {
-                    [event.iosAppState setEntry:@"location" value:SFCLLocationToDictionary(self->_locationManager.location).entries];
+                    [event.iosAppState setObject:SFCLLocationToDictionary(self->_locationManager.location) forKey:@"location"];
                 }
                 
                 CLHeading *heading = self->_locationManager.heading;
                 if (heading) {
-                    [event.iosAppState setEntry:@"heading" value:SFCLHeadingToDictionary(heading).entries];
+                    [event.iosAppState setObject:SFCLHeadingToDictionary(heading) forKey:@"heading"];
                 }
                 
                 [self addReadingsToIosAppState:event.iosAppState];
                 
-                SF_DEBUG(@"iosAppState: %@", event.iosAppState.entries);
+                SF_DEBUG(@"iosAppState: %@", event.iosAppState);
                 [Sift.sharedInstance appendEvent:event];
             }
             
@@ -439,22 +439,22 @@ static NSString * const SF_LAST_COLLECTED_AT = @"lastCollectedAt";
     }
 }
 
-- (void)addReadingsToIosAppState:(SiftHtDictionary *)iosAppState {
+- (void)addReadingsToIosAppState:(NSMutableDictionary *)iosAppState {
     SF_GENERICS(NSArray, NSDictionary *) *motion = [self convertReadings:_deviceMotionReadings converter:SFCMDeviceMotionToDictionary];
     if (motion.count) {
-        [iosAppState setEntry:@"motion" value:motion];
+        [iosAppState setObject:motion forKey:@"motion"];
     }
     SF_GENERICS(NSArray, NSDictionary *) *rawAccelerometer = [self convertReadings:_accelerometerReadings converter:SFCMAccelerometerDataToDictionary];
     if (rawAccelerometer.count) {
-        [iosAppState setEntry:@"raw_accelerometer" value:rawAccelerometer];
+        [iosAppState setObject:rawAccelerometer forKey:@"raw_accelerometer"];
     }
     SF_GENERICS(NSArray, NSDictionary *) *rawGyro = [self convertReadings:_gyroReadings converter:SFCMGyroDataToDictionary];
     if (rawGyro.count) {
-        [iosAppState setEntry:@"raw_gyro" value:rawGyro];
+        [iosAppState setObject:rawGyro forKey:@"raw_gyro"];
     }
     SF_GENERICS(NSArray, NSDictionary *) *rawMagnetometer = [self convertReadings:_magnetometerReadings converter:SFCMMagnetometerDataToDictionary];
     if (rawMagnetometer.count) {
-        [iosAppState setEntry:@"raw_magnetometer" value:rawMagnetometer];
+        [iosAppState setObject:rawMagnetometer forKey:@"raw_magnetometer"];
     }
 }
 
@@ -465,7 +465,7 @@ static NSString * const SF_LAST_COLLECTED_AT = @"lastCollectedAt";
         for (CMLogItem *reading in [buffer shallowCopy]) {
             // CMLogItem records timestamp since device boot.
             SFTimestamp timestamp = [[uptime dateByAddingTimeInterval:reading.timestamp] timeIntervalSince1970] * 1000;
-            [readings addObject:((SiftHtDictionary *(*)(CMLogItem *, SFTimestamp))converter)(reading, timestamp).entries];
+            [readings addObject:((NSDictionary *(*)(CMLogItem *, SFTimestamp))converter)(reading, timestamp)];
         }
         [buffer removeAllObjects];
     }

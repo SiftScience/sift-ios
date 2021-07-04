@@ -71,7 +71,7 @@ NSMutableDictionary *SFCollectIosDeviceProperties() {
 
     UIScreen *screen = [UIScreen mainScreen];
     [iosDeviceProperties setValue:[NSNumber numberWithInt:(screen.fixedCoordinateSpace.bounds.size.width * screen.scale)] forKey:@"device_screen_width"];
-         [iosDeviceProperties setValue:[NSNumber numberWithInt:(screen.fixedCoordinateSpace.bounds.size.height * screen.scale)] forKey:@"device_screen_height"];
+    [iosDeviceProperties setValue:[NSNumber numberWithInt:(screen.fixedCoordinateSpace.bounds.size.height * screen.scale)] forKey:@"device_screen_height"];
 
 #if !TARGET_OS_MACCATALYST
     CTTelephonyNetworkInfo *networkInfo = [CTTelephonyNetworkInfo new];

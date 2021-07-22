@@ -9,7 +9,7 @@
 
 SiftHtDictionary *SFMakeEmptyIosAppState(void);
 
-SiftHtDictionary *SFCollectIosAppState(CLLocationManager *locationManager, NSString *title);
+SiftHtDictionary *SFCollectIosAppState(CLLocationManager *locationManager, NSString *title) NS_EXTENSION_UNAVAILABLE_IOS("SFCollectIosAppState is not supported for iOS extensions.");
 
 SiftHtDictionary *SFCLHeadingToDictionary(CLHeading *heading);
 

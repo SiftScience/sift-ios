@@ -8,6 +8,7 @@
 
 NSMutableDictionary *SFMakeEmptyIosAppState(void);
 
+NS_EXTENSION_UNAVAILABLE_IOS("SFCollectIosAppState is not supported for iOS extensions.")
 NSMutableDictionary *SFCollectIosAppState(CLLocationManager *locationManager, NSString *title);
 
 NSDictionary *SFCLHeadingToDictionary(CLHeading *heading);

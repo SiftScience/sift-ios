@@ -6,6 +6,8 @@
 #import "SiftIosAppStateCollector.h"
 
 /** Private methods of `SiftIosAppStateCollector`. */
+
+NS_EXTENSION_UNAVAILABLE_IOS("SiftIosAppStateCollector is not supported for iOS extensions.")
 @interface SiftIosAppStateCollector ()
 
 /** _serialSuspend Count. */

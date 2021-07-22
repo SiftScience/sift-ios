@@ -6,4 +6,4 @@
 
 SiftHtDictionary *SFMakeEmptyIosDeviceProperties(void);
 
-SiftHtDictionary *SFCollectIosDeviceProperties(void);
+SiftHtDictionary *SFCollectIosDeviceProperties(void) NS_EXTENSION_UNAVAILABLE_IOS("SFCollectIosDeviceProperties is not supported for iOS extensions.");

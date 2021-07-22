@@ -25,6 +25,7 @@
  *
  * Methods return YES on success.
  */
+NS_EXTENSION_UNAVAILABLE_IOS("Sift is not supported for iOS extensions.")
 @interface Sift : NSObject
 
 /** @return the shared instance of Sift. */

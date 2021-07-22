@@ -4,18 +4,17 @@
 @import CoreMotion;
 @import Foundation;
 
-#import "SiftHtDictionary.h"
 #import "SiftUtils.h"
 
-SiftHtDictionary *SFMakeEmptyIosAppState(void);
+NSMutableDictionary *SFMakeEmptyIosAppState(void);
 
-SiftHtDictionary *SFCollectIosAppState(CLLocationManager *locationManager, NSString *title);
+NSMutableDictionary *SFCollectIosAppState(CLLocationManager *locationManager, NSString *title);
 
-SiftHtDictionary *SFCLHeadingToDictionary(CLHeading *heading);
+NSDictionary *SFCLHeadingToDictionary(CLHeading *heading);
 
-SiftHtDictionary *SFCLLocationToDictionary(CLLocation *data);
+NSDictionary *SFCLLocationToDictionary(CLLocation *data);
 
-SiftHtDictionary *SFCMDeviceMotionToDictionary(CMDeviceMotion *data, SFTimestamp now);
-SiftHtDictionary *SFCMAccelerometerDataToDictionary(CMAccelerometerData *data, SFTimestamp now);
-SiftHtDictionary *SFCMGyroDataToDictionary(CMGyroData *data, SFTimestamp now);
-SiftHtDictionary *SFCMMagnetometerDataToDictionary(CMMagnetometerData *data, SFTimestamp now);
+NSDictionary *SFCMDeviceMotionToDictionary(CMDeviceMotion *data, SFTimestamp now);
+NSDictionary *SFCMAccelerometerDataToDictionary(CMAccelerometerData *data, SFTimestamp now);
+NSDictionary *SFCMGyroDataToDictionary(CMGyroData *data, SFTimestamp now);
+NSDictionary *SFCMMagnetometerDataToDictionary(CMMagnetometerData *data, SFTimestamp now);

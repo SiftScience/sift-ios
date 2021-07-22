@@ -17,21 +17,21 @@
 @implementation SiftIosAppStateTests
 
 - (void)testCollect {
-    NSDictionary *actual = SFCollectIosAppState([CLLocationManager new], nil);
-    SF_DEBUG(@"Collect app state: %@", actual);
+    SiftHtDictionary *actual = SFCollectIosAppState([CLLocationManager new], nil);
+    SF_DEBUG(@"Collect app state: %@", actual.entries);
     XCTAssertNotNil(actual);
 }
 
 - (void)testCLLocationToDictionary {
-    NSDictionary *dict = SFCLLocationToDictionary([CLLocationManager new].location);
-    SF_DEBUG(@"CLLocation To Dictionary: %@", dict);
+    SiftHtDictionary *dict = SFCLLocationToDictionary([CLLocationManager new].location);
+    SF_DEBUG(@"CLLocation To Dictionary: %@", dict.entries);
     XCTAssertNotNil(dict);
     
 }
 
 - (void)testCLHeadingToDictionary {
-    NSDictionary *dict = SFCLHeadingToDictionary([CLLocationManager new].heading);
-    SF_DEBUG(@"CLHeading To Dictionary: %@", dict);
+    SiftHtDictionary *dict = SFCLHeadingToDictionary([CLLocationManager new].heading);
+    SF_DEBUG(@"CLHeading To Dictionary: %@", dict.entries);
     XCTAssertNotNil(dict);
 }
 

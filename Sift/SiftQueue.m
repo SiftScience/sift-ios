@@ -8,7 +8,6 @@
 #import "SiftEvent+Private.h"
 #import "SiftUtils.h"
 #import "Sift.h"
-#import "TaskManager.h"
 
 #import "SiftQueue.h"
 
@@ -21,7 +20,6 @@
     NSString *_archivePath;
     // Weak reference back to the parent.
     Sift * __weak _sift;
-    TaskManager *_taskManager;
 }
 
 - (instancetype)initWithIdentifier:(NSString *)identifier config:(SiftQueueConfig)config archivePath:(NSString *)archivePath sift:(Sift *)sift {
@@ -31,7 +29,6 @@
         _config = config;
         _archivePath = archivePath;
         _sift = sift;
-        _taskManager = [[TaskManager alloc] init];
 
         [self unarchive];
     }
@@ -61,13 +58,13 @@
         // before terminating your app and thus we have to persist data
         // aggressively when the app is in background.  Hopefully there
         // won't be too many events when app is in the background.
-        [_taskManager submitWithTask:^{
+        dispatch_async(dispatch_get_main_queue(), ^{
             if (UIApplication.sharedApplication.applicationState == UIApplicationStateBackground) {
-                [self->_taskManager submitWithTask:^{
+                dispatch_async(dispatch_get_global_queue(QOS_CLASS_BACKGROUND, 0), ^{
                     [self archive];
-                } queue:dispatch_get_global_queue(QOS_CLASS_BACKGROUND, 0)];
+                });
             }
-        } queue:dispatch_get_main_queue()];
+        });
         
         if (self.readyForUpload) {
             [self requestUpload];

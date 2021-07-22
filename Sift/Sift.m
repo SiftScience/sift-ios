@@ -12,7 +12,6 @@
 #import "SiftQueueConfig.h"
 #import "SiftUploader.h"
 #import "SiftUtils.h"
-#import "TaskManager.h"
 
 #import "Sift.h"
 #import "Sift+Private.h"
@@ -38,7 +37,6 @@ static const SiftQueueConfig SFDefaultEventQueueConfig = {
 
     NSMutableDictionary *_eventQueues;
     SiftUploader *_uploader;
-    TaskManager *_taskManager;
 
     // Extra collection mechanisms.
     SiftIosAppStateCollector *_iosAppStateCollector;
@@ -72,7 +70,6 @@ static const SiftQueueConfig SFDefaultEventQueueConfig = {
             self = nil;
             return nil;
         }
-        _taskManager = [[TaskManager alloc] init];
 
         // Create the default event queue.
         if (![self addEventQueue:SFDefaultEventQueueIdentifier config:SFDefaultEventQueueConfig]) {
@@ -103,9 +100,9 @@ static const SiftQueueConfig SFDefaultEventQueueConfig = {
 
 - (void)applicationDidEnterBackground:(NSNotification *)notification {
     SF_DEBUG(@"Enter background");
-    [_taskManager submitWithTask:^{
+    dispatch_async(dispatch_get_global_queue(QOS_CLASS_BACKGROUND, 0), ^{
         [self archive];
-    } queue:dispatch_get_global_queue(QOS_CLASS_BACKGROUND, 0)];
+    });
 }
 
 - (BOOL)hasEventQueue:(NSString *)identifier {

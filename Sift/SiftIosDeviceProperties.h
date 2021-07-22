@@ -2,6 +2,8 @@
 
 @import Foundation;
 
-NSMutableDictionary *SFMakeEmptyIosDeviceProperties(void);
+#import "SiftHtDictionary.h"
 
-NSMutableDictionary *SFCollectIosDeviceProperties(void);
+SiftHtDictionary *SFMakeEmptyIosDeviceProperties(void);
+
+SiftHtDictionary *SFCollectIosDeviceProperties(void);

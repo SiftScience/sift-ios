@@ -4,5 +4,4 @@
 
 NSMutableDictionary *SFMakeEmptyIosDeviceProperties(void);
 
-NS_EXTENSION_UNAVAILABLE_IOS("SFCollectIosDeviceProperties is not supported for iOS extensions.")
-NSMutableDictionary *SFCollectIosDeviceProperties(void);
+NSMutableDictionary *SFCollectIosDeviceProperties(void) NS_EXTENSION_UNAVAILABLE_IOS("SFCollectIosDeviceProperties is not supported for iOS extensions.");

@@ -1,5 +1,13 @@
 # Change Log
 
+## [2.0.4] - 2021-07-22
+### Added
+
+### Changed
+- Fixes SwiftPM build error for unsupported app extensions #100
+
+### Removed
+
 ## [2.0.3] - 2021-06-29
 ### Added
 Create PROPOSETECHNICIALDESIGNDOC.md

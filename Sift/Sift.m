@@ -55,7 +55,7 @@ static const SiftQueueConfig SFDefaultEventQueueConfig = {
 - (instancetype)initWithRootDirPath:(NSString *)rootDirPath {
     self = [super init];
     if (self) {
-        _sdkVersion = @"v2.0.3";
+        _sdkVersion = @"v2.0.4";
 
         _rootDirPath = rootDirPath;
 

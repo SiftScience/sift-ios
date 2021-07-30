@@ -10,6 +10,9 @@
 
 - (void)archive;
 
+/** Collect app state. */
+- (void)collectWithTitle:(NSString *)title andTimestamp:(SFTimestamp)now NS_EXTENSION_UNAVAILABLE_IOS("collectWithTitle is not supported for iOS extensions.");
+
 /**
  * Because CMMotionManager is "almost" a global singleton object, we
  * have to coordinate that there is only one CMMotionManager instance

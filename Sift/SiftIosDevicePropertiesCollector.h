@@ -6,6 +6,6 @@
 NS_EXTENSION_UNAVAILABLE_IOS("SiftIosDevicePropertiesCollector is not supported for iOS extensions.")
 @interface SiftIosDevicePropertiesCollector : NSObject
 
-// Nothing here - a collector is autonomous.
+- (void)collect;
 
 @end

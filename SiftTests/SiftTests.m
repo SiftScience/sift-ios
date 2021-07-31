@@ -131,4 +131,17 @@
     XCTAssertTrue([_sift hasEventQueue: [_sift defaultQueueIdentifier]]);
 }
 
+- (void)testCollect {
+    SiftQueueConfig config = {
+        .uploadWhenMoreThan = 65536,
+        .uploadWhenOlderThan = 3600,
+    };
+    [_sift addEventQueue: @"sift-devprops" config: config];
+    
+    [_sift collect];
+    
+    XCTAssertTrue([_sift hasEventQueue: [_sift defaultQueueIdentifier]]);
+    XCTAssertTrue([_sift hasEventQueue: @"sift-devprops"]);
+}
+
 @end

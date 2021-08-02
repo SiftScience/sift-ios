@@ -70,6 +70,11 @@ NS_EXTENSION_UNAVAILABLE_IOS("Sift is not supported for iOS extensions.")
 - (void)unsetUserId;
 
 /**
+ * Use this method to collect mobile events at your discretion
+ */
+- (void)collect;
+
+/**
  * @name Configurations.
  *
  * You should configure `accountId`, `beaconKey`, and `userId`.

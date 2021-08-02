@@ -26,9 +26,6 @@
  */
 - (void)checkAndCollectWhenNoneRecently:(SFTimestamp)now NS_EXTENSION_UNAVAILABLE_IOS("checkAndCollectWhenNoneRecently is not supported for iOS extensions.");
 
-/** Collect app state. */
-- (void)collectWithTitle:(NSString *)title andTimestamp:(SFTimestamp)now NS_EXTENSION_UNAVAILABLE_IOS("collectWithTitle is not supported for iOS extensions.");
-
 /** @return YES if can collect Location data. */
 - (BOOL)canCollectLocationData;
 

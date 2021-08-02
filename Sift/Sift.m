@@ -165,6 +165,11 @@ static const SiftQueueConfig SFDefaultEventQueueConfig = {
     }
 }
 
+- (void)collect {
+    [_iosDevicePropertiesCollector collect];
+    [_iosAppStateCollector collectWithTitle:nil andTimestamp:SFCurrentTime()];
+}
+
 - (BOOL)upload {
     return [self upload:NO];
 }

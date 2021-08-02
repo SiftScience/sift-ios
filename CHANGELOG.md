@@ -1,5 +1,13 @@
 # Change Log
 
+## [2.1.0] - 2021-08-02
+### Added
+- Adding a new public method collect() to collect mobile events on demand
+
+### Changed
+
+### Removed
+
 ## [2.0.4] - 2021-07-22
 ### Added
 

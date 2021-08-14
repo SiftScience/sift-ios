@@ -2,8 +2,7 @@
 
 @import Foundation;
 
-#import "SiftHtDictionary.h"
+NSMutableDictionary *SFMakeEmptyIosDeviceProperties(void);
 
-SiftHtDictionary *SFMakeEmptyIosDeviceProperties(void);
 
-SiftHtDictionary *SFCollectIosDeviceProperties(void) NS_EXTENSION_UNAVAILABLE_IOS("SFCollectIosDeviceProperties is not supported for iOS extensions.");
+NSMutableDictionary *SFCollectIosDeviceProperties(void) NS_EXTENSION_UNAVAILABLE_IOS("SFCollectIosDeviceProperties is not supported for iOS extensions.");

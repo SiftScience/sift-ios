@@ -16,10 +16,10 @@
 @property SF_GENERICS(NSDictionary, NSString *, NSString *) *deviceProperties;
 
 /** Structured iOS app state.  Default to nil. */
-@property SiftHtDictionary *iosAppState;
+@property NSMutableDictionary *iosAppState;
 
 /** Structured iOS device properties.  Default to nil. */
-@property SiftHtDictionary *iosDeviceProperties;
+@property NSMutableDictionary *iosDeviceProperties;
 
 /** Internal metrics.  Default to nil. */
 @property SF_GENERICS(NSDictionary, NSString *, NSString *) *metrics;

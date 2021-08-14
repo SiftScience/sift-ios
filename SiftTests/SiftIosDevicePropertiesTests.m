@@ -13,18 +13,18 @@
 @implementation SiftIosDevicePropertiesTests
 
 - (void)testCollect {
-    NSDictionary *actual = SFCollectIosDeviceProperties();
-    SF_DEBUG(@"Collect device properties: %@", actual);
+    SiftHtDictionary *actual = SFCollectIosDeviceProperties();
+    SF_DEBUG(@"Collect device properties: %@", actual.entries);
     XCTAssertNotNil(actual);
 }
 
 - (void)testCoder {
-    NSDictionary *expect, *actual;
+    SiftHtDictionary *expect, *actual;
     NSData *data;
 
     // Test empty object.
     expect = SFMakeEmptyIosDeviceProperties();
-    XCTAssertEqual(0, expect.count);
+    XCTAssertEqual(0, expect.entries.count);
 
     if (@available(iOS 11.0, macCatalyst 13.0, macOS 10.13, tvOS 11, *)) {
         data = [NSKeyedArchiver archivedDataWithRootObject:expect requiringSecureCoding:NO error:nil];
@@ -36,18 +36,18 @@
         actual = [NSKeyedUnarchiver unarchiveObjectWithData:data];
     }
 
-    XCTAssertEqual(0, actual.count);
+    XCTAssertEqual(0, actual.entries.count);
     XCTAssertEqualObjects(expect, actual);
 
     // Test object with a handful of properties.
     expect = SFMakeEmptyIosDeviceProperties();
-    [expect setValue:@"test-string" forKey:@"app_name"];
-    [expect setValue:@"" forKey:@"app_version"];
-    [expect setValue:[NSNumber numberWithBool:YES] forKey:@"cpu_has_fp"];
-    [expect setValue:[NSNumber numberWithLong:64] forKey:@"cache_line_size"];
-    [expect setValue:@[@"a", @"b", @"c"] forKey:@"evidence_files_present"];
-    [expect setValue:@[] forKey:@"evidence_directories_writable"];
-    XCTAssertEqual(6, expect.count);
+    [expect setEntry:@"app_name" value:@"test-string"];
+    [expect setEntry:@"app_version" value:@""];
+    [expect setEntry:@"cpu_has_fp" value:[NSNumber numberWithBool:YES]];
+    [expect setEntry:@"cache_line_size" value:[NSNumber numberWithLong:64]];
+    [expect setEntry:@"evidence_files_present" value:@[@"a", @"b", @"c"]];
+    [expect setEntry:@"evidence_directories_writable" value:@[]];
+    XCTAssertEqual(6, expect.entries.count);
 
     if (@available(iOS 11.0, macCatalyst 13.0, macOS 10.13, tvOS 11, *)) {
         data = [NSKeyedArchiver archivedDataWithRootObject:expect requiringSecureCoding:NO error:nil];
@@ -59,20 +59,20 @@
         actual = [NSKeyedUnarchiver unarchiveObjectWithData:data];
     }
 
-    XCTAssertEqual(6, actual.count);
+    XCTAssertEqual(6, actual.entries.count);
     XCTAssertEqualObjects(expect, actual);
 }
 
 - (void)testWithRandomData {
-    NSDictionary *z = SFMakeEmptyIosDeviceProperties();  // Empty object.
-    NSDictionary *p = [self generateRandomProperties];  // Random object 1.
-    NSDictionary *q = [self generateRandomProperties];  // Random object 2.
+    SiftHtDictionary *z = SFMakeEmptyIosDeviceProperties();  // Empty object.
+    SiftHtDictionary *p = [self generateRandomProperties];  // Random object 1.
+    SiftHtDictionary *q = [self generateRandomProperties];  // Random object 2.
 
     XCTAssertNotEqualObjects(z, p);
     XCTAssertNotEqualObjects(z, q);
     XCTAssertNotEqualObjects(p, q);
 
-    NSDictionary *actual;
+    SiftHtDictionary *actual;
     NSData *data;
 
     if (@available(iOS 11.0, macCatalyst 13.0, macOS 10.13, tvOS 11, *)) {
@@ -99,11 +99,11 @@
 }
 
 - (void)testMacCatalyst {
-    NSDictionary *actual = SFCollectIosDeviceProperties();
-    SF_DEBUG(@"Collect device properties: %@", actual);
+    SiftHtDictionary *actual = SFCollectIosDeviceProperties();
+    SF_DEBUG(@"Collect device properties: %@", actual.entries);
     XCTAssertNotNil(actual);
     
-    NSString *deviceName = actual[@"device_system_name"];
+    NSString *deviceName = actual.entries[@"device_system_name"];
     #if !TARGET_OS_MACCATALYST
         XCTAssertFalse([deviceName containsString:@"Mac"]);
     #else
@@ -111,13 +111,27 @@
     #endif
 }
 
-- (NSDictionary *)generateRandomProperties {
-    NSMutableDictionary *properties = SFMakeEmptyIosDeviceProperties();
-    [properties setValue:[self generateRandomString] forKey:@"app_name"];
-    [properties setValue:[self generateRandomString] forKey:@"app_version"];
-    [properties setValue:[NSNumber numberWithLong:arc4random_uniform(1 << 20)] forKey:@"cache_line_size"];
-    [properties setValue:[self generateRandomArray] forKey:@"evidence_files_present"];
-    [properties setValue:[self generateRandomArray] forKey:@"evidence_directories_writable"];
+- (SiftHtDictionary *)generateRandomProperties {
+    SiftHtDictionary *properties = SFMakeEmptyIosDeviceProperties();
+    for (NSString *name in properties.entryTypes) {
+        Class entryType = [properties.entryTypes objectForKey:name];
+        id value = nil;
+        if (entryType == NSNumber.class) {
+            value = [NSNumber numberWithLong:arc4random_uniform(1 << 20)];
+        } else if (entryType == NSString.class) {
+            value = [self generateRandomString];
+        } else if (entryType == NSArray.class) {
+            NSMutableArray *strings = [NSMutableArray new];
+            int n = arc4random_uniform(128);
+            while (n-- > 0) {
+                [strings addObject:[self generateRandomString]];
+            }
+            value = strings;
+        } else {
+            XCTFail(@"Unsupported type");
+        }
+        [properties setEntry:name value:value];
+    }
     return properties;
 }
 
@@ -129,15 +143,6 @@
         buffer[n--] = 'a' + arc4random_uniform(26);
     }
     return [NSString stringWithCString:buffer encoding:NSASCIIStringEncoding];
-}
-
-- (NSArray *)generateRandomArray {
-    NSMutableArray *strings = [NSMutableArray new];
-    int n = arc4random_uniform(128);
-    while (n-- > 0) {
-        [strings addObject:[self generateRandomString]];
-    }
-    return strings;
 }
 
 @end

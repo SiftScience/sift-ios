@@ -55,7 +55,7 @@ static const SiftQueueConfig SFDefaultEventQueueConfig = {
 - (instancetype)initWithRootDirPath:(NSString *)rootDirPath {
     self = [super init];
     if (self) {
-        _sdkVersion = @"v2.0.3";
+        _sdkVersion = @"v2.1.0";
 
         _rootDirPath = rootDirPath;
 
@@ -163,6 +163,11 @@ static const SiftQueueConfig SFDefaultEventQueueConfig = {
         [queue append:event];
         return YES;
     }
+}
+
+- (void)collect {
+    [_iosDevicePropertiesCollector collect];
+    [_iosAppStateCollector collectWithTitle:nil andTimestamp:SFCurrentTime()];
 }
 
 - (BOOL)upload {

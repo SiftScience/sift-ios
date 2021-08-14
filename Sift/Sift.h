@@ -25,6 +25,7 @@
  *
  * Methods return YES on success.
  */
+NS_EXTENSION_UNAVAILABLE_IOS("Sift is not supported for iOS extensions.")
 @interface Sift : NSObject
 
 /** @return the shared instance of Sift. */
@@ -67,6 +68,11 @@
  * Unset the user id attached to the Sift object.
  */
 - (void)unsetUserId;
+
+/**
+ * Use this method to collect mobile events at your discretion
+ */
+- (void)collect;
 
 /**
  * @name Configurations.

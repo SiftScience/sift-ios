@@ -65,7 +65,7 @@ static NSString * const SFIosDevicePropertiesCollectorQueueIdentifier = @"sift-d
 
     SiftEvent *event = [SiftEvent new];
     event.iosDeviceProperties = SFCollectIosDeviceProperties();
-    SF_DEBUG(@"Collect device properties: %@", event.iosDeviceProperties);
+    SF_DEBUG(@"Collect device properties: %@", event.iosDeviceProperties.entries);
     [sift appendEvent:event toQueue:SFIosDevicePropertiesCollectorQueueIdentifier];
 }
 

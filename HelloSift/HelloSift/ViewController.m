@@ -73,6 +73,10 @@
     void (*setterFunc)(id, SEL, NSString*) = (void *)[[Sift sharedInstance] methodForSelector:setter];
     setterFunc([Sift sharedInstance], setter, newValue);
 }
+- (IBAction)collectButtonClicked:(id)sender {
+    NSLog(@"Button \"Request Collect\" was clicked");
+    [[Sift sharedInstance] collect];
+}
 
 - (IBAction)handleRequestUploadButtonClick:(id)sender {
     NSLog(@"Button \"Request Upload\" was clicked");

@@ -24,10 +24,7 @@
 /**
  * Collect app state if there was no collection in the last SF_MAX_COLLECTION_PERIOD of time and app is active.
  */
-- (void)checkAndCollectWhenNoneRecently:(SFTimestamp)now;
-
-/** Collect app state. */
-- (void)collectWithTitle:(NSString *)title andTimestamp:(SFTimestamp)now;
+- (void)checkAndCollectWhenNoneRecently:(SFTimestamp)now NS_EXTENSION_UNAVAILABLE_IOS("checkAndCollectWhenNoneRecently is not supported for iOS extensions.");
 
 /** @return YES if can collect Location data. */
 - (BOOL)canCollectLocationData;

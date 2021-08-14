@@ -10,6 +10,7 @@
  * A queue is simply a `NSArray` of `SFEvent` objects with an
  * `SFQueueConfig` policy object.
  */
+NS_EXTENSION_UNAVAILABLE_IOS("SiftQueue is not supported for iOS extensions.")
 @interface SiftQueue : NSObject
 
 - (instancetype)initWithIdentifier:(NSString *)identifier config:(SiftQueueConfig)config archivePath:(NSString *)archivePath sift:(Sift *)sift;

@@ -1,5 +1,36 @@
 # Change Log
 
+## [2.1.0] - 2021-08-02
+### Added
+- Adding a new public method collect() to collect mobile events on demand
+
+### Changed
+
+### Removed
+
+## [2.0.4] - 2021-07-22
+### Added
+
+### Changed
+- Fixes SwiftPM build error for unsupported app extensions #100
+
+### Removed
+
+## [2.0.3] - 2021-06-29
+### Added
+Create PROPOSETECHNICIALDESIGNDOC.md
+Add modules to DESIGNDOC.md
+Add images from /Images folder to Git
+Create DESIGNDOC.md
+Create PROPOSETECHNICIALDESIGNDOC.md
+
+### Changed
+Swift package manager usability
+Changes in DESIGNDOC.md
+Update package and sift_ios file
+
+### Removed
+
 ## [2.0.2] - 2020-12-07
 ### Added
 - Fixed warning and Error related to MacCatalyst

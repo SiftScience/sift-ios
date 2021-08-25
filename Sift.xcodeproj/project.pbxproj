@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		1E409D2425E173B20066C922 /* NSData+GZIP.m in Sources */ = {isa = PBXBuildFile; fileRef = 1E409D2225E173B10066C922 /* NSData+GZIP.m */; };
 		1E409D2525E173B20066C922 /* NSData+GZIP.h in Headers */ = {isa = PBXBuildFile; fileRef = 1E409D2325E173B20066C922 /* NSData+GZIP.h */; };
+		5E819393268E1A47007FED87 /* TaskManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 5E819391268E1A47007FED87 /* TaskManager.h */; };
+		5E819394268E1A47007FED87 /* TaskManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 5E819392268E1A47007FED87 /* TaskManager.m */; };
 		713AF4241DA456740061B688 /* SiftUtilsTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 713AF4231DA456740061B688 /* SiftUtilsTests.m */; };
 		713D859A1D627E9F0011D5FE /* SiftIosDeviceProperties.m in Sources */ = {isa = PBXBuildFile; fileRef = 713D85991D627E9F0011D5FE /* SiftIosDeviceProperties.m */; };
 		713D859B1D627EA60011D5FE /* SiftIosDeviceProperties.h in Headers */ = {isa = PBXBuildFile; fileRef = 713D85981D627E860011D5FE /* SiftIosDeviceProperties.h */; };
@@ -63,6 +65,8 @@
 /* Begin PBXFileReference section */
 		1E409D2225E173B10066C922 /* NSData+GZIP.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSData+GZIP.m"; sourceTree = "<group>"; };
 		1E409D2325E173B20066C922 /* NSData+GZIP.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+GZIP.h"; sourceTree = "<group>"; };
+		5E819391268E1A47007FED87 /* TaskManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TaskManager.h; sourceTree = "<group>"; };
+		5E819392268E1A47007FED87 /* TaskManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TaskManager.m; sourceTree = "<group>"; };
 		713AF4231DA456740061B688 /* SiftUtilsTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SiftUtilsTests.m; sourceTree = "<group>"; };
 		713D85981D627E860011D5FE /* SiftIosDeviceProperties.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SiftIosDeviceProperties.h; sourceTree = "<group>"; };
 		713D85991D627E9F0011D5FE /* SiftIosDeviceProperties.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SiftIosDeviceProperties.m; sourceTree = "<group>"; };
@@ -179,6 +183,8 @@
 				7168EE041C7B977500A88245 /* Sift.h */,
 				716BEB8F1C7D3695009C3706 /* Sift.m */,
 				7168EE211C7F978D00A88245 /* Sift+Private.h */,
+				5E819391268E1A47007FED87 /* TaskManager.h */,
+				5E819392268E1A47007FED87 /* TaskManager.m */,
 			);
 			path = Sift;
 			sourceTree = "<group>";
@@ -209,6 +215,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5E819393268E1A47007FED87 /* TaskManager.h in Headers */,
 				7168EE2C1C86250100A88245 /* SiftEvent+Private.h in Headers */,
 				716BEB911C7D3695009C3706 /* SiftUtils.h in Headers */,
 				71E15CF51D95C8FA00A0305C /* SiftCircularBuffer.h in Headers */,
@@ -328,6 +335,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5E819394268E1A47007FED87 /* TaskManager.m in Sources */,
 				716BEB931C7D3695009C3706 /* Sift.m in Sources */,
 				71E15CF91D95C92300A0305C /* SiftCircularBuffer.m in Sources */,
 				7168EE281C7FB80C00A88245 /* SiftUploader.m in Sources */,

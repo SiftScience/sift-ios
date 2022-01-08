@@ -86,14 +86,6 @@
     XCTAssertEqual(_sift.userId, @"1234");
 }
 
-- (void)testMotionSensors {
-    XCTAssertFalse(_sift.allowUsingMotionSensors);
-    [_sift setAllowUsingMotionSensors:YES];
-    XCTAssertTrue(_sift.allowUsingMotionSensors);
-    [_sift setAllowUsingMotionSensors:NO];
-    XCTAssertFalse(_sift.allowUsingMotionSensors);
-}
-
 - (void)testDisallowCollectingLocationData {
     XCTAssertFalse(_sift.disallowCollectingLocationData);
     [_sift setDisallowCollectingLocationData:YES];
@@ -125,7 +117,6 @@
 
 - (void)testCollectWithTitle {
     SiftIosAppStateCollector *_iosAppStateCollector = [[SiftIosAppStateCollector alloc] initWithArchivePath: @"test_app_state_collector"];
-    [_iosAppStateCollector setAllowUsingMotionSensors:YES];
     [_iosAppStateCollector requestCollectionWithTitle:nil];
     
     XCTAssertTrue([_sift hasEventQueue: [_sift defaultQueueIdentifier]]);

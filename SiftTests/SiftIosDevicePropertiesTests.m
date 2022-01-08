@@ -43,11 +43,9 @@
     expect = SFMakeEmptyIosDeviceProperties();
     [expect setValue:@"test-string" forKey:@"app_name"];
     [expect setValue:@"" forKey:@"app_version"];
-    [expect setValue:[NSNumber numberWithBool:YES] forKey:@"cpu_has_fp"];
-    [expect setValue:[NSNumber numberWithLong:64] forKey:@"cache_line_size"];
     [expect setValue:@[@"a", @"b", @"c"] forKey:@"evidence_files_present"];
     [expect setValue:@[] forKey:@"evidence_directories_writable"];
-    XCTAssertEqual(6, expect.count);
+    XCTAssertEqual(4, expect.count);
 
     if (@available(iOS 11.0, macCatalyst 13.0, macOS 10.13, tvOS 11, *)) {
         data = [NSKeyedArchiver archivedDataWithRootObject:expect requiringSecureCoding:NO error:nil];
@@ -59,7 +57,7 @@
         actual = [NSKeyedUnarchiver unarchiveObjectWithData:data];
     }
 
-    XCTAssertEqual(6, actual.count);
+    XCTAssertEqual(4, actual.count);
     XCTAssertEqualObjects(expect, actual);
 }
 
@@ -115,7 +113,6 @@
     NSMutableDictionary *properties = SFMakeEmptyIosDeviceProperties();
     [properties setValue:[self generateRandomString] forKey:@"app_name"];
     [properties setValue:[self generateRandomString] forKey:@"app_version"];
-    [properties setValue:[NSNumber numberWithLong:arc4random_uniform(1 << 20)] forKey:@"cache_line_size"];
     [properties setValue:[self generateRandomArray] forKey:@"evidence_files_present"];
     [properties setValue:[self generateRandomArray] forKey:@"evidence_directories_writable"];
     return properties;

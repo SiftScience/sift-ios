@@ -48,7 +48,6 @@
 
     NSDictionary *iosAppState = [actual objectForKey:@"ios_app_state"];
     XCTAssertNotNil(iosAppState);
-    XCTAssertEqualObjects(@"ui_application_state_active", [iosAppState objectForKey:@"application_state"]);
     XCTAssertGreaterThan(((NSArray *)[iosAppState objectForKey:@"network_addresses"]).count, 0);
     
     NSArray *titles = [iosAppState objectForKey:@"window_root_view_controller_titles"];
@@ -57,53 +56,11 @@
     NSDictionary *iosDeviceProperties = [actual objectForKey:@"ios_device_properties"];
     XCTAssertNotNil(iosDeviceProperties);
     NSDictionary *entryTypes = @{
-        @"bus_frequency": NSNumber.class,
-        @"bus_frequency_max": NSNumber.class,
-        @"bus_frequency_min": NSNumber.class,
-        @"cache_l1_dcache_size": NSNumber.class,
-        @"cache_l1_icache_size": NSNumber.class,
-        @"cache_l2_cache_size": NSNumber.class,
-        @"cache_l3_cache_size": NSNumber.class,
-        @"cache_line_size": NSNumber.class,
-        @"cpu_64bit_capable": NSNumber.class,
-        @"cpu_active_cpu_count": NSNumber.class,
-        @"cpu_byte_order": NSString.class,
-        @"cpu_count": NSNumber.class,
-        @"cpu_family": NSNumber.class,
-        @"cpu_frequency": NSNumber.class,
-        @"cpu_frequency_max": NSNumber.class,
-        @"cpu_frequency_min": NSNumber.class,
-        @"cpu_has_fp": NSNumber.class,
-        @"cpu_logical_cpu_count": NSNumber.class,
-        @"cpu_logical_cpu_max": NSNumber.class,
-        @"cpu_physical_cpu_count": NSNumber.class,
-        @"cpu_physical_cpu_max": NSNumber.class,
-        @"cpu_subtype": NSNumber.class,
-        @"cpu_type": NSNumber.class,
         @"device_hardware_machine": NSString.class,
-        @"device_hardware_model": NSString.class,
-        @"device_host_id": NSNumber.class,
-        @"device_host_name": NSString.class,
-        @"device_ifa": NSString.class,
         @"device_ifv": NSString.class,
-        @"device_kernel_boot_session_uuid": NSString.class,
-        @"device_kernel_boot_signature": NSString.class,
-        @"device_kernel_uuid": NSString.class,
-        @"device_kernel_version": NSString.class,
-        @"device_localized_model": NSString.class,
-        @"device_memory_size": NSNumber.class,
-        @"device_model": NSString.class,
         @"device_name": NSString.class,
-        @"device_os_release": NSString.class,
-        @"device_os_revision": NSNumber.class,
-        @"device_os_type": NSString.class,
-        @"device_package_count": NSNumber.class,
-        @"device_page_size": NSNumber.class,
-        @"device_screen_height": NSNumber.class,
-        @"device_screen_width": NSNumber.class,
         @"device_system_name": NSString.class,
         @"device_system_version": NSString.class,
-        @"device_tb_frequency": NSNumber.class,
         @"evidence_directories_symlinked": NSArray.class,
         @"evidence_directories_writable": NSArray.class,
         @"evidence_dylds_present": NSArray.class,

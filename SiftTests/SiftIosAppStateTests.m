@@ -29,12 +29,6 @@
     
 }
 
-- (void)testCLHeadingToDictionary {
-    NSDictionary *dict = SFCLHeadingToDictionary([CLLocationManager new].heading);
-    SF_DEBUG(@"CLHeading To Dictionary: %@", dict);
-    XCTAssertNotNil(dict);
-}
-
 - (void)testIOSAppLifeCycle {
     SiftIosAppStateCollector *_iosAppStateCollector = [[SiftIosAppStateCollector alloc] initWithArchivePath: @"test_app_state_collector"];
     XCTAssertEqual([_iosAppStateCollector serialSuspendCounter], 0);
@@ -53,8 +47,6 @@
 }
 
 - (void)testViewDidChange {
-    SiftIosAppStateCollector *_iosAppStateCollector = [[SiftIosAppStateCollector alloc] initWithArchivePath: @"test_app_state_collector"];
-    [_iosAppStateCollector setAllowUsingMotionSensors:YES];
     [[NSNotificationCenter defaultCenter] postNotificationName: @"UINavigationControllerDidShowViewControllerNotification" object:nil userInfo:nil];
 }
 

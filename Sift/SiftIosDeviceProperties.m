@@ -42,36 +42,13 @@ NSMutableDictionary *SFCollectIosDeviceProperties() {
 
     UIDevice *device = [UIDevice currentDevice];
     [iosDeviceProperties setValue:device.name forKey:@"device_name"];
-    [iosDeviceProperties setValue:device.model forKey:@"device_model"];
-    [iosDeviceProperties setValue:device.localizedModel forKey:@"device_localized_model"];
     [iosDeviceProperties setValue:device.systemName forKey:@"device_system_name"];
     [iosDeviceProperties setValue:device.systemVersion forKey:@"device_system_version"];
-    
-    NSUUID *ifa = nil;
-    Class ASIdentifierManagerClass = NSClassFromString(@"ASIdentifierManager");
-    if (ASIdentifierManagerClass) {
-        SEL sharedManagerSelector = NSSelectorFromString(@"sharedManager");
-        id sharedManager = ((id (*)(id, SEL))[ASIdentifierManagerClass methodForSelector:sharedManagerSelector])(ASIdentifierManagerClass, sharedManagerSelector);
-        SEL advertisingTrackingEnabledSelector = NSSelectorFromString(@"isAdvertisingTrackingEnabled");
-        BOOL isTrackingEnabled = ((BOOL (*)(id, SEL))[sharedManager methodForSelector:advertisingTrackingEnabledSelector])(sharedManager, advertisingTrackingEnabledSelector);
-        if (isTrackingEnabled) {
-            SEL advertisingIdentifierSelector = NSSelectorFromString(@"advertisingIdentifier");
-            ifa = ((NSUUID* (*)(id, SEL))[sharedManager methodForSelector:advertisingIdentifierSelector])(sharedManager, advertisingIdentifierSelector);
-        }
-    }
-    
-    if (ifa) {  // IFA could be nil.
-        [iosDeviceProperties setValue:ifa.UUIDString forKey:@"device_ifa"];
-    }
     
     NSUUID *ifv = device.identifierForVendor;
     if (ifv) {  // IFV could be nil.
         [iosDeviceProperties setValue:ifv.UUIDString forKey:@"device_ifv"];
     }
-
-    UIScreen *screen = [UIScreen mainScreen];
-    [iosDeviceProperties setValue:[NSNumber numberWithInt:(screen.fixedCoordinateSpace.bounds.size.width * screen.scale)] forKey:@"device_screen_width"];
-         [iosDeviceProperties setValue:[NSNumber numberWithInt:(screen.fixedCoordinateSpace.bounds.size.height * screen.scale)] forKey:@"device_screen_height"];
 
 #if !TARGET_OS_MACCATALYST
     CTTelephonyNetworkInfo *networkInfo = [CTTelephonyNetworkInfo new];
@@ -82,13 +59,6 @@ NSMutableDictionary *SFCollectIosDeviceProperties() {
         [iosDeviceProperties setValue:carrier.mobileCountryCode forKey:@"mobile_country_code"];
         [iosDeviceProperties setValue:carrier.mobileNetworkCode forKey:@"mobile_network_code"];
     }
-#endif
-
-    // Simulator detection
-#if TARGET_OS_SIMULATOR
-    [iosDeviceProperties setValue:[NSNumber numberWithBool:YES] forKey:@"is_simulator"];
-#else
-    [iosDeviceProperties setValue:[NSNumber numberWithBool:NO] forKey:@"is_simulator"];
 #endif
 
     enum SysctlType {
@@ -110,45 +80,6 @@ NSMutableDictionary *SFCollectIosDeviceProperties() {
     } specs[] = {
         // entry_key                        sysctl_name                     sysctl_type     sysctl_int32_conversion
         {"device_hardware_machine",         "hw.machine",                   SYSCTL_STRING},
-        {"device_hardware_model",           "hw.model",                     SYSCTL_STRING},
-        {"device_package_count",            "hw.packages",                  SYSCTL_INT32,   SYSCTL_TO_INTEGER},
-        {"device_memory_size",              "hw.memsize",                   SYSCTL_INT64},
-        {"device_page_size",                "hw.pagesize",                  SYSCTL_INT64},
-        {"device_tb_frequency",             "hw.tbfrequency",               SYSCTL_INT64},
-        {"device_kernel_uuid",              "kern.uuid",                    SYSCTL_STRING},
-        {"device_kernel_version",           "kern.version",                 SYSCTL_STRING},
-        {"device_kernel_boot_session_uuid", "kern.bootsessionuuid",         SYSCTL_STRING},
-        {"device_kernel_boot_signature",    "kern.bootsignature",           SYSCTL_STRING},
-        {"device_host_id",                  "kern.hostid",                  SYSCTL_INT32,   SYSCTL_TO_INTEGER},
-        {"device_host_name",                "kern.hostname",                SYSCTL_STRING},
-        {"device_os_type",                  "kern.ostype",                  SYSCTL_STRING},
-        {"device_os_release",               "kern.osrelease",               SYSCTL_STRING},
-        {"device_os_revision",              "kern.osrevision",              SYSCTL_INT32,   SYSCTL_TO_INTEGER},
-        {"device_posix1_version",           "kern.posix1version",           SYSCTL_STRING},
-        {"device_posix2_version",           "user.posix2_version",          SYSCTL_STRING},
-        {"cpu_family",                      "hw.cpufamily",                 SYSCTL_INT32,   SYSCTL_TO_INTEGER},
-        {"cpu_type",                        "hw.cputype",                   SYSCTL_INT32,   SYSCTL_TO_INTEGER},
-        {"cpu_subtype",                     "hw.cpusubtype",                SYSCTL_INT32,   SYSCTL_TO_INTEGER},
-        {"cpu_byte_order",                  "hw.byteorder",                 SYSCTL_INT32,   SYSCTL_TO_STRING},
-        {"cpu_64bit_capable",               "hw.cpu64bit_capable",          SYSCTL_INT32,   SYSCTL_TO_BOOL},
-        {"cpu_has_fp",                      "hw.optional.floatingpoint",    SYSCTL_INT32,   SYSCTL_TO_BOOL},
-        {"cpu_count",                       "hw.ncpu",                      SYSCTL_INT32,   SYSCTL_TO_INTEGER},
-        {"cpu_physical_cpu_count",          "hw.physicalcpu",               SYSCTL_INT32,   SYSCTL_TO_INTEGER},
-        {"cpu_physical_cpu_max",            "hw.physicalcpu_max",           SYSCTL_INT32,   SYSCTL_TO_INTEGER},
-        {"cpu_logical_cpu_count",           "hw.logicalcpu",                SYSCTL_INT32,   SYSCTL_TO_INTEGER},
-        {"cpu_logical_cpu_max",             "hw.logicalcpu_max",            SYSCTL_INT32,   SYSCTL_TO_INTEGER},
-        {"cpu_active_cpu_count",            "hw.activecpu",                 SYSCTL_INT32,   SYSCTL_TO_INTEGER},
-        {"cpu_frequency",                   "hw.cpufrequency",              SYSCTL_INT64},
-        {"cpu_frequency_min",               "hw.cpufrequency_min",          SYSCTL_INT64},
-        {"cpu_frequency_max",               "hw.cpufrequency_max",          SYSCTL_INT64},
-        {"cache_line_size",                 "hw.cachelinesize",             SYSCTL_INT64},
-        {"cache_l1_dcache_size",            "hw.l1dcachesize",              SYSCTL_INT64},
-        {"cache_l1_icache_size",            "hw.l1icachesize",              SYSCTL_INT64},
-        {"cache_l2_cache_size",             "hw.l2cachesize",               SYSCTL_INT64},
-        {"cache_l3_cache_size",             "hw.l3cachesize",               SYSCTL_INT64},
-        {"bus_frequency",                   "hw.busfrequency",              SYSCTL_INT64},
-        {"bus_frequency_min",               "hw.busfrequency_min",          SYSCTL_INT64},
-        {"bus_frequency_max",               "hw.busfrequency_max",          SYSCTL_INT64},
     };
     for (int i = 0; i < sizeof(specs) / sizeof(specs[0]); i++) {
         struct SysctlSpec *spec = specs + i;

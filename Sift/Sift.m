@@ -236,32 +236,6 @@ static const SiftQueueConfig SFDefaultEventQueueConfig = {
 }
 
 
-- (BOOL)allowUsingMotionSensors {
-    return [_iosAppStateCollector allowUsingMotionSensors];
-}
-
-- (void)setAllowUsingMotionSensors:(BOOL)allowUsingMotionSensors {
-    [_iosAppStateCollector setAllowUsingMotionSensors:allowUsingMotionSensors];
-}
-
-
-- (void)updateDeviceMotion:(CMDeviceMotion *)data {
-    [_iosAppStateCollector updateDeviceMotion:data];
-}
-
-- (void)updateAccelerometerData:(CMAccelerometerData *)data {
-    [_iosAppStateCollector updateAccelerometerData:data];
-}
-
-- (void)updateGyroData:(CMGyroData *)data {
-    [_iosAppStateCollector updateGyroData:data];
-}
-
-- (void)updateMagnetometerData:(CMMagnetometerData *)data {
-    [_iosAppStateCollector updateMagnetometerData:data];
-}
-
-
 - (BOOL)disallowCollectingLocationData {
     return [_iosAppStateCollector disallowCollectingLocationData];
 }

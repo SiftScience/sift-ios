@@ -23,90 +23,6 @@ NSMutableDictionary *SFMakeLocation() {
     return [NSMutableDictionary new];
 }
 
-NSMutableDictionary *SFMakeHeading() {
-    return [NSMutableDictionary new];
-}
-
-NSMutableDictionary *SFMakeIosDeviceMotion() {
-    return [NSMutableDictionary new];
-}
-
-NSMutableDictionary *SFMakeIosDeviceAccelerometerData() {
-    return [NSMutableDictionary new];
-}
-
-NSMutableDictionary *SFMakeIosDeviceGyroData() {
-    return [NSMutableDictionary new];
-}
-
-NSMutableDictionary *SFMakeIosDeviceMagnetometerData() {
-    return [NSMutableDictionary new];
-}
-
-#pragma mark - Converters
-
-NSDictionary *SFCMDeviceMotionToDictionary(CMDeviceMotion *data, SFTimestamp now) {
-    NSMutableDictionary *dict = SFMakeIosDeviceMotion();
-    [dict setValue:[NSNumber numberWithUnsignedLongLong:now] forKey:@"time"];
-    [dict setValue:[NSNumber numberWithDouble:data.attitude.roll] forKey:@"attitude_roll"];
-    [dict setValue:[NSNumber numberWithDouble:data.attitude.pitch] forKey:@"attitude_pitch"];
-    [dict setValue:[NSNumber numberWithDouble:data.attitude.yaw] forKey:@"attitude_yaw"];
-    [dict setValue:[NSNumber numberWithDouble:data.rotationRate.x] forKey:@"rotation_rate_x"];
-    [dict setValue:[NSNumber numberWithDouble:data.rotationRate.y] forKey:@"rotation_rate_y"];
-    [dict setValue:[NSNumber numberWithDouble:data.rotationRate.z] forKey:@"rotation_rate_z"];
-    [dict setValue:[NSNumber numberWithDouble:data.gravity.x] forKey:@"gravity_x"];
-    [dict setValue:[NSNumber numberWithDouble:data.gravity.y] forKey:@"gravity_y"];
-    [dict setValue:[NSNumber numberWithDouble:data.gravity.z] forKey:@"gravity_z"];
-    [dict setValue:[NSNumber numberWithDouble:data.userAcceleration.x] forKey:@"user_acceleration_x"];
-    [dict setValue:[NSNumber numberWithDouble:data.userAcceleration.y] forKey:@"user_acceleration_y"];
-    [dict setValue:[NSNumber numberWithDouble:data.userAcceleration.z] forKey:@"user_acceleration_z"];
-    if (data.magneticField.accuracy != CMMagneticFieldCalibrationAccuracyUncalibrated) {
-        [dict setValue:[NSNumber numberWithDouble:data.magneticField.field.x] forKey:@"magnetic_field_x"];
-        [dict setValue:[NSNumber numberWithDouble:data.magneticField.field.y] forKey:@"magnetic_field_y"];
-        [dict setValue:[NSNumber numberWithDouble:data.magneticField.field.z] forKey:@"magnetic_field_x"];
-        NSString *value = nil;
-        switch (data.magneticField.accuracy) {
-#define CASE(enum_value) case enum_value: value = SFCamelCaseToSnakeCase(@#enum_value); break;
-            CASE(CMMagneticFieldCalibrationAccuracyUncalibrated);
-            CASE(CMMagneticFieldCalibrationAccuracyLow);
-            CASE(CMMagneticFieldCalibrationAccuracyMedium);
-            CASE(CMMagneticFieldCalibrationAccuracyHigh);
-#undef CASE
-        }
-        if (value) {
-            [dict setValue:value forKey:@"magnetic_field_calibration_accuracy"];
-        }
-    }
-    return dict;
-}
-
-NSDictionary *SFCMAccelerometerDataToDictionary(CMAccelerometerData *data, SFTimestamp now) {
-    NSMutableDictionary *dict = SFMakeIosDeviceAccelerometerData();
-    [dict setValue:[NSNumber numberWithUnsignedLongLong:now] forKey:@"time"];
-    [dict setValue:[NSNumber numberWithDouble:data.acceleration.x] forKey:@"acceleration_x"];
-    [dict setValue:[NSNumber numberWithDouble:data.acceleration.y] forKey:@"acceleration_y"];
-    [dict setValue:[NSNumber numberWithDouble:data.acceleration.z] forKey:@"acceleration_z"];
-    return dict;
-}
-
-NSDictionary *SFCMGyroDataToDictionary(CMGyroData *data, SFTimestamp now) {
-    NSMutableDictionary *dict = SFMakeIosDeviceGyroData();
-    [dict setValue:[NSNumber numberWithUnsignedLongLong:now] forKey:@"time"];
-    [dict setValue:[NSNumber numberWithDouble:data.rotationRate.x] forKey:@"rotation_rate_x"];
-    [dict setValue:[NSNumber numberWithDouble:data.rotationRate.y] forKey:@"rotation_rate_y"];
-    [dict setValue:[NSNumber numberWithDouble:data.rotationRate.z] forKey:@"rotation_rate_z"];
-    return dict;
-}
-
-NSDictionary *SFCMMagnetometerDataToDictionary(CMMagnetometerData *data, SFTimestamp now) {
-    NSMutableDictionary *dict = SFMakeIosDeviceMagnetometerData();
-    [dict setValue:[NSNumber numberWithUnsignedLongLong:now] forKey:@"time"];
-    [dict setValue:[NSNumber numberWithDouble:data.magneticField.x] forKey:@"magnetic_field_x"];
-    [dict setValue:[NSNumber numberWithDouble:data.magneticField.y] forKey:@"magnetic_field_y"];
-    [dict setValue:[NSNumber numberWithDouble:data.magneticField.z] forKey:@"magnetic_field_z"];
-    return dict;
-}
-
 #pragma mark - App state collection.
 
 static SF_GENERICS(NSArray, NSString *) *getIpAddresses(void);
@@ -114,18 +30,6 @@ static SF_GENERICS(NSArray, NSString *) *getIpAddresses(void);
 NSMutableDictionary *SFCollectIosAppState(CLLocationManager *locationManager, NSString *title) {
     NSMutableDictionary *iosAppState = SFMakeEmptyIosAppState();
     [iosAppState setValue:[Sift sharedInstance].sdkVersion forKey:@"sdk_version"];
-
-    NSString *applicationState = nil;
-    switch (UIApplication.sharedApplication.applicationState) {
-#define CASE(enum_value) case enum_value: applicationState = SFCamelCaseToSnakeCase(@#enum_value); break;
-        CASE(UIApplicationStateActive);
-        CASE(UIApplicationStateInactive);
-        CASE(UIApplicationStateBackground);
-#undef CASE
-    }
-    if (applicationState) {
-        [iosAppState setValue:applicationState forKey:@"application_state"];
-    }
 
     if (title) {
         [iosAppState setValue:[[NSArray alloc] initWithObjects:title, nil] forKey:@"window_root_view_controller_titles"];
@@ -153,25 +57,6 @@ NSMutableDictionary *SFCollectIosAppState(CLLocationManager *locationManager, NS
         }
     }
 
-    // Orientation
-    if (device.isGeneratingDeviceOrientationNotifications) {
-        NSString *deviceOrientation = nil;
-        switch (device.orientation) {
-#define CASE(enum_value) case enum_value: deviceOrientation = SFCamelCaseToSnakeCase(@#enum_value); break;
-            CASE(UIDeviceOrientationUnknown);
-            CASE(UIDeviceOrientationPortrait);
-            CASE(UIDeviceOrientationPortraitUpsideDown);
-            CASE(UIDeviceOrientationLandscapeLeft);
-            CASE(UIDeviceOrientationLandscapeRight);
-            CASE(UIDeviceOrientationFaceUp);
-            CASE(UIDeviceOrientationFaceDown);
-#undef CASE
-        }
-        if (deviceOrientation) {
-            [iosAppState setValue:deviceOrientation forKey:@"device_orientation"];
-        }
-    }
-
     // Proximity
     if (device.isProximityMonitoringEnabled) {
         [iosAppState setValue:[NSNumber numberWithBool:device.proximityState] forKey:@"proximity_state"];
@@ -191,42 +76,11 @@ NSMutableDictionary *SFCollectIosAppState(CLLocationManager *locationManager, NS
 
 NSDictionary *SFCLLocationToDictionary(CLLocation *location) {
     NSMutableDictionary *dict = SFMakeLocation();
-    [dict setValue:[NSNumber numberWithLongLong:(location.timestamp.timeIntervalSince1970 * 1000)] forKey:@"time"];
     
     if (location.horizontalAccuracy >= 0) {
         [dict setValue:[NSNumber numberWithDouble:location.coordinate.latitude] forKey:@"latitude"];
         [dict setValue:[NSNumber numberWithDouble:location.coordinate.longitude] forKey:@"longitude"];
-        [dict setValue:[NSNumber numberWithDouble:location.horizontalAccuracy] forKey:@"horizontal_accuracy"];
     }
-    if (location.verticalAccuracy >= 0) {
-        [dict setValue:[NSNumber numberWithDouble:location.altitude] forKey:@"altitude"];
-        [dict setValue:[NSNumber numberWithDouble:location.verticalAccuracy] forKey:@"vertical_accuracy"];
-    }
-    if (location.floor) {
-        [dict setValue:[NSNumber numberWithInteger:location.floor.level] forKey:@"floor"];
-    }
-    if (location.speed >= 0) {
-        [dict setValue:[NSNumber numberWithDouble:location.speed] forKey:@"speed"];
-    }
-    if (location.course >= 0) {
-        [dict setValue:[NSNumber numberWithDouble:location.course] forKey:@"course"];
-    }
-    return dict;
-}
-
-NSDictionary *SFCLHeadingToDictionary(CLHeading *heading) {
-    NSMutableDictionary *dict = SFMakeHeading();
-    [dict setValue:[NSNumber numberWithLongLong:(heading.timestamp.timeIntervalSince1970 * 1000)] forKey:@"time"];
-    if (heading.headingAccuracy >= 0) {
-        [dict setValue:[NSNumber numberWithDouble:heading.magneticHeading] forKey:@"magnetic_heading"];
-        [dict setValue:[NSNumber numberWithDouble:heading.headingAccuracy] forKey:@"accuracy"];
-    }
-    if (heading.trueHeading >= 0) {
-        [dict setValue:[NSNumber numberWithDouble:heading.trueHeading] forKey:@"true_heading"];
-    }
-    [dict setValue:[NSNumber numberWithDouble:heading.x] forKey:@"raw_magnetic_field_x"];
-    [dict setValue:[NSNumber numberWithDouble:heading.y] forKey:@"raw_magnetic_field_y"];
-    [dict setValue:[NSNumber numberWithDouble:heading.z] forKey:@"raw_magnetic_field_z"];
     return dict;
 }
 

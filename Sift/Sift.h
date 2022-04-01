@@ -109,30 +109,6 @@ NS_EXTENSION_UNAVAILABLE_IOS("Sift is not supported for iOS extensions.")
 @property NSString *userId;
 
 /**
- * @name Motion sensors.
- */
-
-/**
- * Because CMMotionManager is "almost" a global singleton object, we
- * have to coordinate that there is only one CMMotionManager instance
- * that is starting/stopping motion sensors.  If you don't intend to use
- * motion sensors _at all_, you may set this flag to YES, which allows
- * the SDK to use motion sensors.  If you intend to use motion sensors
- * occasionally, please call the following callbacks to send us motion
- * data.
- */
-@property (nonatomic) BOOL allowUsingMotionSensors;
-
-/**
- * If you do intend to use motion sensors, please call these methods to
- * send us motion data you've got.
- */
-- (void)updateDeviceMotion:(CMDeviceMotion *)data;
-- (void)updateAccelerometerData:(CMAccelerometerData *)data;
-- (void)updateGyroData:(CMGyroData *)data;
-- (void)updateMagnetometerData:(CMMagnetometerData *)data;
-
-/**
  * The default SDK behavior is to collect user location data only if
  * the user has authorized location services through your application.
  * If you do not want the SDK to collect user location data, you may

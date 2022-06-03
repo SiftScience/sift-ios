@@ -1,4 +1,12 @@
 # Change Log
+## [2.1.1] - 2022-06-03
+### Added
+
+### Changed
+
+### Removed
+Deprecated fields
+
 
 ## [2.1.0] - 2021-08-02
 ### Added

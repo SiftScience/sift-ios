@@ -3,13 +3,8 @@
 @import Foundation;
 @import UIKit;
 
-#import "NSData+GZIP.h"
-#import "SiftDebug.h"
-#import "SiftEvent.h"
-#import "SiftEvent+Private.h"
-#import "TaskManager.h"
-
 #import "SiftUploader.h"
+#import "Sift.h"
 
 @implementation SiftUploader {
     TaskManager *_taskManager;

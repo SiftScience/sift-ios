@@ -2,7 +2,7 @@
 
 // This is a public header.
 
-#import <Foundation/Foundation.h>
+@import Foundation;
 
 /** Control the behavior of an `SFQueue`. */
 typedef struct {

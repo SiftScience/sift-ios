@@ -1,1 +1,2 @@
-github "SiftScience/sift-ios" ~> 2.1.1
+git "file:///Users/intersmart/Documents/sift/sift-ios"
+

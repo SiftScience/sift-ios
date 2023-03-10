@@ -3,19 +3,9 @@
 @import Foundation;
 @import UIKit;
 
-#import "SiftDebug.h"
-#import "SiftEvent.h"
-#import "SiftEvent+Private.h"
-#import "SiftIosAppStateCollector.h"
-#import "SiftIosDevicePropertiesCollector.h"
-#import "SiftQueue.h"
-#import "SiftQueueConfig.h"
-#import "SiftUploader.h"
-#import "SiftUtils.h"
-#import "TaskManager.h"
-
 #import "Sift.h"
-#import "Sift+Private.h"
+#import "SiftQueue.h"
+#import "SiftUploader.h"
 
 static NSString * const SFServerUrlFormat = @"https://api3.siftscience.com/v3/accounts/%@/mobile_events";
 

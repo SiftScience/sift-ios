@@ -2,11 +2,23 @@
 
 // This is a public header.
 
-#import <CoreMotion/CoreMotion.h>
-#import <Foundation/Foundation.h>
+@import CoreMotion;
+@import Foundation;
+
 
 #import "SiftEvent.h"
 #import "SiftQueueConfig.h"
+#import "SiftIosAppState.h"
+#import "SiftCircularBuffer.h"
+#import "NSData+GZIP.h"
+#import "SiftDebug.h"
+#import "SiftIosAppStateCollector.h"
+#import "SiftIosDevicePropertiesCollector.h"
+#import "TaskManager.h"
+#import "SiftEvent+Private.h"
+#import "SiftIosAppStateCollector+Private.h"
+#import "SiftTokenBucket.h"
+
 
 /**
  * This is the main interface you interact with Sift.

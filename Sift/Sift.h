@@ -7,6 +7,20 @@
 
 #import "SiftEvent.h"
 #import "SiftQueueConfig.h"
+#import "TaskManager.h"
+#import "SiftCircularBuffer.h"
+#import "NSData+GZIP.h"
+#import "SiftEvent+Private.h"
+#import "SiftIosAppState.h"
+#import "SiftIosDeviceProperties.h"
+#import "SiftDebug.h"
+#import "SiftIosAppStateCollector+Private.h"
+#import "SiftIosDevicePropertiesCollector.h"
+#import "SiftTokenBucket.h"
+#import "SiftUploader.h"
+#import "SiftQueue.h"
+
+
 
 /**
  * This is the main interface you interact with Sift.

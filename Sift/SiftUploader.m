@@ -8,7 +8,7 @@
 #import "SiftEvent.h"
 #import "SiftEvent+Private.h"
 #import "TaskManager.h"
-
+#import "Sift.h"
 #import "SiftUploader.h"
 
 @implementation SiftUploader {

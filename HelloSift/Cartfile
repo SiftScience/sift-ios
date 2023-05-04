@@ -1,1 +1,1 @@
-git "/Users/sujisha/Desktop/SIFTClone /sift-ios" ~> 2.1.1
+github "SiftScience/sift-ios" ~> 2.1.1

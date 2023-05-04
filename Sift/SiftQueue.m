@@ -99,17 +99,10 @@ static NSString * const SF_LAST_UPLOAD_TIMESTAMP = @"lastUploadTimestamp";
             [archive setObject:_lastEvent forKey:SF_LAST_EVENT];
         }
         [archive setObject:@(_lastUploadTimestamp) forKey:SF_LAST_UPLOAD_TIMESTAMP];
-        #if TARGET_OS_MACCATALYST
-            NSData* data = [NSKeyedArchiver archivedDataWithRootObject: archive requiringSecureCoding:NO error:nil];
-            [data writeToFile:self->_archivePath options:NSDataWritingAtomic error:nil];
-        #else
-            if (@available(iOS 11.0, *)) {
-                NSData* data = [NSKeyedArchiver archivedDataWithRootObject: archive requiringSecureCoding:NO error:nil];
-                [data writeToFile:self->_archivePath options:NSDataWritingAtomic error:nil];
-            } else {
-                [NSKeyedArchiver archiveRootObject:archive toFile:self->_archivePath];
-            }
-        #endif
+       
+        NSData* data = [NSKeyedArchiver archivedDataWithRootObject: archive requiringSecureCoding:NO error:nil];
+        [data writeToFile:self->_archivePath options:NSDataWritingAtomic error:nil];
+
     }
 }
 
@@ -118,21 +111,12 @@ static NSString * const SF_LAST_UPLOAD_TIMESTAMP = @"lastUploadTimestamp";
         NSDictionary *archive;
         NSError *error;
         NSData *newData = [NSData dataWithContentsOfFile:_archivePath];
-        #if TARGET_OS_MACCATALYST
-            NSKeyedUnarchiver* unarchiver = [[NSKeyedUnarchiver alloc] initForReadingFromData:newData error:&error];
-            unarchiver.requiresSecureCoding = NO;
-            archive = [unarchiver decodeTopLevelObjectForKey:NSKeyedArchiveRootObjectKey error:&error];
-            SF_DEBUG(@"error unarchiving data: %@", error.localizedDescription);
-        #else
-            if (@available(iOS 11.0, *)) {
-                NSKeyedUnarchiver* unarchiver = [[NSKeyedUnarchiver alloc] initForReadingFromData:newData error:&error];
-                unarchiver.requiresSecureCoding = NO;
-                archive = [unarchiver decodeTopLevelObjectForKey:NSKeyedArchiveRootObjectKey error:&error];
-                SF_DEBUG(@"error unarchiving data: %@", error.localizedDescription);
-            } else {
-                archive = [NSKeyedUnarchiver unarchiveObjectWithFile:_archivePath];
-            }
-        #endif
+        
+        NSKeyedUnarchiver* unarchiver = [[NSKeyedUnarchiver alloc] initForReadingFromData:newData error:&error];
+        unarchiver.requiresSecureCoding = NO;
+        archive = [unarchiver decodeTopLevelObjectForKey:NSKeyedArchiveRootObjectKey error:&error];
+        SF_DEBUG(@"error unarchiving data: %@", error.localizedDescription);
+
         if (archive) {
             _queue = [NSMutableArray arrayWithArray:[archive objectForKey:SF_QUEUE]];
             _lastEvent = [archive objectForKey:SF_LAST_EVENT];

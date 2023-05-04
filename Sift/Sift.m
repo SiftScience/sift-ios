@@ -294,44 +294,24 @@ static NSString * const SF_UPLOADER = @"uploader";
         [archive setObject:_userId forKey:SF_SIFT_USER_ID];
     }
     NSError *error;
-    #if TARGET_OS_MACCATALYST
-        if ([self archivePathForKeys] != nil) {
-            NSData* data = [NSKeyedArchiver archivedDataWithRootObject: archive requiringSecureCoding:NO error:&error];
-            [data writeToFile:[self archivePathForKeys] options:NSDataWritingAtomic error:&error];
-            SF_DEBUG(@"Write returned error: %@", [error localizedDescription]);
-        }
-    #else
-        if (@available(iOS 11.0, *)) {
-            if ([self archivePathForKeys] != nil) {
-                NSData* data = [NSKeyedArchiver archivedDataWithRootObject: archive requiringSecureCoding:NO error:&error];
-                [data writeToFile:[self archivePathForKeys] options:NSDataWritingAtomic error:&error];
-                SF_DEBUG(@"Write returned error: %@", [error localizedDescription]);
-            }
-        } else {
-            [NSKeyedArchiver archiveRootObject:archive toFile:[self archivePathForKeys]];
-        }
-    #endif
+   
+    if ([self archivePathForKeys] != nil) {
+        NSData* data = [NSKeyedArchiver archivedDataWithRootObject: archive requiringSecureCoding:NO error:&error];
+        [data writeToFile:[self archivePathForKeys] options:NSDataWritingAtomic error:&error];
+        SF_DEBUG(@"Write returned error: %@", [error localizedDescription]);
+    }
+        
 }
 
 - (void)unarchiveKeys {
     NSDictionary *archive;
     NSData *newData = [NSData dataWithContentsOfFile:[self archivePathForKeys]];
     NSError *error;
-    #if TARGET_OS_MACCATALYST
-        NSKeyedUnarchiver* unarchiver = [[NSKeyedUnarchiver alloc] initForReadingFromData:newData error:&error];
-        unarchiver.requiresSecureCoding = NO;
-        archive = [unarchiver decodeTopLevelObjectForKey:NSKeyedArchiveRootObjectKey error:&error];
-        SF_DEBUG(@"error unarchiving data: %@", error.localizedDescription);
-    #else
-        if (@available(iOS 11.0, *)) {
-            NSKeyedUnarchiver* unarchiver = [[NSKeyedUnarchiver alloc] initForReadingFromData:newData error:&error];
-            unarchiver.requiresSecureCoding = NO;
-            archive = [unarchiver decodeTopLevelObjectForKey:NSKeyedArchiveRootObjectKey error:&error];
-            SF_DEBUG(@"error unarchiving data: %@", error.localizedDescription);
-        } else {
-            archive = [NSKeyedUnarchiver unarchiveObjectWithFile:[self archivePathForKeys]];
-        }
-    #endif
+    
+    NSKeyedUnarchiver* unarchiver = [[NSKeyedUnarchiver alloc] initForReadingFromData:newData error:&error];
+    unarchiver.requiresSecureCoding = NO;
+    archive = [unarchiver decodeTopLevelObjectForKey:NSKeyedArchiveRootObjectKey error:&error];
+    SF_DEBUG(@"error unarchiving data: %@", error.localizedDescription);
 
     if (archive) {
         _accountId = [archive objectForKey:SF_SIFT_ACCOUNT_ID];

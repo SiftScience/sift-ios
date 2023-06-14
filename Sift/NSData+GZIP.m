@@ -41,7 +41,7 @@
 
 @implementation NSData (GZIP)
 
-static void *libzOpen()
+static void *libzOpen(void)
 {
     static void *libz;
     static dispatch_once_t onceToken;

@@ -1,5 +1,6 @@
 // Copyright (c) 2016 Sift Science. All rights reserved.
 
+#include <TargetConditionals.h>
 #if !TARGET_OS_MACCATALYST
 @import CoreTelephony;
 #endif
@@ -17,7 +18,7 @@
 
 #import "SiftIosDeviceProperties.h"
 
-NSMutableDictionary *SFMakeEmptyIosDeviceProperties() {
+NSMutableDictionary *SFMakeEmptyIosDeviceProperties(void) {
     return [NSMutableDictionary new];
 }
 
@@ -31,7 +32,7 @@ static void rot13(char *p);
 
 static BOOL SFIsUrlSchemeWhitelisted(NSString *targetScheme);
 
-NSMutableDictionary *SFCollectIosDeviceProperties() {
+NSMutableDictionary *SFCollectIosDeviceProperties(void) {
     NSMutableDictionary *iosDeviceProperties = SFMakeEmptyIosDeviceProperties();
 
     NSDictionary *infoDictionary = [[NSBundle mainBundle] infoDictionary];
@@ -52,7 +53,10 @@ NSMutableDictionary *SFCollectIosDeviceProperties() {
 
 #if !TARGET_OS_MACCATALYST
     CTTelephonyNetworkInfo *networkInfo = [CTTelephonyNetworkInfo new];
-    CTCarrier *carrier = [networkInfo subscriberCellularProvider];
+    
+    NSDictionary<NSString *, CTCarrier *> *providers= [networkInfo serviceSubscriberCellularProviders];
+    CTCarrier *carrier = providers.allValues.firstObject;
+   
     if (carrier) {
         [iosDeviceProperties setValue:carrier.carrierName forKey:@"mobile_carrier_name"];
         [iosDeviceProperties setValue:carrier.isoCountryCode forKey:@"mobile_iso_country_code"];

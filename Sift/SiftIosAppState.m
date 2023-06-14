@@ -15,11 +15,11 @@
 #import "Sift.h"
 #import "SiftIosAppState.h"
 
-NSMutableDictionary *SFMakeEmptyIosAppState() {
+NSMutableDictionary *SFMakeEmptyIosAppState(void) {
     return [NSMutableDictionary new];
 }
 
-NSMutableDictionary *SFMakeLocation() {
+NSMutableDictionary *SFMakeLocation(void) {
     return [NSMutableDictionary new];
 }
 
@@ -84,7 +84,7 @@ NSDictionary *SFCLLocationToDictionary(CLLocation *location) {
     return dict;
 }
 
-static SF_GENERICS(NSArray, NSString *) *getIpAddresses() {
+static SF_GENERICS(NSArray, NSString *) *getIpAddresses(void) {
     struct ifaddrs *interfaces;
     if (getifaddrs(&interfaces)) {
         SF_DEBUG(@"Cannot get network interface: %s", strerror(errno));

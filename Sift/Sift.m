@@ -57,7 +57,7 @@ static const SiftQueueConfig SFDefaultEventQueueConfig = {
 - (instancetype)initWithRootDirPath:(NSString *)rootDirPath {
     self = [super init];
     if (self) {
-        _sdkVersion = @"v2.1.1";
+        _sdkVersion = @"v2.1.2";
 
         _rootDirPath = rootDirPath;
 
@@ -294,20 +294,20 @@ static NSString * const SF_UPLOADER = @"uploader";
         [archive setObject:_userId forKey:SF_SIFT_USER_ID];
     }
     NSError *error;
-   
+
     if ([self archivePathForKeys] != nil) {
         NSData* data = [NSKeyedArchiver archivedDataWithRootObject: archive requiringSecureCoding:NO error:&error];
         [data writeToFile:[self archivePathForKeys] options:NSDataWritingAtomic error:&error];
         SF_DEBUG(@"Write returned error: %@", [error localizedDescription]);
     }
-        
+
 }
 
 - (void)unarchiveKeys {
     NSDictionary *archive;
     NSData *newData = [NSData dataWithContentsOfFile:[self archivePathForKeys]];
     NSError *error;
-    
+
     NSKeyedUnarchiver* unarchiver = [[NSKeyedUnarchiver alloc] initForReadingFromData:newData error:&error];
     unarchiver.requiresSecureCoding = NO;
     archive = [unarchiver decodeTopLevelObjectForKey:NSKeyedArchiveRootObjectKey error:&error];

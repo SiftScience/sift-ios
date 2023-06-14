@@ -1,4 +1,15 @@
 # Change Log
+
+## [2.1.2] - 2023-06-14
+### Fixed warnings related to following
+- A function declaration without a prototype is deprecated in all version of C
+- The iOS deployment target is set to 9. But the range of supported deployment version is 12. to 16.4.99
+- 'TARGET_OS_MACCATALYST' is not defined , evaluates to 0.
+- 'archiveRootObject:toFile:' is deprecated: first deprecated in iOS 12.0 - Use +archivedDataWithRootObject:requiringSecureCoding:error: and -writeToURL:options:error: instead
+- 'unarchiveObjectWithFile:' is deprecated: first deprecated in iOS 12.0 - Use +unarchivedObjectOfClass:fromData:error: instead
+- 'subscriberCellularProvider' is deprecated: first deprecated in iOS 12.0 , Replace 'subscriberCellularProvider' with 'serviceSubscriberCellularProviders'
+
+
 ## [2.1.1] - 2022-06-03
 ### Added
 

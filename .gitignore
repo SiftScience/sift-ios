@@ -16,3 +16,5 @@ Carthage
 Packages/
 .build/
 .swiftpm/
+
+build/

@@ -1,4 +1,0 @@
-module sift_ios {
-    header "/Users/developer/Documents/GitRepo/forks/sift-ios/.build/x86_64-apple-macosx/debug/sift_ios.build/sift-ios-Swift.h"
-    requires objc
-}

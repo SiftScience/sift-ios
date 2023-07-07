@@ -1,5 +1,0 @@
-version: "Apple Swift version 5.3 (swiftlang-1200.0.29.2 clang-1200.0.30.1)"
-options: "b85dcc60f87fdd0ff9eb0464b8005476"
-build_time: [1605070789, 44090000]
-inputs:
-  "/Users/developer/Documents/GitRepo/forks/sift-ios/Sources/sift-ios/sift_ios.swift": [1605070771, 526990167]

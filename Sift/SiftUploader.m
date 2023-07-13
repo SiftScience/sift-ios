@@ -23,6 +23,7 @@
     int _numRejects;
     int64_t _backoffBase;
     int64_t _backoff;
+    int64_t _backoffLimit;
     NSString *_archivePath;
     // Weak reference back to the parent.
     Sift * __weak _sift;
@@ -32,6 +33,7 @@
 static const int SF_REJECT_LIMIT = 3;
 
 static const int64_t SF_BACKOFF = NSEC_PER_SEC * 5;  // Starting from 5 seconds.
+static const int64_t SF_BACKOFF_LIMIT = NSEC_PER_SEC * 600;  // Limited to 10 minutes.
 
 // Periodically check if we have unfinished batches.
 static const int64_t SF_CHECK_UPLOAD_PERIOD = 60 * NSEC_PER_SEC;
@@ -51,6 +53,7 @@ static const int64_t SF_CHECK_UPLOAD_LEEWAY = 5 * NSEC_PER_SEC;
         _uploadTask = nil;
         _backoffBase = backoffBase;
         _backoff = backoffBase;
+        _backoffLimit = SF_BACKOFF_LIMIT;
         _sift = sift;
 
         [self unarchive];
@@ -137,7 +140,10 @@ static const int64_t SF_CHECK_UPLOAD_LEEWAY = 5 * NSEC_PER_SEC;
             [self->_taskManager scheduleWithTask:^{
                 [self doUpload];
             } queue:self->_serial delay:self->_backoff];
-            self->_backoff *= 2;
+            // Avoid int64 overflow + it doesn't need to have delay more than limit
+            if (self->_backoff < self->_backoffLimit) {
+                self->_backoff *= 2;
+            }
         }
     } queue:self->_serial];
 }

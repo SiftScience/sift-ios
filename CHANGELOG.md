@@ -1,5 +1,9 @@
 # Change Log
 
+## [2.1.3] - 2023-07-17
+### Removed
+- Removing submodule HackerNewsReader dependency
+
 ## [2.1.2] - 2023-06-14
 ### Fixed warnings related to following
 - A function declaration without a prototype is deprecated in all version of C

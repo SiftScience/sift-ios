@@ -1,5 +1,9 @@
 # Change Log
 
+## [2.1.4] - 2023-07-18
+### Removed
+- Removing samples/HackerNewsReader submodule directory
+
 ## [2.1.3] - 2023-07-17
 ### Removed
 - Removing submodule HackerNewsReader dependency

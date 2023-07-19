@@ -15,7 +15,7 @@ Pod::Spec.new do |spec|
 
   # Platform
   spec.platform = :ios
-  spec.ios.deployment_target = '8.0'
+  spec.ios.deployment_target = '12.0'
 
   # Build settings
   spec.ios.frameworks = [

@@ -1,5 +1,9 @@
 # Change Log
 
+## [2.1.5] - 2023-07-25
+### Changed
+- The Podspec iOS deployment target is set to 12.0
+
 ## [2.1.4] - 2023-07-18
 ### Removed
 - Removing samples/HackerNewsReader submodule directory

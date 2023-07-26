@@ -7,6 +7,7 @@
 
 #import "SiftEvent.h"
 #import "SiftQueueConfig.h"
+#import "AccountKey.h"
 
 /**
  * This is the main interface you interact with Sift.
@@ -100,6 +101,13 @@ NS_EXTENSION_UNAVAILABLE_IOS("Sift is not supported for iOS extensions.")
  * NOTE: This is persisted to device's storage.
  */
 @property NSString *beaconKey;
+
+/**
+ * Account Keys.  Default to nil. Used to send data to multiple accountId, beaconkey.
+ *
+ * NOTE: This is persisted to device's storage.
+ */
+@property NSArray<AccountKey *> *accountKeys;
 
 /**
  * User ID.  Default to nil.

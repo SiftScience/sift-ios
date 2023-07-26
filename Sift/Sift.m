@@ -13,6 +13,7 @@
 #import "SiftUploader.h"
 #import "SiftUtils.h"
 #import "TaskManager.h"
+#import "AccountKey.h"
 
 #import "Sift.h"
 #import "Sift+Private.h"
@@ -34,6 +35,7 @@ static const SiftQueueConfig SFDefaultEventQueueConfig = {
 
     NSString *_accountId;
     NSString *_beaconKey;
+    NSArray<AccountKey *> *_accountKeys;
     NSString *_userId;
 
     NSMutableDictionary *_eventQueues;
@@ -201,8 +203,6 @@ static const SiftQueueConfig SFDefaultEventQueueConfig = {
     return YES;
 }
 
-#pragma mark - Account keys
-
 - (NSString *)accountId {
     return _accountId;
 }
@@ -221,6 +221,15 @@ static const SiftQueueConfig SFDefaultEventQueueConfig = {
     [self archiveKeys];
 }
 
+- (NSArray<AccountKey *> *)accountKeys {
+    return _accountKeys;
+}
+
+- (void)setAccountKeys:(NSArray<AccountKey *> *)accountKeys {
+    _accountKeys = accountKeys;
+    [self archiveKeys];
+}
+
 - (NSString *)userId {
     return _userId;
 }
@@ -235,7 +244,6 @@ static const SiftQueueConfig SFDefaultEventQueueConfig = {
     [self archiveKeys];
 }
 
-
 - (BOOL)disallowCollectingLocationData {
     return [_iosAppStateCollector disallowCollectingLocationData];
 }
@@ -244,12 +252,11 @@ static const SiftQueueConfig SFDefaultEventQueueConfig = {
     [_iosAppStateCollector setDisallowCollectingLocationData:disallowCollectingLocationData];
 }
 
-#pragma mark - NSKeyedArchiver/NSKeyedUnarchiver
-
 static NSString * const SF_SIFT = @"sift";
 static NSString * const SF_SIFT_ACCOUNT_ID = @"accountId";
 static NSString * const SF_SIFT_BEACON_KEY = @"beaconKey";
 static NSString * const SF_SIFT_USER_ID = @"userId";
+static NSString * const SF_SIFT_ACCOUNT_KEYS = @"accountKeys";
 
 static NSString * const SF_QUEUE_DIR = @"queues";
 static NSString * const SF_IOS_APP_STATE_COLLECTOR = @"ios_app_state_collector";
@@ -290,6 +297,9 @@ static NSString * const SF_UPLOADER = @"uploader";
     if (_beaconKey) {
         [archive setObject:_beaconKey forKey:SF_SIFT_BEACON_KEY];
     }
+    if (_accountKeys) {
+        [archive setObject:_accountKeys forKey:SF_SIFT_ACCOUNT_KEYS];
+    }
     if (_userId) {
         [archive setObject:_userId forKey:SF_SIFT_USER_ID];
     }
@@ -316,13 +326,15 @@ static NSString * const SF_UPLOADER = @"uploader";
     if (archive) {
         _accountId = [archive objectForKey:SF_SIFT_ACCOUNT_ID];
         _beaconKey = [archive objectForKey:SF_SIFT_BEACON_KEY];
+        _accountKeys = [archive objectForKey:SF_SIFT_ACCOUNT_KEYS];
         _userId = [archive objectForKey:SF_SIFT_USER_ID];
     } else {
         _accountId = nil;
         _beaconKey = nil;
+        _accountKeys = nil;
         _userId = nil;
     }
-    SF_DEBUG(@"Unarchive: accountId=%@ beaconKey=%@ userId=%@", _accountId, _beaconKey, _userId);
+    SF_DEBUG(@"Unarchive: accountId=%@ beaconKey=%@ accountKeys=%@ userId=%@", _accountId, _beaconKey, _accountKeys, _userId);
 }
 
 @end

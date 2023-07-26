@@ -3,7 +3,6 @@
 @import XCTest;
 
 #import "SiftUtils.h"
-
 #import "Sift.h"
 #import "Sift+Private.h"
 #import "SiftIosAppStateCollector.h"
@@ -79,6 +78,20 @@
 - (void)testSetBeaconKey {
     [_sift setBeaconKey:@"xxxx"];
     XCTAssertEqual(_sift.beaconKey, @"xxxx");
+}
+
+- (void)testSetAccountKeys {
+    AccountKey *accountKey1 = [AccountKey new];
+    accountKey1.accountId = @"accountId1";
+    accountKey1.beaconKey = @"beaconKey1";
+
+    AccountKey *accountKey2 = [AccountKey new];
+    accountKey2.accountId = @"accountId2";
+    accountKey2.beaconKey = @"beaconKey2";
+
+    NSArray<AccountKey *> *accountKeysArray = @[accountKey1, accountKey2];
+    [_sift setAccountKeys:accountKeysArray];
+    XCTAssertEqual(_sift.accountKeys, accountKeysArray);
 }
 
 - (void)testSetUserId {

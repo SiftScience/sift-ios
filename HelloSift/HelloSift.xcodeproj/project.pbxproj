@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		712A42191C6D3FAA005AEC79 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 712A42171C6D3E9F005AEC79 /* CoreLocation.framework */; };
 		712A421B1C6D5744005AEC79 /* CoreMotion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 712A421A1C6D5744005AEC79 /* CoreMotion.framework */; };
-		714ACE9C1C99E97300596A7C /* Sift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 714ACE9B1C99E97300596A7C /* Sift.framework */; };
 		714ACE9D1C99E97300596A7C /* Sift.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 714ACE9B1C99E97300596A7C /* Sift.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		71E96AE91BFC074D0037AC23 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 71E96AE81BFC074D0037AC23 /* main.m */; };
 		71E96AEC1BFC074D0037AC23 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 71E96AEB1BFC074D0037AC23 /* AppDelegate.m */; };
@@ -17,6 +16,7 @@
 		71E96AF21BFC074D0037AC23 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 71E96AF01BFC074D0037AC23 /* Main.storyboard */; };
 		71E96AF41BFC074D0037AC23 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 71E96AF31BFC074D0037AC23 /* Assets.xcassets */; };
 		71E96AF71BFC074D0037AC23 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 71E96AF51BFC074D0037AC23 /* LaunchScreen.storyboard */; };
+		9FC961A42A7B4B2B00891B4F /* Sift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9FC961A32A7B4B2B00891B4F /* Sift.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -47,6 +47,7 @@
 		71E96AF31BFC074D0037AC23 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		71E96AF61BFC074D0037AC23 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		71E96AF81BFC074D0037AC23 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		9FC961A32A7B4B2B00891B4F /* Sift.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Sift.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -54,8 +55,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9FC961A42A7B4B2B00891B4F /* Sift.framework in Frameworks */,
 				712A421B1C6D5744005AEC79 /* CoreMotion.framework in Frameworks */,
-				714ACE9C1C99E97300596A7C /* Sift.framework in Frameworks */,
 				712A42191C6D3FAA005AEC79 /* CoreLocation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -71,6 +72,7 @@
 				712A42171C6D3E9F005AEC79 /* CoreLocation.framework */,
 				71E96AE61BFC074D0037AC23 /* HelloSift */,
 				71E96AE51BFC074D0037AC23 /* Products */,
+				9FC9619C2A7AC2C500891B4F /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -106,6 +108,14 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
+		9FC9619C2A7AC2C500891B4F /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				9FC961A32A7B4B2B00891B4F /* Sift.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -139,6 +149,7 @@
 				TargetAttributes = {
 					71E96AE31BFC074D0037AC23 = {
 						CreatedOnToolsVersion = 7.1;
+						DevelopmentTeam = APTY75H4ED;
 					};
 				};
 			};
@@ -176,7 +187,7 @@
 /* Begin PBXShellScriptBuildPhase section */
 		714ACEA11C99EA5900596A7C /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
+			buildActionMask = 8;
 			files = (
 			);
 			inputPaths = (
@@ -184,9 +195,9 @@
 			);
 			outputPaths = (
 			);
-			runOnlyForDeploymentPostprocessing = 0;
+			runOnlyForDeploymentPostprocessing = 1;
 			shellPath = /bin/sh;
-			shellScript = "/usr/local/bin/carthage copy-frameworks";
+			shellScript = "/usr/local/bin/carthage copy-frameworks\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -329,6 +340,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				DEVELOPMENT_TEAM = APTY75H4ED;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
@@ -348,6 +360,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				DEVELOPMENT_TEAM = APTY75H4ED;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Build/iOS",

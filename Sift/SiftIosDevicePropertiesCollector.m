@@ -55,6 +55,12 @@ static NSString * const SFIosDevicePropertiesCollectorQueueIdentifier = @"sift-d
 - (void)collect {
     Sift *sift = Sift.sharedInstance;
 
+    if(!sift.allowDataCollectionAndUpload)
+    {
+        SF_DEBUG(@"Collect and Upload action is in disabled state");
+        return;
+    }
+    
     // Create queue lazily.
     if (![sift hasEventQueue:SFIosDevicePropertiesCollectorQueueIdentifier]) {
         if (![sift addEventQueue:SFIosDevicePropertiesCollectorQueueIdentifier config:SFIosDevicePropertiesCollectorQueueConfig]) {

@@ -142,6 +142,16 @@ static const int64_t SF_CHECK_UPLOAD_LEEWAY = 5 * NSEC_PER_SEC;
     } queue:self->_serial];
 }
 
+- (void)suspendUpload
+{
+    [_uploadTask suspend];
+}
+
+- (void)resumeUpload
+{
+    [_uploadTask resume];
+}
+
 - (void)doUpload {
     // Query the applicationState on the main thread, then proceed on the serial dispatch queue
     [self->_taskManager submitWithTask:^{
@@ -163,6 +173,12 @@ static const int64_t SF_CHECK_UPLOAD_LEEWAY = 5 * NSEC_PER_SEC;
             Sift *sift = self->_sift;
             if (!sift) {
                 SF_DEBUG(@"Reference to Sift object was lost");
+                return;
+            }
+            
+            if(!sift.allowDataCollectionAndUpload)
+            {
+                SF_DEBUG(@"Collect and Upload action is in disabled state");
                 return;
             }
             

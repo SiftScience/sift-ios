@@ -1,5 +1,9 @@
 # Change Log
 
+## [2.1.6] - 2024-01-02
+### Added
+- Added Privacy Manifest
+
 ## [2.1.5] - 2023-07-25
 ### Changed
 - The Podspec iOS deployment target is set to 12.0

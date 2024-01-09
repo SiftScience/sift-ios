@@ -150,5 +150,18 @@ NS_EXTENSION_UNAVAILABLE_IOS("Sift is not supported for iOS extensions.")
  * where "%@" will be substituted with `accountId`.
  */
 @property NSString *serverUrlFormat;
+/**
+ * Use this method to disable the mobile SDK collection and sending of data
+ */
+- (BOOL)stopCollection;
+/**
+ * Use this method to re-enable the mobile SDK collection and sending of data
+ */
+- (BOOL)restartCollection;
+
+/**
+ * Use this property to know the status of SDK activities enable or disable mode
+ */
+- (BOOL) allowDataCollectionAndUpload;
 
 @end

@@ -1,0 +1,3 @@
+[submodule "Carthage/Checkouts/sift-ios"]
+	path = HelloSift/Carthage/Checkouts/sift-ios
+	url = https://github.com/SiftScience/sift-ios.git

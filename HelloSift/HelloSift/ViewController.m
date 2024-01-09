@@ -83,4 +83,17 @@
     [[Sift sharedInstance] upload:YES];
 }
 
+- (IBAction)handleEnableDisable:(UISwitch *)sender {
+   if (sender.isOn == YES)
+   {
+       [[Sift sharedInstance] restartCollection];
+       [[Sift sharedInstance] collect];
+       [[Sift sharedInstance] upload:YES];
+   }
+    else
+    {
+        [[Sift sharedInstance] stopCollection];
+    }
+}
+
 @end

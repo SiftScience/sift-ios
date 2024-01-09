@@ -150,6 +150,13 @@ static const unsigned long long SF_HEADING_INTERVAL = 4 * NSEC_PER_SEC;
 }
 
 - (void)collectWithTitle:(NSString *)title andTimestamp:(SFTimestamp)now {
+    
+    if(![Sift.sharedInstance allowDataCollectionAndUpload])
+    {
+        SF_DEBUG(@"Collect and Upload action is in disabled state");
+        return;
+    }
+    
     [_taskManager submitWithTask:^{
         SF_DEBUG(@"Collect app state...");
         SiftEvent *event = [SiftEvent new];

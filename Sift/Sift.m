@@ -43,6 +43,7 @@ static const SiftQueueConfig SFDefaultEventQueueConfig = {
     // Extra collection mechanisms.
     SiftIosAppStateCollector *_iosAppStateCollector;
     SiftIosDevicePropertiesCollector *_iosDevicePropertiesCollector;
+    BOOL _allowDataCollectionAndUpload;
 }
 
 + (instancetype)sharedInstance {
@@ -97,6 +98,7 @@ static const SiftQueueConfig SFDefaultEventQueueConfig = {
             self = nil;
             return nil;
         }
+        _allowDataCollectionAndUpload = YES;
     }
     return self;
 }
@@ -143,6 +145,11 @@ static const SiftQueueConfig SFDefaultEventQueueConfig = {
 }
 
 - (BOOL)appendEvent:(SiftEvent *)event {
+    if(!_allowDataCollectionAndUpload)
+    {
+        SF_DEBUG(@"Collect and Upload action is in disabled state");
+        return NO;
+    }
     return [self appendEvent:event toQueue:_defaultQueueIdentifier];
 }
 
@@ -182,7 +189,11 @@ static const SiftQueueConfig SFDefaultEventQueueConfig = {
         SF_DEBUG(@"Lack _accountId, _beaconKey, and/or _serverUrlFormat");
         return NO;
     }
-
+    if(!_allowDataCollectionAndUpload)
+    {
+        SF_DEBUG(@"Collect and Upload action is in disabled state");
+        return NO;
+    }
     NSMutableArray *events = [NSMutableArray new];
     @synchronized(_eventQueues) {
         for (NSString *identifier in _eventQueues) {
@@ -325,4 +336,29 @@ static NSString * const SF_UPLOADER = @"uploader";
     SF_DEBUG(@"Unarchive: accountId=%@ beaconKey=%@ userId=%@", _accountId, _beaconKey, _userId);
 }
 
+#pragma mark – Enable Disable Data collection and Upload
+
+- (BOOL) allowDataCollectionAndUpload {
+    return _allowDataCollectionAndUpload;
+}
+
+- (void)setAllowDataCollectionAndUpload:(BOOL)allowDataCollectionAndUpload {
+    _allowDataCollectionAndUpload = allowDataCollectionAndUpload;
+}
+
+- (BOOL)stopCollection
+{
+    [self setAllowDataCollectionAndUpload:NO];
+    [_uploader suspendUpload];
+    return YES;
+}
+
+- (BOOL)restartCollection
+{
+    [self setAllowDataCollectionAndUpload:YES];
+    [_uploader resumeUpload];
+    [self collect];
+    [self upload];
+    return YES;
+}
 @end

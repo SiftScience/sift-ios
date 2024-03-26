@@ -16,6 +16,7 @@ Pod::Spec.new do |spec|
   # Platform
   spec.platform = :ios
   spec.ios.deployment_target = '12.0'
+  spec.ios.resource_bundles = {"Sift" => ["PrivacyInfo.xcprivacy"]}
 
   # Build settings
   spec.ios.frameworks = [

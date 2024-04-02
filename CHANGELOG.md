@@ -1,5 +1,9 @@
 # Change Log
 
+## [2.1.8] - 2024-04-02
+### Changed
+- Privacy Manifest updates
+
 ## [2.1.7] - 2024-01-02
 ### Fixed
 - Fixed project build

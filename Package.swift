@@ -25,8 +25,7 @@ let package = Package(
             name: "Sift",
             dependencies: [],
             path: "Sift",
-            exclude: ["Info.plist", "README.md"],
-            publicHeadersPath: "."),
+            exclude: ["Info.plist", "README.md"]
         .testTarget(
             name: "sift-iosTests",
             dependencies: ["sift-ios"]),

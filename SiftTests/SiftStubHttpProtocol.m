@@ -60,10 +60,16 @@ NSURLSessionConfiguration *SFMakeStubConfig(void) {
         [stub.stubbedStatusCodes removeObjectAtIndex:0];
     }
 
-    NSURLResponse *response = [[NSHTTPURLResponse alloc] initWithURL:self.request.URL statusCode:statusCode HTTPVersion:@"HTTP/1.1" headerFields:nil];
-    [self.client URLProtocol:self didReceiveResponse:response cacheStoragePolicy:NSURLCacheStorageAllowedInMemoryOnly];
-    [self.client URLProtocolDidFinishLoading:self];
-
+    // Status code 1 hardcoded for network errors.
+    if (statusCode == 1) {
+        NSError *error = [NSError errorWithDomain:NSURLErrorDomain code:NSURLErrorUnknown userInfo:nil];
+        [self.client URLProtocol:self didFailWithError:error];
+        [self.client URLProtocolDidFinishLoading:self];
+    } else {
+        NSURLResponse *response = [[NSHTTPURLResponse alloc] initWithURL:self.request.URL statusCode:statusCode HTTPVersion:@"HTTP/1.1" headerFields:nil];
+        [self.client URLProtocol:self didReceiveResponse:response cacheStoragePolicy:NSURLCacheStorageAllowedInMemoryOnly];
+        [self.client URLProtocolDidFinishLoading:self];
+    }
     if (!stub.stubbedStatusCodes.count) {
         stub.completionHandler();
     }

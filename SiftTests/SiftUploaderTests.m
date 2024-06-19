@@ -78,7 +78,7 @@
     [self waitForExpectationsWithTimeout:5.0 handler:nil];
 
     XCTAssertEqual(stub.stubbedStatusCodes.count, 0);
-    XCTAssertEqual(stub.capturedRequests.count, 2);
+    XCTAssertEqual(stub.capturedRequests.count, 3);
 }
 
 - (void)testUploadHttpError {

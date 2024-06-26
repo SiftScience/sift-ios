@@ -1,5 +1,9 @@
 # Change Log
 
+## [2.1.9] - 2024-06-26
+### Changed
+- Fixed infinite retries for network errors
+
 ## [2.1.8] - 2024-04-02
 ### Changed
 - Privacy Manifest updates

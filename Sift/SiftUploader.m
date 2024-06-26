@@ -98,6 +98,7 @@ static const int64_t SF_CHECK_UPLOAD_LEEWAY = 5 * NSEC_PER_SEC;
         BOOL success = NO;
         if (error) {
             SF_IMPORTANT(@"Could not complete upload due to %@", [error localizedDescription]);
+            self->_numRejects++;
         } else {
             NSInteger statusCode = [(NSHTTPURLResponse *)task.response statusCode];
             SF_DEBUG(@"PUT %@ status %ld", task.response.URL, (long)statusCode);

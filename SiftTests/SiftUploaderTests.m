@@ -29,7 +29,7 @@
     _sift.serverUrlFormat = @"mock+https://127.0.0.1/v3/accounts/%@/mobile_events";
 
     // Disable exponential backoff with baseoffBase = 0.
-    _uploader = [[SiftUploader alloc] initWithArchivePath:nil sift:_sift config:SFMakeStubConfig() backoffBase:0];
+    _uploader = [[SiftUploader alloc] initWithArchivePath:nil sift:_sift config:SFMakeStubConfig() backoffBase:0 networkRetryTimeout: 60 * NSEC_PER_SEC];
 
     SFHttpStub *stub = [SFHttpStub sharedInstance];
     [stub.stubbedStatusCodes removeAllObjects];

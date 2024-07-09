@@ -1,6 +1,6 @@
 # Change Log
 
-## [2.1.9] - 2024-06-26
+## [2.2.0] - 2024-07-09
 ### Changed
 - Fixed infinite retries for network errors
 

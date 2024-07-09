@@ -33,9 +33,9 @@
 // Drop a batch if our backend has rejected it `SF_REJECT_LIMIT` times.
 static const int SF_REJECT_LIMIT = 3;
 
-// Drop a batch if our backend has rejected it `SF_REJECT_LIMIT` times.
-static const int64_t SF_NETWORK_MAX_DELAY_IN_SEC = 60 * NSEC_PER_SEC;
-static const int64_t SF_DEFAULT_NETWORK_MAX_RETRIES = 60;
+// Batch will be dropped if the network requests fail and the retry timeout period is reached.
+static const int64_t SF_DEFAULT_NETWORK_RETRY_TIMEOUT = 10 * 60 * NSEC_PER_SEC;
+static const int64_t SF_FALLBACK_NETWORK_MAX_RETRIES = 60;
 
 static const int64_t SF_BACKOFF = NSEC_PER_SEC * 5;  // Starting from 5 seconds.
 
@@ -44,10 +44,13 @@ static const int64_t SF_CHECK_UPLOAD_PERIOD = 60 * NSEC_PER_SEC;
 static const int64_t SF_CHECK_UPLOAD_LEEWAY = 5 * NSEC_PER_SEC;
 
 - (instancetype)initWithArchivePath:(NSString *)archivePath sift:(Sift *)sift {
-    return [self initWithArchivePath:archivePath sift:sift config:[NSURLSessionConfiguration defaultSessionConfiguration] backoffBase:SF_BACKOFF];
+    return [self initWithArchivePath:archivePath sift:sift config:[NSURLSessionConfiguration defaultSessionConfiguration] backoffBase:SF_BACKOFF
+        networkRetryTimeout:SF_DEFAULT_NETWORK_RETRY_TIMEOUT];
 }
 
-- (instancetype)initWithArchivePath:(NSString *)archivePath sift:(Sift *)sift config:(NSURLSessionConfiguration *)config backoffBase:(int64_t)backoffBase {
+- (instancetype)initWithArchivePath:(NSString *)archivePath sift:(Sift *)sift config:(NSURLSessionConfiguration *)config backoffBase:(int64_t)backoffBase
+    networkRetryTimeout:(int64_t)networkRetryTimeout {
+
     self = [super init];
     if (self) {
         _taskManager = [[TaskManager alloc] init];
@@ -58,9 +61,9 @@ static const int64_t SF_CHECK_UPLOAD_LEEWAY = 5 * NSEC_PER_SEC;
         _backoffBase = backoffBase;
         _backoff = backoffBase;
         _sift = sift;
-        _maxNumNetworkRejects = SF_NETWORK_MAX_DELAY_IN_SEC / backoffBase;
+        _maxNumNetworkRejects = networkRetryTimeout / backoffBase;
         if (_maxNumNetworkRejects <= 0) {
-            _maxNumNetworkRejects = SF_DEFAULT_NETWORK_MAX_RETRIES;
+            _maxNumNetworkRejects = SF_FALLBACK_NETWORK_MAX_RETRIES;
         }
         [self unarchive];
 

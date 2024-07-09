@@ -29,7 +29,7 @@
     _sift.serverUrlFormat = @"mock+https://127.0.0.1/v3/accounts/%@/mobile_events";
     
     // Set backoff = 5 seconds to test calculation of max retries for network errors
-    _uploader = [[SiftUploader alloc] initWithArchivePath:nil sift:_sift config:SFMakeStubConfig() backoffBase:5 * NSEC_PER_SEC];
+    _uploader = [[SiftUploader alloc] initWithArchivePath:nil sift:_sift config:SFMakeStubConfig() backoffBase:5 * NSEC_PER_SEC networkRetryTimeout: 60 * NSEC_PER_SEC];
     
     SFHttpStub *stub = [SFHttpStub sharedInstance];
     [stub.stubbedStatusCodes removeAllObjects];

@@ -21,6 +21,8 @@
     NSMutableData *_responseBody;
     NSMutableArray *_batches;
     int _numRejects;
+    int _numNetworkRejects;
+    int64_t _maxNumNetworkRejects;
     int64_t _backoffBase;
     int64_t _backoff;
     NSString *_archivePath;
@@ -31,6 +33,10 @@
 // Drop a batch if our backend has rejected it `SF_REJECT_LIMIT` times.
 static const int SF_REJECT_LIMIT = 3;
 
+// Batch will be dropped if the network requests fail and the retry timeout period is reached.
+static const int64_t SF_DEFAULT_NETWORK_RETRY_TIMEOUT = 10 * 60 * NSEC_PER_SEC;
+static const int64_t SF_FALLBACK_NETWORK_MAX_RETRIES = 60;
+
 static const int64_t SF_BACKOFF = NSEC_PER_SEC * 5;  // Starting from 5 seconds.
 
 // Periodically check if we have unfinished batches.
@@ -38,10 +44,13 @@ static const int64_t SF_CHECK_UPLOAD_PERIOD = 60 * NSEC_PER_SEC;
 static const int64_t SF_CHECK_UPLOAD_LEEWAY = 5 * NSEC_PER_SEC;
 
 - (instancetype)initWithArchivePath:(NSString *)archivePath sift:(Sift *)sift {
-    return [self initWithArchivePath:archivePath sift:sift config:[NSURLSessionConfiguration defaultSessionConfiguration] backoffBase:SF_BACKOFF];
+    return [self initWithArchivePath:archivePath sift:sift config:[NSURLSessionConfiguration defaultSessionConfiguration] backoffBase:SF_BACKOFF
+        networkRetryTimeout:SF_DEFAULT_NETWORK_RETRY_TIMEOUT];
 }
 
-- (instancetype)initWithArchivePath:(NSString *)archivePath sift:(Sift *)sift config:(NSURLSessionConfiguration *)config backoffBase:(int64_t)backoffBase {
+- (instancetype)initWithArchivePath:(NSString *)archivePath sift:(Sift *)sift config:(NSURLSessionConfiguration *)config backoffBase:(int64_t)backoffBase
+    networkRetryTimeout:(int64_t)networkRetryTimeout {
+
     self = [super init];
     if (self) {
         _taskManager = [[TaskManager alloc] init];
@@ -52,7 +61,10 @@ static const int64_t SF_CHECK_UPLOAD_LEEWAY = 5 * NSEC_PER_SEC;
         _backoffBase = backoffBase;
         _backoff = backoffBase;
         _sift = sift;
-
+        _maxNumNetworkRejects = networkRetryTimeout / backoffBase;
+        if (_maxNumNetworkRejects <= 0) {
+            _maxNumNetworkRejects = SF_FALLBACK_NETWORK_MAX_RETRIES;
+        }
         [self unarchive];
 
         _source = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0, _serial);
@@ -96,10 +108,13 @@ static const int64_t SF_CHECK_UPLOAD_LEEWAY = 5 * NSEC_PER_SEC;
         self->_responseBody = nil;
 
         BOOL success = NO;
+        BOOL networkError = NO;
         if (error) {
             SF_IMPORTANT(@"Could not complete upload due to %@", [error localizedDescription]);
-            self->_numRejects++;
+            self->_numNetworkRejects++;
+            networkError = YES;
         } else {
+            self->_numNetworkRejects = 0;
             NSInteger statusCode = [(NSHTTPURLResponse *)task.response statusCode];
             SF_DEBUG(@"PUT %@ status %ld", task.response.URL, (long)statusCode);
             if (statusCode != 200) {
@@ -123,10 +138,12 @@ static const int64_t SF_CHECK_UPLOAD_LEEWAY = 5 * NSEC_PER_SEC;
             }
         }
         
-        if (self->_numRejects >= SF_REJECT_LIMIT) {
+        if (self->_numRejects >= SF_REJECT_LIMIT ||
+            self->_numNetworkRejects >= self->_maxNumNetworkRejects) {
             NSLog(@"Drop a batch due to reject limit reached");
             [self->_batches removeObjectAtIndex:0];
             self->_numRejects = 0;
+            self->_numNetworkRejects = 0;
             self->_backoff = self->_backoffBase;
         }
 
@@ -134,13 +151,19 @@ static const int64_t SF_CHECK_UPLOAD_LEEWAY = 5 * NSEC_PER_SEC;
         if (success) {
             self->_backoff = self->_backoffBase;
             [self doUpload];
+        } else if (networkError) {
+            [self retryUploadWithDelay:self->_backoffBase];
         } else {
-            [self->_taskManager scheduleWithTask:^{
-                [self doUpload];
-            } queue:self->_serial delay:self->_backoff];
+            [self retryUploadWithDelay:self->_backoff];
             self->_backoff *= 2;
         }
     } queue:self->_serial];
+}
+
+- (void)retryUploadWithDelay:(NSTimeInterval)delay {
+    [self->_taskManager scheduleWithTask:^{
+        [self doUpload];
+    } queue:self->_serial delay:delay];
 }
 
 - (void)doUpload {

@@ -10,7 +10,7 @@ NS_EXTENSION_UNAVAILABLE_IOS("SiftUploader is not supported for iOS extensions."
 - (instancetype)initWithArchivePath:(NSString *)archivePath sift:(Sift *)sift;
 
 /** For testing. */
-- (instancetype)initWithArchivePath:(NSString *)archivePath sift:(Sift *)sift config:(NSURLSessionConfiguration *)config backoffBase:(int64_t)backoffBase;
+- (instancetype)initWithArchivePath:(NSString *)archivePath sift:(Sift *)sift config:(NSURLSessionConfiguration *)config backoffBase:(int64_t)backoffBase networkRetryTimeout:(int64_t)networkRetryTimeout;
 
 /** Persist uploader state to disk. */
 - (void)archive;

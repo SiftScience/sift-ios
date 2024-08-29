@@ -1,5 +1,9 @@
 # Change Log
 
+## [2.2.1] - 2024-08-29
+### Changed
+- `PrivacyInfo.xcprivacy` is now part of the package
+
 ## [2.2.0] - 2024-07-09
 ### Changed
 - Fixed infinite retries for network errors

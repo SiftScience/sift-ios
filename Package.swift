@@ -29,7 +29,8 @@ let package = Package(
             resources: [
                 .process("../PrivacyInfo.xcprivacy")
             ],
-            publicHeadersPath: "."),
+            publicHeadersPath: "Public"
+        ),
         .testTarget(
             name: "sift-iosTests",
             dependencies: ["sift-ios"]),

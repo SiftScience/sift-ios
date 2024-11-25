@@ -1,5 +1,9 @@
 # Change Log
 
+## [2.2.2] - 2024-11-25
+### Changed
+- Added Public headers for Swift Package
+
 ## [2.2.1] - 2024-08-29
 ### Changed
 - `PrivacyInfo.xcprivacy` is now part of the package

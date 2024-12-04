@@ -10,6 +10,11 @@
 
 #import "SiftStubHttpProtocol.h"
 
+@interface SiftUploader (Testing)
+/** For testing. */
+- (instancetype)initWithArchivePath:(NSString *)archivePath sift:(Sift *)sift config:(NSURLSessionConfiguration *)config backoffBase:(int64_t)backoffBase networkRetryTimeout:(int64_t)networkRetryTimeout;
+@end
+
 @interface SiftEventFileUploaderTests : XCTestCase
 
 @end
@@ -29,7 +34,7 @@
     _sift.serverUrlFormat = @"mock+https://127.0.0.1/v3/accounts/%@/mobile_events";
 
     // Disable exponential backoff with baseoffBase = 0.
-    _uploader = [[SiftUploader alloc] initWithArchivePath:nil sift:_sift config:SFMakeStubConfig() backoffBase:0 networkRetryTimeout: 60 * NSEC_PER_SEC];
+    _uploader = [[SiftUploader alloc] initWithArchivePath:nil sift:_sift config:SFMakeStubConfig() backoffBase:NSEC_PER_SEC/100 networkRetryTimeout: NSEC_PER_SEC / 1000];
 
     SFHttpStub *stub = [SFHttpStub sharedInstance];
     [stub.stubbedStatusCodes removeAllObjects];
@@ -37,6 +42,8 @@
 }
 
 - (void)tearDown {
+    _uploader = nil;
+    _sift = nil;
     [super tearDown];
 }
 

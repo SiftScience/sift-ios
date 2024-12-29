@@ -6,6 +6,7 @@
 #endif
 @import Foundation;
 @import UIKit;
+@import Security;
 
 #include <sys/sysctl.h>
 #include <sys/stat.h>
@@ -32,6 +33,9 @@ static void rot13(char *p);
 
 static BOOL SFIsUrlSchemeWhitelisted(NSString *targetScheme);
 
+static NSString *SFGetStoredIFVString(void);
+static void SFStoreIFVString(NSString *ifv);
+
 NSMutableDictionary *SFCollectIosDeviceProperties(void) {
     NSMutableDictionary *iosDeviceProperties = SFMakeEmptyIosDeviceProperties();
 
@@ -49,6 +53,16 @@ NSMutableDictionary *SFCollectIosDeviceProperties(void) {
     NSUUID *ifv = device.identifierForVendor;
     if (ifv) {  // IFV could be nil.
         [iosDeviceProperties setValue:ifv.UUIDString forKey:@"device_ifv"];
+    }
+
+    NSString *storedIFVString = SFGetStoredIFVString();
+    if (storedIFVString == nil && ifv != nil) {
+        storedIFVString = ifv.UUIDString;
+        SFStoreIFVString(storedIFVString);
+    }
+    
+    if (storedIFVString) {
+        [iosDeviceProperties setValue:storedIFVString forKey:@"initial_device_ifv"];
     }
 
 #if !TARGET_OS_MACCATALYST
@@ -368,4 +382,37 @@ static BOOL SFIsUrlSchemeWhitelisted(NSString *targetScheme) {
 #else
     return YES;
 #endif
+}
+
+static NSString* kSiftVendorIFVKeychainKey = @"com.sift.initial_device_ifv";
+
+static NSString *SFGetStoredIFVString(void) {
+    NSDictionary *query = @{
+        (__bridge id)kSecClass: (__bridge id)kSecClassGenericPassword,
+        (__bridge id)kSecAttrAccount: kSiftVendorIFVKeychainKey,
+        (__bridge id)kSecReturnData: (__bridge id)kCFBooleanTrue,
+        (__bridge id)kSecMatchLimit: (__bridge id)kSecMatchLimitOne
+    };
+
+    CFTypeRef result = NULL;
+    SecItemCopyMatching((__bridge CFDictionaryRef)query, &result);
+
+    NSString *storedIFVString = nil;
+    if (result) {
+        NSData *data = (__bridge_transfer NSData *)result;
+        storedIFVString = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+    }
+    return storedIFVString;
+}
+
+static void SFStoreIFVString(NSString *ifv) {
+    NSData *data = [ifv dataUsingEncoding:NSUTF8StringEncoding];
+    NSDictionary *query = @{
+        (__bridge id)kSecClass: (__bridge id)kSecClassGenericPassword,
+        (__bridge id)kSecAttrAccount: kSiftVendorIFVKeychainKey,
+        (__bridge id)kSecValueData: data
+    };
+
+    SecItemDelete((__bridge CFDictionaryRef)query);
+    SecItemAdd((__bridge CFDictionaryRef)query, NULL);
 }

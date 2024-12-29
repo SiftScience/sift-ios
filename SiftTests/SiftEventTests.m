@@ -66,6 +66,7 @@
         @"evidence_dylds_present": NSArray.class,
         @"evidence_files_present": NSArray.class,
         @"sdk_version": NSString.class,
+        @"initial_device_ifv": NSString.class,
     };
     
     for (NSString *name in entryTypes) {

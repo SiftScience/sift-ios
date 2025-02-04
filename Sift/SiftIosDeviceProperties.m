@@ -6,6 +6,7 @@
 #endif
 @import Foundation;
 @import UIKit;
+@import Security;
 
 #include <sys/sysctl.h>
 #include <sys/stat.h>
@@ -14,6 +15,7 @@
 
 #import "SiftCompatibility.h"
 #import "SiftDebug.h"
+#import "SiftKeychain.h"
 #import "Sift.h"
 
 #import "SiftIosDeviceProperties.h"
@@ -49,6 +51,11 @@ NSMutableDictionary *SFCollectIosDeviceProperties(void) {
     NSUUID *ifv = device.identifierForVendor;
     if (ifv) {  // IFV could be nil.
         [iosDeviceProperties setValue:ifv.UUIDString forKey:@"device_ifv"];
+    }
+
+    NSString *storedIFVString = [SiftKeychain processDeviceIFV:ifv.UUIDString];
+    if (storedIFVString) {
+        [iosDeviceProperties setValue:storedIFVString forKey:@"initial_device_ifv"];
     }
 
 #if !TARGET_OS_MACCATALYST

@@ -1,6 +1,8 @@
 // Copyright (c) 2016 Sift Science. All rights reserved.
 
 @import XCTest;
+#import "XCTestCase+Swizzling.h"
+#import "SiftKeychain+Testing.h"
 
 #import "SiftDebug.h"
 
@@ -11,6 +13,20 @@
 @end
 
 @implementation SiftIosDevicePropertiesTests
+
+- (void)setup {
+    Method storeIFV = class_getClassMethod([SiftKeychain class], @selector(storeIFVString:));
+    Method mockStoreIFV = class_getClassMethod([self class], @selector(mockStoreDeviceIFV));
+    
+    [self swizzleMethod:storeIFV withMethod:mockStoreIFV];
+}
+
+- (void)tearDown {
+    Method storeIFV = class_getClassMethod([SiftKeychain class], @selector(storeIFVString:));
+    Method mockStoreIFV = class_getClassMethod([self class], @selector(mockStoreDeviceIFV));
+    
+    [self swizzleMethod:storeIFV withMethod:mockStoreIFV];
+}
 
 - (void)testCollect {
     NSDictionary *actual = SFCollectIosDeviceProperties();
@@ -109,6 +125,52 @@
     #endif
 }
 
+- (void)testProcessDeviceIFV_nilDeviceIFV {
+    Method getStoredDeviceIFV = class_getClassMethod([SiftKeychain class], @selector(getStoredIFVString));
+    Method mockGetStoredDeviceIFV = class_getClassMethod([self class], @selector(mockNilStoredDeviceIFV));
+    Method deviceIdentifier = class_getInstanceMethod([UIDevice class], @selector(identifierForVendor));
+    Method mockDeviceIdentifier = class_getClassMethod([self class], @selector(mockNilDeviceIdentifier));
+    
+    [self swizzleMethod:getStoredDeviceIFV withMethod:mockGetStoredDeviceIFV];
+    [self swizzleMethod:deviceIdentifier withMethod:mockDeviceIdentifier];
+    
+    NSString *actual = SFCollectIosDeviceProperties()[@"initial_device_ifv"];
+
+    XCTAssertNil(actual);
+    
+    [self swizzleMethod:mockGetStoredDeviceIFV withMethod:getStoredDeviceIFV];
+    [self swizzleMethod:mockDeviceIdentifier withMethod:deviceIdentifier];
+}
+
+- (void)testProcessDeviceIFV_nilStoredDeviceIFV {
+    Method getStoredDeviceIFV = class_getClassMethod([SiftKeychain class], @selector(getStoredIFVString));
+    Method mockGetStoredDeviceIFV = class_getClassMethod([self class], @selector(mockNilStoredDeviceIFV));
+
+    [self swizzleMethod:getStoredDeviceIFV withMethod:mockGetStoredDeviceIFV];
+
+    NSString *deviceIFV = [[UIDevice currentDevice] identifierForVendor].UUIDString;
+    NSString *actual = SFCollectIosDeviceProperties()[@"initial_device_ifv"];
+
+    XCTAssertEqualObjects(actual, deviceIFV);
+    
+    [self swizzleMethod:mockGetStoredDeviceIFV withMethod:getStoredDeviceIFV];
+}
+
+- (void)testProcessDeviceIFV_changedDeviceIFV {
+    Method getStoredDeviceIFV = class_getClassMethod([SiftKeychain class], @selector(getStoredIFVString));
+    Method mockGetStoredDeviceIFV = class_getClassMethod([self class], @selector(mockChangedStoredDeviceIFV));
+
+    [self swizzleMethod:getStoredDeviceIFV withMethod:mockGetStoredDeviceIFV];
+
+    NSString *actual = SFCollectIosDeviceProperties()[@"initial_device_ifv"];
+
+    XCTAssertEqual(actual, @"CHANGED-DEVICE-IFV");
+    
+    [self swizzleMethod:mockGetStoredDeviceIFV withMethod:getStoredDeviceIFV];
+}
+
+// MARK: Helpers
+
 - (NSDictionary *)generateRandomProperties {
     NSMutableDictionary *properties = SFMakeEmptyIosDeviceProperties();
     [properties setValue:[self generateRandomString] forKey:@"app_name"];
@@ -137,4 +199,19 @@
     return strings;
 }
 
+// MARK: Mocks
+
++ (NSString *)mockNilDeviceIdentifier {
+    return nil;
+}
+
++ (NSString *)mockNilStoredDeviceIFV {
+    return nil;
+}
+
++ (NSString *)mockChangedStoredDeviceIFV {
+    return @"CHANGED-DEVICE-IFV";
+}
+
++ (void)mockStoreDeviceIFV {}
 @end

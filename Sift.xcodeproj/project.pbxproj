@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0541A85D2D3E3A5F00076F57 /* SiftKeychain.h in Headers */ = {isa = PBXBuildFile; fileRef = 0541A85B2D3E3A5F00076F57 /* SiftKeychain.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		0541A85E2D3E3A5F00076F57 /* SiftKeychain.m in Sources */ = {isa = PBXBuildFile; fileRef = 0541A85C2D3E3A5F00076F57 /* SiftKeychain.m */; };
+		0541A8602D3E3BAB00076F57 /* SiftKeychainTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 0541A85F2D3E3BAB00076F57 /* SiftKeychainTests.m */; };
+		0541A8632D3E3D9400076F57 /* XCTestCase+Swizzling.m in Sources */ = {isa = PBXBuildFile; fileRef = 0541A8622D3E3D9400076F57 /* XCTestCase+Swizzling.m */; };
 		1E409D2425E173B20066C922 /* NSData+GZIP.m in Sources */ = {isa = PBXBuildFile; fileRef = 1E409D2225E173B10066C922 /* NSData+GZIP.m */; };
 		1E409D2525E173B20066C922 /* NSData+GZIP.h in Headers */ = {isa = PBXBuildFile; fileRef = 1E409D2325E173B20066C922 /* NSData+GZIP.h */; };
 		5E819393268E1A47007FED87 /* TaskManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 5E819391268E1A47007FED87 /* TaskManager.h */; };
@@ -63,6 +67,12 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		0541A85B2D3E3A5F00076F57 /* SiftKeychain.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SiftKeychain.h; sourceTree = "<group>"; };
+		0541A85C2D3E3A5F00076F57 /* SiftKeychain.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SiftKeychain.m; sourceTree = "<group>"; };
+		0541A85F2D3E3BAB00076F57 /* SiftKeychainTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SiftKeychainTests.m; sourceTree = "<group>"; };
+		0541A8612D3E3D9400076F57 /* XCTestCase+Swizzling.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "XCTestCase+Swizzling.h"; sourceTree = "<group>"; };
+		0541A8622D3E3D9400076F57 /* XCTestCase+Swizzling.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "XCTestCase+Swizzling.m"; sourceTree = "<group>"; };
+		0541A8642D3E49D500076F57 /* SiftKeychain+Testing.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "SiftKeychain+Testing.h"; sourceTree = "<group>"; };
 		1E409D2225E173B10066C922 /* NSData+GZIP.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSData+GZIP.m"; sourceTree = "<group>"; };
 		1E409D2325E173B20066C922 /* NSData+GZIP.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+GZIP.h"; sourceTree = "<group>"; };
 		5E819391268E1A47007FED87 /* TaskManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TaskManager.h; sourceTree = "<group>"; };
@@ -169,6 +179,8 @@
 				8B5874F42552FE0C00CF8A02 /* SiftIosAppStateCollector+Private.h */,
 				713D85981D627E860011D5FE /* SiftIosDeviceProperties.h */,
 				713D85991D627E9F0011D5FE /* SiftIosDeviceProperties.m */,
+				0541A85B2D3E3A5F00076F57 /* SiftKeychain.h */,
+				0541A85C2D3E3A5F00076F57 /* SiftKeychain.m */,
 				7168EE321C864A4100A88245 /* SiftIosDevicePropertiesCollector.h */,
 				7168EE331C864A4100A88245 /* SiftIosDevicePropertiesCollector.m */,
 				7168EE1D1C7E7A6800A88245 /* SiftQueue.h */,
@@ -204,6 +216,10 @@
 				7168EE401C88C91900A88245 /* SiftUploaderTests.m */,
 				713AF4231DA456740061B688 /* SiftUtilsTests.m */,
 				7168EE101C7B977500A88245 /* SiftTests.m */,
+				0541A85F2D3E3BAB00076F57 /* SiftKeychainTests.m */,
+				0541A8642D3E49D500076F57 /* SiftKeychain+Testing.h */,
+				0541A8612D3E3D9400076F57 /* XCTestCase+Swizzling.h */,
+				0541A8622D3E3D9400076F57 /* XCTestCase+Swizzling.m */,
 			);
 			path = SiftTests;
 			sourceTree = "<group>";
@@ -225,6 +241,7 @@
 				1E409D2525E173B20066C922 /* NSData+GZIP.h in Headers */,
 				71B1B5971D8C700C00EA9B17 /* SiftIosAppStateCollector.h in Headers */,
 				716BEB8B1C7D336B009C3706 /* SiftQueueConfig.h in Headers */,
+				0541A85D2D3E3A5F00076F57 /* SiftKeychain.h in Headers */,
 				7168EE1E1C7E7A6800A88245 /* SiftQueue.h in Headers */,
 				7168EE051C7B977500A88245 /* Sift.h in Headers */,
 				713D859B1D627EA60011D5FE /* SiftIosDeviceProperties.h in Headers */,
@@ -338,6 +355,7 @@
 				5E819394268E1A47007FED87 /* TaskManager.m in Sources */,
 				716BEB931C7D3695009C3706 /* Sift.m in Sources */,
 				71E15CF91D95C92300A0305C /* SiftCircularBuffer.m in Sources */,
+				0541A85E2D3E3A5F00076F57 /* SiftKeychain.m in Sources */,
 				7168EE281C7FB80C00A88245 /* SiftUploader.m in Sources */,
 				71E15CFD1D95D15900A0305C /* SiftTokenBucket.m in Sources */,
 				713D859A1D627E9F0011D5FE /* SiftIosDeviceProperties.m in Sources */,
@@ -363,6 +381,8 @@
 				7168EE1C1C7E61E900A88245 /* SiftEventTests.m in Sources */,
 				713D859D1D6CF69E0011D5FE /* SiftIosDevicePropertiesTests.m in Sources */,
 				7168EE241C7F99AF00A88245 /* SiftQueueTests.m in Sources */,
+				0541A8632D3E3D9400076F57 /* XCTestCase+Swizzling.m in Sources */,
+				0541A8602D3E3BAB00076F57 /* SiftKeychainTests.m in Sources */,
 				7168EE421C88C91900A88245 /* SiftUploaderTests.m in Sources */,
 				71B1B5911D8B31ED00EA9B17 /* SiftIosAppStateTests.m in Sources */,
 			);

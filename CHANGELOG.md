@@ -1,5 +1,9 @@
 # Change Log
 
+## [2.2.3] - 2025-02-04
+### Changed
+- Added additional signal to collect `initial_device_ifv`
+
 ## [2.2.2] - 2024-11-25
 ### Changed
 - Added Public headers for Swift Package

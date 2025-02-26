@@ -14,11 +14,6 @@
 * [3.2 DeviceProperties](#32-deviceProperties)
 * [3.3 AppState](#33-appState)
 * [3.4 Location](#34-location)
-* [3.5 Heading](#35-heading)
-* [3.6 DeviceMotion](#36-deviceMotion)
-* [3.7 DeviceAccelerometerData](#37-deviceAccelerometerData)
-* [3.8 DeviceGyroData](#38-deviceGyroData)
-* [3.9 DeviceMagnetometerData](#39-deviceMagnetometerData)
 
 **[4 Modules](#4-modules)**
 

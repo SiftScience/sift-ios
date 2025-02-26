@@ -36,7 +36,7 @@
 
 ## 1 Overview
 
-The [sift-ios](https://github.com/SiftScience/sift-ios)  Mobile SDKs collect and send device information and app life cycle events to Sift. Objective C will be used as the programming language and Xcode will be used as the IDE.  SDK will be supporting ios 9.2 as deployment target.
+The [sift-ios](https://github.com/SiftScience/sift-ios)  Mobile SDKs collect and send device information and app life cycle events to Sift. Objective C will be used as the programming language and Xcode will be used as the IDE.  SDK will be supporting iOS 12 as deployment target.
 
 The specific features used are: CoreMotion, BatteryManager, Location, NetworkInterface and TelephonyManager. The SDK uses CoreMotion, BatteryManager, Location and NetworkInterface for collecting AppState details. The Device properties details are collected with the help of TelephonyManager and PackageManager along with Build details. In particular, event collecting, appending and uploading are handled on a separate thread with the help of Executors. The Mobile SDKs allow mobile applications to collect and send device properties and application lifecycle events to Sift. 
 
@@ -105,18 +105,8 @@ The iOSDeviceProperties collects the following information:
   - The sdk version indicates the current version of the sift SDK that has been used in the application.
 - **device_name** : {type: string}
   - It indicates device  name.
-- **device_model** : {type: string}
-    - The device model indicates the end-user-visible model name for the end product.
-- **device_ifa** : {type: string}
-    - Identifier for Advertisers (IFA or IDFA) is a temporary device identifier used by the Apple set of handheld devices. A successor of Unique Device Identifier (UDID), IFA is available on all devices with versions iOS 6 and later..
 - **device_ifv** : {type: string}
     - The identifierForVendor is an alphanumeric string that uniquely identifies a device to the app’s vendor..
-- **device_screen_width** : {type: integer}
-    - It indicates the device screen width.
-- **device_screen_height** : {type: integer}
-   - It indicates the device screen height.
-- **device_localized_model** : {type: string}
-    - It indicates the localized version of model.
 - **device_system_name** : {type: string}
   - It indicates the user-visible operating system name string.  Eg: iOS
 - **device_system_version** : {type: string}
@@ -127,8 +117,6 @@ The iOSDeviceProperties collects the following information:
   - It indicates the ISO country code for the user’s cellular service provider..
 - **mobile_network_code** : {type: string}
   - It indicates the mobile network code for the user’s cellular service provider.
-- **is_simulator** : {type: integer}
-  - It indicates if device is simulator or not.
 
 Class diagram of iOSDeviceProperties:
 
@@ -140,11 +128,6 @@ Class diagram of iOSDeviceProperties:
 
 The iOSAppState collects the following informations:
 
-- **application_state** : {type: string}
-  - Constants that indicate the running states of an app. 
-    - UIApplicationStateActive -> The app is running in the foreground and currently receiving events.
-    - UIApplicationStateInactive -> The app is running in the foreground but is not receiving events.
-    - UIApplicationStateBackground -> The app is running in the background.
 - **sdk_version** : {type: string}
   - The sdk version indicates the current Sift SDK version which is used.
 - **window_root_view_controller_titles** : {type: array}
@@ -157,31 +140,12 @@ The iOSAppState collects the following informations:
     - UIDeviceBatteryStateUnplugged -> on battery, discharging
     - UIDeviceBatteryStateCharging -> plugged in, less than 100%
     - UIDeviceBatteryStateFull -> plugged in, at 100%
-- **device_orientation** : {type: string}
-  - Constants that describe the physical orientation of the device.
-    - UIDeviceOrientationUnknown -> The orientation of the device cannot be determined.
-    - UIDeviceOrientationPortrait -> The device is in portrait mode, with the device held upright and the Home button at the bottom.
-    - UIDeviceOrientationPortraitUpsideDown -> The device is in portrait mode but upside down, with the device held upright and the Home button at the top.
-    - UIDeviceOrientationLandscapeLeft -> The device is in landscape mode, with the device held upright and the Home button on the right side.
-    - UIDeviceOrientationLandscapeRight -> The device is in landscape mode, with the device held upright and the Home button on the left side.
-    - UIDeviceOrientationFaceUp -> The device is held parallel to the ground with the screen facing upwards.
-    - UIDeviceOrientationFaceDown -> The device is held parallel to the ground with the screen facing downwards.
 - **proximity_state** : {type: number}
    - A Boolean value that indicates whether the proximity sensor is close to the user.
 - **location** : {type: dictionary}
   - The location consists of collective information of latitude, longitude, accuracy and the time at which data was collected as shown in the [section 3.4](#34-location). (_Have data only if the sift configuration and permissions are enabled_)
-- **heading** : {type: dictionary}
-  - The heading consists of collective information of time, magnetic heading, accuracy, true heading and raw magnetic field values was collected as shown in the [section 3.5](#35-heading).
 - **network_addresses** : {type: array}
   - The network addresses indicate the list of IP addresses of the current device in which the SDK is running. 
-- **motion** : {type: array}
-  - Encapsulated measurements of the attitude, rotation rate, and acceleration of a device was collected as shown in the [section 3.6](#36-deviceMotion).
-- **raw_accelerometer** : {type: array}
-  - Retrieve data from the onboard accelerometers of a device was collected as shown in the [section 3.7](#37-deviceAccelerometerData).
-- **raw_gyro** : {type: array}
-  - Retrieve data from the onboard gyroscopes value of a device was collected as shown in the [section 3.8](#38-deviceGyroData).
-- **raw_magnetometer** : {type: array}
-  - Measurements of the Earth's magnetic field relative to the device was collected as shown in the [section 3.9](#39-deviceMagnetometerData).
 
 Class diagram of iOSAppState:
 
@@ -215,133 +179,6 @@ The location consist of the following information:
 Class diagram for Location:
 
 ![](Images/LocationDataModel.png)
-
-###
-
-### 3.5 Heading
-
-The azimuth (orientation) of the user’s device, relative to true or magnetic north. The heading mainly collects the following information:
-
-- **time** : {type: number}
-  - It indicates the time at which this heading was determined.
-- **magnetic_heading** : {type: number}
-  - It indicates the heading (measured in degrees) relative to magnetic north.
-- **accuracy** : {type: number}
-  - It indicates the maximum deviation (measured in degrees) between the reported heading and the true geomagnetic heading.
-- **true_heading** : {type: number}
-  - The heading (measured in degrees) relative to true north.
-- **raw_magnetic_field_x** : {type: number}
-  - The geomagnetic data (measured in microteslas) for the x-axis.
-- **raw_magnetic_field_y** : {type: number}
-  - The geomagnetic data (measured in microteslas) for the y-axis.
-- **raw_magnetic_field_z** : {type: number}
-  - The geomagnetic data (measured in microteslas) for the z-axis
-
-Class diagram of Heading:
-
-![](Images/HeadingDataModel.png)
-
-###
-
-### 3.6 DeviceMotion
-
-The iosDeviceMotion mainly collects the following information:
-
-- **time** : {type: number}
-  - It indicates the time at which this motion was determined.
-- **attitude_roll** : {type: double}
-  - A roll is a rotation around a longitudinal axis that passes through the device from its top to bottom. The roll of the device, in radians.
-- **attitude_pitch** : {type: double}
-  - A pitch is a rotation around a lateral axis that passes through the device from side to side. The pitch of the device, in radians.
-- **attitude_yaw** : {type: double}
-  - A yaw is a rotation around an axis that runs vertically through the device. The yaw of the device, in radians.
-- **rotation_rate_x** : {type: number}
-  - The rotation rate of the device for the x-axis.
-- **rotation_rate_y** : {type: number}
-  - The rotation rate of the device for the y-axis.
-- **rotation_rate_z** : {type: number}
-  - The rotation rate of the device for the z-axis.
-- **gravity_x** : {type: number}
-  - The gravity acceleration vector expressed in the device's reference frame for the x-axis.
-- **gravity_y** : {type: number}
-  - The gravity acceleration vector expressed in the device's reference frame for the y-axis.
-- **gravity_z** : {type: number}
-  - The gravity acceleration vector expressed in the device's reference frame for the z-axis.
-- **user_acceleration_x** : {type: number}
-  - The acceleration that the user is giving to the device for the x-axis.
-- **user_acceleration_y** : {type: number}
-  - The acceleration that the user is giving to the device for the y-axis.
-- **user_acceleration_z** : {type: number}
-  - The acceleration that the user is giving to the device for the z-axis.
-- **magnetic_field_x** : {type: number}
-  - Returns the magnetic field vector with respect to the device for the x-axis.
-- **magnetic_field_y** : {type: number}
-  - Returns the magnetic field vector with respect to the device for the y-axis.
-- **magnetic_field_z** : {type: number}
-  - Returns the magnetic field vector with respect to the device for the z-axis.
-- **magnetic_field_calibration_accuracy** : {type: string}
-  - It Indicates the calibration accuracy of a magnetic field estimate.
-
-Class diagram of DeviceMotion:
-
-![](Images/DeviceMotionDataModel.png)
-
-###
-
-### 3.7 DeviceAccelerometerData
-
-The accelerometer data mainly collects the following information:
-
-- **time** : {type: number}
-  - It indicates the time at which this motion was determined.
-- **acceleration_x** : {type: number}
-  - The acceleration that the user is giving to the device for the x-axis.
-- **acceleration_y** : {type: number}
-  - The acceleration that the user is giving to the device for the y-axis.
-- **acceleration_z** : {type: number}
-  - The acceleration that the user is giving to the device for the z-axis.
-
-Class diagram of DeviceAccelerometerData:
-
-![](Images/DeviceAccelerometerDataModel.png)
-
-###
-
-### 3.8 DeviceGyroData
-
-The gyro data mainly collects the following information:
-
-- **time** : {type: number}
-  - It indicates the time at which this motion was determined.
-- **rotation_rate_x** : {type: number}
-  - The rotation rate of the device for the x-axis.
-- **rotation_rate_y** : {type: number}
-  - The rotation rate of the device for the y-axis.
-- **rotation_rate_z** : {type: number}
-  - The rotation rate of the device for the z-axis.
-
-Class diagram of DeviceGyroData:
-
-![](Images/DeviceGyroDataModel.png)
-
-###
-
-### 3.9 DeviceMagnetometerData
-
-The magnetometer data mainly collects the following information:
-
-- **time** : {type: number}
-  - It indicates the time at which this motion was determined.
-- **magnetic_field_x** : {type: number}
-  - Returns the magnetic field vector with respect to the device for the x-axis.
-- **magnetic_field_y** : {type: number}
-  - Returns the magnetic field vector with respect to the device for the y-axis.
-- **magnetic_field_z** : {type: number}
-  - Returns the magnetic field vector with respect to the device for the z-axis.
-
-Class diagram of DeviceMagnetometerData:
-
-![](Images/DeviceMagnetometerDataModel.png)
 
 ## 4 Modules
 

@@ -59,10 +59,9 @@ NSURLSessionConfiguration *SFMakeStubConfig(void) {
         statusCode = ((NSNumber *)[stub.stubbedStatusCodes objectAtIndex:0]).intValue;
         [stub.stubbedStatusCodes removeObjectAtIndex:0];
     }
-
-    // Status code 1 hardcoded for network errors.
-    if (statusCode == 1) {
-        NSError *error = [NSError errorWithDomain:NSURLErrorDomain code:NSURLErrorUnknown userInfo:nil];
+    
+    NSError *error = [self errorForStatusCode:statusCode];
+    if (error != nil) {
         [self.client URLProtocol:self didFailWithError:error];
         [self.client URLProtocolDidFinishLoading:self];
     } else {
@@ -77,6 +76,24 @@ NSURLSessionConfiguration *SFMakeStubConfig(void) {
 
 - (void)stopLoading {
     // Nothing yet...
+}
+
+- (NSError *) errorForStatusCode: (int) statusCode {
+    switch (statusCode) {
+        case 1:
+            return [NSError errorWithDomain:NSURLErrorDomain code:NSURLErrorUnknown userInfo:nil];
+        case -1001:
+            return [NSError errorWithDomain:NSURLErrorDomain code:NSURLErrorTimedOut userInfo:nil];
+        case -1003:
+            return [NSError errorWithDomain:NSURLErrorDomain code:NSURLErrorCannotFindHost userInfo:nil];
+        case -1004:
+            return [NSError errorWithDomain:NSURLErrorDomain code:NSURLErrorCannotConnectToHost userInfo:nil];
+        case -1005:
+            return [NSError errorWithDomain:NSURLErrorDomain code:NSURLErrorNetworkConnectionLost userInfo:nil];
+        case -1006:
+            return [NSError errorWithDomain:NSURLErrorDomain code:NSURLErrorDNSLookupFailed userInfo:nil];
+    }
+    return nil;
 }
 
 @end

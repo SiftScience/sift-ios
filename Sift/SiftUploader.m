@@ -109,10 +109,18 @@ static const int64_t SF_CHECK_UPLOAD_LEEWAY = 5 * NSEC_PER_SEC;
 
         BOOL success = NO;
         BOOL networkError = NO;
+        BOOL isNetworkBlockError = NO;
+
         if (error) {
             SF_IMPORTANT(@"Could not complete upload due to %@", [error localizedDescription]);
-            self->_numNetworkRejects++;
-            networkError = YES;
+            isNetworkBlockError = [self isNetworkBlockedError:error];
+            if (isNetworkBlockError){
+                [self dropBatch];
+                return;
+            } else {
+                self->_numNetworkRejects++;
+                networkError = YES;
+            }
         } else {
             self->_numNetworkRejects = 0;
             NSInteger statusCode = [(NSHTTPURLResponse *)task.response statusCode];
@@ -141,10 +149,7 @@ static const int64_t SF_CHECK_UPLOAD_LEEWAY = 5 * NSEC_PER_SEC;
         if (self->_numRejects >= SF_REJECT_LIMIT ||
             self->_numNetworkRejects >= self->_maxNumNetworkRejects) {
             NSLog(@"Drop a batch due to reject limit reached");
-            [self->_batches removeObjectAtIndex:0];
-            self->_numRejects = 0;
-            self->_numNetworkRejects = 0;
-            self->_backoff = self->_backoffBase;
+            [self dropBatch];
         }
 
         // Keep working on unfinished upload jobs.
@@ -158,6 +163,31 @@ static const int64_t SF_CHECK_UPLOAD_LEEWAY = 5 * NSEC_PER_SEC;
             self->_backoff *= 2;
         }
     } queue:self->_serial];
+}
+
+- (void) dropBatch {
+    [self->_batches removeObjectAtIndex:0];
+    self->_numRejects = 0;
+    self->_numNetworkRejects = 0;
+    self->_backoff = self->_backoffBase;
+}
+
+- (BOOL) isNetworkBlockedError: (NSError *) error {
+    if ([error.domain isEqualToString:NSURLErrorDomain]) {
+        switch (error.code) {
+            // Network errors that might indicate an interrupted connection
+            case NSURLErrorNetworkConnectionLost:
+            // Errors that might indicate a firewall block or connection refused
+            case NSURLErrorCannotFindHost:
+            case NSURLErrorCannotConnectToHost:
+            case NSURLErrorDNSLookupFailed:
+                return YES;
+            default:
+                break;
+        }
+    }
+    
+    return NO;
 }
 
 - (void)retryUploadWithDelay:(NSTimeInterval)delay {

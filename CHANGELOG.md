@@ -1,5 +1,9 @@
 # Change Log
 
+## [2.2.4] - 2025-05-05
+### Changed
+- Removed batch retry when network request blocked by firewall
+
 ## [2.2.3] - 2025-02-04
 ### Changed
 - Added additional signal to collect `initial_device_ifv`

@@ -1,6 +1,6 @@
 # Change Log
 
-## [2.2.4] - 2025-05-01
+## [2.2.4] - 2025-05-05
 ### Changed
 - Removed batch retry when network request blocked by firewall
 

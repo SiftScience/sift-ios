@@ -151,4 +151,13 @@ NS_EXTENSION_UNAVAILABLE_IOS("Sift is not supported for iOS extensions.")
  */
 @property NSString *serverUrlFormat;
 
+/**
+ 
+ */
+- (void)pause;
+
+/**
+ 
+ */
+- (void)resume;
 @end

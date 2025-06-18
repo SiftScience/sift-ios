@@ -201,6 +201,17 @@ static const SiftQueueConfig SFDefaultEventQueueConfig = {
     return YES;
 }
 
+- (void)pause {
+    [self archive];
+    [_uploader pause];
+    [_iosAppStateCollector pause];
+}
+
+- (void)resume{
+    [_uploader resume];
+    [_iosAppStateCollector resume];
+}
+
 #pragma mark - Account keys
 
 - (NSString *)accountId {

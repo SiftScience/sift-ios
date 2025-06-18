@@ -15,4 +15,10 @@
 
 @property (nonatomic) BOOL disallowCollectingLocationData;
 
+/** Pause sending events*/
+- (void)pause;
+
+/** Resume sending events*/
+- (void)resume;
+
 @end

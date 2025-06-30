@@ -8,6 +8,7 @@
 #import "Sift+Private.h"
 #import "SiftIosAppStateCollector.h"
 #import "SiftIosAppStateCollector+Private.h"
+#import "SiftUploader.h"
 
 @interface SiftTests : XCTestCase
 
@@ -133,6 +134,33 @@
     
     XCTAssertTrue([_sift hasEventQueue: [_sift defaultQueueIdentifier]]);
     XCTAssertTrue([_sift hasEventQueue: @"sift-devprops"]);
+}
+
+- (void)testPauseResume {
+    SiftUploader *uploader = [_sift valueForKey:@"_uploader"];
+    SiftIosAppStateCollector *collector = [_sift valueForKey:@"_iosAppStateCollector"];
+    
+    XCTAssertFalse([[uploader valueForKey:@"_isPaused"] boolValue]);
+    XCTAssertFalse([[collector valueForKey:@"_isPaused"] boolValue]);
+    
+    [_sift pause];
+    
+    XCTAssertTrue([[uploader valueForKey:@"_isPaused"] boolValue]);
+    XCTAssertTrue([[collector valueForKey:@"_isPaused"] boolValue]);
+
+    // Test that multiple pause calls don't cause issues
+    [_sift pause];
+    XCTAssertTrue([[uploader valueForKey:@"_isPaused"] boolValue]);
+    XCTAssertTrue([[collector valueForKey:@"_isPaused"] boolValue]);
+
+    [_sift resume];
+    XCTAssertFalse([[uploader valueForKey:@"_isPaused"] boolValue]);
+    XCTAssertFalse([[collector valueForKey:@"_isPaused"] boolValue]);
+
+    // Test that multiple resume calls don't cause issues
+    [_sift resume];
+    XCTAssertFalse([[uploader valueForKey:@"_isPaused"] boolValue]);
+    XCTAssertFalse([[collector valueForKey:@"_isPaused"] boolValue]);
 }
 
 @end

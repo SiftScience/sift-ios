@@ -265,7 +265,7 @@ static const int64_t SF_CHECK_UPLOAD_LEEWAY = 5 * NSEC_PER_SEC;
 - (void) resume {
     if (_source && _isPaused) {
         dispatch_resume(_source);
-        _isPaused = false;
+        _isPaused = NO;
     }
 }
 

@@ -57,7 +57,7 @@
     dispatch_queue_t serial = [_iosAppStateCollector valueForKey:@"_serial"];
     
     XCTestExpectation *expectation = [self expectationWithDescription:@"Wait for upload tasks completion"];
-    expectation.inverted = true;
+    expectation.inverted = YES;
     
     dispatch_source_t timer = [_iosAppStateCollector valueForKey:@"_source"];
     dispatch_source_set_timer(timer, DISPATCH_TIME_NOW, NSEC_PER_SEC / 100, NSEC_PER_SEC);

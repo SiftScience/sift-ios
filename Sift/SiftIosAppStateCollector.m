@@ -58,7 +58,7 @@ static const unsigned long long SF_HEADING_INTERVAL = 4 * NSEC_PER_SEC;
         _archivePath = archivePath;
         _locationManager = [CLLocationManager new];
         _serialSuspendCounter = 0;
-        _isPaused = false;
+        _isPaused = NO;
         
         [self unarchive];
 
@@ -213,7 +213,7 @@ static const unsigned long long SF_HEADING_INTERVAL = 4 * NSEC_PER_SEC;
 - (void) resume {
     if (_source && _isPaused) {
         dispatch_resume(_source);
-        _isPaused = false;
+        _isPaused = NO;
     }
 }
 

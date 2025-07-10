@@ -267,7 +267,7 @@
     [stub.stubbedStatusCodes addObject:@(NSURLErrorNetworkConnectionLost)];
     
     XCTestExpectation *expectation = [self expectationWithDescription:@"Wait for upload tasks completion"];
-    expectation.inverted = true;
+    expectation.inverted = YES;
     stub.completionHandler = ^{};
     
     NSMutableArray *batches = [_uploader valueForKey:@"_batches"];

@@ -235,6 +235,10 @@ Following are the static API to interact with SDK:
   - It will call the upload method with force param as NO.
 - **upload**(_force_)
   - It will upload the collects events to Sift Server. If force is YES, then won't wait for queue.readyForUpload to be true.
+- **pause**()
+  - It will pause collecting and uploading events to Sift Server
+- **resume**()
+  - It will resume collecting and uploading events to Sift Server
 
 ### 4.2 SiftEvent
 
@@ -335,6 +339,10 @@ This class have the following methods:
   - This method will unarchive the content from the given path. And also assign values to batches and numRejects  from unarchived dictionary detail.
 - **upload**(_events_)
   - It will upload the collects events to Sift Server.
+- **pause**()
+  - It will pause collecting and uploading events to Sift Server
+- **resume**()
+  - It will resume collecting and uploading events to Sift Server
   
   ### 4.5 SiftDeviceProperties
 

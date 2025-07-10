@@ -261,4 +261,47 @@
     XCTAssertEqual(stub.stubbedStatusCodes.count, 0);
 }
 
+- (void)testPause {
+    SFHttpStub *stub = [SFHttpStub sharedInstance];
+    [stub.stubbedStatusCodes addObject:@(NSURLErrorNetworkConnectionLost)];
+    [stub.stubbedStatusCodes addObject:@(NSURLErrorNetworkConnectionLost)];
+    
+    XCTestExpectation *expectation = [self expectationWithDescription:@"Wait for upload tasks completion"];
+    expectation.inverted = YES;
+    stub.completionHandler = ^{};
+    
+    NSMutableArray *batches = [_uploader valueForKey:@"_batches"];
+    NSArray *events = @[[SiftEvent eventWithType:nil path:@"path" fields:nil]];
+        
+    dispatch_source_t timer = [_uploader valueForKey:@"_source"];
+    dispatch_source_set_timer(timer, DISPATCH_TIME_NOW, NSEC_PER_SEC / 100, NSEC_PER_SEC);
+
+    [_uploader pause];
+    XCTAssertTrue([[_uploader valueForKey:@"_isPaused"] boolValue]);
+    
+    [batches addObject:events];
+    [batches addObject:events];
+
+    [self waitForExpectationsWithTimeout:0.1 handler:nil];
+    
+    // Verify that only one blocked request sent
+    XCTAssertEqual(stub.capturedRequests.count, 1);
+    XCTAssertEqual(stub.stubbedStatusCodes.count, 1);
+    
+    // Test that multiple pause calls don't cause issues
+    [_uploader pause];
+    XCTAssertTrue([[_uploader valueForKey:@"_isPaused"] boolValue]);
+}
+
+- (void)testResume {
+    [_uploader pause];
+    XCTAssertTrue([[_uploader valueForKey:@"_isPaused"] boolValue]);
+    
+    [_uploader resume];
+    XCTAssertFalse([[_uploader valueForKey:@"_isPaused"] boolValue]);
+    // Test that multiple resume calls don't cause issues
+    [_uploader resume];
+    XCTAssertFalse([[_uploader valueForKey:@"_isPaused"] boolValue]);
+}
+
 @end

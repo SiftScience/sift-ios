@@ -43,6 +43,8 @@ static const unsigned long long SF_HEADING_INTERVAL = 4 * NSEC_PER_SEC;
     BOOL _disallowCollectingLocationData;
     NSOperationQueue *_operationQueue;
 
+    BOOL _isPaused;
+    
     //// Archived states.
     SiftTokenBucket *_bucket;  // Control the rate of requestCollection.
     SFTimestamp _lastCollectedAt;  // Control the rate of checkAndCollectWhenNoneRecently.
@@ -56,7 +58,8 @@ static const unsigned long long SF_HEADING_INTERVAL = 4 * NSEC_PER_SEC;
         _archivePath = archivePath;
         _locationManager = [CLLocationManager new];
         _serialSuspendCounter = 0;
-
+        _isPaused = NO;
+        
         [self unarchive];
 
         NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
@@ -199,6 +202,21 @@ static const unsigned long long SF_HEADING_INTERVAL = 4 * NSEC_PER_SEC;
         } queue:self->_serial];
     } queue:dispatch_get_main_queue()];
 }
+
+- (void) pause {
+    if (_source && !_isPaused) {
+        dispatch_suspend(_source);
+        _isPaused = YES;
+    }
+}
+
+- (void) resume {
+    if (_source && _isPaused) {
+        dispatch_resume(_source);
+        _isPaused = NO;
+    }
+}
+
 
 #pragma mark - NSKeyedArchiver/NSKeyedUnarchiver
 

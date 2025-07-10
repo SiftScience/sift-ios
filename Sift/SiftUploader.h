@@ -15,4 +15,10 @@ NS_EXTENSION_UNAVAILABLE_IOS("SiftUploader is not supported for iOS extensions."
 /** Upload events to the server. */
 - (void)upload:(NSArray *)events;
 
+/** Pause sending events*/
+- (void)pause;
+
+/** Resume sending events*/
+- (void)resume;
+
 @end

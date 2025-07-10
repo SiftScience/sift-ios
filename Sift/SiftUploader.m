@@ -26,6 +26,7 @@
     int64_t _backoffBase;
     int64_t _backoff;
     NSString *_archivePath;
+    BOOL _isPaused;
     // Weak reference back to the parent.
     Sift * __weak _sift;
 }
@@ -62,6 +63,7 @@ static const int64_t SF_CHECK_UPLOAD_LEEWAY = 5 * NSEC_PER_SEC;
         _backoff = backoffBase;
         _sift = sift;
         _maxNumNetworkRejects = networkRetryTimeout / backoffBase;
+        _isPaused = NO;
         if (_maxNumNetworkRejects <= 0) {
             _maxNumNetworkRejects = SF_FALLBACK_NETWORK_MAX_RETRIES;
         }
@@ -251,6 +253,20 @@ static const int64_t SF_CHECK_UPLOAD_LEEWAY = 5 * NSEC_PER_SEC;
             }
         } queue:self->_serial];
     } queue:dispatch_get_main_queue()];
+}
+
+- (void) pause {
+    if (_source && !_isPaused) {
+        dispatch_suspend(_source);
+        _isPaused = YES;
+    }
+}
+
+- (void) resume {
+    if (_source && _isPaused) {
+        dispatch_resume(_source);
+        _isPaused = NO;
+    }
 }
 
 #pragma mark - NSKeyedArchiver/NSKeyedUnarchiver

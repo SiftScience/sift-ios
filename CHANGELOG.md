@@ -55,29 +55,17 @@
 
 
 ## [2.1.1] - 2022-06-03
-### Added
-
-### Changed
-
 ### Removed
-Deprecated fields
-
+- Deprecated `allowUsingMotionSensors` property
+- Deprected methods for collecting motion sensors data: `updateDeviceMotion:`, `updateAccelerometerData:`, `updateGyroData:`, `updateMagnetometerData:`
 
 ## [2.1.0] - 2021-08-02
 ### Added
 - Adding a new public method collect() to collect mobile events on demand
 
-### Changed
-
-### Removed
-
 ## [2.0.4] - 2021-07-22
-### Added
-
 ### Changed
 - Fixes SwiftPM build error for unsupported app extensions #100
-
-### Removed
 
 ## [2.0.3] - 2021-06-29
 ### Added
@@ -92,7 +80,6 @@ Swift package manager usability
 Changes in DESIGNDOC.md
 Update package and sift_ios file
 
-### Removed
 
 ## [2.0.2] - 2020-12-07
 ### Added

@@ -92,14 +92,6 @@ Here is what you would do within `AppDelegate.m`:
   [sift setAccountId:@"YOUR_ACCOUNT_ID"];
   [sift setBeaconKey:@"YOUR_JAVASCRIPT_SNIPPET_KEY"];
   ```
-
-* (Recommended) If your app uses motion sensors (accelerometer, gyro, or
-  magnetometer), and you want to send motion data to Sift, add this line:
-  ```
-  [sift setAllowUsingMotionSensors:YES];
-  ```
-  This will enable the SDK to occasionally collect motion data in the
-  background.
   
 * If your app uses user location data but you do not want send it to
   Sift, add this line:

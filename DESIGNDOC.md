@@ -48,7 +48,6 @@ flowchart LR
 
 App --> SDK --> Server
 ```
-![](Images/HighLevelBlock.png)
 
 1. IOS app loads the SDK with the Sift configurations.
 2. The sift SDK will collect and send events to the Sift server when there are events to upload.
@@ -107,8 +106,6 @@ SiftEvent <-- AppStateCollector
 SiftEvent <-- DevicePropertiesCollector
 ```
 
-![](Images/HighLevelClass.png)
-
 
 Class Diagram for App State Collector shown below:
 
@@ -136,9 +133,6 @@ classDiagram
   }
 AppStateCollector <-- Location
 ```
-![](Images/AppStateCollectorClass.png)
-
-
 
 ## 3 Data Models
 
@@ -188,7 +182,6 @@ classDiagram
     +listRequests(events) BOOL
   }
 ```
-![](Images/SiftEventDataModel.png)
 
 ###
 
@@ -219,7 +212,21 @@ The iOSDeviceProperties collects the following information:
 
 Class diagram of iOSDeviceProperties:
 
-![](Images/DevicePropertiesDataModel.png)
+```mermaid
+classDiagram
+  class DeviceProperties{
+    +NSString app_name
+    +NSString app_version
+    +NSString sdk_version
+    +NSString device_name
+    +NSString device_ifv
+    +NSString device_system_name
+    +NSString device_system_version
+    +NSString mobile_carrier_name
+    +NSString mobile_iso_country_code
+    +NSString mobile_network_code
+  }
+```
 
 ###
 
@@ -552,6 +559,5 @@ AppStateQueue --"Request upload"--> Uploader
 Uploader --"Upload event"--> SiftServer
 ```
 
-![](Images/RevisedFlowChart.png)
 
 

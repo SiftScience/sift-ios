@@ -24,7 +24,14 @@ The specific features used are: CoreMotion, BatteryManager, Location, NetworkInt
 
 A high-level block diagram is shown
 
-![](Images/HighLevelBlock.png)
+```mermaid
+flowchart LR
+  App["Sift iOS <br/> App"]
+  SDK["Sift iOS <br/> SDK"]
+  Server["Sift <br/> Server"]
+
+App --> SDK --> Server
+```
 
 1. IOS app loads the SDK with the Sift configurations.
 2. The sift SDK will collect and send events to the Sift server when there are events to upload.
@@ -35,7 +42,28 @@ A high-level block diagram is shown
 
 Current overview of the Sift module is shown below:
 
-![](Images/OldFlowChart.png)
+```mermaid
+flowchart
+  SiftEvent["Sift event"]
+  Sift("Sift")
+  SiftQueue1[["SiftQueue <br/> SiftQueueConfig"]]
+  SiftQueue2[["SiftQueue <br/> SiftQueueConfig"]]
+  SiftQueue3[["SiftQueue <br/> SiftQueueConfig"]]
+  SiftUploader("SIft Uploader")
+  SiftServer(("Sift Server"))
+
+SiftEvent --"Collected events"-->Sift
+
+Sift --"Append Event <br/> to SiftQueue"--> SiftQueue1
+Sift --"Append Event <br/> to SiftQueue"--> SiftQueue2
+Sift --"Append Event <br/> to SiftQueue"--> SiftQueue3
+
+SiftQueue1 --"Collect events from <br/> all ready queues"--> SiftUploader
+SiftQueue2 --"Collect events from <br/> all ready queues"--> SiftUploader
+SiftQueue3 --"Collect events from <br/> all ready queues"--> SiftUploader
+
+SiftUploader --"Upload Event"--> SiftServer
+```
 
 1. The unit of data i.e. SiftEvent object is created  and send it to the shared Sift Object.
 2. The Sift object will append that SiftEvent to the SiftQueue you specify.
@@ -47,7 +75,31 @@ To have better batching results, you should create queues based on your batching
 
 After comparing with Sift android SDK, here the proposed data flow chart below :
 
-![](Images/RevisedFlowChart.png)
+```mermaid
+flowchart
+  Sift
+  DevicePropertyCollector("Device Property Collector")
+  AppStateCollector("App State Collector")
+  TaskManager["Task Manager"]
+  DevicePropertyQueue[["Device Property Queue"]]
+  AppStateQueue[["App State Queue"]]
+  Uploader(["Uploader"])
+  SiftServer(("Sift Server"))
+
+Sift --> DevicePropertyCollector
+Sift --> AppStateCollector
+
+DevicePropertyCollector --"Collected events"--> TaskManager
+AppStateCollector --"Collected events"--> TaskManager
+
+TaskManager --"Add Event"--> DevicePropertyQueue
+TaskManager --"Add Event"--> AppStateQueue
+
+DevicePropertyQueue --"Request upload"--> Uploader
+AppStateQueue --"Request upload"--> Uploader
+
+Uploader --"Upload event"--> SiftServer
+```
 
 1. Sift Events will have two types for collectors i.e, Device property collector and App state collector.
 2. There will be common task manager which will collect the events from both collectors.
@@ -60,7 +112,17 @@ Current thread management are in a nested dispatch format. This means, even if t
 
 Following diagram is Task Manager's:
 
-![](Images/TaskManager.png)
+```mermaid
+flowchart TD
+    TaskManager["Task Manager"]
+    Submit
+    Schedule
+    Shutdown
+
+TaskManager --- Submit
+TaskManager --- Schedule
+TaskManager --- Shutdown
+```
 
 1. SUBMIT: Add the collected task to queue.
 2. SCHEDULE: Uploading process and also will be tracking on delay time.

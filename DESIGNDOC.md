@@ -39,12 +39,9 @@ A high-level block diagram is shown
 
 ```mermaid
 flowchart LR
-  App["Sift iOS
-       App"]
-  SDK["Sift iOS
-       SDK"]
-  Server["Sift
-          Server"]
+  App["Sift iOS <br/> App"]
+  SDK["Sift iOS <br/> SDK"]
+  Server["Sift <br/> Server"]
 
 App --> SDK --> Server
 ```

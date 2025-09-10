@@ -37,7 +37,14 @@ The specific features used are: CoreMotion, BatteryManager, Location, NetworkInt
 
 A high-level block diagram is shown
 
-![](Images/HighLevelBlock.png)
+```mermaid
+flowchart LR
+  App["Sift iOS <br/> App"]
+  SDK["Sift iOS <br/> SDK"]
+  Server["Sift <br/> Server"]
+
+App --> SDK --> Server
+```
 
 1. IOS app loads the SDK with the Sift configurations.
 2. The sift SDK will collect and send events to the Sift server when there are events to upload.
@@ -47,13 +54,82 @@ This document describes the data models,classes for handling events, and specifi
 
 ## 2 High Level Class Diagram
 
-![](Images/HighLevelClass.png)
+```mermaid
+classDiagram
+  class SiftEvent {
+    +NSString time
+    +NSString type
+    +NSString path
+    +NSString userId
+    +NSString installationId
+    +NSString fields
+    +NSNumber deviceProperties
+    +AppStateCollector iosAppState
+    +DevicePropertiesCollector iosDeviceProperties
+    +NSString metrics
+  }
+
+  class AppStateCollector{
+    +NSString application_state
+    +NSString sdk_version
+    +NSArray window_root_view_controller_titles
+    +NSNumber battery_level
+    +NSString battery_state
+    +NSDictionary location
+    +NSArray network_addresses
+  }
+
+  class DevicePropertiesCollector{
+    +NSString app_name
+    +NSString app_version
+    +NSString sdk_version
+    +NSString device_name
+    +NSString device_mode
+    +NSString device_ifa
+    +NSStrong device_ifv
+    +NSNumber device_screen_width
+    +NSNumber device_screen_height
+    +NSString device_localized_model
+    +NSString device_system_name
+    +NSString device_system_version
+    +NSString mobile_carrier_name
+    +NSString mobile_iso_country_code
+    +NSString mobile_country_code
+    +NSString mobile_network_code
+    +NSNumber isSimulator
+  }
+
+SiftEvent <-- AppStateCollector
+SiftEvent <-- DevicePropertiesCollector
+```
 
 
 Class Diagram for App State Collector shown below:
 
-![](Images/AppStateCollectorClass.png)
+```mermaid
+classDiagram
+  class AppStateCollector{
+    +NSString application_state
+    +NSString sdk_version
+    +NSArray window_root_view_controller_titles
+    +NSNumber battery_level
+    +NSString battery_state
+    +NSDictionary location
+    +NSArray network_addresses
+  }
 
+  class Location{
+    +NSNumber latitude
+    +NSNumber longitude
+    +NSNumber altitude
+    +NSNumber horizontal_accuracy
+    +NSNumber vertical_accuracy
+    +NSNumber floor
+    +NSNumber speed
+    +NSNumber course
+  }
+AppStateCollector <-- Location
+```
 
 ## 3 Data Models
 
@@ -84,7 +160,25 @@ The SiftEvent mainly collects the following information:
 
 Class diagram of SiftEvent:
 
-![](Images/SiftEventDataModel.png)
+```mermaid
+classDiagram
+  class SiftEvent {
+    +NSString time
+    +NSString type
+    +NSString path
+    +NSString userId
+    +NSString installationId
+    +NSString fields
+    +NSNumber deviceProperties
+    +AppStateCollector iosAppState
+    +DevicePropertiesCollector iosDeviceProperties
+    +NSString metrics
+    +eventWithType(type, path, fields) SiftEvent
+    +isEssentiallEqualTo(event) BOOL
+    +sanityCheck() BOOL
+    +listRequests(events) BOOL
+  }
+```
 
 ###
 
@@ -115,7 +209,21 @@ The iOSDeviceProperties collects the following information:
 
 Class diagram of iOSDeviceProperties:
 
-![](Images/DevicePropertiesDataModel.png)
+```mermaid
+classDiagram
+  class DeviceProperties{
+    +NSString app_name
+    +NSString app_version
+    +NSString sdk_version
+    +NSString device_name
+    +NSString device_ifv
+    +NSString device_system_name
+    +NSString device_system_version
+    +NSString mobile_carrier_name
+    +NSString mobile_iso_country_code
+    +NSString mobile_network_code
+  }
+```
 
 ###
 
@@ -143,6 +251,19 @@ The iOSAppState collects the following informations:
   - The network addresses indicate the list of IP addresses of the current device in which the SDK is running. 
 
 Class diagram of iOSAppState:
+
+```mermaid
+classDiagram
+  class AppStateCollector{
+    +NSString application_state
+    +NSString sdk_version
+    +NSArray window_root_view_controller_titles
+    +NSNumber battery_level
+    +NSString battery_state
+    +NSDictionary location
+    +NSArray network_addresses
+  }
+```
 
 ![](Images/AppStateDataModel.png)
 
@@ -172,6 +293,20 @@ The location consist of the following information:
   - Indicates the accuracy of the course value, measured in degrees.
 
 Class diagram for Location:
+
+```mermaid
+classDiagram
+  class Location{
+    +NSNumber latitude
+    +NSNumber longitude
+    +NSNumber altitude
+    +NSNumber horizontal_accuracy
+    +NSNumber vertical_accuracy
+    +NSNumber floor
+    +NSNumber speed
+    +NSNumber course
+  }
+```
 
 ![](Images/LocationDataModel.png)
 
@@ -395,6 +530,31 @@ This class holds the application related datas with the following attributes as 
 
 ## 5 Flow Chart
 
-![](Images/RevisedFlowChart.png)
+```mermaid
+flowchart
+  Sift
+  DevicePropertyCollector("Device Property Collector")
+  AppStateCollector("App State Collector")
+  TaskManager["Task Manager"]
+  DevicePropertyQueue[["Device Property Queue"]]
+  AppStateQueue[["App State Queue"]]
+  Uploader(["Uploader"])
+  SiftServer(("Sift Server"))
+
+Sift --> DevicePropertyCollector
+Sift --> AppStateCollector
+
+DevicePropertyCollector --"Collected events"--> TaskManager
+AppStateCollector --"Collected events"--> TaskManager
+
+TaskManager --"Add Event"--> DevicePropertyQueue
+TaskManager --"Add Event"--> AppStateQueue
+
+DevicePropertyQueue --"Request upload"--> Uploader
+AppStateQueue --"Request upload"--> Uploader
+
+Uploader --"Upload event"--> SiftServer
+```
+
 
 

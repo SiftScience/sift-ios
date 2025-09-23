@@ -1,5 +1,9 @@
 # Change Log
 
+## [2.2.5] - 2025-09-23
+### Added
+- Added public interface to pause/resume events collection to Sift object
+
 ## [2.2.4] - 2025-05-05
 ### Changed
 - Removed batch retry when network request blocked by firewall

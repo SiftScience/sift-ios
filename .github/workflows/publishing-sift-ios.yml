@@ -1,0 +1,17 @@
+name: Publishing to ios
+on:
+  release:
+    types: [published]
+
+env:
+  GH_TOKEN: ${{ github.token }}
+
+jobs:
+  build_and_publish:
+    runs-on: macos-latest
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v3
+      - name: publish ios
+        run: |
+          ./carthage.sh build --platform iOS

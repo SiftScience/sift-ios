@@ -11,4 +11,7 @@
 @interface SiftKeychain ()
 + (NSString *)getStoredIFVString;
 + (void)storeIFVString:(NSString *)ifv;
++ (NSString *)vendorIFVKeychainKey;
++ (NSDictionary *)keychainQueryForIFV:(NSString *)ifv;
++ (BOOL)attributesNeedMigration:(NSDictionary *)attributes;
 @end

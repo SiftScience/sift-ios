@@ -71,6 +71,48 @@
     [self swizzleMethod:mockGetStoredDeviceIFV withMethod:getStoredDeviceIFV];
 }
 
+- (void)testKeychainQueryForIFV_setsDeviceOnlyAccessibilityAndNotSynchronizable {
+    NSString *ifv = @"TEST-DEVICE-ONLY-IFV";
+    NSDictionary *query = [SiftKeychain keychainQueryForIFV:ifv];
+
+    XCTAssertEqualObjects(query[(__bridge id)kSecAttrAccount], [SiftKeychain vendorIFVKeychainKey]);
+    XCTAssertEqualObjects(query[(__bridge id)kSecValueData], [ifv dataUsingEncoding:NSUTF8StringEncoding]);
+    XCTAssertEqualObjects(query[(__bridge id)kSecAttrAccessible],
+                           (__bridge id)kSecAttrAccessibleAfterFirstUnlockThisDeviceOnly);
+    XCTAssertEqualObjects(query[(__bridge id)kSecAttrSynchronizable], @NO);
+}
+
+- (void)testAttributesNeedMigration_returnsNoWhenAlreadyDeviceOnlyAndNotSynchronizable {
+    NSDictionary *attributes = @{
+        (__bridge id)kSecAttrAccessible: (__bridge id)kSecAttrAccessibleAfterFirstUnlockThisDeviceOnly,
+        (__bridge id)kSecAttrSynchronizable: @NO
+    };
+
+    XCTAssertFalse([SiftKeychain attributesNeedMigration:attributes]);
+}
+
+- (void)testAttributesNeedMigration_returnsYesWhenAccessibleIsMissingOrNotDeviceOnly {
+    NSDictionary *missingAccessible = @{
+        (__bridge id)kSecAttrSynchronizable: @NO
+    };
+    NSDictionary *legacyAccessible = @{
+        (__bridge id)kSecAttrAccessible: (__bridge id)kSecAttrAccessibleWhenUnlocked,
+        (__bridge id)kSecAttrSynchronizable: @NO
+    };
+
+    XCTAssertTrue([SiftKeychain attributesNeedMigration:missingAccessible]);
+    XCTAssertTrue([SiftKeychain attributesNeedMigration:legacyAccessible]);
+}
+
+- (void)testAttributesNeedMigration_returnsYesWhenSynchronizable {
+    NSDictionary *attributes = @{
+        (__bridge id)kSecAttrAccessible: (__bridge id)kSecAttrAccessibleAfterFirstUnlockThisDeviceOnly,
+        (__bridge id)kSecAttrSynchronizable: @YES
+    };
+
+    XCTAssertTrue([SiftKeychain attributesNeedMigration:attributes]);
+}
+
 // MARK: Mocks
 
 + (NSString *)mockNilStoredDeviceIFV {

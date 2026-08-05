@@ -32,6 +32,7 @@ static NSString* kSiftVendorIFVKeychainKey = @"com.sift.initial_device_ifv";
         (__bridge id)kSecClass: (__bridge id)kSecClassGenericPassword,
         (__bridge id)kSecAttrAccount: kSiftVendorIFVKeychainKey,
         (__bridge id)kSecReturnData: (__bridge id)kCFBooleanTrue,
+        (__bridge id)kSecReturnAttributes: (__bridge id)kCFBooleanTrue,
         (__bridge id)kSecMatchLimit: (__bridge id)kSecMatchLimitOne
     };
 
@@ -40,22 +41,43 @@ static NSString* kSiftVendorIFVKeychainKey = @"com.sift.initial_device_ifv";
 
     NSString *storedIFVString = nil;
     if (result) {
-        NSData *data = (__bridge_transfer NSData *)result;
+        NSDictionary *attributes = (__bridge_transfer NSDictionary *)result;
+        NSData *data = attributes[(__bridge id)kSecValueData];
         storedIFVString = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+
+        if (storedIFVString != nil && [self attributesNeedMigration:attributes]) {
+            [self storeIFVString:storedIFVString];
+        }
     }
     return storedIFVString;
 }
 
-+ (void)storeIFVString:(NSString *)ifv {
-    NSData *data = [ifv dataUsingEncoding:NSUTF8StringEncoding];
-    NSDictionary *query = @{
-        (__bridge id)kSecClass: (__bridge id)kSecClassGenericPassword,
-        (__bridge id)kSecAttrAccount: kSiftVendorIFVKeychainKey,
-        (__bridge id)kSecValueData: data
-    };
++ (BOOL)attributesNeedMigration:(NSDictionary *)attributes {
+    BOOL isDeviceOnly = [attributes[(__bridge id)kSecAttrAccessible]
+                          isEqual:(__bridge id)kSecAttrAccessibleAfterFirstUnlockThisDeviceOnly];
+    BOOL isSynchronizable = [attributes[(__bridge id)kSecAttrSynchronizable] boolValue];
+    return !isDeviceOnly || isSynchronizable;
+}
 
++ (void)storeIFVString:(NSString *)ifv {
+    NSDictionary *query = [self keychainQueryForIFV:ifv];
     SecItemDelete((__bridge CFDictionaryRef)query);
     SecItemAdd((__bridge CFDictionaryRef)query, NULL);
+}
+
++ (NSDictionary *)keychainQueryForIFV:(NSString *)ifv {
+    NSData *data = [ifv dataUsingEncoding:NSUTF8StringEncoding];
+    return @{
+        (__bridge id)kSecClass: (__bridge id)kSecClassGenericPassword,
+        (__bridge id)kSecAttrAccount: kSiftVendorIFVKeychainKey,
+        (__bridge id)kSecValueData: data,
+        (__bridge id)kSecAttrAccessible: (__bridge id)kSecAttrAccessibleAfterFirstUnlockThisDeviceOnly,
+        (__bridge id)kSecAttrSynchronizable: (__bridge id)kCFBooleanFalse
+    };
+}
+
++ (NSString *)vendorIFVKeychainKey {
+    return kSiftVendorIFVKeychainKey;
 }
 
 @end

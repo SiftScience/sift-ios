@@ -7,6 +7,7 @@
 //
 
 #import "SiftKeychain.h"
+#import "SiftDebug.h"
 @import Security;
 
 static NSString* kSiftVendorIFVKeychainKey = @"com.sift.initial_device_ifv";
@@ -39,15 +40,19 @@ static NSString* kSiftVendorIFVKeychainKey = @"com.sift.initial_device_ifv";
     CFTypeRef result = NULL;
     SecItemCopyMatching((__bridge CFDictionaryRef)query, &result);
 
-    NSString *storedIFVString = nil;
-    if (result) {
-        NSDictionary *attributes = (__bridge_transfer NSDictionary *)result;
-        NSData *data = attributes[(__bridge id)kSecValueData];
-        storedIFVString = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+    if (!result) {
+        return nil;
+    }
+    NSDictionary *attributes = (__bridge_transfer NSDictionary *)result;
+    return [self processStoredIFVAttributes:attributes];
+}
 
-        if (storedIFVString != nil && [self attributesNeedMigration:attributes]) {
-            [self storeIFVString:storedIFVString];
-        }
++ (NSString *)processStoredIFVAttributes:(NSDictionary *)attributes {
+    NSData *data = attributes[(__bridge id)kSecValueData];
+    NSString *storedIFVString = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+
+    if (storedIFVString != nil && [self attributesNeedMigration:attributes]) {
+        [self migrateStoredIFV:storedIFVString];
     }
     return storedIFVString;
 }
@@ -60,9 +65,40 @@ static NSString* kSiftVendorIFVKeychainKey = @"com.sift.initial_device_ifv";
 }
 
 + (void)storeIFVString:(NSString *)ifv {
-    NSDictionary *query = [self keychainQueryForIFV:ifv];
-    SecItemDelete((__bridge CFDictionaryRef)query);
-    SecItemAdd((__bridge CFDictionaryRef)query, NULL);
+    OSStatus addStatus = [self addIFV:ifv];
+    if (addStatus == errSecDuplicateItem) {
+        // An item already exists under this account even though the caller determined
+        // no usable value was stored (e.g. getStoredIFVString found data that failed to
+        // decode as UTF8). Clear it and retry once rather than failing silently forever.
+        [self deleteStoredIFV];
+        addStatus = [self addIFV:ifv];
+    }
+    if (addStatus != errSecSuccess) {
+        SF_DEBUG(@"Failed to store initial_device_ifv keychain item, status=%d", (int)addStatus);
+    }
+}
+
++ (OSStatus)addIFV:(NSString *)ifv {
+    return SecItemAdd((__bridge CFDictionaryRef)[self keychainQueryForIFV:ifv], NULL);
+}
+
++ (void)migrateStoredIFV:(NSString *)ifv {
+    [self deleteStoredIFV];
+    [self storeIFVString:ifv];
+}
+
++ (void)deleteStoredIFV {
+    OSStatus deleteStatus = SecItemDelete((__bridge CFDictionaryRef)[self ifvDeleteQuery]);
+    if (deleteStatus != errSecSuccess && deleteStatus != errSecItemNotFound) {
+        SF_DEBUG(@"Failed to delete existing initial_device_ifv keychain item, status=%d", (int)deleteStatus);
+    }
+}
+
++ (NSDictionary *)ifvDeleteQuery {
+    return @{
+        (__bridge id)kSecClass: (__bridge id)kSecClassGenericPassword,
+        (__bridge id)kSecAttrAccount: kSiftVendorIFVKeychainKey
+    };
 }
 
 + (NSDictionary *)keychainQueryForIFV:(NSString *)ifv {

@@ -7,10 +7,16 @@
 //
 
 #import "SiftKeychain.h"
+@import Security;
 
 @interface SiftKeychain ()
 + (NSString *)getStoredIFVString;
++ (NSString *)processStoredIFVAttributes:(NSDictionary *)attributes;
 + (void)storeIFVString:(NSString *)ifv;
++ (OSStatus)addIFV:(NSString *)ifv;
++ (void)migrateStoredIFV:(NSString *)ifv;
++ (void)deleteStoredIFV;
++ (NSDictionary *)ifvDeleteQuery;
 + (NSString *)vendorIFVKeychainKey;
 + (NSDictionary *)keychainQueryForIFV:(NSString *)ifv;
 + (BOOL)attributesNeedMigration:(NSDictionary *)attributes;

@@ -11,6 +11,7 @@
 		0541A85E2D3E3A5F00076F57 /* SiftKeychain.m in Sources */ = {isa = PBXBuildFile; fileRef = 0541A85C2D3E3A5F00076F57 /* SiftKeychain.m */; };
 		0541A8602D3E3BAB00076F57 /* SiftKeychainTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 0541A85F2D3E3BAB00076F57 /* SiftKeychainTests.m */; };
 		0541A8632D3E3D9400076F57 /* XCTestCase+Swizzling.m in Sources */ = {isa = PBXBuildFile; fileRef = 0541A8622D3E3D9400076F57 /* XCTestCase+Swizzling.m */; };
+		2D9E1A2B4C3F4A5B8E7D6C1F /* SiftKeychainE2ETests.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A9E1A2B4C3F4A5B8E7D6C1F /* SiftKeychainE2ETests.m */; };
 		1E409D2425E173B20066C922 /* NSData+GZIP.m in Sources */ = {isa = PBXBuildFile; fileRef = 1E409D2225E173B10066C922 /* NSData+GZIP.m */; };
 		1E409D2525E173B20066C922 /* NSData+GZIP.h in Headers */ = {isa = PBXBuildFile; fileRef = 1E409D2325E173B20066C922 /* NSData+GZIP.h */; };
 		5E819393268E1A47007FED87 /* TaskManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 5E819391268E1A47007FED87 /* TaskManager.h */; };
@@ -54,6 +55,10 @@
 		71E15CFD1D95D15900A0305C /* SiftTokenBucket.m in Sources */ = {isa = PBXBuildFile; fileRef = 71E15CFC1D95D15900A0305C /* SiftTokenBucket.m */; };
 		71E15CFF1D95DEC300A0305C /* SiftTokenBucketTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 71E15CFE1D95DEC300A0305C /* SiftTokenBucketTests.m */; };
 		8B5874FF2552FE8A00CF8A02 /* SiftIosAppStateCollector+Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 8B5874F42552FE0C00CF8A02 /* SiftIosAppStateCollector+Private.h */; };
+		F62301EB7CEA7609C22D4545 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = E03BACC11EA1421EADF23BD9 /* AppDelegate.m */; };
+		9EA18546461B4151C77DF861 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 035DB7BAB06F20DE4202A5AA /* main.m */; };
+		93E7EBAFCCA4986B8CF223B5 /* Sift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7168EE011C7B977500A88245 /* Sift.framework */; };
+		3A491B6F9D6CF393F5990A13 /* Sift.framework in Copy Files */ = {isa = PBXBuildFile; fileRef = 7168EE011C7B977500A88245 /* Sift.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -64,9 +69,39 @@
 			remoteGlobalIDString = 7168EE001C7B977500A88245;
 			remoteInfo = Sift;
 		};
+		451FB8C6C4ABE274AD6660B5 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 7168EDF81C7B977500A88245 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 8336CF06FA2516D0F5CE4184;
+			remoteInfo = SiftE2ETestHost;
+		};
+		0A0DDADE43669425ED8E2F63 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 7168EDF81C7B977500A88245 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 7168EE001C7B977500A88245;
+			remoteInfo = Sift;
+		};
 /* End PBXContainerItemProxy section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		975B072301EA9B2C50FE7F9D /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				3A491B6F9D6CF393F5990A13 /* Sift.framework in Copy Files */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
+		6EE0DC785034CB59C65E6A10 /* Sift-Unit.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = "Sift-Unit.xctestplan"; sourceTree = "<group>"; };
+		9D843134D1442A138F97F6CA /* Sift-Full.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = "Sift-Full.xctestplan"; sourceTree = "<group>"; };
 		0541A85B2D3E3A5F00076F57 /* SiftKeychain.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SiftKeychain.h; sourceTree = "<group>"; };
 		0541A85C2D3E3A5F00076F57 /* SiftKeychain.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SiftKeychain.m; sourceTree = "<group>"; };
 		0541A85F2D3E3BAB00076F57 /* SiftKeychainTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SiftKeychainTests.m; sourceTree = "<group>"; };
@@ -120,6 +155,14 @@
 		71E15CFC1D95D15900A0305C /* SiftTokenBucket.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SiftTokenBucket.m; sourceTree = "<group>"; };
 		71E15CFE1D95DEC300A0305C /* SiftTokenBucketTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SiftTokenBucketTests.m; sourceTree = "<group>"; };
 		8B5874F42552FE0C00CF8A02 /* SiftIosAppStateCollector+Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "SiftIosAppStateCollector+Private.h"; sourceTree = "<group>"; };
+		5FCBF253BFE8B6FD251DE00A /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		E03BACC11EA1421EADF23BD9 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		035DB7BAB06F20DE4202A5AA /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		E4E477898C2A47A8C261A96A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		F83095F64744BA5B7053EE1B /* SiftE2ETestHost.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SiftE2ETestHost.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		F81528B2481904FD49095450 /* SiftE2ETests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SiftE2ETests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		BAA8A7F531A9FF8FDEA4E756 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		1A9E1A2B4C3F4A5B8E7D6C1F /* SiftKeychainE2ETests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SiftKeychainE2ETests.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -138,6 +181,21 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		509B44BB98CB51639C804B25 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		98C91E59038CE952D52D53B1 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				93E7EBAFCCA4986B8CF223B5 /* Sift.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -146,6 +204,10 @@
 			children = (
 				7168EE031C7B977500A88245 /* Sift */,
 				7168EE0F1C7B977500A88245 /* SiftTests */,
+				18B981A1EB22D307107358D0 /* SiftE2ETestHost */,
+				AC8DE5EC2C7C21245B78E7C6 /* SiftE2ETests */,
+				6EE0DC785034CB59C65E6A10 /* Sift-Unit.xctestplan */,
+				9D843134D1442A138F97F6CA /* Sift-Full.xctestplan */,
 				7168EE021C7B977500A88245 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -155,8 +217,30 @@
 			children = (
 				7168EE011C7B977500A88245 /* Sift.framework */,
 				7168EE0B1C7B977500A88245 /* SiftTests.xctest */,
+				F83095F64744BA5B7053EE1B /* SiftE2ETestHost.app */,
+				F81528B2481904FD49095450 /* SiftE2ETests.xctest */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		AC8DE5EC2C7C21245B78E7C6 /* SiftE2ETests */ = {
+			isa = PBXGroup;
+			children = (
+				1A9E1A2B4C3F4A5B8E7D6C1F /* SiftKeychainE2ETests.m */,
+				BAA8A7F531A9FF8FDEA4E756 /* Info.plist */,
+			);
+			path = SiftE2ETests;
+			sourceTree = "<group>";
+		};
+		18B981A1EB22D307107358D0 /* SiftE2ETestHost */ = {
+			isa = PBXGroup;
+			children = (
+				5FCBF253BFE8B6FD251DE00A /* AppDelegate.h */,
+				E03BACC11EA1421EADF23BD9 /* AppDelegate.m */,
+				035DB7BAB06F20DE4202A5AA /* main.m */,
+				E4E477898C2A47A8C261A96A /* Info.plist */,
+			);
+			path = SiftE2ETestHost;
 			sourceTree = "<group>";
 		};
 		7168EE031C7B977500A88245 /* Sift */ = {
@@ -293,6 +377,43 @@
 			productReference = 7168EE0B1C7B977500A88245 /* SiftTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
+		8336CF06FA2516D0F5CE4184 /* SiftE2ETestHost */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = BE04EF4AB0B6BFB784815582 /* Build configuration list for PBXNativeTarget "SiftE2ETestHost" */;
+			buildPhases = (
+				DF8DE2AB9A265FAA5554A2BE /* Sources */,
+				509B44BB98CB51639C804B25 /* Frameworks */,
+				C1B743DCC5F89E2AC3A2290C /* Resources */,
+				975B072301EA9B2C50FE7F9D /* Embed Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				EDAF94F8C16F03278C788653 /* PBXTargetDependency */,
+			);
+			name = SiftE2ETestHost;
+			productName = SiftE2ETestHost;
+			productReference = F83095F64744BA5B7053EE1B /* SiftE2ETestHost.app */;
+			productType = "com.apple.product-type.application";
+		};
+		29C6F8848F95E85482A1793A /* SiftE2ETests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = E8CE17DB93E436543CE8057D /* Build configuration list for PBXNativeTarget "SiftE2ETests" */;
+			buildPhases = (
+				DE3C1D6E88AE9AE907B47213 /* Sources */,
+				98C91E59038CE952D52D53B1 /* Frameworks */,
+				21ABF93E3B12482393A2A480 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				61ABF5E75F0A2414EE3890E8 /* PBXTargetDependency */,
+			);
+			name = SiftE2ETests;
+			productName = SiftE2ETests;
+			productReference = F81528B2481904FD49095450 /* SiftE2ETests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -308,6 +429,13 @@
 					};
 					7168EE0A1C7B977500A88245 = {
 						CreatedOnToolsVersion = 7.2.1;
+					};
+					8336CF06FA2516D0F5CE4184 = {
+						CreatedOnToolsVersion = 7.2.1;
+					};
+					29C6F8848F95E85482A1793A = {
+						CreatedOnToolsVersion = 7.2.1;
+						TestTargetID = 8336CF06FA2516D0F5CE4184;
 					};
 				};
 			};
@@ -326,6 +454,8 @@
 			targets = (
 				7168EE001C7B977500A88245 /* Sift */,
 				7168EE0A1C7B977500A88245 /* SiftTests */,
+				8336CF06FA2516D0F5CE4184 /* SiftE2ETestHost */,
+				29C6F8848F95E85482A1793A /* SiftE2ETests */,
 			);
 		};
 /* End PBXProject section */
@@ -339,6 +469,20 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		7168EE091C7B977500A88245 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C1B743DCC5F89E2AC3A2290C /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		21ABF93E3B12482393A2A480 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -388,6 +532,23 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		DF8DE2AB9A265FAA5554A2BE /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F62301EB7CEA7609C22D4545 /* AppDelegate.m in Sources */,
+				9EA18546461B4151C77DF861 /* main.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		DE3C1D6E88AE9AE907B47213 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2D9E1A2B4C3F4A5B8E7D6C1F /* SiftKeychainE2ETests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -395,6 +556,16 @@
 			isa = PBXTargetDependency;
 			target = 7168EE001C7B977500A88245 /* Sift */;
 			targetProxy = 7168EE0D1C7B977500A88245 /* PBXContainerItemProxy */;
+		};
+		61ABF5E75F0A2414EE3890E8 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 8336CF06FA2516D0F5CE4184 /* SiftE2ETestHost */;
+			targetProxy = 451FB8C6C4ABE274AD6660B5 /* PBXContainerItemProxy */;
+		};
+		EDAF94F8C16F03278C788653 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 7168EE001C7B977500A88245 /* Sift */;
+			targetProxy = 0A0DDADE43669425ED8E2F63 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -569,6 +740,66 @@
 			};
 			name = Release;
 		};
+		B9D612A988E50BC8F29CCF8A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				INFOPLIST_FILE = SiftE2ETestHost/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.sift.SiftE2ETestHost;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		EF022F2430422D22A73FECB1 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				INFOPLIST_FILE = SiftE2ETestHost/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.sift.SiftE2ETestHost;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		FB5180AC5B9A9E33690E41A0 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				HEADER_SEARCH_PATHS = (
+					"$(SRCROOT)/SiftTests",
+					"$(SRCROOT)/Sift",
+				);
+				INFOPLIST_FILE = SiftE2ETests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.sift.SiftE2ETests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/SiftE2ETestHost.app/SiftE2ETestHost";
+			};
+			name = Debug;
+		};
+		9887A10ECB6F9D13C6974C33 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				HEADER_SEARCH_PATHS = (
+					"$(SRCROOT)/SiftTests",
+					"$(SRCROOT)/Sift",
+				);
+				INFOPLIST_FILE = SiftE2ETests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.sift.SiftE2ETests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/SiftE2ETestHost.app/SiftE2ETestHost";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -595,6 +826,24 @@
 			buildConfigurations = (
 				7168EE191C7B977500A88245 /* Debug */,
 				7168EE1A1C7B977500A88245 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		BE04EF4AB0B6BFB784815582 /* Build configuration list for PBXNativeTarget "SiftE2ETestHost" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B9D612A988E50BC8F29CCF8A /* Debug */,
+				EF022F2430422D22A73FECB1 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		E8CE17DB93E436543CE8057D /* Build configuration list for PBXNativeTarget "SiftE2ETests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				FB5180AC5B9A9E33690E41A0 /* Debug */,
+				9887A10ECB6F9D13C6974C33 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

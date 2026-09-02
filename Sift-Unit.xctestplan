@@ -1,0 +1,28 @@
+{
+  "configurations" : [
+    {
+      "id" : "B71B4CF5-3C9A-4AF5-8DED-B21EEBF5B891",
+      "name" : "Unit",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "targetForVariableExpansion" : {
+      "containerPath" : "container:Sift.xcodeproj",
+      "identifier" : "7168EE001C7B977500A88245",
+      "name" : "Sift"
+    }
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:Sift.xcodeproj",
+        "identifier" : "7168EE0A1C7B977500A88245",
+        "name" : "SiftTests"
+      }
+    }
+  ],
+  "version" : 1
+}

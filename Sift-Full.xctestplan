@@ -1,0 +1,35 @@
+{
+  "configurations" : [
+    {
+      "id" : "0016CD6A-42B8-4891-B164-D9947EDEFA5C",
+      "name" : "Full",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "targetForVariableExpansion" : {
+      "containerPath" : "container:Sift.xcodeproj",
+      "identifier" : "7168EE001C7B977500A88245",
+      "name" : "Sift"
+    }
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:Sift.xcodeproj",
+        "identifier" : "7168EE0A1C7B977500A88245",
+        "name" : "SiftTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:Sift.xcodeproj",
+        "identifier" : "29C6F8848F95E85482A1793A",
+        "name" : "SiftE2ETests"
+      }
+    }
+  ],
+  "version" : 1
+}

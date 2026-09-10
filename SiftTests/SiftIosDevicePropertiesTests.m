@@ -14,10 +14,10 @@
 
 @implementation SiftIosDevicePropertiesTests
 
-- (void)setup {
+- (void)setUp {
     Method storeIFV = class_getClassMethod([SiftKeychain class], @selector(storeIFVString:));
     Method mockStoreIFV = class_getClassMethod([self class], @selector(mockStoreDeviceIFV));
-    
+
     [self swizzleMethod:storeIFV withMethod:mockStoreIFV];
 }
 
@@ -130,14 +130,14 @@
     Method mockGetStoredDeviceIFV = class_getClassMethod([self class], @selector(mockNilStoredDeviceIFV));
     Method deviceIdentifier = class_getInstanceMethod([UIDevice class], @selector(identifierForVendor));
     Method mockDeviceIdentifier = class_getClassMethod([self class], @selector(mockNilDeviceIdentifier));
-    
+
     [self swizzleMethod:getStoredDeviceIFV withMethod:mockGetStoredDeviceIFV];
     [self swizzleMethod:deviceIdentifier withMethod:mockDeviceIdentifier];
-    
+
     NSString *actual = SFCollectIosDeviceProperties()[@"initial_device_ifv"];
 
     XCTAssertNil(actual);
-    
+
     [self swizzleMethod:mockGetStoredDeviceIFV withMethod:getStoredDeviceIFV];
     [self swizzleMethod:mockDeviceIdentifier withMethod:deviceIdentifier];
 }
@@ -152,7 +152,7 @@
     NSString *actual = SFCollectIosDeviceProperties()[@"initial_device_ifv"];
 
     XCTAssertEqualObjects(actual, deviceIFV);
-    
+
     [self swizzleMethod:mockGetStoredDeviceIFV withMethod:getStoredDeviceIFV];
 }
 
@@ -165,7 +165,7 @@
     NSString *actual = SFCollectIosDeviceProperties()[@"initial_device_ifv"];
 
     XCTAssertEqual(actual, @"CHANGED-DEVICE-IFV");
-    
+
     [self swizzleMethod:mockGetStoredDeviceIFV withMethod:getStoredDeviceIFV];
 }
 

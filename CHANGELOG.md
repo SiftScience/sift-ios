@@ -1,5 +1,9 @@
 # Change Log
 
+## [2.2.6] - 2026-09-10
+### Added
+- Fixed Unified Device Id duplication for different devices
+
 ## [2.2.5] - 2025-09-23
 ### Added
 - Added public interface to pause/resume events collection to Sift object

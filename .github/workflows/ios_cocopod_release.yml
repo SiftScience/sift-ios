@@ -1,0 +1,22 @@
+name: Release CocoaPod to CocoaPods.org
+
+on:
+  release:
+    types: [published]
+
+env:
+  GH_TOKEN: ${{ github.token }}
+  COCOAPODS_TRUNK_TOKEN: ${{ secrets.COCOAPODS_TRUNK_TOKEN }}
+
+
+jobs:
+  release:
+    name: Perform the Release
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Publish to CocoaPods
+        run: pod trunk push Sift.podspec

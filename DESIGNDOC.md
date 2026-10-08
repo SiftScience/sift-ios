@@ -234,7 +234,7 @@ The iOSAppState collects the following informations:
 - **sdk_version** : {type: string}
   - The sdk version indicates the current Sift SDK version which is used.
 - **window_root_view_controller_titles** : {type: array}
-  - The window root class name indicates the current view controller class name from where the data are collected.
+  - The window root class name indicates the current view controller class name from where the data are collected; overridden by the title set via `setTitle:`.
 - **battery_level** : {type: number}
   - The current battery level, from 0 to 1.0 and -1.0 if UIDeviceBatteryStateUnknown.
 - **battery_state** : {type: string}
@@ -364,6 +364,10 @@ Following are the static API to interact with SDK:
   - It will set the userId inside the sift instance.
 - **unsetUserId**()
   - Which removes any current useId to nil
+- **collect**()
+  - It will collect app state and device properties events right away; not rate-limited.
+- **setTitle**(_title_)
+  - It will set a label attached to all later app state collections until changed or reset; it overrides automatically detected view controller class names. It does not collect by itself (call collect to send an event now). Pass nil to reset.
 - **setDisallowCollectingLocationData**(_disallowCollectingLocationData_)
   - Whether to allow location collection; defaults to false.
 - **upload**()

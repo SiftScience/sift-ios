@@ -75,6 +75,28 @@ NS_EXTENSION_UNAVAILABLE_IOS("Sift is not supported for iOS extensions.")
 - (void)collect;
 
 /**
+ * Set a label attached to all later app state collections until it is changed or reset.
+ *
+ * NOTE: Pass `nil` to reset; automatic labels are used again.
+ *
+ * Example:
+ * ``` objc
+ *  - (void)viewDidAppear:(BOOL)animated {
+ *      [super viewDidAppear:animated];
+ *      [[Sift sharedInstance] setTitle:@"Checkout"];
+ *     // ...
+ *  }
+ *
+ *  - (void)viewWillDisappear:(BOOL)animated {
+ *      [super viewWillDisappear:animated];
+ *      [[Sift sharedInstance] setTitle:nil];
+ *     /// ...
+ *  }
+ * ```
+ */
+- (void)setTitle:(NSString *)title;
+
+/**
  * @name Configurations.
  *
  * You should configure `accountId`, `beaconKey`, and `userId`.

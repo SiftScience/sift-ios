@@ -11,6 +11,7 @@
 		0541A85E2D3E3A5F00076F57 /* SiftKeychain.m in Sources */ = {isa = PBXBuildFile; fileRef = 0541A85C2D3E3A5F00076F57 /* SiftKeychain.m */; };
 		0541A8602D3E3BAB00076F57 /* SiftKeychainTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 0541A85F2D3E3BAB00076F57 /* SiftKeychainTests.m */; };
 		0541A8632D3E3D9400076F57 /* XCTestCase+Swizzling.m in Sources */ = {isa = PBXBuildFile; fileRef = 0541A8622D3E3D9400076F57 /* XCTestCase+Swizzling.m */; };
+		5E7A1C032F8B000100A1B2C3 /* XCTestCase+SiftCollector.m in Sources */ = {isa = PBXBuildFile; fileRef = 5E7A1C022F8B000100A1B2C3 /* XCTestCase+SiftCollector.m */; };
 		2D9E1A2B4C3F4A5B8E7D6C1F /* SiftKeychainE2ETests.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A9E1A2B4C3F4A5B8E7D6C1F /* SiftKeychainE2ETests.m */; };
 		1E409D2425E173B20066C922 /* NSData+GZIP.m in Sources */ = {isa = PBXBuildFile; fileRef = 1E409D2225E173B10066C922 /* NSData+GZIP.m */; };
 		1E409D2525E173B20066C922 /* NSData+GZIP.h in Headers */ = {isa = PBXBuildFile; fileRef = 1E409D2325E173B20066C922 /* NSData+GZIP.h */; };
@@ -107,6 +108,8 @@
 		0541A85F2D3E3BAB00076F57 /* SiftKeychainTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SiftKeychainTests.m; sourceTree = "<group>"; };
 		0541A8612D3E3D9400076F57 /* XCTestCase+Swizzling.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "XCTestCase+Swizzling.h"; sourceTree = "<group>"; };
 		0541A8622D3E3D9400076F57 /* XCTestCase+Swizzling.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "XCTestCase+Swizzling.m"; sourceTree = "<group>"; };
+		5E7A1C012F8B000100A1B2C3 /* XCTestCase+SiftCollector.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "XCTestCase+SiftCollector.h"; sourceTree = "<group>"; };
+		5E7A1C022F8B000100A1B2C3 /* XCTestCase+SiftCollector.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "XCTestCase+SiftCollector.m"; sourceTree = "<group>"; };
 		0541A8642D3E49D500076F57 /* SiftKeychain+Testing.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "SiftKeychain+Testing.h"; sourceTree = "<group>"; };
 		1E409D2225E173B10066C922 /* NSData+GZIP.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSData+GZIP.m"; sourceTree = "<group>"; };
 		1E409D2325E173B20066C922 /* NSData+GZIP.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+GZIP.h"; sourceTree = "<group>"; };
@@ -304,6 +307,8 @@
 				0541A8642D3E49D500076F57 /* SiftKeychain+Testing.h */,
 				0541A8612D3E3D9400076F57 /* XCTestCase+Swizzling.h */,
 				0541A8622D3E3D9400076F57 /* XCTestCase+Swizzling.m */,
+				5E7A1C012F8B000100A1B2C3 /* XCTestCase+SiftCollector.h */,
+				5E7A1C022F8B000100A1B2C3 /* XCTestCase+SiftCollector.m */,
 			);
 			path = SiftTests;
 			sourceTree = "<group>";
@@ -526,6 +531,7 @@
 				713D859D1D6CF69E0011D5FE /* SiftIosDevicePropertiesTests.m in Sources */,
 				7168EE241C7F99AF00A88245 /* SiftQueueTests.m in Sources */,
 				0541A8632D3E3D9400076F57 /* XCTestCase+Swizzling.m in Sources */,
+				5E7A1C032F8B000100A1B2C3 /* XCTestCase+SiftCollector.m in Sources */,
 				0541A8602D3E3BAB00076F57 /* SiftKeychainTests.m in Sources */,
 				7168EE421C88C91900A88245 /* SiftUploaderTests.m in Sources */,
 				71B1B5911D8B31ED00EA9B17 /* SiftIosAppStateTests.m in Sources */,

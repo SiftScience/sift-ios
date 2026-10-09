@@ -13,6 +13,14 @@
 /** Collect app state. */
 - (void)collectWithTitle:(NSString *)title andTimestamp:(SFTimestamp)now NS_EXTENSION_UNAVAILABLE_IOS("collectWithTitle is not supported for iOS extensions.");
 
+/**
+ * Record `title` as the manual label, used instead of any per-event title
+ * in all later collections. Does not request a collection.
+ *
+ * `nil`, empty or non-string values reset the label.
+ */
+- (void)setManualTitle:(NSString *)title;
+
 @property (nonatomic) BOOL disallowCollectingLocationData;
 
 /** Pause sending events*/

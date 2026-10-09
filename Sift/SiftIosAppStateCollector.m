@@ -32,6 +32,13 @@ static const SFTimestamp SF_MAX_COLLECTION_PERIOD = 120000;  // Unit: millisecon
 // And we add 1 second as a margin; so that's 4 seconds.)
 static const unsigned long long SF_HEADING_INTERVAL = 4 * NSEC_PER_SEC;
 
+@interface SiftIosAppStateCollector ()
+
+// Label set via -[Sift setScreenTitle:]; overrides per-event titles. Atomic: set from any thread. Not archived.
+@property (atomic, copy) NSString *manualLabel;
+
+@end
+
 @implementation SiftIosAppStateCollector {
     TaskManager *_taskManager;
     // Use serial queue as an alternative to locking.
@@ -134,6 +141,12 @@ static const unsigned long long SF_HEADING_INTERVAL = 4 * NSEC_PER_SEC;
     } queue:_serial];
 }
 
+- (void)setManualTitle:(NSString *)title {
+    // nil, empty or non-string (e.g. NSNull from a bridge) resets to automatic labels.
+    BOOL isLabel = [title isKindOfClass:NSString.class] && title.length > 0;
+    self.manualLabel = isLabel ? title : nil;
+}
+
 - (void)checkAndCollectWhenNoneRecently:(SFTimestamp)now {
     [_taskManager submitWithTask:^{
         if (UIApplication.sharedApplication.applicationState == UIApplicationStateBackground) {
@@ -157,7 +170,7 @@ static const unsigned long long SF_HEADING_INTERVAL = 4 * NSEC_PER_SEC;
         SF_DEBUG(@"Collect app state...");
         SiftEvent *event = [SiftEvent new];
         event.time = now;
-        event.iosAppState = SFCollectIosAppState(self->_locationManager, title);
+        event.iosAppState = SFCollectIosAppState(self->_locationManager, self.manualLabel ?: title);
 
         BOOL foreground = UIApplication.sharedApplication.applicationState != UIApplicationStateBackground;
         

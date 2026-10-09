@@ -83,18 +83,18 @@ NS_EXTENSION_UNAVAILABLE_IOS("Sift is not supported for iOS extensions.")
  * ``` objc
  *  - (void)viewDidAppear:(BOOL)animated {
  *      [super viewDidAppear:animated];
- *      [[Sift sharedInstance] setTitle:@"Checkout"];
+ *      [[Sift sharedInstance] setScreenTitle:@"Checkout"];
  *     // ...
  *  }
  *
  *  - (void)viewWillDisappear:(BOOL)animated {
  *      [super viewWillDisappear:animated];
- *      [[Sift sharedInstance] setTitle:nil];
+ *      [[Sift sharedInstance] setScreenTitle:nil];
  *     /// ...
  *  }
  * ```
  */
-- (void)setTitle:(NSString *)title;
+- (void)setScreenTitle:(NSString *)title;
 
 /**
  * @name Configurations.

@@ -164,18 +164,18 @@
     XCTAssertFalse([[collector valueForKey:@"_isPaused"] boolValue]);
 }
 
-- (void)testSetTitleIsUsedByLaterCollections {
+- (void)testSetScreenTitleIsUsedByLaterCollections {
     [self startCapturingAppendedEvents];
     SiftIosAppStateCollector *collector = [self makeQuietCollector];
     [_sift setValue:collector forKey:@"_iosAppStateCollector"];
 
-    [_sift setTitle:@"HomeScreen"];
+    [_sift setScreenTitle:@"HomeScreen"];
     [_sift collect];
     [self drainCollector:collector];
-    // Only the collect event: setTitle: labels, it does not collect.
+    // Only the collect event: setScreenTitle: labels, it does not collect.
     XCTAssertEqual([self capturedEventCountWithTitle:@"HomeScreen"], 1);
 
-    [_sift setTitle:nil]; // Resets the label.
+    [_sift setScreenTitle:nil]; // Resets the label.
     [_sift collect];
     [self drainCollector:collector];
     XCTAssertEqual([self capturedEventCountWithTitle:@"HomeScreen"], 1);

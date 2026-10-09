@@ -34,7 +34,7 @@ static const unsigned long long SF_HEADING_INTERVAL = 4 * NSEC_PER_SEC;
 
 @interface SiftIosAppStateCollector ()
 
-// Label set via -[Sift setTitle:]; overrides per-event titles. Atomic: set from any thread. Not archived.
+// Label set via -[Sift setScreenTitle:]; overrides per-event titles. Atomic: set from any thread. Not archived.
 @property (atomic, copy) NSString *manualLabel;
 
 @end

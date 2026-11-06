@@ -16,7 +16,7 @@
 
 /**
  * A collector whose periodic timer won't collect during the test (a collection
- * "just happened"), with the production rate limit.
+ * "just happened"), with the production rate limit. It never collects location.
  */
 - (SiftIosAppStateCollector *)makeQuietCollector;
 

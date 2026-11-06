@@ -35,6 +35,19 @@ static NSArray<SiftEvent *> *CapturedEventsSnapshot(void) {
 
 @end
 
+// The real check makes a synchronous XPC call that can block _serial for many seconds
+// on a freshly booted simulator, outlasting the waits in drainCollector:.
+@interface SiftNoLocationAppStateCollector : SiftIosAppStateCollector
+@end
+
+@implementation SiftNoLocationAppStateCollector
+
+- (BOOL)canCollectLocationData {
+    return NO;
+}
+
+@end
+
 @implementation XCTestCase (SiftCollector)
 
 - (SiftIosAppStateCollector *)makeQuietCollector {
@@ -43,7 +56,7 @@ static NSArray<SiftEvent *> *CapturedEventsSnapshot(void) {
     [self addTeardownBlock:^{
         [[NSFileManager defaultManager] removeItemAtPath:archivePath error:nil];
     }];
-    SiftIosAppStateCollector *collector = [[SiftIosAppStateCollector alloc] initWithArchivePath:archivePath];
+    SiftIosAppStateCollector *collector = [[SiftNoLocationAppStateCollector alloc] initWithArchivePath:archivePath];
     // Written on _serial, like the collector's own unarchive. The periodic check reads
     // _lastCollectedAt only after a main-queue hop, i.e. after this returns.
     dispatch_sync([collector valueForKey:@"_serial"], ^{
@@ -63,8 +76,9 @@ static NSArray<SiftEvent *> *CapturedEventsSnapshot(void) {
     Method original = class_getInstanceMethod(Sift.class, @selector(appendEvent:));
     Method capture = class_getInstanceMethod(Sift.class, @selector(sift_test_captureAppendEvent:));
     [self swizzleMethod:original withMethod:capture];
+    XCTestCase * __weak weakSelf = self;
     [self addTeardownBlock:^{
-        [self swizzleMethod:original withMethod:capture];
+        [weakSelf swizzleMethod:original withMethod:capture];
     }];
 }
 

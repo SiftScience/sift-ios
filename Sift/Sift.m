@@ -173,6 +173,10 @@ static const SiftQueueConfig SFDefaultEventQueueConfig = {
     [_iosAppStateCollector collectWithTitle:nil andTimestamp:SFCurrentTime()];
 }
 
+- (void)setScreenTitle:(NSString *)title {
+    [_iosAppStateCollector setManualTitle:title];
+}
+
 - (BOOL)upload {
     return [self upload:NO];
 }

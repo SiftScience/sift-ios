@@ -9,6 +9,7 @@
 #import "SiftIosAppStateCollector.h"
 #import "SiftIosAppStateCollector+Private.h"
 #import "SiftUploader.h"
+#import "XCTestCase+SiftCollector.h"
 
 @interface SiftTests : XCTestCase
 
@@ -161,6 +162,23 @@
     [_sift resume];
     XCTAssertFalse([[uploader valueForKey:@"_isPaused"] boolValue]);
     XCTAssertFalse([[collector valueForKey:@"_isPaused"] boolValue]);
+}
+
+- (void)testSetScreenTitleIsUsedByLaterCollections {
+    [self startCapturingAppendedEvents];
+    SiftIosAppStateCollector *collector = [self makeQuietCollector];
+    [_sift setValue:collector forKey:@"_iosAppStateCollector"];
+
+    [_sift setScreenTitle:@"HomeScreen"];
+    [_sift collect];
+    [self drainCollector:collector];
+    // Only the collect event: setScreenTitle: labels, it does not collect.
+    XCTAssertEqual([self capturedEventCountWithTitle:@"HomeScreen"], 1);
+
+    [_sift setScreenTitle:nil]; // Resets the label.
+    [_sift collect];
+    [self drainCollector:collector];
+    XCTAssertEqual([self capturedEventCountWithTitle:@"HomeScreen"], 1);
 }
 
 @end

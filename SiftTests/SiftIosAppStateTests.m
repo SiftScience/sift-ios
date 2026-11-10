@@ -9,7 +9,16 @@
 #import "SiftIosAppState.h"
 #import "SiftIosAppStateCollector.h"
 #import "SiftIosAppStateCollector+Private.h"
+#import "SiftUtils.h"
 #import "TaskManager.h"
+#import "XCTestCase+SiftCollector.h"
+
+// Notification handlers, called directly to avoid posting app-wide notifications.
+@interface SiftIosAppStateCollector (Testing)
+- (void)viewControllerDidChange:(NSNotification *)notification;
+- (void)willEnterForeground;
+- (void)didEnterBackground;
+@end
 
 @interface SiftIosAppStateTests : XCTestCase
 
@@ -84,6 +93,9 @@
     // Test that multiple pause calls don't cause issues
     [_iosAppStateCollector pause];
     XCTAssertTrue([[_iosAppStateCollector valueForKey:@"_isPaused"] boolValue]);
+
+    // Releasing a collector with a suspended timer source crashes the test process.
+    [_iosAppStateCollector resume];
 }
 
 - (void)testResume {
@@ -98,6 +110,115 @@
     // Test that multiple resume calls don't cause issues
     [_iosAppStateCollector resume];
     XCTAssertFalse([[_iosAppStateCollector valueForKey:@"_isPaused"] boolValue]);
+}
+
+#pragma mark - Manual title
+
+- (void)testSetManualTitleDoesNotCollect {
+    [self startCapturingAppendedEvents];
+    SiftIosAppStateCollector *collector = [self makeQuietCollector];
+
+    [collector setManualTitle:@"QuietScreen"];
+    [self drainCollector:collector];
+
+    XCTAssertEqualObjects([collector valueForKey:@"manualLabel"], @"QuietScreen");
+    XCTAssertEqual([self capturedEventCountWithTitle:@"QuietScreen"], 0);
+}
+
+- (void)testManualTitleIsUsedByLaterCollections {
+    [self startCapturingAppendedEvents];
+    SiftIosAppStateCollector *collector = [self makeQuietCollector];
+
+    [collector setManualTitle:@"PersistScreen"];
+    [collector requestCollectionWithTitle:nil];
+    [collector collectWithTitle:nil andTimestamp:SFCurrentTime()];
+    [self drainCollector:collector];
+
+    XCTAssertEqual([self capturedEventCountWithTitle:@"PersistScreen"], 2);
+}
+
+- (void)testManualTitleSurvivesAutomaticNavigationTitle {
+    [self startCapturingAppendedEvents];
+    SiftIosAppStateCollector *collector = [self makeQuietCollector];
+
+    [collector setManualTitle:@"ManualScreen"];
+    [collector viewControllerDidChange:[self navigationNotificationShowing:[UIViewController new]]];
+    [collector requestCollectionWithTitle:nil];
+    [self drainCollector:collector];
+
+    XCTAssertEqualObjects([collector valueForKey:@"manualLabel"], @"ManualScreen");
+    XCTAssertEqual([self capturedEventCountWithTitle:@"ManualScreen"], 2);
+    XCTAssertEqual([self capturedEventCountWithTitle:@"UIViewController"], 0);
+}
+
+- (void)testAutomaticNavigationTitleDoesNotPersist {
+    [self startCapturingAppendedEvents];
+    SiftIosAppStateCollector *collector = [self makeQuietCollector];
+
+    [collector viewControllerDidChange:[self navigationNotificationShowing:[UITabBarController new]]];
+    [self drainCollector:collector];
+    XCTAssertEqual([self capturedEventCountWithTitle:@"UITabBarController"], 1);
+
+    [collector requestCollectionWithTitle:nil];
+    [self drainCollector:collector];
+    XCTAssertEqual([self capturedEventCountWithTitle:@"UITabBarController"], 1);
+    XCTAssertNil([collector valueForKey:@"manualLabel"]);
+}
+
+- (void)testManualTitleInBackground {
+    [self startCapturingAppendedEvents];
+    SiftIosAppStateCollector *collector = [self makeQuietCollector];
+
+    [collector didEnterBackground];
+    NSPredicate *suspended = [NSPredicate predicateWithFormat:@"serialSuspendCounter == 1"];
+    [self waitForExpectations:@[[[XCTNSPredicateExpectation alloc] initWithPredicate:suspended object:collector]] timeout:2];
+
+    // The label is recorded right away; a collection requested now waits for the foreground.
+    [collector setManualTitle:@"BackgroundScreen"];
+    [collector requestCollectionWithTitle:nil];
+    [self flushMainQueue];
+    XCTAssertEqualObjects([collector valueForKey:@"manualLabel"], @"BackgroundScreen");
+    XCTAssertEqual([self capturedEventCountWithTitle:@"BackgroundScreen"], 0);
+
+    [collector willEnterForeground];
+    [self drainCollector:collector];
+    XCTAssertEqual([self capturedEventCountWithTitle:@"BackgroundScreen"], 1);
+}
+
+- (void)testNilResetsManualTitle {
+    [self startCapturingAppendedEvents];
+    SiftIosAppStateCollector *collector = [self makeQuietCollector];
+
+    [collector setManualTitle:@"ResetScreen"];
+    [collector setManualTitle:nil];
+    [collector viewControllerDidChange:[self navigationNotificationShowing:[UIViewController new]]];
+    [self drainCollector:collector];
+
+    XCTAssertNil([collector valueForKey:@"manualLabel"]);
+    XCTAssertEqual([self capturedEventCountWithTitle:@"ResetScreen"], 0);
+    XCTAssertEqual([self capturedEventCountWithTitle:@"UIViewController"], 1);
+}
+
+- (void)testManualTitleEmptyOrNonStringResets {
+    SiftIosAppStateCollector *collector = [self makeQuietCollector];
+
+    NSMutableString *title = [NSMutableString stringWithString:@"CopiedScreen"];
+    [collector setManualTitle:title];
+    [title setString:@"Mutated"];
+    XCTAssertEqualObjects([collector valueForKey:@"manualLabel"], @"CopiedScreen");
+
+    [collector setManualTitle:@""];
+    XCTAssertNil([collector valueForKey:@"manualLabel"]);
+
+    [collector setManualTitle:@"CopiedScreen"];
+    [collector setManualTitle:(NSString *)[NSNull null]];
+    XCTAssertNil([collector valueForKey:@"manualLabel"]);
+}
+
+- (NSNotification *)navigationNotificationShowing:(UIViewController *)viewController {
+    return [NSNotification notificationWithName:@"UINavigationControllerDidShowViewControllerNotification"
+                                         object:nil
+                                       userInfo:@{@"UINavigationControllerNextVisibleViewController": viewController}];
 }
 
 @end

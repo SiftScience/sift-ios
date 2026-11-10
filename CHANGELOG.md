@@ -1,5 +1,9 @@
 # Change Log
 
+## [2.2.7] - 2026-11-09
+### Added
+- Added public `setScreenTitle:` API to `Sift` to manually set the screen name attached to app state collections (overrides the automatically detected view controller class name; pass `nil` to reset)
+
 ## [2.2.6] - 2026-09-10
 ### Added
 - Fixed Unified Device Id duplication for different devices
